@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-anthonynlt Naliato CACAO2024
-=======
 # CACAO2024
 
 Producteur 2 de cacao
@@ -14,4 +11,6 @@ UserName: Quentin30502
 
 Maxime
 UserName: Maximemkn
->>>>>>> branch 'main' of https://github.com/Quentin30502/CACAO2024
+
+Anthony Naliato
+UserName: anthonynlt
