@@ -251,7 +251,7 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 			deltaConsoMin.setValeur(this,  deltaConsoMax.getValeur());
 			deltaConsoMax.setValeur(this,  max);
 		}
-		double deltaConso = deltaConsoMin.getValeur() + (Math.random()*(deltaConsoMax.getValeur() - deltaConsoMin.getValeur()));
+		double deltaConso = deltaConsoMin.getValeur() + (Filiere.random.nextDouble()*(deltaConsoMax.getValeur() - deltaConsoMin.getValeur()));
 		conso.setValeur(this, conso.getValeur()*(1+(deltaConso/24.0)));
 
 		JournalDistribution.ajouter("Evolution conso globale : delta conso = "+Journal.doubleSur(deltaConso, 4)+" ==> conso = "+Journal.doubleSur(conso.getValeur(),2));
@@ -401,9 +401,9 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 
 	//--- Evolution de la consommation annuelle
 	private void initEvolutionDistributionAnnuelleDesVentes() {
-		this.distributionOrigine = (int) (Math.random()*distributionsAnnuelles.length);
-		this.distributionArrivee = (int) (Math.random()*distributionsAnnuelles.length);// potentiellement distributionArrivee==distributionOrigine ==> dans ce cas on est dans une periode ou les pics de consommation ne changent pas.
-		this.etapesEvolutionDistribution =(int) ( dureeMinTransitionDistribution.getValeur() + (int)(Math.random()*(dureeMaxTransitionDistribution.getValeur()-dureeMinTransitionDistribution.getValeur()))); // Nombre d'etapes pour atteindre la prochaine distribution
+		this.distributionOrigine = (int) (Filiere.random.nextDouble()*distributionsAnnuelles.length);
+		this.distributionArrivee = (int) (Filiere.random.nextDouble()*distributionsAnnuelles.length);// potentiellement distributionArrivee==distributionOrigine ==> dans ce cas on est dans une periode ou les pics de consommation ne changent pas.
+		this.etapesEvolutionDistribution =(int) ( dureeMinTransitionDistribution.getValeur() + (int)(Filiere.random.nextDouble()*(dureeMaxTransitionDistribution.getValeur()-dureeMinTransitionDistribution.getValeur()))); // Nombre d'etapes pour atteindre la prochaine distribution
 		this.etapeEvolutionDistribution=0;
 	}
 	private void evolutionDistributionAnnuelleDesVentes() {
@@ -411,8 +411,8 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		if (this.etapeEvolutionDistribution>this.etapesEvolutionDistribution) {
 			this.etapeEvolutionDistribution=0;
 			this.distributionOrigine=this.distributionArrivee;
-			this.distributionArrivee = (int) (Math.random()*distributionsAnnuelles.length);// potentiellement distributionArrivee==distributionOrigine ==> dans ce cas on est dans une periode ou les pics de consommation ne changent pas.
-			this.etapesEvolutionDistribution =(int) ( dureeMinTransitionDistribution.getValeur() + (int)(Math.random()*(dureeMaxTransitionDistribution.getValeur()-dureeMinTransitionDistribution.getValeur()))); // Nombre d'etapes pour atteindre la prochaine distribution
+			this.distributionArrivee = (int) (Filiere.random.nextDouble()*distributionsAnnuelles.length);// potentiellement distributionArrivee==distributionOrigine ==> dans ce cas on est dans une periode ou les pics de consommation ne changent pas.
+			this.etapesEvolutionDistribution =(int) ( dureeMinTransitionDistribution.getValeur() + (int)(Filiere.random.nextDouble()*(dureeMaxTransitionDistribution.getValeur()-dureeMinTransitionDistribution.getValeur()))); // Nombre d'etapes pour atteindre la prochaine distribution
 		}
 	}
 	private double ratioStep(int step) {
