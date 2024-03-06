@@ -336,34 +336,34 @@ public class BourseCacao implements IActeur, IAssermente {
 				if ( totalDemandes==0.0 && totalOffres==0) {
 					// il ne se passe rien
 				} else if (totalDemandes==0.0 && totalOffres>0.0) {
-					double diminution = Math.random()*2.0;  // ca va diminuer entre 0 et 2%
+					double diminution = Filiere.random.nextDouble()*2.0;  // ca va diminuer entre 0 et 2%
 					double min = this.cours.get(f).getMin();
 					if (cours * (1.0-(diminution/100.0))<min) {
-						diminution=Math.min(diminution, Math.random()*0.1); // Si ca fait aller en dessous du Min connu alors on diminue au plus de 1 pour mille
+						diminution=Math.min(diminution, Filiere.random.nextDouble()*0.1); // Si ca fait aller en dessous du Min connu alors on diminue au plus de 1 pour mille
 					}
 					cours = cours * (1.0- (diminution/100.0));
 					this.cours.get(f).setValeur(this, cours, crypto);
 				} else if (totalDemandes>0.0 && totalOffres==0.0) {
-					double augmentation = Math.random()*2.0;  // ca va augmenter entre 0 et 2%
+					double augmentation = Filiere.random.nextDouble()*2.0;  // ca va augmenter entre 0 et 2%
 					double max = this.cours.get(f).getMax();
 					if (cours * (1.0+ (augmentation/100.0))>max) {
-						augmentation=Math.min(augmentation, Math.random()*0.1); // Si ca fait aller au dela du Max connu alors on augmente au plus de 1 pour 1000
+						augmentation=Math.min(augmentation, Filiere.random.nextDouble()*0.1); // Si ca fait aller au dela du Max connu alors on augmente au plus de 1 pour 1000
 					}
 					cours = cours * (1.0+ (augmentation/100.0));
 					this.cours.get(f).setValeur(this, cours, crypto);
 				} else if (totalDemandes>totalOffres) {// Le cours va monter
-					double augmentation = Math.max(Math.random()*1.5, Math.min(12.5,  (totalDemandes-totalOffres)/totalOffres)); // plus l'ecart entre demande et offre est eleve, plus l'agumentation sera forte, mais pas plus de 12.5% d'augmentation, pas moins qu'un nombre au hasard tire entre 0 et 1.5.
+					double augmentation = Math.max(Filiere.random.nextDouble()*1.5, Math.min(12.5,  (totalDemandes-totalOffres)/totalOffres)); // plus l'ecart entre demande et offre est eleve, plus l'agumentation sera forte, mais pas plus de 12.5% d'augmentation, pas moins qu'un nombre au hasard tire entre 0 et 1.5.
 					double max = this.cours.get(f).getMax();
 					if (cours * (1.0+ (augmentation/100.0))>max) {
-						augmentation=Math.min(augmentation, Math.random()*0.1); // Si ca fait aller au dela du Max connu alors on augmente au plus de 1 pour 1000
+						augmentation=Math.min(augmentation, Filiere.random.nextDouble()*0.1); // Si ca fait aller au dela du Max connu alors on augmente au plus de 1 pour 1000
 					}
 					cours = cours * (1.0+ (augmentation/100.0));
 					this.cours.get(f).setValeur(this, cours, crypto);
 				} else { // le cours va baisser
-					double diminution = Math.max(Math.random()*1.5, Math.min(12.5,  (totalOffres-totalDemandes)/totalDemandes)); // plus l'ecart entre demande et offre est eleve, plus la diminution sera forte, mais pas plus de 12.5% de diminution, pas moins qu'un nombre au hasard tire entre 0 et 1.5.
+					double diminution = Math.max(Filiere.random.nextDouble()*1.5, Math.min(12.5,  (totalOffres-totalDemandes)/totalDemandes)); // plus l'ecart entre demande et offre est eleve, plus la diminution sera forte, mais pas plus de 12.5% de diminution, pas moins qu'un nombre au hasard tire entre 0 et 1.5.
 					double min = this.cours.get(f).getMin();
 					if (cours * (1.0-(diminution/100.0))<min) {
-						diminution=Math.min(diminution, Math.random()*0.1); // Si ca fait aller en dessous du Min connu alors on diminue au plus de 1 pour mille
+						diminution=Math.min(diminution, Filiere.random.nextDouble()*0.1); // Si ca fait aller en dessous du Min connu alors on diminue au plus de 1 pour mille
 					}
 					cours = cours * (1.0- (diminution/100.0));
 					this.cours.get(f).setValeur(this, cours, crypto);

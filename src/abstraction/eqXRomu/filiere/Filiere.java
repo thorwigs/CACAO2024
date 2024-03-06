@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.general.Journal;
@@ -26,6 +27,7 @@ import java.beans.PropertyChangeSupport;
  * @author Romuald Debruyne
  */
 public class Filiere implements IAssermente {
+	public static Random random;
 	public static Filiere LA_FILIERE; // Filiere.LA_FILIERE reference l'unique instance de Filiere
 	public static double SEUIL_EN_TETE_DE_GONDOLE_POUR_IMPACT = 0.05; // Si les produits d'une marque m representent au moins 5% de la quantite totale en tete de gondole alors il y a un impact positif sur l'attrait de la marque.
 
@@ -63,6 +65,7 @@ public class Filiere implements IAssermente {
 	 */
 	public Filiere() {
 		this.etape=0;
+		this.random=new Random(0);
 		this.acteurs=new ArrayList<IActeur>();
 		this.acteursSolvables=new ArrayList<IActeur>();
 		this.clientsFinaux=new ArrayList<ClientFinal>();
