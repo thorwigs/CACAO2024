@@ -2,7 +2,7 @@
 #AfriKakao
 
 Description :
-	Faire des benefices
+	Faire des bénéfices en assurant une vie équitable à tous les travailleurs. 
 
 #L'equipe
 
