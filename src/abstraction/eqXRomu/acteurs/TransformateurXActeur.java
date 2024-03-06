@@ -136,7 +136,7 @@ public class TransformateurXActeur  implements IActeur, IMarqueChocolat, IFabric
 
 		for (Feve f : this.pourcentageTransfo.keySet()) {
 			for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
-				int transfo = (int) (Math.min(this.stockFeves.get(f), Math.random()*30));
+				int transfo = (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
 				if (transfo>0) {
 					this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
 					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
