@@ -2,16 +2,17 @@
 #AfriKakao
 
 Description :
-	Faire des benefices
+<br/><br/>
+* Faire des bénéfices en assurant une vie équitable à tous les travailleurs. 
+* Assurer un prix compétitif dans le marché. 
+* Assurer un rapport social respectant les normes.
 
 #L'equipe
-ER-RAHMAOUY Abderrahmane : Yuri69420
 
+* ER-RAHMAOUY Abderrahmane : Yuri69420
 
-youssef7rouz
+* GHARBI Haythem : Haythem7
 
-GHARBI Haythem : Haythem7
+* BEN ABDELJELIL youssef : youssef7rouz
 
-BEN ABDELJELIL youssef : youssef7rouz
-
-fzaMM
+* ALAOUI-MRANI  Fatim-ezzahra : fzaMM
