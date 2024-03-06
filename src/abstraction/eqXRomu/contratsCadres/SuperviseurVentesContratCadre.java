@@ -185,7 +185,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	}
 	
 	private ExemplaireContratCadre negociations(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, Object produit, Echeancier echeancier, int cryptogramme, boolean tg, ContratCadre contrat, IActeur initiateur) {
-		int maxNego = 5 + (int)(Math.random()*11); // Le nombre maximum de contrepropositions est compris dans [5, 15]
+		int maxNego = 5 + (int)(Filiere.random.nextDouble()*11); // Le nombre maximum de contrepropositions est compris dans [5, 15]
 
 		// NEGOCIATIONS SUR L'ECHEANCIER
 		Echeancier contrePropositionV, contrePropositionA;

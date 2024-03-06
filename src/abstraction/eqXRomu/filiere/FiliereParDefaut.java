@@ -45,7 +45,7 @@ public class FiliereParDefaut extends Filiere {
 		super();
 		HashMap<Chocolat, Double> repartitionInitiale = new HashMap<Chocolat, Double>();
 		// Tirage au sort de la repartition
-		int hasard = (int)(Math.random()*3); // tirage au hasard d'un nombre dans {0, 1, 2}
+		int hasard = (int)(Filiere.random.nextDouble()*3); // tirage au hasard d'un nombre dans {0, 1, 2}
 		this.journalFiliere.ajouter("Repartition initiale des  achats des clients finaux : "+hasard);
 
 		switch (hasard) {
