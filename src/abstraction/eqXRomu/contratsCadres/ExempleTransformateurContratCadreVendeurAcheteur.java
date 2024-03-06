@@ -16,7 +16,7 @@ public class ExempleTransformateurContratCadreVendeurAcheteur extends ExempleTra
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		if (Math.random()<0.1) {
+		if (Filiere.random.nextDouble()<0.1) {
 			return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
 		} else {//dans 90% des cas on fait une contreproposition pour l'echeancier
 			Echeancier e = contrat.getEcheancier();
@@ -26,7 +26,7 @@ public class ExempleTransformateurContratCadreVendeurAcheteur extends ExempleTra
 	}
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		if (Math.random()<0.1) {
+		if (Filiere.random.nextDouble()<0.1) {
 			return contrat.getPrix(); // on ne cherche pas a negocier dans 10% des cas
 		} else {//dans 90% des cas on fait une contreproposition differente
 			return contrat.getPrix()*0.95;// 5% de moins.
@@ -59,7 +59,7 @@ public class ExempleTransformateurContratCadreVendeurAcheteur extends ExempleTra
 		if (vendeurs.size()==1) {
 			vendeur=vendeurs.get(0);
 		} else if (vendeurs.size()>1) {
-			vendeur = vendeurs.get((int)( Math.random()*vendeurs.size()));
+			vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
 		}
 		if (vendeur!=null) {
 			journal.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
@@ -76,7 +76,7 @@ public class ExempleTransformateurContratCadreVendeurAcheteur extends ExempleTra
 		if (acheteurs.size()==1) {
 			acheteur=acheteurs.get(0);
 		} else if (acheteurs.size()>1) {
-			acheteur = acheteurs.get((int)( Math.random()*acheteurs.size()));
+			acheteur = acheteurs.get((int)( Filiere.random.nextDouble()*acheteurs.size()));
 		}
 		if (acheteur!=null) {
 			journal.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
