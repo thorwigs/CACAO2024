@@ -2,6 +2,8 @@ package abstraction.eqXRomu.contratsCadres;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class ExempleTransformateurContratCadreVendeur extends ExempleTransformateurContratCadre implements IVendeurContratCadre {
@@ -16,7 +18,7 @@ public class ExempleTransformateurContratCadreVendeur extends ExempleTransformat
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		if (contrat.getProduit().equals(produit)) {
 			if (contrat.getEcheancier().getQuantiteTotale()<stock.getValeur()) {
-				if (Math.random()<0.1) {
+				if (Filiere.random.nextDouble()<0.1) {
 				return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
 				} else {//dans 90% des cas on fait une contreproposition pour l'echeancier
 					Echeancier e = contrat.getEcheancier();
@@ -36,10 +38,10 @@ public class ExempleTransformateurContratCadreVendeur extends ExempleTransformat
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		if (Math.random()<0.1) {
+		if (Filiere.random.nextDouble()<0.1) {
 			return contrat.getPrix(); // on ne cherche pas a negocier dans 10% des cas
 		} else {//dans 90% des cas on fait une contreproposition differente
-			return 0.5 + (5000.0-(contrat.getQuantiteTotale()*Math.random()));
+			return 0.5 + (5000.0-(contrat.getQuantiteTotale()*Filiere.random.nextDouble()));
 		}
 	}
 

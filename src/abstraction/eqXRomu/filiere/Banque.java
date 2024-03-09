@@ -215,9 +215,9 @@ public class Banque implements IActeur, IAssermente {
 	}
 
 	public Integer genereCryptogramme() {
-		Integer crypto=100000000+((int)(Math.random()*899999999)); 
+		Integer crypto=100000000+((int)(Filiere.random.nextDouble()*899999999)); 
 		while (cryptogramme.values().contains(crypto)) {
-			crypto=100000000+((int)(Math.random()*899999999)); 
+			crypto=100000000+((int)(Filiere.random.nextDouble()*899999999)); 
 		}
 		return crypto;
 	}
