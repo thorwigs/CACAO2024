@@ -70,6 +70,7 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
 		}
+		this.journalCC.ajouter("=================================");
 	}
 
 	public double restantDu(Feve f) {
