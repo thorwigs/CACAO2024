@@ -157,6 +157,7 @@ public class TransformateurXAcheteurCCadre extends TransformateurXAcheteurBourse
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
 
 }
