@@ -39,8 +39,6 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 
 	public void next() {
 		super.next();
-		//supCC.getAcheteurs(null)
-		//supCC.demandeVendeur(null, null, null, null, cryptogramme, false);
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f).getValeur()-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
@@ -77,7 +75,7 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 	public double restantDu(Feve f) {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if (c.getProduit().equals(c)) {
+			if (c.getProduit().equals(f)) {
 				res+=c.getQuantiteRestantALivrer();
 			}
 		}
@@ -153,7 +151,7 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 			return 0; // ne peut pas etre le cas normalement 
 		}
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		double cours = bourse.getCours((Feve)contrat.getProduit()).getValeur();
+		double cours = ((Feve)(contrat.getProduit())).isEquitable() ? 0.0 : bourse.getCours((Feve)contrat.getProduit()).getValeur();
 		double prixCC = prix((Feve)contrat.getProduit());
 		if (prixCC==0.0) {
 			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat

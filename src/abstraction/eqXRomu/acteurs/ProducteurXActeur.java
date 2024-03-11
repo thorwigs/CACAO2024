@@ -19,7 +19,7 @@ import abstraction.eqXRomu.produits.IProduit;
  * d'en acheter sans attendre que les realisations des equipes 1 a 3 soient operationnelles.
  * 
  * (*) trop trivial puisqu'il ne respecte pas toutes les contraintes imposees,
- * notamment en termes de couts, de replantation, de maladies, de pe
+ * notamment en termes de couts, de replantation, de maladies, de perissabilite, ...
  * et c'est pourquoi sa part de marche initiale est faible.
  */
 public class ProducteurXActeur  implements IActeur {
