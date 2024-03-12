@@ -28,7 +28,7 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal("PX Journal CC", this);
+		this.journalCC = new Journal(this.getNom()+" journal CC", this);
 	}
 	
 	public void initialiser() {
