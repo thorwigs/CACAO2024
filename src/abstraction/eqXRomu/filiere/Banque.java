@@ -11,6 +11,7 @@ import abstraction.eqXRomu.general.Courbe;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
+import controle.CtrlBtnFaillite;
 import controle.CtrlDecouvertAutorise;
 import presentation.FenetrePrincipale;
 import presentation.secondaire.FenetreGraphique;
@@ -25,6 +26,7 @@ public class Banque implements IActeur, IAssermente {
 	// Les acteurs assermentes (Banque et Superviseurs) ont acces a ces cryptogrammes et s'en
 	// servent lors d'operations sensibles (Transferts d'argent, acces a des informations) afin de
 	// garantir qu'ils sont bien des acteurs asserments de la filiere.
+	private int crypto;
 	private HashMap<IActeur, Boolean> faillites; // A true pour les acteurs ayant fait faillite
 
 	private Journal journalBanque;
@@ -89,6 +91,7 @@ public class Banque implements IActeur, IAssermente {
 	}
 
 	public void setCryptogramme(Integer crypto) {
+		this.crypto=crypto;
 	}
 
 	public void next() {
@@ -99,7 +102,7 @@ public class Banque implements IActeur, IAssermente {
 				if (comptes.get(a).getValeur()<0) {
 					int nbDecouverts = decouvertsConsecutifs.get(a)+1;
 					if (nbDecouverts>= decouvertsConsecutifsAvantFaillite.getValeur()) {
-						faireFaillite(a);
+						faireFaillite(a, this, crypto);
 					} else {
 						decouvertsConsecutifs.put(a,nbDecouverts);
 						agios(a);
@@ -226,16 +229,20 @@ public class Banque implements IActeur, IAssermente {
 		return this.cryptogramme.get(acteur)==cryptogramme;
 	}
 
-	public void faireFaillite(IActeur acteur) {
-		if (!(acteur instanceof IAssermente)) { 
-			this.journalBanque.ajouter(Journal.texteColore(acteur, "Faillite de "+acteur.getNom()));
-			this.faillites.put(acteur, true);
-			Filiere.LA_FILIERE.notificationFaillite(acteur);
-			for (IActeur a : this.comptes.keySet()) {
-				this.journalBanque.ajouter(Journal.texteColore(acteur, "- notification de Faillite de "+acteur.getNom())+Journal.texteColore(a, " a "+a.getNom()));
-				a.notificationFaillite(acteur);
+	public void faireFaillite(IActeur acteur, Object assermente, long cryptoAssermente) {
+		if (assermente!=null 
+				&&( (assermente instanceof CtrlBtnFaillite) || 
+				(assermente instanceof IAssermente && cryptogramme.get(assermente)==cryptoAssermente))) {
+			if (!(acteur instanceof IAssermente)) { 
+				this.journalBanque.ajouter(Journal.texteColore(acteur, "Faillite de "+acteur.getNom()));
+				this.faillites.put(acteur, true);
+				Filiere.LA_FILIERE.notificationFaillite(acteur);
+				for (IActeur a : this.comptes.keySet()) {
+					this.journalBanque.ajouter(Journal.texteColore(acteur, "- notification de Faillite de "+acteur.getNom())+Journal.texteColore(a, " a "+a.getNom()));
+					a.notificationFaillite(acteur);
+				}
+				this.journalBanque.notifyObservers(); 
 			}
-			this.journalBanque.notifyObservers(); 
 		}
 	}
 
@@ -343,7 +350,7 @@ public class Banque implements IActeur, IAssermente {
 		}
 		return false;
 	}
-	
+
 	public void payerCout(IActeur acteurADebiter, int cryptogrammeActeurADebiter, String ligneBudgetaire, double montant) {
 		if (acteurADebiter==null) {
 			erreur(" Appel de payerCout de Banque avec null pour acteur");
@@ -360,7 +367,7 @@ public class Banque implements IActeur, IAssermente {
 				comptes.get(acteurADebiter).retirer(this, montant);
 				acteurADebiter.notificationOperationBancaire(-montant);
 				if (getSolde(acteurADebiter,cryptogrammeActeurADebiter)<this.getSeuilOperationsRefusees()) {
-					faireFaillite(acteurADebiter);
+					faireFaillite(acteurADebiter, this, crypto);
 				}
 				this.journalCouts.ajouter(acteurADebiter.getColor(), Color.white, acteurADebiter+" paye"+Journal.doubleSur(montant, 9, 2)+" sur la ligne budgetaire "+ligneBudgetaire);
 			}
@@ -372,7 +379,7 @@ public class Banque implements IActeur, IAssermente {
 
 	public void setCryptos(HashMap<IActeur, Integer> cryptos) {	// Inutile pour la banque car elle dispose deja des cryptogrammes
 	}
-	
+
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0;
 	}

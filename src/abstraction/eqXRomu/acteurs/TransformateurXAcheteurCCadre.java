@@ -25,7 +25,7 @@ public class TransformateurXAcheteurCCadre extends TransformateurXAcheteurBourse
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal("TX Journal CC", this);
+		this.journalCC = new Journal(this.getNom()+" journal CC", this);
 	}
 
 	public void initialiser() {
@@ -128,23 +128,27 @@ public class TransformateurXAcheteurCCadre extends TransformateurXAcheteurBourse
 		// il devient plus urgent d'en disposer et donc on acceptera davantage un prix eleve)
 		// mais dans cet acteur trivial on ne se base que sur le prix et via des tirages aleatoires.
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme);
+		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)-restantAPayer();
+		double prixSansDecouvert = solde / contrat.getQuantiteTotale();
+		if (prixSansDecouvert<bourse.getCours(Feve.F_BQ).getValeur()) {
+			return 0.0; // nous ne sommes pas en mesure de fournir un prix raisonnable
+		}
 		if (((Feve)contrat.getProduit()).isEquitable()) { // pas de cours en bourse
 			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
 			double alea = Filiere.random.nextInt((int)max);
-			if (contrat.getPrix()<alea) {
+			if (contrat.getPrix()<Math.min(alea, prixSansDecouvert)) {
 				return contrat.getPrix();
 			} else {
-				return bourse.getCours(Feve.F_MQ).getValeur()*(1+(Filiere.random.nextInt(25)/100.0)); // entre 1 et 1.25 le prix de F_MQ
+				return Math.min(prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*(1+(Filiere.random.nextInt(25)/100.0))); // entre 1 et 1.25 le prix de F_MQ
 			}
 		} else {
 			double cours = bourse.getCours((Feve)contrat.getProduit()).getValeur();
 			double coursMax = bourse.getCours((Feve)contrat.getProduit()).getMax();
-			int alea = Filiere.random.nextInt((int)(coursMax-cours));
+			int alea = coursMax-cours>1 ? Filiere.random.nextInt((int)(coursMax-cours)) : 0;
 			if (contrat.getPrix()<cours+alea) {
-				return contrat.getPrix();
+				return Math.min(prixSansDecouvert, contrat.getPrix());
 			} else {
-				return cours*(1.1-(Filiere.random.nextDouble()/3.0));
+				return Math.min(prixSansDecouvert, cours*(1.1-(Filiere.random.nextDouble()/3.0)));
 			}
 		}
 	}

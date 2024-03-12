@@ -15,7 +15,7 @@ public class ProducteurXVendeurBourse extends ProducteurXActeur implements IVend
 	
 	public ProducteurXVendeurBourse() {
 		super();
-		this.journalBourse = new Journal("PX Journal Bourse", this);
+		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
 
 	}
 	

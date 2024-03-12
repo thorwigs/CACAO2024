@@ -1,5 +1,5 @@
 package abstraction.eqXRomu.acteurs;
 
-public class TransformateurX extends TransformateurXAcheteurCCadre {
+public class TransformateurX extends TransformateurXVendeurAuxEncheres {
 
 }

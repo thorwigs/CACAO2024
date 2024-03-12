@@ -44,7 +44,7 @@ public class ProducteurXActeur  implements IActeur {
 		
 		this.stock = new HashMap<Feve, Variable>();
 		for (Feve f : Feve.values()) {
-		    this.stock.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6));
+		    this.stock.put(f, new VariableReadOnly(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6));
 		}
 	}
 	
