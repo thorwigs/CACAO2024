@@ -16,6 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Courbe;
 
 /**
@@ -652,7 +653,7 @@ public class FenetreGraphique extends JFrame implements MouseListener, Component
 		g2.ajouter(c);
 		c=new Courbe("puissance 1.4",140);
 		for (int x=0; x<=50; x++) {
-			c.ajouter(4*x, Math.pow(x,1.4), Math.abs(Math.random()*x));
+			c.ajouter(4*x, Math.pow(x,1.4), Math.abs(Filiere.random.nextDouble()*x));
 		}
 		g2.ajouter(c);
 
