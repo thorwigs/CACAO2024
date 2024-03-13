@@ -182,7 +182,7 @@ public class FenetrePrincipale extends JFrame {
 					cGraphiqueIndic.setSelectedIcon(CHECKED_IMAGE);
 					cGraphiqueIndic.setToolTipText("Montrer/Cacher le graphique");
 					FenetreGraphique graphique = new FenetreGraphique(i.getNom(), 800, 600);
-					graphique.ajouter(i.getCourbe(this.cryptos.get(i.getCreateur())));
+					graphique.ajouter(i.getCourbe((Integer)(this.cryptos.get(i.getCreateur()))));
 					// Controleur permettant quand on clique sur la fermeture 
 					// de la fenetre graphique de mettre a jour la case a cocher "graphique"
 					// et quand on clique sur la case a cocher d'afficher/masquer le graphique
@@ -254,7 +254,7 @@ public class FenetrePrincipale extends JFrame {
 				FenetreGraphique graphique = new FenetreGraphique(i.getNom(), 800, 600);
 				cGraphiqueParam.setIcon(UNCHECKED_IMAGE);
 				cGraphiqueParam.setSelectedIcon(CHECKED_IMAGE);
-				graphique.ajouter(i.getCourbe(this.cryptos.get(i.getCreateur())));
+				graphique.ajouter(i.getCourbe((Integer)(this.cryptos.get(i.getCreateur()))));
 				// Controleur permettant quand on clique sur la fermeture 
 				// de la fenetre graphique de mettre a jour la case a cocher "graphique"
 				// et quand on clique sur la case a cocher d'afficher/masquer le graphique
@@ -365,7 +365,7 @@ public class FenetrePrincipale extends JFrame {
 			cGraphiqueIndic.setSelectedIcon(CHECKED_IMAGE);
 			cGraphiqueIndic.setToolTipText("Montrer/Cacher le graphique");
 			FenetreGraphique graphique = new FenetreGraphique(i.getNom(), 800, 600);
-			graphique.ajouter(i.getCourbe(this.cryptos.get(i.getCreateur())));
+			graphique.ajouter(i.getCourbe((Integer)(this.cryptos.get(i.getCreateur()))));
 			// Controleur permettant quand on clique sur la fermeture 
 			// de la fenetre graphique de mettre a jour la case a cocher "graphique"
 			// et quand on clique sur la case a cocher d'afficher/masquer le graphique
