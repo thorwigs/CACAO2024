@@ -65,7 +65,7 @@ public class Filiere implements IAssermente {
 	 */
 	public Filiere() {
 		this.etape=0;
-		this.random=new Random(0);
+		Filiere.random=new Random();
 		this.acteurs=new ArrayList<IActeur>();
 		this.acteursSolvables=new ArrayList<IActeur>();
 		this.clientsFinaux=new ArrayList<ClientFinal>();
