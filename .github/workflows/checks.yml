@@ -76,6 +76,12 @@ jobs:
           ant -noinput -buildfile build.xml
           ant -noinput -buildfile build.xml
           ant -noinput -buildfile build.xml
+    - name: Check that the console is empty
+      run: |
+        if grep -q "Standard Output" output.txt; then
+          echo "Error: the console is not empty"
+          exit 1
+        fi
     - name: Pass performance file
       id: perf
       if: success()
