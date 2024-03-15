@@ -73,9 +73,6 @@ jobs:
         run: |
           set -e
           ant -noinput -buildfile build.xml
-          ant -noinput -buildfile build.xml
-          ant -noinput -buildfile build.xml
-          ant -noinput -buildfile build.xml
     - name: Check that the console is empty
       run: |
         if grep -q "Standard Output" output.txt; then
