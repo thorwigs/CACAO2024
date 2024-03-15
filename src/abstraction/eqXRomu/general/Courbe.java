@@ -239,14 +239,14 @@ public class Courbe {
     }
 
 
-    public static void main(String[] args) {
-	Courbe c = new Courbe("test");
-	c.ajouter(1.0, 2.0, 0.0035);
-	c.ajouter(2.0, 2.5, 0.00035);
-	c.ajouter(2.5, 3.0, 0.000035);
-	c.ajouter(1.5, 4.0, 0.000035);
-	c.ajouter(0.5, 3.0, 0.035);
-	c.ajouter(2.0, 10, 0.0);
-	System.out.println(c);
-    }
+//    public static void main(String[] args) {
+//	Courbe c = new Courbe("test");
+//	c.ajouter(1.0, 2.0, 0.0035);
+//	c.ajouter(2.0, 2.5, 0.00035);
+//	c.ajouter(2.5, 3.0, 0.000035);
+//	c.ajouter(1.5, 4.0, 0.000035);
+//	c.ajouter(0.5, 3.0, 0.035);
+//	c.ajouter(2.0, 10, 0.0);
+//	System.out.println(c);
+//    }
 }
