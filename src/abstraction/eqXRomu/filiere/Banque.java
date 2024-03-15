@@ -257,9 +257,9 @@ public class Banque implements IActeur, IAssermente {
 
 	public void notificationFaillite(IActeur acteur) {
 		if (this==acteur) {
-			System.out.println("OMG !!! They killed the banker !");
+			journalBanque.ajouter("OMG !!! They killed the banker !");
 		} else {
-			System.out.println("Poor "+acteur.getNom()+"... We will miss you. The Banker");
+			journalBanque.ajouter("Poor "+acteur.getNom()+"... We will miss you. The Banker");
 		}
 	}
 

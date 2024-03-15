@@ -19,8 +19,9 @@ public class FenetrePrincipaleTest {
 	@Test
 	public void test() {
 		Filiere.LA_FILIERE = null;
-		FenetrePrincipale fp = new FenetrePrincipale(new String[0]);
-		Filiere.random = new Random(LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay());
+		long seed = LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay();
+		String[] args= { ""+seed };
+		FenetrePrincipale fp = new FenetrePrincipale(args);
 		
 		for (int i=0; i<100; i++)
 			((JButton) ((JPanel) fp.getRootPane().getContentPane().getComponent(2)).getComponent(0)).doClick();
