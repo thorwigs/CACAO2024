@@ -49,7 +49,7 @@ public class Distributeur1Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "Fidéliser une clientèle avec un commerce durable et équitable dans le haut de gamme";
 	}
 
 	// Renvoie les indicateurs
