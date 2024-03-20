@@ -525,7 +525,7 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 			this.cmSelectionnee.setValeur(this, index);
 		}
 		this.volumeVente.cloner(this.venteCM.get(this.chocolatsDeMarquesProduits.get(index)));
-	//	System.out.println("Chocolat de marque selectionne :"+this.chocolatsDeMarquesProduits.get(index));
+		System.out.println("Chocolat de marque selectionne :"+this.chocolatsDeMarquesProduits.get(index));
 	}
 	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {

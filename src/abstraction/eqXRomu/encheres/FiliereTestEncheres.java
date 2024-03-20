@@ -1,8 +1,5 @@
 package abstraction.eqXRomu.encheres;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 import abstraction.eqXRomu.acteurs.Romu;
@@ -26,10 +23,7 @@ public class FiliereTestEncheres  extends Filiere {
 	private SuperviseurVentesAuxEncheres superviseurVEnch;
 
 	public FiliereTestEncheres() {
-		this(ZonedDateTime.of(LocalDateTime.now(ZoneId.of("Europe/Paris")),ZoneId.systemDefault()).toEpochSecond());
-	}
-	public FiliereTestEncheres(long seed) {
-		super(seed);
+		super();
 		HashMap<Chocolat, Double> repartitionInitiale = new HashMap<Chocolat, Double>();
 		repartitionInitiale.put(Chocolat.C_HQ_BE,  10.0); // Haute Qualite  ,  Bio-Equitable  
 		repartitionInitiale.put(Chocolat.C_HQ_E,   20.0); // Haute Qualite  ,  Equitable  

@@ -85,7 +85,7 @@ public class SuperviseurVentesAuxEncheres implements IActeur, IAssermente {
 				if (retenue != null) {
 					if (!encheres.contains(retenue)) {
 						// le vendeur a retourne une enchere qui ne figurait pas parmi les propositions
-						journal.ajouter("Superviseur des encheres : Le vendeur "+vendeur+" est mis en faillite car il retourne une enchere qui ne figure pas dans la liste des encheres realisees");
+						System.out.println("Superviseur des encheres : Le vendeur "+vendeur+" est mis en faillite car il retourne une enchere qui ne figure pas dans la liste des encheres realisees");
 						laBanque.faireFaillite(vendeur, this, cryptos.get(this));
 					}
 					journal.ajouter( Journal.texteColore(vendeur, vendeur.getNom()+" choisit l'enchere "+retenue));

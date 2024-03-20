@@ -30,23 +30,23 @@ public class VariableReadOnly extends Variable {
 	}
 	public void setMax(double max) {
 		// Pas de modification
-		throw new IllegalArgumentException("appel a setMax sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
+		System.out.println("appel a setMax sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
 	}
 	public void setValeur(IActeur auteur, double valeur) {
 		// Pas de modification
-		throw new IllegalArgumentException("appel a setValeur sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
+		System.out.println("appel a setValeur sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
 	}
 	public void setMin(double min) {
 		// Pas de modification
-		throw new IllegalArgumentException("appel a setMin sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
+		System.out.println("appel a setMin sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
 	}
 	public void ajouter(IActeur auteur, double delta) {
 		// Pas de modification
-		throw new IllegalArgumentException("appel a ajouter sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
+		System.out.println("appel a ajouter sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
 	}
 	public void retirer(IActeur auteur, double delta) {
 		// Pas de modification
-		throw new IllegalArgumentException("appel a retirer sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
+		System.out.println("appel a retirer sur la variable ReadOnly "+this.getNom()+" sans preciser le crytogramme");
 	}
 	public void setMax(double max, Integer crypto) {
 		if (Filiere.LA_FILIERE!=null) {

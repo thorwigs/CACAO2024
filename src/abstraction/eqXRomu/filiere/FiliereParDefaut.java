@@ -1,8 +1,5 @@
 package abstraction.eqXRomu.filiere;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 import abstraction.eq1Producteur1.Producteur1;
@@ -43,12 +40,9 @@ public class FiliereParDefaut extends Filiere {
 	private SuperviseurVentesAuxEncheres superviseurAO;
 	private SuperviseurVentesAO superviseurOA;
 
-	public FiliereParDefaut() {
-		this(ZonedDateTime.of(LocalDateTime.now(ZoneId.of("Europe/Paris")),ZoneId.systemDefault()).toEpochSecond());
-	}
 
-	public FiliereParDefaut(long seed) {
-		super(seed);
+	public FiliereParDefaut() {
+		super();
 		HashMap<Chocolat, Double> repartitionInitiale = new HashMap<Chocolat, Double>();
 		// Tirage au sort de la repartition
 		int hasard = (int)(Filiere.random.nextDouble()*3); // tirage au hasard d'un nombre dans {0, 1, 2}
