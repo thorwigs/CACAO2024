@@ -1,2 +1,0 @@
-README
-Bacem CHtourou BACEMFF11

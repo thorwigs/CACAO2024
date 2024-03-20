@@ -76,7 +76,8 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" haltonfailure="true" showoutput="yes">
             <formatter type="plain" usefile="false" />
-            <test name="presentation.FenetrePrincipaleTest" todir="${junit.output.dir}"/>
+            <test name="presentation.FenetrePrincipaleTest" todir="${junit.output.dir}" outfile="output"/>
+        	<formatter type="plain" usefile="true"/>
             <jvmarg line="-ea -Xmx4g"/>
             <classpath refid="CACAO2024.classpath"/>
         </junit>
@@ -85,7 +86,8 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" haltonfailure="true">
             <formatter type="plain" usefile="false" />
-            <test name="abstraction.FiliereParDefaultTest" todir="${junit.output.dir}"/>
+            <test name="abstraction.FiliereParDefaultTest" todir="${junit.output.dir}" outfile="output"/>
+        	<formatter type="plain" usefile="true"/>
             <jvmarg line="-ea"/>
             <classpath refid="CACAO2024.classpath"/>
         </junit>
