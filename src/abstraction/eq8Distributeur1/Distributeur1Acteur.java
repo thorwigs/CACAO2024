@@ -14,8 +14,12 @@ public class Distributeur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	
+	
+//	private double coutStockageProducteur;
 
 	public Distributeur1Acteur() {
+//		this.coutStockageProducteur=Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		this.journal= new Journal(this.getNom()+" journal", this);
 	}
 	
@@ -36,6 +40,7 @@ public class Distributeur1Acteur implements IActeur {
 
 	public void next() {
 		this.journal.ajouter("étape=" + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("Stock == " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -55,6 +60,7 @@ public class Distributeur1Acteur implements IActeur {
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
 		List<Variable> res=new ArrayList<Variable>();
+//		res.add(this.coutStockageProducteur);
 		return res;
 	}
 
