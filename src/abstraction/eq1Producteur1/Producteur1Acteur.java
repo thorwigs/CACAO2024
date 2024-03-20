@@ -13,6 +13,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	protected Journal journal;
 
 	public Producteur1Acteur() {
 	}
@@ -33,6 +34,7 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
