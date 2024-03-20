@@ -34,8 +34,9 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur"));
+		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
 	}
 
