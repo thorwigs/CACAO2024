@@ -16,6 +16,7 @@ public class Transformateur4Acteur implements IActeur {
 	private Journal journal;
 
 	public Transformateur4Acteur() {
+		this.journal = new Journal(this.getNom()+" journal", this);
 	}
 	
 	public void initialiser() {
@@ -60,6 +61,7 @@ public class Transformateur4Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(journal);
 		return res;
 	}
 
