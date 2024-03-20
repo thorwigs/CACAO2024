@@ -3,6 +3,7 @@ package abstraction.eq6Transformateur3;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
@@ -11,15 +12,27 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3Acteur implements IActeur {
 	
-	protected List<Feve> lesFeves;
-	protected HashMap<Feve, Double> stockFeves;
 	protected Journal journal;
+	
+	private double coutStockage;
+
+	protected List<Feve> lesFeves;
+	private List<ChocolatDeMarque>chocosProduits;
+	protected HashMap<Feve, Double> stockFeves;
+	protected HashMap<Chocolat, Double> stockChoco;
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
+	protected List<ChocolatDeMarque> chocolatsVillors;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
+	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
+	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 	
 	protected int cryptogramme;
 
@@ -30,6 +43,9 @@ public class Transformateur3Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		this.lesFeves = new LinkedList<Feve>();
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+		this.stockFeves=new HashMap<Feve,Double>();
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -47,9 +63,8 @@ public class Transformateur3Acteur implements IActeur {
 	public void next() {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape() );
 		this.journal.ajouter("=== STOCKS === ");
-		for (Feve f : this.lesFeves) {
-			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(f+"", 15)+" = "+this.stockFeves.get(f));
-			}
+		this.journal.ajouter ("cout moyen stockage producteur" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4);
+				
 	
 	}
 
