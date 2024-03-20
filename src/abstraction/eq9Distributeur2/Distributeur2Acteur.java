@@ -37,6 +37,7 @@ public class Distributeur2Acteur implements IActeur {
 
 	public void next() {
 		this.getJournaux().get(0).ajouter("Step "+Filiere.LA_FILIERE.getEtape());
+		this.getJournaux().get(0).ajouter("Coût de stockage : ");
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
