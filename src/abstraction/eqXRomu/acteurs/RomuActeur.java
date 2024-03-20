@@ -126,9 +126,9 @@ public class RomuActeur implements IActeur {
 
 	public void notificationFaillite(IActeur acteur) {
 		if (this==acteur) {
-			System.out.println("They killed Romu... ");
+			journal.ajouter("They killed Romu... ");
 		} else {
-			System.out.println("Poor "+acteur.getNom()+"... We will miss you. "+this.getNom());
+			journal.ajouter("Poor "+acteur.getNom()+"... We will miss you. "+this.getNom());
 		}
 	}
 
