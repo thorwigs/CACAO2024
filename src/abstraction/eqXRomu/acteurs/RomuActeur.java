@@ -59,7 +59,7 @@ public class RomuActeur implements IActeur {
 		this.partCacaoQualitePercue = new VariableReadOnly("impact cacao qualite percue", "<html>L'impact d'un % de cacao plus eleve dans la qualite percue du chocolat</html>",this, 0.0, 0.5, 0.3);
 		
 		this.coutStockageProducteur = new VariableReadOnly("cout moyen stockage producteur", "<html>Le cout moyen du stockage par step d'une Tomme de produit chez un producteur</html>",this, 0.0, 100.0, 7.5);
-		this.journal = new Journal("Journal "+this.getNom(), this);
+		this.journal = new Journal(this.getNom()+" journal", this);
 		this.coutMiseEnRayon  = new VariableReadOnly("cout mise en rayon", "<html>Le cout pour la mise en rayon d'une tonne de chocolat</html>",this, 0.0, 1000.0, 34.19);
 	}
 
@@ -126,9 +126,9 @@ public class RomuActeur implements IActeur {
 
 	public void notificationFaillite(IActeur acteur) {
 		if (this==acteur) {
-			System.out.println("They killed Romu... ");
+			journal.ajouter("They killed Romu... ");
 		} else {
-			System.out.println("Poor "+acteur.getNom()+"... We will miss you. "+this.getNom());
+			journal.ajouter("Poor "+acteur.getNom()+"... We will miss you. "+this.getNom());
 		}
 	}
 

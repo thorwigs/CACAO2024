@@ -1,5 +1,8 @@
 package abstraction.eqXRomu.contratsCadres;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 import abstraction.eqXRomu.acteurs.Romu;
@@ -24,7 +27,10 @@ public class FiliereTestContratCadre extends Filiere {
 	private SuperviseurVentesContratCadre superviseurCC;
 
 	public FiliereTestContratCadre() {
-		super();
+		this(ZonedDateTime.of(LocalDateTime.now(ZoneId.of("Europe/Paris")),ZoneId.systemDefault()).toEpochSecond());
+	}
+	public FiliereTestContratCadre(long seed) {
+		super(seed);
 		HashMap<Chocolat, Double> repartitionInitiale = new HashMap<Chocolat, Double>();
 		repartitionInitiale.put(Chocolat.C_HQ_BE,  10.0); // Haute Qualite   Bio-Equitable   
 		repartitionInitiale.put(Chocolat.C_HQ_E,   20.0); // Haute Qualite   Equitable   

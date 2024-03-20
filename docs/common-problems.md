@@ -46,9 +46,10 @@ Not accepting because the code does not pass the tests. You can read the error m
 
 Not accepting because your update makes the simulation too slow. You can read the results of the performance tests by clicking on `Details` near to the failed check. You will see how much time (in milliseconds) each team takes when the button `Next` is clicked 300 times. The maximum time allowed per team is 20 seconds.
 
-## `This branch is out-of-date with the base branch`
+## `This branch is out-of-date with the base branch` or `This branch has conflicts that must be resolved`
 
 Your team repository is not up-to-date with the changes that happened on the main repository. 
 
 1. Pull from the main repository: right-click on the java project -> `Team` -> `Pull...` -> in `Remote:` select the main repository (not your team repository) -> `Finish`
-2. Push
+2. Fix any possible conflict
+3. Push

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.general.Journal;
@@ -14,6 +15,10 @@ import presentation.FenetrePrincipale;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  * Classe modelisant une filiere vue comme un regroupement d'acteurs, 
@@ -26,6 +31,7 @@ import java.beans.PropertyChangeSupport;
  * @author Romuald Debruyne
  */
 public class Filiere implements IAssermente {
+	public static Random random;
 	public static Filiere LA_FILIERE; // Filiere.LA_FILIERE reference l'unique instance de Filiere
 	public static double SEUIL_EN_TETE_DE_GONDOLE_POUR_IMPACT = 0.05; // Si les produits d'une marque m representent au moins 5% de la quantite totale en tete de gondole alors il y a un impact positif sur l'attrait de la marque.
 
@@ -56,13 +62,18 @@ public class Filiere implements IAssermente {
 	private HashMap<IActeur, Integer> cryptos;
 	public HashMap<String, Long> tempsEquipes = new HashMap<String, Long>();
 
+	
+//	public Filiere() {
+//		this(ZonedDateTime.of(LocalDateTime.now(ZoneId.of("Europe/Paris")),ZoneId.systemDefault()).toEpochSecond());
+//	}
 	/**
 	 * Initialise la filiere de sorte que le numero d'etape soit 0, 
 	 * et qu'il n'y ait pour l'heure que la Banque pour unique acteur. 
 	 * Les constructeurs des sous-classes de Filiere devront ajouter les autres acteurs
 	 */
-	public Filiere() {
+	public Filiere(long seed) {
 		this.etape=0;
+		Filiere.random=new Random(seed);
 		this.acteurs=new ArrayList<IActeur>();
 		this.acteursSolvables=new ArrayList<IActeur>();
 		this.clientsFinaux=new ArrayList<ClientFinal>();
@@ -75,6 +86,7 @@ public class Filiere implements IAssermente {
 		this.pcs = new  PropertyChangeSupport(this);
 		this.laBanque = new Banque();
 		this.journalFiliere = this.laBanque.getJournaux().get(0);
+		this.journalFiliere.ajouter("SEED="+seed);
 		this.marquesDeposees = new HashMap<String, IActeur>();
 		this.chocolatsProduits = new ArrayList<ChocolatDeMarque>();
 		this.fabricantsChocolatDeMarque = new HashMap<ChocolatDeMarque, List<IFabricantChocolatDeMarque>>();
@@ -118,7 +130,7 @@ public class Filiere implements IAssermente {
 		for (IFabricantChocolatDeMarque f : fabricants) {
 			List<ChocolatDeMarque> produits = f.getChocolatsProduits();
 			if (produits==null || produits.size()==0) {
-				System.out.println(""+f+" est un IFabricantChocolatDeMarque ne fabriquant aucun produit");
+				journalFiliere.ajouter(""+f+" est un IFabricantChocolatDeMarque ne fabriquant aucun produit");
 			} else {
 				for (ChocolatDeMarque c : produits) {
 					if (!this.chocolatsProduits.contains(c)) {
@@ -136,7 +148,7 @@ public class Filiere implements IAssermente {
 		for (IFabricantChocolatDeMarque f : fabricants) {
 			List<ChocolatDeMarque> produits = f.getChocolatsProduits();
 			if (produits==null || produits.size()==0) {
-				System.out.println(f+" est un IFabricantChocolatDeMarque qui ne produit aucun chocolat");
+				journalFiliere.ajouter(f+" est un IFabricantChocolatDeMarque qui ne produit aucun chocolat");
 			} else {
 				for (ChocolatDeMarque c : produits) {
 					this.fabricantsChocolatDeMarque.get(c).add(f);
@@ -383,8 +395,8 @@ public class Filiere implements IAssermente {
 		}
 		Variable res = this.indicateurs.get(nomIndicateur);
 		if (res==null) {
-			System.out.println("  Aie... recherche d'un indicateur en utilisant un nom incorrect : \""+nomIndicateur+"\" n'est pas dans la liste :"+indicateurs.keySet());
-			System.out.println("  la variable que vous recherchez est peut etre un parametre plutot qu'un indicateur ?");
+			journalFiliere.ajouter("  Aie... recherche d'un indicateur en utilisant un nom incorrect : \""+nomIndicateur+"\" n'est pas dans la liste :"+indicateurs.keySet());
+			journalFiliere.ajouter("  la variable que vous recherchez est peut etre un parametre plutot qu'un indicateur ?");
 			throw new IllegalArgumentException("recherche de >>"+nomIndicateur+"<<");
 		}
 		return res;
@@ -402,8 +414,8 @@ public class Filiere implements IAssermente {
 		} 
 		Variable res = this.parametres.get(nomParametre);
 		if (res==null) {
-			System.out.println("  Aie... recherche d'un parametre en utilisant un nom incorrect : \""+nomParametre+"\" n'est pas dans la liste :"+parametres.keySet());
-			System.out.println("  la variable que vous recherchez est peut etre un indicateur plutot qu'un parametre ?");
+			journalFiliere.ajouter("  Aie... recherche d'un parametre en utilisant un nom incorrect : \""+nomParametre+"\" n'est pas dans la liste :"+parametres.keySet());
+			journalFiliere.ajouter("  la variable que vous recherchez est peut etre un indicateur plutot qu'un parametre ?");
 		}
 		return res;
 	}
