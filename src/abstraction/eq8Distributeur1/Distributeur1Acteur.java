@@ -35,7 +35,8 @@ public class Distributeur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-	}
+		this.journal.ajouter("étape=" + Filiere.LA_FILIERE.getEtape());
+		}
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(209, 179, 221); 
