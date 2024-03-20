@@ -414,7 +414,7 @@ public class BourseCacao implements IActeur, IAssermente {
 						aEcrire.close();
 					}
 					catch (IOException e) {
-						System.out.println("Une operation sur les fichiers a leve l'exception "+e) ;
+						throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
 					}
 				}
 			}
