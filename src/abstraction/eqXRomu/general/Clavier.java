@@ -53,22 +53,22 @@ public class Clavier {
 		}
 	}
 
-	public static void main(String[] args){
-		System.out.println("=== Essai Clavier ===");
-		System.out.print("Entier : ");
-		int i= lireInt();
-		System.out.println("Entier lu : " + i);
-		System.out.print("Long : ");
-		long il= lireLong();
-		System.out.println("Entier lu (long) : " + il);
-		System.out.print("Char : ");
-		char c=lireChar();
-		System.out.println("Char lu : " + c);
-		System.out.println("Double : ");
-		double d=lireDouble();
-		System.out.println("Double lu : " + d);
-		System.out.println("String : ");
-		String s=lireString();
-		System.out.println("String lu : " + s);
-	}
+//	public static void main(String[] args){
+//		System.out.println("=== Essai Clavier ===");
+//		System.out.print("Entier : ");
+//		int i= lireInt();
+//		System.out.println("Entier lu : " + i);
+//		System.out.print("Long : ");
+//		long il= lireLong();
+//		System.out.println("Entier lu (long) : " + il);
+//		System.out.print("Char : ");
+//		char c=lireChar();
+//		System.out.println("Char lu : " + c);
+//		System.out.println("Double : ");
+//		double d=lireDouble();
+//		System.out.println("Double lu : " + d);
+//		System.out.println("String : ");
+//		String s=lireString();
+//		System.out.println("String lu : " + s);
+//	}
 }
