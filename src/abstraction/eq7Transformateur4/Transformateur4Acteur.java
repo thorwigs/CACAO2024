@@ -16,7 +16,8 @@ public class Transformateur4Acteur implements IActeur {
 	private Journal journal;
 
 	public Transformateur4Acteur() {
-		this.journal = new Journal(this.getNom()+" journal", this);
+		this.journal = new Journal(this.getNom()+" journal ", this);
+		
 	}
 	
 	public void initialiser() {
