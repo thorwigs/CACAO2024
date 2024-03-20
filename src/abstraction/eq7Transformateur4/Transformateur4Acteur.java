@@ -37,6 +37,7 @@ public class Transformateur4Acteur implements IActeur {
 
 	public void next() {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape());
+		this.getJournaux();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
