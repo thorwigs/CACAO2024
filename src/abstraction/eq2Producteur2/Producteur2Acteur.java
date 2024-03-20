@@ -2,21 +2,28 @@ package abstraction.eq2Producteur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariableReadOnly;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	protected HashMap<Feve,Variable> stock;
+	protected HashMap<Feve,Double> prodParStep;
+	private static final double PART=0.1;
 
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
+	
 	}
 	
 	public void initialiser() {
@@ -36,6 +43,8 @@ public class Producteur2Acteur implements IActeur {
 
 	public void next() {
 		this.journal.ajouter("étape="+Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("prix producteur = "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
