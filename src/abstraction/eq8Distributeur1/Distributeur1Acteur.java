@@ -41,6 +41,7 @@ public class Distributeur1Acteur implements IActeur {
 	public void next() {
 		this.journal.ajouter("étape=" + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("Stock == " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+//		this.journal.ajouter(""+this.coutStockageProducteur);
 		}
 
 	public Color getColor() {// NE PAS MODIFIER
