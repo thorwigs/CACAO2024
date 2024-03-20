@@ -69,7 +69,7 @@ public class FenetrePrincipale extends JFrame {
 
 	private HashMap<IActeur, JButton> boutonsFaillite;
 	private HashMap<IActeur, Integer> cryptos; // Pour acceder aux variables a acces restreint
-	
+
 	public FenetrePrincipale(String[] args) {
 		super("CACAO 2024");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -78,25 +78,36 @@ public class FenetrePrincipale extends JFrame {
 			Filiere.LA_FILIERE = new FiliereParDefaut();
 		} else {
 			String filiereChoisie = args[0];
-			System.out.println(filiereChoisie);
-			IActeur[] equipes = { new Producteur1(), new Producteur2(), new Producteur3(), new Transformateur1(), new Transformateur2(), new Transformateur3(), new Transformateur4(), new Distributeur1(), new Distributeur2(), new Romu()};
-			int i=0; 
-			while (i<equipes.length && !equipes[i].getNomsFilieresProposees().contains(filiereChoisie)) {
-				i++;
+			long seed=0;
+			boolean estSeed=false;
+			try {
+				seed = Long.parseLong(args[0]);
+				estSeed=true;
+			} catch (Exception e) {
 			}
-			if (i<equipes.length) {
-				Filiere.LA_FILIERE = equipes[i].getFiliere(filiereChoisie);
+			if (estSeed) {
+				Filiere.LA_FILIERE = new FiliereParDefaut(seed);
 			} else {
-				System.out.println("Aucune equipe ne propose la filiere \""+filiereChoisie+"\"");
-				System.out.println("Les filieres proposees sont : ");
-				for (IActeur eq : equipes) {
-					System.out.println("equipe "+eq.getNom()+" : "+eq.getNomsFilieresProposees());
+				System.out.println(filiereChoisie);
+				IActeur[] equipes = { new Producteur1(), new Producteur2(), new Producteur3(), new Transformateur1(), new Transformateur2(), new Transformateur3(), new Transformateur4(), new Distributeur1(), new Distributeur2(), new Romu()};
+				int i=0; 
+				while (i<equipes.length && !equipes[i].getNomsFilieresProposees().contains(filiereChoisie)) {
+					i++;
 				}
-				System.exit(0);
+				if (i<equipes.length) {
+					Filiere.LA_FILIERE = equipes[i].getFiliere(filiereChoisie);
+				} else {
+					System.out.println("Aucune equipe ne propose la filiere \""+filiereChoisie+"\"");
+					System.out.println("Les filieres proposees sont : ");
+					for (IActeur eq : equipes) {
+						System.out.println("equipe "+eq.getNom()+" : "+eq.getNomsFilieresProposees());
+					}
+					System.exit(0);
+				}
 			}
 		}
 		Filiere.LA_FILIERE.initialiser();
-		
+
 		//Filiere.LA_FILIERE.peupler();
 		this.setLayout(new BorderLayout());
 
@@ -104,7 +115,7 @@ public class FenetrePrincipale extends JFrame {
 		JLabel labelEtape = new JLabel("Etape : "+Filiere.LA_FILIERE.getEtape()+" = "+(Filiere.LA_FILIERE==null ? "" : Filiere.LA_FILIERE.getDate()));
 		Filiere.LA_FILIERE.addObserver(new CtrlLabelEtape(labelEtape));
 		this.add(labelEtape, BorderLayout.NORTH);
-		
+
 		this.boutonsFaillite=new HashMap<IActeur, JButton>();
 
 		// Indicateurs
@@ -357,7 +368,7 @@ public class FenetrePrincipale extends JFrame {
 			bFaillite.addActionListener(new CtrlBtnFaillite(bFaillite, i.getCreateur()));
 			boutonsFaillite.put(i.getCreateur(), bFaillite);
 			pReste.add(bFaillite);
-			
+
 
 			// Case a cocher "Graphique" permettant d'afficher/cacher le graphique de l'indicateur
 			JCheckBox cGraphiqueIndic = new JCheckBox(); 
@@ -456,8 +467,8 @@ public class FenetrePrincipale extends JFrame {
 		JPanel pSouth = new JPanel();
 		pSouth.setLayout(new GridLayout(1,3));
 		JButton btnNext = new JButton("Next");
-//		btnNext.setBackground(Color.DARK_GRAY);
-//		btnNext.setForeground(Color.CYAN);
+		//		btnNext.setBackground(Color.DARK_GRAY);
+		//		btnNext.setForeground(Color.CYAN);
 		btnNext.addActionListener(new CtrlBtnNext(Filiere.LA_FILIERE, 1));
 		pSouth.add(btnNext);
 		JButton btnNext10 = new JButton("10 Nexts");
