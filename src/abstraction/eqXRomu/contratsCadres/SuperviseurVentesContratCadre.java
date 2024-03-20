@@ -100,14 +100,14 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (echeancier.getQuantiteTotale()<QUANTITE_MIN_ECHEANCIER) {
 			if (Filiere.LA_FILIERE.getActeursSolvables().contains(acheteur)) {
 				System.out.println("!!! "+acheteur.getNom()+" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre avec un echeancier d'un volume total de moins de "+QUANTITE_MIN_ECHEANCIER+" T");
-				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur);
+				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptogramme);
 			}
 			return null;
 		}
 		if (echeancier.getStepDebut()<=Filiere.LA_FILIERE.getEtape()) {
 			if (Filiere.LA_FILIERE.getActeursSolvables().contains(acheteur)) {
 				System.out.println("!!! "+acheteur.getNom()+" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre avec un echeancier commencant a l'etape "+echeancier.getStepDebut()+" a l'etape "+Filiere.LA_FILIERE.getEtape());
-				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur);
+				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptogramme);
 			}
 			return null;			
 		}
@@ -148,7 +148,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (echeancier.getStepDebut()<=Filiere.LA_FILIERE.getEtape()) {
 			if (Filiere.LA_FILIERE.getActeursSolvables().contains(vendeur)) {
 				System.out.println("!!! "+acheteur.getNom()+" appel de demandeVendeur(...) de SuperViseurVentesContratCadre avec un echeancier commencant a l'etape "+echeancier.getStepDebut()+" a l'etape "+Filiere.LA_FILIERE.getEtape());
-				Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur);
+				Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur, this, cryptogramme);
 			}
 			return null;			
 		}		
@@ -185,7 +185,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	}
 	
 	private ExemplaireContratCadre negociations(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, Object produit, Echeancier echeancier, int cryptogramme, boolean tg, ContratCadre contrat, IActeur initiateur) {
-		int maxNego = 5 + (int)(Math.random()*11); // Le nombre maximum de contrepropositions est compris dans [5, 15]
+		int maxNego = 5 + (int)(Filiere.random.nextDouble()*11); // Le nombre maximum de contrepropositions est compris dans [5, 15]
 
 		// NEGOCIATIONS SUR L'ECHEANCIER
 		Echeancier contrePropositionV, contrePropositionA;

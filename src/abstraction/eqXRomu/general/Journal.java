@@ -66,6 +66,13 @@ public class Journal {
 	public void ajouter(String s) {
 		this.liste.add( "Et"+entierSur6(Filiere.LA_FILIERE==null? 0 : Filiere.LA_FILIERE.getEtape())+" "+s);
 	}
+	
+	/**
+	 * Efface le journal
+	 */
+	public void clear() {
+		this.liste.clear();
+	}
 
 	/**
 	 * Ajoute le message s sur le journal
@@ -204,7 +211,6 @@ public class Journal {
 
 	public static String doubleSur(double nombre, int caracteresAvantLaVirgule, int caracteresApresLaVirgule) {
 		String avantLaVirgule = "";
-		int longueurAvantLaVirgule=0;
 		String apresLaVirgule = "";
 		long partieEntiere = (long)nombre;
 		if (partieEntiere==0) {
@@ -218,24 +224,15 @@ public class Journal {
 				} else {
 					avantLaVirgule="&nbsp;"+((partieEntiere%1000)/100)+(partieEntiere%100/10)+""+(partieEntiere%10)+avantLaVirgule;
 				}
-				longueurAvantLaVirgule+=4;
-				//				System.out.println(">>>"+avantLaVirgule+"<<<");
 				partieEntiere=partieEntiere/1000;
 			}
 		}
-		int caracteresAvantLaVirguleNBSP = caracteresAvantLaVirgule+(5*((caracteresAvantLaVirgule)/4));
-		if (avantLaVirgule.length()>caracteresAvantLaVirguleNBSP) {
-			avantLaVirgule=avantLaVirgule.substring(avantLaVirgule.length()-caracteresAvantLaVirguleNBSP);
-		} else if (longueurAvantLaVirgule<caracteresAvantLaVirgule) {
-			int espacesAAjouter= caracteresAvantLaVirgule-longueurAvantLaVirgule;
-			//			System.out.println("longueur="+longueurAvantLaVirgule+" --> "+espacesAAjouter+" espaces a ajouter");
+		int espacesAAjouter=caracteresAvantLaVirgule-avantLaVirgule.replace("&nbsp;", " ").length();
 			for (int i=0; i<espacesAAjouter; i++) {
 				avantLaVirgule="&nbsp;"+avantLaVirgule;
 			}
-		}
 		double decimales = nombre-(long)nombre;
 		for (int i = 0; i<caracteresApresLaVirgule; i++) {
-			//			System.out.println("i="+i+" -> "+apresLaVirgule+" dec="+decimales);
 			if (i!=0 && i%4==3) {
 				apresLaVirgule=apresLaVirgule+"&nbsp;";
 			} else {
@@ -244,7 +241,6 @@ public class Journal {
 				apresLaVirgule=apresLaVirgule+chiffre;
 			}
 		}
-
 		if (caracteresApresLaVirgule==0) {
 			return avantLaVirgule;
 		} else {

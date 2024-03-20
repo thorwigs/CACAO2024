@@ -83,6 +83,11 @@ public class SuperviseurVentesAuxEncheres implements IActeur, IAssermente {
 				journal.ajouter(" propositions : "+encheres);
 				Enchere retenue = vendeur.choisir(encheres);
 				if (retenue != null) {
+					if (!encheres.contains(retenue)) {
+						// le vendeur a retourne une enchere qui ne figurait pas parmi les propositions
+						System.out.println("Superviseur des encheres : Le vendeur "+vendeur+" est mis en faillite car il retourne une enchere qui ne figure pas dans la liste des encheres realisees");
+						laBanque.faireFaillite(vendeur, this, cryptos.get(this));
+					}
 					journal.ajouter( Journal.texteColore(vendeur, vendeur.getNom()+" choisit l'enchere "+retenue));
 					// le virement peut se faire car on a verifie au prealable la solvabilite de l'acheteur
 					this.laBanque.virer(retenue.getAcheteur(), this.cryptos.get(retenue.getAcheteur()), vendeur, retenue.getPrixTonne()*retenue.getMiseAuxEncheres().getQuantiteT());

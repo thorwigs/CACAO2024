@@ -191,7 +191,11 @@ public class Variable implements Comparable<Variable>{
 	 * pas le cryptogramme
 	 */
 	public void setValeur(IActeur auteur, double valeur, Integer crypto) {
-		this.setValeur(auteur, valeur);
+		double old = getValeur(crypto);
+		int etape = Filiere.LA_FILIERE==null ? 0 : Filiere.LA_FILIERE.getEtape();
+		this.historique.ajouter(auteur, etape, valeur);
+		this.courbe.ajouter(etape, this.getValeur(crypto));
+		pcs.firePropertyChange("Value",old,valeur);
 	}
 	
 	public double getMin() {
@@ -267,7 +271,7 @@ public class Variable implements Comparable<Variable>{
 	 * pas le cryptogramme
 	 */
 	public void ajouter(IActeur auteur, double delta, Integer crypto) {
-		this.setValeur(auteur, this.getValeur(crypto)+delta, crypto);
+		this.setValeur(auteur, this.getValeur((Integer)crypto)+delta, crypto);
 	}
 	/**
 	 * Retire montant a la valeur de l'indicateur
@@ -284,7 +288,7 @@ public class Variable implements Comparable<Variable>{
 	 * pas le cryptogramme
 	 */
 	public void retirer(IActeur auteur, double delta, Integer crypto) {
-		this.setValeur(auteur, this.getValeur(crypto)-delta, crypto);
+		this.setValeur(auteur, this.getValeur((Integer)crypto)-delta, crypto);
 	}
 
 	public void addObserver(PropertyChangeListener obs) {
