@@ -14,8 +14,10 @@ public class Producteur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	
 
 	public Producteur1Acteur() {
+		this.journal=new Journal(this.getNom()+" journal",this);
 	}
 	
 	public void initialiser() {
