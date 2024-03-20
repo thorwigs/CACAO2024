@@ -17,7 +17,7 @@ public class Producteur1Acteur implements IActeur {
 	
 
 	public Producteur1Acteur() {
-		this.journal=new Journal(this.getNom()+"  journal",this);
+		this.journal=new Journal(this.getNom()+"   journal",this);
 	}
 	
 	public void initialiser() {
