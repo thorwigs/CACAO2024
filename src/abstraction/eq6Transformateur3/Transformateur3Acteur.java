@@ -8,13 +8,19 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3Acteur implements IActeur {
 	
+	protected Journal journal;
+	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
+	
 	protected int cryptogramme;
 
 	public Transformateur3Acteur() {
+		
+		this.journal = new Journal(this.getNom()+" journal", this);
 	}
 	
 	public void initialiser() {
@@ -33,6 +39,8 @@ public class Transformateur3Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape() );
+		this.totalStocksFeves = new VariablePrivee("EqXTStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
