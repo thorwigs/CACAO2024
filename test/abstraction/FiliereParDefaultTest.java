@@ -2,6 +2,7 @@ package abstraction;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -12,7 +13,9 @@ public class FiliereParDefaultTest {
 
 	@Test
 	public void testNext() {
-		Filiere.LA_FILIERE = new FiliereParDefaut(LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay());
+		Filiere.LA_FILIERE = null;
+		Filiere.LA_FILIERE = new FiliereParDefaut();
+		Filiere.random = new Random(LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay());
 
 		Filiere.LA_FILIERE.initialiser();
 

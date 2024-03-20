@@ -1,5 +1,6 @@
 package presentation;
 
+import java.util.Random;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,9 +19,8 @@ public class FenetrePrincipaleTest {
 	@Test
 	public void test() {
 		Filiere.LA_FILIERE = null;
-		long seed = LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay();
-		String[] args= { ""+seed };
-		FenetrePrincipale fp = new FenetrePrincipale(args);
+		FenetrePrincipale fp = new FenetrePrincipale(new String[0]);
+		Filiere.random = new Random(LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay());
 		
 		for (int i=0; i<100; i++)
 			((JButton) ((JPanel) fp.getRootPane().getContentPane().getComponent(2)).getComponent(0)).doClick();
