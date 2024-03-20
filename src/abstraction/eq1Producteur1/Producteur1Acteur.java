@@ -2,7 +2,6 @@ package abstraction.eq1Producteur1;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -14,12 +13,8 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	public Journal journal;
 
 	public Producteur1Acteur() {
-		
-		this.journal = new Journal("Journal "+this.getNom(), this);
-		
 	}
 	
 	public void initialiser() {
@@ -63,7 +58,6 @@ public class Producteur1Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(this.journal);
 		return res;
 	}
 
@@ -77,9 +71,6 @@ public class Producteur1Acteur implements IActeur {
 	public void setCryptogramme(Integer crypto) {
 		this.cryptogramme = crypto;
 	}
-	
-	
-	
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
