@@ -16,6 +16,7 @@ public class Producteur3Acteur implements IActeur {
 	protected Journal journal;
 
 	public Producteur3Acteur() {
+		this.journal = new Journal(this.getNom()+" journal",this);
 	}
 	
 	public void initialiser() {
@@ -35,6 +36,7 @@ public class Producteur3Acteur implements IActeur {
 
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -60,6 +62,7 @@ public class Producteur3Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(this.journal);
 		return res;
 	}
 
