@@ -13,8 +13,11 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur4Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	private Journal journal;
 
 	public Transformateur4Acteur() {
+		this.journal = new Journal(this.getNom()+" journal", this);
+		
 	}
 	
 	public void initialiser() {
@@ -33,6 +36,8 @@ public class Transformateur4Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape());
+		this.getJournaux();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -58,6 +63,7 @@ public class Transformateur4Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(journal);
 		return res;
 	}
 
