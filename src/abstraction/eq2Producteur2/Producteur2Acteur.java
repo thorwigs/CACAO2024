@@ -43,7 +43,7 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
 	}
 
 	// Renvoie les indicateurs
