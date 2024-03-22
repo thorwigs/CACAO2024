@@ -13,12 +13,12 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
-
 	protected Journal journal;
 	
 	private double coutStockage;
+	
 	public Transformateur2Acteur() {
-	}
+		this.journal = new Journal(this.getNom()+" journal", this);	}
 	
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
@@ -40,7 +40,6 @@ public class Transformateur2Acteur implements IActeur {
 		this.journal.ajouter("etape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("=====STOCKS=====");
 		this.journal.ajouter("prix stockage chez producteur : "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -66,6 +65,7 @@ public class Transformateur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(this.journal);
 		return res;
 	}
 
