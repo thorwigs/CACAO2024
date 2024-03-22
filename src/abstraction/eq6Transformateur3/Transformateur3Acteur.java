@@ -136,6 +136,7 @@ public class Transformateur3Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 // TEST 
+// TEST 2
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			return 0; // A modifier
