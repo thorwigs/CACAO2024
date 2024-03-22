@@ -38,7 +38,7 @@ public class Transformateur2Acteur implements IActeur {
 
 	public void next() {
 		this.journal.ajouter("etape = " + Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("===STOCKS===");
+		this.journal.ajouter("=====STOCKS=====");
 		this.journal.ajouter("prix stockage chez producteur : "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 	}
 
