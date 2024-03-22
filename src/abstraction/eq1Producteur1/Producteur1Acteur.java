@@ -13,8 +13,11 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	protected Journal journal;
+	
 
 	public Producteur1Acteur() {
+		this.journal=new Journal(this.getNom()+"   journal",this);
 	}
 	
 	public void initialiser() {
@@ -33,6 +36,10 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		
+		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
