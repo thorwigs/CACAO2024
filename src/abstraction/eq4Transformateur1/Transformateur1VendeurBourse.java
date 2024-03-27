@@ -3,7 +3,7 @@ package abstraction.eq4Transformateur1;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformateur1VendeurBourse implements IVendeurBourse{
+public class Transformateur1VendeurBourse extends Transformateur1AcheteurCCadre implements IVendeurBourse{
 
 	@Override
 	public double offre(Feve f, double cours) {
