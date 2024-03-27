@@ -35,5 +35,5 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 }
