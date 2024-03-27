@@ -2,18 +2,33 @@ package abstraction.eq7Transformateur4;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	private Journal journal;
+	private double coutStockageTransfo; //pour simplifier, on aura juste a appeler cette variable pour nos coût de stockage
+	protected List<Feve> lesFeves; //la liste de toutes les fèves qui existent
+	private List<ChocolatDeMarque>chocosProduits; 
+	protected HashMap<Feve, Double> stockFeves; //un truc qui contiendra tout nos stocks pour chaque fèves
+	protected HashMap<Chocolat, Double> stockChoco; //idem pour les chocolats
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; //idem pour les chocolat de marques
+	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
+	protected List<ChocolatDeMarque> chococolatCocOasis;
+	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
+	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
+	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
 
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -21,7 +36,15 @@ public class Transformateur4Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		this.coutStockageTransfo = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+		
+		
+		
+		
+		
 	}
+	
+	
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ7";
@@ -37,6 +60,7 @@ public class Transformateur4Acteur implements IActeur {
 
 	public void next() {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.getJournaux();
 	}
 
@@ -45,7 +69,7 @@ public class Transformateur4Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "CocOasis";
 	}
 
 	// Renvoie les indicateurs
