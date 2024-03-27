@@ -12,7 +12,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Achat extends Transformateur3Acteur implements IAcheteurContratCadre {
+public class AchateurContratCadre extends Transformateur3Acteur implements IAcheteurContratCadre {
 
 	@Override
 	public void initialiser() {
