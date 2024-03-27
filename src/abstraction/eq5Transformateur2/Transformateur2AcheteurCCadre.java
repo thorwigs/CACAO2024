@@ -3,18 +3,23 @@ package abstraction.eq5Transformateur2;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2AcheteurCCadre extends Transformateur2Acteur implements IAcheteurContratCadre {
+	private SuperviseurVentesContratCadre supCC;
 
+	
+	
+	
+	
+	
 	public boolean achete(IProduit produit) {
-		// TODO Auto-generated method stub
-		return false;
+		return produit.getType().equals("Feve") ;
 	}
 
-	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
