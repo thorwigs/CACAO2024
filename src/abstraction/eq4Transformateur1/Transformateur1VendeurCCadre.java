@@ -1,6 +1,7 @@
 package abstraction.eq4Transformateur1;
 
 import java.awt.Color;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -25,6 +26,13 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	
+	public Transformateur1VendeurCCadre() {
+		super();
+		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
+		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
+		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+	}
 	
 	@Override
 	public void initialiser() {
@@ -80,65 +88,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		}
 		return res;
 	}
-	
-	
-	
-	
-	
 
-	@Override
-	public List<Variable> getIndicateurs() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Variable> getParametres() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Journal> getJournaux() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setCryptogramme(Integer crypto) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notificationFaillite(IActeur acteur) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notificationOperationBancaire(double montant) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public List<String> getNomsFilieresProposees() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Filiere getFiliere(String nom) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public boolean vend(IProduit produit) {
@@ -146,11 +96,13 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		return false;
 	}
 
+
 	@Override
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 	@Override
 	public double propositionPrix(ExemplaireContratCadre contrat) {
@@ -158,22 +110,21 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		return 0;
 	}
 
+
 	@Override
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
-	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	
+	
 
 }
