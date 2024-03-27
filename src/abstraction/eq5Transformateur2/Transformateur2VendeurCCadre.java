@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat");
+		return produit.getType().equals("Chocolat") && this.getQuantiteEnStock(produit, cryptogramme)>0;
 	}
 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
