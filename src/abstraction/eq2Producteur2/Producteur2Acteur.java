@@ -29,7 +29,7 @@ public class Producteur2Acteur implements IActeur {
 		
 	}
 
-	 public String getNom() {// NE PAS MODIFIER
+	public String getNom() {// NE PAS MODIFIER
 		return "EQ2";
 	}
 	
