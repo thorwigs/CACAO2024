@@ -1,11 +1,13 @@
 package abstraction.eq5Transformateur2;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -21,7 +23,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	
 	// Constructor //
 	public Transformateur2AcheteurCCadre() {
-		super();
+		super(); //récupère les infos de Transformateur2Acteur
 		this.contratsEnCours = new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines = new LinkedList<ExemplaireContratCadre>();
 		this.journalCC = new Journal(this.getNom()+" journal CC", this);
@@ -31,6 +33,19 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+	}
+	
+	public void next() {
+		super.next();
+			for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+				double parStep = 100;
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 26, parStep);
+				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
+					if (vendeurs.size()>0) {
+						IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+					}
+			 }
 	}
 	
 	// 
@@ -49,7 +64,6 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		
 		return contrat.getEcheancier();
 	}
 
