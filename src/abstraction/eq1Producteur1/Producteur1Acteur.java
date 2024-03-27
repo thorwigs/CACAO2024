@@ -62,6 +62,9 @@ public class Producteur1Acteur implements IActeur {
 	public HashMap<Feve, Double> getProd(){
 		return this.ProdParStep;
 	}
+	public double getCoutStockage() {
+		return this.coutStockage;
+	}
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		
@@ -86,12 +89,15 @@ public class Producteur1Acteur implements IActeur {
 			totalStock += this.Stock.get(f).getValeur();
 		}
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
-		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.coutStockage);
+		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.getCoutStockage());
 		this.getJournaux().get(0).ajouter("Stock= "+ totalStock);
 		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
+		double Labor = 0;
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
