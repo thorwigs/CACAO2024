@@ -14,6 +14,7 @@ public class Transformateur4Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	private Journal journal;
+	private double coutStockageTransfo;
 
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -21,7 +22,15 @@ public class Transformateur4Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		this.coutStockageTransfo = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+		
+		
+		
+		
+		
 	}
+	
+	
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ7";
