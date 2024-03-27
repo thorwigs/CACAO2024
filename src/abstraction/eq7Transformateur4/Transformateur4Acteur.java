@@ -55,7 +55,7 @@ public class Transformateur4Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "CocOasis";
 	}
 
 	// Renvoie les indicateurs
