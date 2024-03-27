@@ -4,11 +4,13 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2AcheteurCCadre extends Transformateur2Acteur implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
-
+	protected Journal journalCC;
 	
 	
 	
@@ -20,25 +22,21 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		
-		return null;
+		return contrat.getEcheancier();
 	}
 
-	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return 0;
+		return contrat.getPrix();
 	}
 
-	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		
+		journalCC.ajouter("Nouveau contrat :"+contrat);		
 	}
 
-	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		
+		journalCC.ajouter("Réception de : "+quantiteEnTonnes+" Tonnes de :"+p.getType()+" provenant du contrat : "+contrat.getNumero());
+		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
 	
 }

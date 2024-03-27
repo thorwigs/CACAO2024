@@ -2,19 +2,23 @@ package abstraction.eq5Transformateur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
-	
+	protected HashMap<Feve, Double> stockFeves;
+	protected Variable totalStocksFeves;
+
 	private double coutStockage; 
 	
 	public Transformateur2Acteur() {
