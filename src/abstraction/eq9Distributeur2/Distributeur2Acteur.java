@@ -45,7 +45,7 @@ public class Distributeur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "C'est nous les meilleurs";
 	}
 
 	// Renvoie les indicateurs
