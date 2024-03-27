@@ -64,55 +64,57 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Acteur imple
 		
 	}
 
-	@Override
+
 	public void notificationOperationBancaire(double montant) {
-		// TODO Auto-generated method stub
-		
+		super.notificationOperationBancaire(montant);
 	}
 
-	@Override
+
 	public List<String> getNomsFilieresProposees() {
-		// TODO Auto-generated method stub
-		return null;
+		return(super.getNomsFilieresProposees());
 	}
 
-	@Override
 	public Filiere getFiliere(String nom) {
-		// TODO Auto-generated method stub
-		return null;
+		return(super.getFiliere(nom));
 	}
 
-	@Override
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		// TODO Auto-generated method stub
-		return 0;
+		return(super.getQuantiteEnStock(p, cryptogramme));
 	}
 
-	@Override
 	public boolean achete(IProduit produit) {
-		// TODO Auto-generated method stub
-		return false;
+		return (produit.getType().equals("ChocolatDeMarque")
+				&& this.données.get(produit)<1000);  // a redéfinir + ce qu'on va recevoir
+
 	}
 
-	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
+			return null;
+		}
+		
+		Echeancier x = contrat.getEcheancier();
+		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72) {
+			if (this.données.get(contrat.getProduit())<1000) { // a redéfinir
+//				if (contrat.getQuantiteTotale()>=1000 && )
+			}
+		}
+		
+		
+		
 		return null;
 	}
 
-	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		

@@ -1,6 +1,7 @@
 package abstraction.eq8Distributeur1;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +9,16 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	protected IProduit produit;
+	protected Variable stock;
+	protected HashMap<ChocolatDeMarque, Double> données;
 	
 	
 
@@ -109,11 +114,16 @@ public class Distributeur1Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+		if (this.cryptogramme==cryptogramme) {
+			if (p.equals(this.produit)) {
+				return this.stock.getValeur();
+			} else{
+				return 0;
+			}
 		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+			return 0;
 		}
 	}
 }
