@@ -1,7 +1,7 @@
 package abstraction.eq2Producteur2;
 
 public class Producteur2_MasseSalariale extends Producteur2_Stocks {
-	private int nb_employes;
+	private int nb_employes ;
 	private int nb_employes_equitable;
 	private int nb_employes_enfants;
 	
