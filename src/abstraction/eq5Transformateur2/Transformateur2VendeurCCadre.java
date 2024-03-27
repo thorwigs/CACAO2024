@@ -42,6 +42,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2Acteur implemen
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	//test
 
 
 }
