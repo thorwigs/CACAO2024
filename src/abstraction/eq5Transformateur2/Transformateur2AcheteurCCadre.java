@@ -45,31 +45,26 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	}
 	
 	public boolean achete(IProduit produit) {
-		return false;
+		return produit.getType().equals("Feve") ;
 	}
 
-	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return contrat.getEcheancier();
 	}
 
-	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return 0;
+		return contrat.getPrix();
 	}
 
-	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		
+		journalCC.ajouter("Nouveau contrat :"+contrat);		
 	}
 
-	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		
+		journalCC.ajouter("Réception de : "+quantiteEnTonnes+", tonnes de :"+p.getType()+" provenant du contrat : "+contrat.getNumero());
+		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
 
 }
