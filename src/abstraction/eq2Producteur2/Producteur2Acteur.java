@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur2Acteur implements IActeur {
-	//Quentin
+	
 	protected int cryptogramme;
 	protected Journal journal;
 
