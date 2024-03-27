@@ -3,6 +3,7 @@ package abstraction.eq5Transformateur2;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
@@ -10,7 +11,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	@Override
 	public boolean vend(IProduit produit) {
 		// TODO Auto-generated method stub
-		return false;
+		return this.getQuantiteEnStock(produit, cryptogramme)>100; //Valeur a modifier
 	}
 
 	@Override
