@@ -15,10 +15,11 @@ public class Transformateur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	
-	private double coutStockage;
+	private double coutStockage; 
 	
 	public Transformateur2Acteur() {
-		this.journal = new Journal(this.getNom()+" journal", this);	}
+		this.journal = new Journal(this.getNom()+" journal", this);	
+	}
 	
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
