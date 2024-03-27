@@ -18,8 +18,9 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 			return 0;
 		}
 		else {
-			//mettre la quantite de stock BQ
-			return 10000;
+			//mettre la quantite de stock BQ (mettre plus et ajuster selon la demande)
+			//plus on demande, plus on vend (attention a l'offre et a la demande)
+			return this.getQuantiteEnStock(f,this.cryptogramme);
 		}
 	}
 
