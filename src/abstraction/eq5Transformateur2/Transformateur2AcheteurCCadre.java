@@ -49,7 +49,6 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		
 		return contrat.getEcheancier();
 	}
 
