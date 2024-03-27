@@ -41,7 +41,6 @@ public class Transformateur4Acteur implements IActeur {
 		
 		
 		
-		
 	}
 	
 	
@@ -62,6 +61,8 @@ public class Transformateur4Acteur implements IActeur {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.getJournaux();
+		
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
