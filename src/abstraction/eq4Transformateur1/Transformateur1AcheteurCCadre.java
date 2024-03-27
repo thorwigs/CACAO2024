@@ -34,6 +34,12 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
+	
+	@Override
+	public void next() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public String getNom() {
@@ -51,12 +57,6 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	public String getDescription() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void next() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
