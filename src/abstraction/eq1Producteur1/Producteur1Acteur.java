@@ -1,6 +1,18 @@
 package abstraction.eq1Producteur1;
 
 import java.awt.Color;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariableReadOnly;
+import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +32,36 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_equitables;
 	private double coutStockage;
 	//This /|\
-	
+	protected HashMap<Feve, Double> ProdParStep;
+	protected HashMap<Feve, Variable> Stock;
 	
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
+		Production();
+		Stockage();
 	}
-	
+	public void Production() {
+		this.ProdParStep = new HashMap<Feve, Double>();
+		this.ProdParStep.put(Feve.F_BQ,1.0 );
+		this.ProdParStep.put(Feve.F_MQ,1.0 );
+		
+		this.ProdParStep.put(Feve.F_MQ_E,1.0 );
+		this.ProdParStep.put(Feve.F_HQ_E,1.0 );
+		this.ProdParStep.put(Feve.F_HQ_BE,1.0 );
+		
+		}
+	public void Stockage() {
+		//Still not sure about this need to be looked into a bit more
+		this.Stock = new HashMap<Feve, Variable>();
+		for (Feve f : Feve.values()) {
+			Variable v = new Variable(f.toString(), null, this, 0.0, this.ProdParStep.get(f)*24, this.ProdParStep.get(f)*2 );
+			this.Stock.put(f, v);
+		}
+	}
+	public HashMap<Feve, Double> getProd(){
+		return this.ProdParStep;
+	}
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		
@@ -46,6 +81,10 @@ public class Producteur1Acteur implements IActeur {
 
 	public void next() {
 		double totalStock = 0;
+		for (Feve f : Feve.values()) {
+			this.Stock.get(f).ajouter(this,this.getProd().get(f) );
+			totalStock += this.Stock.get(f).getValeur();
+		}
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.coutStockage);
 		this.getJournaux().get(0).ajouter("Stock= "+ totalStock);
