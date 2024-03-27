@@ -4,7 +4,6 @@ public enum Feve implements IProduit {
 
 	F_HQ_BE(Gamme.HQ, true, true), // FEVE HAUTE QUALITE BIO EQUITABLE
 	F_HQ_E( Gamme.HQ, false,true), // FEVE HAUTE QUALITE EQUITABLE
-	F_HQ  ( Gamme.HQ, false,false),// FEVE HAUTE NI BIO NI EQUITABLE
 	F_MQ_E( Gamme.MQ, false,true), // FEVE MOYENNE QUALITE EQUITABLE
 	F_MQ  ( Gamme.MQ, false,false),// FEVE MOYENNE QUALITE (NI BIO NI EQUITABLE)
 	F_BQ(   Gamme.BQ, false,false);// FEVE BASSE QUALITE (NI BIO NI EQUITABLE)

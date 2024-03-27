@@ -1,5 +1,5 @@
 package abstraction.eq1Producteur1;
-
+// Ce code a été fait par Haythem :)
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;

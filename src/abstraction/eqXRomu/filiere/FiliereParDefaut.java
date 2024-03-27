@@ -56,25 +56,22 @@ public class FiliereParDefaut extends Filiere {
 
 		switch (hasard) {
 		case 0 :
-			repartitionInitiale.put(Chocolat.C_HQ_BE, 5.0); // Haute Qualite   Bio-Equitable 
-			repartitionInitiale.put(Chocolat.C_HQ_E,  10.0); // Haute Qualite   Equitable 
-			repartitionInitiale.put(Chocolat.C_HQ,    30.0); // Haute Qualite   Ni Bio ni Equitable 
+			repartitionInitiale.put(Chocolat.C_HQ_BE, 15.0); // Haute Qualite   Bio-Equitable 
+			repartitionInitiale.put(Chocolat.C_HQ_E,  30.0); // Haute Qualite   Equitable 
 			repartitionInitiale.put(Chocolat.C_MQ_E,  10.0); // Moyenne Qualite Equitable 
 			repartitionInitiale.put(Chocolat.C_MQ,    15.0); // Moyenne Qualite ni Bio ni Equitable 
 			repartitionInitiale.put(Chocolat.C_BQ,    30.0); // Basse Qualite   ni Bio ni Equitable 
 			break;
 		case 1 : 
-			repartitionInitiale.put(Chocolat.C_HQ_BE,  5.0); // Haute Qualite   Bio-Equitable 
-			repartitionInitiale.put(Chocolat.C_HQ_E,   5.0); // Haute Qualite   Equitable 
-			repartitionInitiale.put(Chocolat.C_HQ,    20.0); // Haute Qualite   Ni Bio ni Equitable 
+			repartitionInitiale.put(Chocolat.C_HQ_BE, 10.0); // Haute Qualite   Bio-Equitable 
+			repartitionInitiale.put(Chocolat.C_HQ_E,  20.0); // Haute Qualite   Equitable 
 			repartitionInitiale.put(Chocolat.C_MQ_E,   5.0); // Moyenne Qualite Equitable 
 			repartitionInitiale.put(Chocolat.C_MQ,    25.0); // Moyenne Qualite ni Bio ni Equitable 
 			repartitionInitiale.put(Chocolat.C_BQ,    40.0); // Basse Qualite   ni Bio ni Equitable 
 			break;
 		default : 
-			repartitionInitiale.put(Chocolat.C_HQ_BE,   3.0); // Haute Qualite   Bio-Equitable   
-			repartitionInitiale.put(Chocolat.C_HQ_E,    3.0); // Haute Qualite   Equitable   
-			repartitionInitiale.put(Chocolat.C_HQ,     10.0); // Haute Qualite   Ni Bio ni Equitable   
+			repartitionInitiale.put(Chocolat.C_HQ_BE,   6.0); // Haute Qualite   Bio-Equitable   
+			repartitionInitiale.put(Chocolat.C_HQ_E,   10.0); // Haute Qualite   Equitable   
 			repartitionInitiale.put(Chocolat.C_MQ_E,    4.0); // Moyenne Qualite Equitable 
 			repartitionInitiale.put(Chocolat.C_MQ,     25.0); // Moyenne Qualite ni Bio ni Equitable 
 			repartitionInitiale.put(Chocolat.C_BQ,     55.0); // Basse Qualite   ni Bio ni Equitable 
