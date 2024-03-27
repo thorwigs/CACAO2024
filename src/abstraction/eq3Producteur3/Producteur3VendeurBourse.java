@@ -19,7 +19,7 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 		}
 		else {
 			//mettre la quantite de stock BQ
-			return 10;
+			return 10000;
 		}
 	}
 
