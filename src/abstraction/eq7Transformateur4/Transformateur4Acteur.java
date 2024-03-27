@@ -68,7 +68,8 @@ public class Transformateur4Acteur implements IActeur {
 		
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 		
-		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>(); //on créé la Hashmap, qu'on va compléter ensuite avec les infos connues par tout le monde
+		//on créé la Hashmap de pourcentageTransfo, qu'on va compléter ensuite avec les infos connues par tout le monde
+		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
 		double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_HQ_BE).put(Chocolat.C_HQ_BE, conversion);// la masse de chocolat obtenue est plus importante que la masse de feve vue l'ajout d'autres ingredients
@@ -80,6 +81,8 @@ public class Transformateur4Acteur implements IActeur {
 		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
+		
+		// à continuer..
 	}
 	
 	
