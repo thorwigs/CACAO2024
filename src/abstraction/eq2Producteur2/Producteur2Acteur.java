@@ -23,9 +23,9 @@ public class Producteur2Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
-		int nb_employes = 3300;
-		int nb_employes_equitable = 82;
-		int nb_employes_enfants = 840;
+		int nb_employes =  3679200;
+		int nb_employes_equitable = 100800;
+		int nb_employes_enfants = 1260000; //25% au départ
 		
 	}
 
