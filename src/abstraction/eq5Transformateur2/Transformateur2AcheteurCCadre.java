@@ -38,5 +38,5 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
-	
+
 }
