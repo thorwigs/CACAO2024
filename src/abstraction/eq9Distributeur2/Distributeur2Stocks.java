@@ -13,6 +13,10 @@ public class Distributeur2Stocks extends Distributeur2Acteur{
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected List<ChocolatDeMarque> chocolatsVillors;
 	protected Variable totalStocksChocoMarque;  
-
+	
+	
+	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
+		return this.stockChocoMarque;
+	}
 
 }
