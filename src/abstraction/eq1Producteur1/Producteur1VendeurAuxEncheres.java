@@ -4,16 +4,12 @@ import java.util.List;
 
 import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
+import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
+import abstraction.eqXRomu.produits.Chocolat;
 /**************************	
 	YOUSSEF BEN ABDELJELIL		**********************/
 
-public class Producteur1VendeurAuxEncheres extends Producteur1VendeurCCadre implements IVendeurAuxEncheres{
 
-	@Override
-	public Enchere choisir(List<Enchere> propositions) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 			
 
-}
+
