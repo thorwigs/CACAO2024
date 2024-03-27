@@ -14,10 +14,12 @@ public class Distributeur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	private int capaciteStockage;
 	
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
+		this.capaciteStockage = Integer.MAX_VALUE;
 	}
 	
 	public void initialiser() {
@@ -29,6 +31,10 @@ public class Distributeur2Acteur implements IActeur {
 	
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
+	}
+	
+	public int getCapaciteStockage() {
+		return this.capaciteStockage;
 	}
 
 	////////////////////////////////////////////////////////
