@@ -45,9 +45,10 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		double totalStock = 0;
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.coutStockage);
-		this.journal.ajouter("Stock");
+		this.getJournaux().get(0).ajouter("Stock= "+ totalStock);
 		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
