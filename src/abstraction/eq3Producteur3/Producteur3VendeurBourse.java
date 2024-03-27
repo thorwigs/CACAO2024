@@ -31,7 +31,6 @@ public class Producteur3VendeurBourse implements IVendeurBourse {
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
-		this.journal.ajouter("Le producteur 3 a ete blacklist de la bourse pour"+dureeEnStep);
-		
+//		this.journal.ajouter("Le producteur 3 a ete blacklist de la bourse pour"+dureeEnStep);
 	}
 }
