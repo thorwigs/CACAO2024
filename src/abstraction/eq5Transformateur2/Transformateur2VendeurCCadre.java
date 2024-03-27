@@ -5,7 +5,7 @@ import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur2VendeurCCadre extends Transformateur2Acteur implements IVendeurContratCadre {
+public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 
 	@Override
 	public boolean vend(IProduit produit) {
