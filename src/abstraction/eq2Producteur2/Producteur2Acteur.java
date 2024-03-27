@@ -14,16 +14,13 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur2Acteur implements IActeur {
-	
+	//Quentin
 	protected int cryptogramme;
 	protected Journal journal;
 
 	protected HashMap<Feve,Variable> stock;
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
-	protected int nb_employes;
-	protected int nb_employes_equitable;
-	protected int nb_employes_enfants;
 
 
 	public Producteur2Acteur() {
@@ -60,7 +57,7 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		 return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
+		return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
 	}
 
 	// Renvoie les indicateurs
@@ -131,3 +128,4 @@ public class Producteur2Acteur implements IActeur {
 		}
 	}
 }
+
