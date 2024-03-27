@@ -5,4 +5,8 @@ public class Transformateur4 extends Transformateur4Acteur  {
 	public Transformateur4() {
 		super();
 	}
+	
+	public void next() {
+		super.next();
+	}
 }
