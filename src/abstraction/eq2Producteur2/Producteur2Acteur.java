@@ -18,7 +18,7 @@ public class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 
-	protected HashMap<Feve,Variable> stock;
+	protected HashMap<Feve,Variable> stock; //Feve = qualite et Variable = quantite
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
 
@@ -47,8 +47,8 @@ public class Producteur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		this.journal.ajouter("étape="+Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("prix producteur = "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
 	}
 
