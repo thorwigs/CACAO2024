@@ -6,13 +6,20 @@ import java.util.List;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur1AchteurCCadre implements IAcheteurContratCadre {
+public class Transformateur1AcheteurCCadre implements IAcheteurContratCadre {
+	private SuperviseurVentesContratCadre supCC;
+	private List<ExemplaireContratCadre> contratsEnCours;
+	private List<ExemplaireContratCadre> contratsTermines;
+	protected Journal journalCC;
+	
+	public Transformateur
 
 	@Override
 	public void initialiser() {
