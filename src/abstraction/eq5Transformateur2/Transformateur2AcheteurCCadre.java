@@ -1,11 +1,13 @@
 package abstraction.eq5Transformateur2;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -18,46 +20,95 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
 	
-	
+	/////////////////
 	// Constructor //
+	/////////////////
 	public Transformateur2AcheteurCCadre() {
-		super();
+		super(); //récupère les infos de Transformateur2Acteur
 		this.contratsEnCours = new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines = new LinkedList<ExemplaireContratCadre>();
 		this.journalCC = new Journal(this.getNom()+" journal CC", this);
 	}
 	
+	///////////////////////////
 	// Initialise le contrat //
+	///////////////////////////
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	
-	// 
-	public double restantDu(Feve f) {
-		double res=0;
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	// Permet d'enregistrer et de garder une trace des contrats en cours et des anciens contrats //
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	public void next() {
+		super.next();
+		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+					this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+					double parStep = 100;
+					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 26, parStep);
+					List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
+					if (vendeurs.size()>0) {
+						IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+						journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+						if (contrat==null) {
+							journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+						} else {
+							this.contratsEnCours.add(contrat);
+							journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+						}
+					} else {
+						journalCC.ajouter("   pas de vendeur");
+					}
+				}	
+		// On archive les contrats termines
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if (c.getProduit().equals(f)) {
-				res+=c.getQuantiteRestantALivrer();
+			if (c.getQuantiteRestantALivrer()==0.0 && c.getMontantRestantARegler()<=0.0) {
+				this.contratsTermines.add(c);
 			}
 		}
-		return res;
+		for (ExemplaireContratCadre c : this.contratsTermines) {
+			journalCC.ajouter("Archivage du contrat "+c);
+			this.contratsEnCours.remove(c);
+		}
+		this.journalCC.ajouter("=================================");
 	}
+	
+	////////////
+	// Getter //
+	////////////
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalCC);
+		return jx;
+	}
+	
+	
+	/////////////////////////////////////////////
+	//     Fonctions du protocole de Vente     //
+	/////////////////////////////////////////////
 	
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("Feve") ;
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		return contrat.getEcheancier();
+		if (!contrat.getProduit().getType().equals("Feve")) {
+			return null; // retourne null si ce n'est pas la bonne fève
+		} else {
+			return contrat.getEcheancier(); // retourne l'échéancier proposé par le vendeur
+		}
 	}
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		return contrat.getPrix(); // retourne le prix proposé par le vendeur
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);		
+		journalCC.ajouter("Nouveau contrat :"+contrat);	
+		this.contratsEnCours.add(contrat);
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
