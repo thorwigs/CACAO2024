@@ -8,9 +8,9 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVendeurBourse {
-	public double  PrixSeuilHQ ;
-	public double  PrixSeuilBQ ;
-	public double  PrixSeuilMQ ;
+	public double  prixSeuilHQ ;
+	public double  prixSeuilBQ ;
+	public double  prixSeuilMQ ;
 	private Journal journalBourse;
 	
 	
@@ -24,19 +24,19 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		   
 	  
 		if (f.getGamme()==Gamme.MQ) {
-			if(cours>=PrixSeuilMQ) {
+			if(cours>=prixSeuilMQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
 			}
 		}
 		if (f.getGamme()==Gamme.HQ) {
-			if(cours>=PrixSeuilHQ) {
+			if(cours>=prixSeuilHQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
 			}
 		}
 		if (f.getGamme()==Gamme.HQ) {
-			if(cours>=PrixSeuilHQ) {
+			if(cours>=prixSeuilHQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
 			}
