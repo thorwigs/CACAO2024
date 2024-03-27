@@ -13,7 +13,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur1VendeurCCadre implements IVendeurContratCadre {
+public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse implements IVendeurContratCadre {
 
 	private static int PRIX_DEFAUT = 4500;
 	
