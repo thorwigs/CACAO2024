@@ -33,7 +33,7 @@ public class Producteur1Acteur implements IActeur {
 	private double coutStockage;
 	//This /|\
 	protected HashMap<Feve, Double> ProdParStep;
-	protected HashMap<Feve, Variable> Stock;
+	protected HashMap<Feve, Variable> stock;
 	protected static double LabourNormal = 1.80;
 	protected static double LabourEnfant = 0.80;
 	protected static double LabourEquitable = 3;
@@ -55,10 +55,10 @@ public class Producteur1Acteur implements IActeur {
 		}
 	public void Stockage() {
 		//Still not sure about this need to be looked into a bit more
-		this.Stock = new HashMap<Feve, Variable>();
+		this.stock = new HashMap<Feve, Variable>();
 		for (Feve f : Feve.values()) {
 			Variable v = new Variable(f.toString(), null, this, 0.0, this.ProdParStep.get(f)*24, this.ProdParStep.get(f)*2 );
-			this.Stock.put(f, v);
+			this.stock.put(f, v);
 		}
 	}
 	public HashMap<Feve, Double> getProd(){
@@ -69,7 +69,9 @@ public class Producteur1Acteur implements IActeur {
 	}
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		
+		this.nb_enfants = 3000;
+		this.nb_equitables = 1;
+		this.nb_employees = 100;
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -87,8 +89,8 @@ public class Producteur1Acteur implements IActeur {
 	public void next() {
 		double totalStock = 0;
 		for (Feve f : Feve.values()) {
-			this.Stock.get(f).ajouter(this,this.getProd().get(f) );
-			totalStock += this.Stock.get(f).getValeur();
+			this.stock.get(f).ajouter(this,this.getProd().get(f) );
+			totalStock += this.stock.get(f).getValeur();
 		}
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.getCoutStockage());
