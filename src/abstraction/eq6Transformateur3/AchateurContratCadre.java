@@ -115,19 +115,32 @@ public class AchateurContratCadre extends Transformateur3Acteur implements IAche
 	@Override
 	public boolean achete(IProduit produit) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
-
+	
+	/**
+	 * Methode appelee par le SuperviseurVentesContratCadre lors des negociations
+	 * sur le prix a la tonne afin de connaitre la contreproposition de l'acheteur.
+	 * L'acheteur peut consulter les precedentes propositions via un appel a la
+	 * methode getListePrix() sur le contrat. En particulier la methode getPrix()
+	 * appelee sur contrat indique la derniere proposition faite par le vendeur.
+	 * 
+	 * @param contrat
+	 * @return Retourne un prix negatif ou nul si l'acheteur souhaite mettre fin aux
+	 *         negociations (en renoncant a ce contrat). Retourne le prix actuel
+	 *         (contrat.getPrix()) si il est d'accord avec ce prix. Sinon, retourne
+	 *         un autre prix correspondant a sa contreproposition.
+	 */
 	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
-		return null;
+		return contrat.getEcheancier();
 	}
 
 	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
