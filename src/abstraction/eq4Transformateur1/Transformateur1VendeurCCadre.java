@@ -12,6 +12,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -36,10 +38,10 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-			if (stock.get(f).getValeur()-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
+		for (ChocolatDeMarque f : stockChocoMarque.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+			if (stockChocoMarque.get(f) - restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				double parStep = Math.max(100, (stockChocoMarque.get(f)-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
 				if (acheteurs.size()>0) {
@@ -68,6 +70,21 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		}
 		this.journalCC.ajouter("=================================");
 	}
+	
+	public double restantDu(ChocolatDeMarque f) {
+		double res=0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(f)) {
+				res+=c.getQuantiteRestantALivrer();
+			}
+		}
+		return res;
+	}
+	
+	
+	
+	
+	
 
 	@Override
 	public List<Variable> getIndicateurs() {
