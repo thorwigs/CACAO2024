@@ -5,6 +5,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 public enum Chocolat implements IProduit {
 	C_HQ_BE(Gamme.HQ, true, true), // CHOCOLAT HAUTE QUALITE BIO EQUITABLE
 	C_HQ_E( Gamme.HQ, false,true), // CHOCOLAT HAUTE QUALITE EQUITABLE
+	C_HQ  ( Gamme.HQ, false,false),// CHOCOLAT HAUTE QUALITE NI BIO NI EQUITABLE
 	C_MQ_E( Gamme.MQ, false,true), // CHOCOLAT MOYENNE QUALITE EQUITABLE
 	C_MQ  ( Gamme.MQ, false,false),// CHOCOLAT MOYENNE QUALITE (NI BIO NI EQUITABLE)
 	C_BQ(   Gamme.BQ, false,false);// CHOCOLAT BASSE QUALITE (NI BIO NI EQUITABLE)
