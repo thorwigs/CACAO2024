@@ -95,6 +95,9 @@ public class Producteur1Acteur implements IActeur {
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.getCoutStockage());
 		this.getJournaux().get(0).ajouter("Stock= "+ totalStock);
+		this.getJournaux().get(0).ajouter("Le nombre d'employees = "+ this.nb_employees);
+		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ this.nb_equitables);
+		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ this.nb_enfants);
 		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
@@ -115,6 +118,7 @@ public class Producteur1Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		res.addAll(this.stock.values());
 		return res;
 	}
 
@@ -173,8 +177,8 @@ public class Producteur1Acteur implements IActeur {
 	}
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+		if (this.cryptogramme==cryptogramme && this.stock.containsKey(p)) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
+			return this.stock.get(p).getValeur(cryptogramme); // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
