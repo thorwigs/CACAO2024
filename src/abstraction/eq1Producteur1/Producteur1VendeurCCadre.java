@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
-// Ce code a été fait par Haythem :)
+
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
