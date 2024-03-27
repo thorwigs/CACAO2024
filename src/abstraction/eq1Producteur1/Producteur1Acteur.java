@@ -14,6 +14,13 @@ public class Producteur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	//new stuff I added : Abdo
+	protected int nb_employees;
+	protected int nb_enfants;
+	protected int nb_equitables;
+	private double coutStockage;
+	//This /|\
+	
 	
 
 	public Producteur1Acteur() {
@@ -21,6 +28,8 @@ public class Producteur1Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
+		
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -36,10 +45,13 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		
+		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
+		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.coutStockage);
+		this.journal.ajouter("Stock");
+		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		
+		*/
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -47,7 +59,7 @@ public class Producteur1Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "AfriKakao-Producteur Cacao";
 	}
 
 	// Renvoie les indicateurs
@@ -65,6 +77,7 @@ public class Producteur1Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(this.journal);
 		return res;
 	}
 
