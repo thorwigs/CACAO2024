@@ -34,7 +34,9 @@ public class Producteur1Acteur implements IActeur {
 	//This /|\
 	protected HashMap<Feve, Double> ProdParStep;
 	protected HashMap<Feve, Variable> Stock;
-	
+	protected static double LabourNormal = 1.80;
+	protected static double LabourEnfant = 0.80;
+	protected static double LabourEquitable = 3;
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
@@ -95,7 +97,7 @@ public class Producteur1Acteur implements IActeur {
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = 0;
+		double Labor = this.nb_employees*this.LabourNormal+this.nb_enfants*this.LabourEnfant+this.nb_equitables*this.LabourEquitable;
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
 	}
