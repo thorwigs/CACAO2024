@@ -16,7 +16,6 @@ public class Producteur2VendeurBourse extends Producteur2_Plantation implements 
 
 	}
 	
-
 	@Override
 	public double offre(Feve f, double cours) {
 		if (f.getGamme()==Gamme.MQ) {
