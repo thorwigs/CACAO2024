@@ -17,9 +17,14 @@ public class Producteur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+
 	protected HashMap<Feve,Variable> stock;
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
+	protected int nb_employes;
+	protected int nb_employes_equitable;
+	protected int nb_employes_enfants;
+
 
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -27,6 +32,10 @@ public class Producteur2Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		int nb_employes = 3300;
+		int nb_employes_equitable = 82;
+		int nb_employes_enfants = 840;
+		
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -52,7 +61,7 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		 return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
 	}
 
 	// Renvoie les indicateurs

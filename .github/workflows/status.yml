@@ -25,7 +25,4 @@ jobs:
         run: |
           set -e
           ant -noinput -buildfile build.xml
-          ant -noinput -buildfile build.xml
-          ant -noinput -buildfile build.xml
-          ant -noinput -buildfile build.xml
           cat tempsEquipes.json

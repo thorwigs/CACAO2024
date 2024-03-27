@@ -51,6 +51,7 @@ public class BourseCacao implements IActeur, IAssermente {
 		// 2417 euros = 2627 dollars prix moy du cours du cacao par tonne de l'annee passee
 		// 3221 euros = 3500 dollars prix max du cours du cacao par tonne (sur les 20 annees avant 2023)
 
+		this.cours.put(Feve.F_HQ, new VariableReadOnly(getNom()+" cours H", "<html>le cours actuel<br>de FEVE_HAUTE</html>", this,1693.0, 3704.0, 2780.0)); 
 		this.cours.put(Feve.F_MQ, new VariableReadOnly(getNom()+" cours M", "<html>le cours actuel<br>de FEVE_MOYENNE</html>", this,1472.0, 3221.0, 2417.0)); 
 		this.cours.put(Feve.F_BQ, new VariableReadOnly(getNom()+" cours B", "<html>le cours actuel<br>de FEVE_BASSE</html>", this,1272.0, 3021.0, 2217.0));
 		// PAS d'equitable en bourse : l'echange de produits equitables s'effectue via
@@ -414,7 +415,7 @@ public class BourseCacao implements IActeur, IAssermente {
 						aEcrire.close();
 					}
 					catch (IOException e) {
-						System.out.println("Une operation sur les fichiers a leve l'exception "+e) ;
+						throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
 					}
 				}
 			}
