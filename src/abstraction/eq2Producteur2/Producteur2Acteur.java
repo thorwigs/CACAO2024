@@ -35,7 +35,6 @@ public class Producteur2Acteur implements IActeur {
 		int nb_employes =  3679200;
 		int nb_employes_equitable = 100800;
 		int nb_employes_enfants = 1260000; //25% au départ
-		
 	}
 
 	public String getNom() {// NE PAS MODIFIER
