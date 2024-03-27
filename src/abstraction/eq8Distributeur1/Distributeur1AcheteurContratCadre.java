@@ -99,9 +99,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Acteur imple
 //				if (contrat.getQuantiteTotale()>=1000 && )
 			}
 		}
-		
-		
-		
 		return null;
 	}
 
