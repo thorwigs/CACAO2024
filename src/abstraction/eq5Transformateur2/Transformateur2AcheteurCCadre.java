@@ -34,7 +34,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Réception de : "+quantiteEnTonnes+" tonnes de :"+p.getType()+" provenant du contrat : "+contrat.getNumero());
+		journalCC.ajouter("Réception de : "+quantiteEnTonnes+", tonnes de :"+p.getType()+" provenant du contrat : "+contrat.getNumero());
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
