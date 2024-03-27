@@ -1,6 +1,7 @@
 package abstraction.eq4Transformateur1;
 
 import java.awt.Color;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -19,7 +20,12 @@ public class Transformateur1AcheteurCCadre implements IAcheteurContratCadre {
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
 	
-	public Transformateur
+	public Transformateur1AcheteurCCadre() {
+		super();
+		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
+		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
+		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+	}
 
 	@Override
 	public void initialiser() {
