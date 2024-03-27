@@ -21,9 +21,6 @@ public class Producteur2Acteur implements IActeur {
 	protected HashMap<Feve,Variable> stock;
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
-	protected int nb_employes;
-	protected int nb_employes_equitable;
-	protected int nb_employes_enfants;
 
 
 	public Producteur2Acteur() {
