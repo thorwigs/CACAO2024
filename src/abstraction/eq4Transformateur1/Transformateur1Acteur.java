@@ -61,7 +61,7 @@ public class Transformateur1Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "équipe 4, transformateur 1 : LeaderKakao";
 	}
 
 	// Renvoie les indicateurs
