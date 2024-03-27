@@ -27,10 +27,12 @@ public class Transformateur1AcheteurCCadre implements IAcheteurContratCadre {
 		this.journalCC = new Journal(this.getNom()+" journal CC", this);
 	}
 
-	@Override
+	/**
+	 * A MODIFIER EN FONCTION DES DIFFERENTS CONTRATS QU'ON VEUT FAIRE, CHOISIR QUI 
+	 */
 	public void initialiser() {
-		// TODO Auto-generated method stub
-		
+		super.initialiser();
+		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 
 	@Override
