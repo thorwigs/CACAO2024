@@ -45,7 +45,7 @@ public class Producteur2Acteur implements IActeur {
 	public String getDescription() {
 		return "Bla bla bla";
 	}
-
+ 
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
