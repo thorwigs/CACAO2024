@@ -102,7 +102,7 @@ public class Producteur1Acteur implements IActeur {
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = this.nb_employees*this.LabourNormal+this.nb_enfants*this.LabourEnfant+this.nb_equitables*this.LabourEquitable;
+		double Labor = (this.nb_employees*this.LabourNormal+this.nb_enfants*this.LabourEnfant+this.nb_equitables*this.LabourEquitable)*15;
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
 	}

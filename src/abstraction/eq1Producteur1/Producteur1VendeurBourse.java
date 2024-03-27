@@ -8,9 +8,9 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVendeurBourse {
-	public double  PrixSeuilHQ ;
-	public double  PrixSeuilBQ ;
-	public double  PrixSeuilMQ ;
+	public double  prixSeuilHQ ;
+	public double  prixSeuilBQ ;
+	public double  prixSeuilMQ ;
 	private Journal journalBourse;
 	
 	
@@ -20,23 +20,28 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		// TODO Auto-generated method stub
 		
 	   double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
+	   Gamme gamme = f.getGamme();
+	   boolean bio = f.isBio();
+		boolean equi = f.isEquitable();
+	   
 	   if (quantiteEnT!=0) {
 		   
 	  
 		if (f.getGamme()==Gamme.MQ) {
-			if(cours>=PrixSeuilMQ) {
+			if(cours>=prixSeuilMQ) {
+				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+				return quantiteEnT;
+				
+			}
+		}
+		if (f.getGamme()==Gamme.HQ) {
+			if(cours>=prixSeuilHQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
 			}
 		}
 		if (f.getGamme()==Gamme.HQ) {
-			if(cours>=PrixSeuilHQ) {
-				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-				return quantiteEnT;
-			}
-		}
-		if (f.getGamme()==Gamme.HQ) {
-			if(cours>=PrixSeuilHQ) {
+			if(cours>=prixSeuilHQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
 			}
