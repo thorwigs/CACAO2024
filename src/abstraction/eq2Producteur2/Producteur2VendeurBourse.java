@@ -6,7 +6,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
-public class Producteur2VendeurBourse extends Producteur2Acteur implements IVendeurBourse {
+public class Producteur2VendeurBourse extends Producteur2_Plantation implements IVendeurBourse {
 	
 	private Journal journalBourse;
 	
