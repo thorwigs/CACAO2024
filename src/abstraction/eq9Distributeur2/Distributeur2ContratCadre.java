@@ -11,6 +11,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
@@ -60,8 +61,11 @@ public class Distributeur2ContratCadre extends Distributeur2Vente implements IAc
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
-		
+		if (p.getType().equals("ChocolatDeMarque")) {
+			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
+		}
 	}
 
+	
 	
 }
