@@ -9,17 +9,28 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2Acteur implements IActeur {
 	
-	protected int cryptogramme;
 	protected Journal journal;
-	protected HashMap<Feve, Double> stockFeves;
-	protected Variable totalStocksFeves;
+	protected int cryptogramme;
+	private double coutStockage;
 
-	private double coutStockage; 
+	protected List<Feve> lesFeves;
+	private List<ChocolatDeMarque>chocosProduits;
+	protected HashMap<Feve, Double> stockFeves;
+	protected HashMap<Chocolat, Double> stockChoco;
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
+	protected List<ChocolatDeMarque> chocolatsVillors;
+	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
+	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
+	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
+	
 	
 	public Transformateur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);	
