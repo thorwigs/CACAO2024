@@ -19,7 +19,7 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 		}
 		else {
 			//mettre la quantite de stock BQ
-			return 10;
+			return 10000;
 		}
 	}
 
@@ -31,6 +31,6 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
-//		this.journal.ajouter("Le producteur 3 a ete blacklist de la bourse pour"+dureeEnStep);
+		this.journal.ajouter("Le producteur 3 a ete blacklist de la bourse pour "+dureeEnStep);
 	}
 }
