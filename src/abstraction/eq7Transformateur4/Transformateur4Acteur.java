@@ -18,18 +18,8 @@ public class Transformateur4Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	private Journal journal;
-	
-	protected List<Feve> lesFeves;
-	private List<ChocolatDeMarque>chocosProduits;
-	protected HashMap<Feve, Double> stockFeves;
-	protected HashMap<Chocolat, Double> stockChoco;
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
-	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
-	protected List<ChocolatDeMarque> chocolatsVillors;
-	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
-	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
-	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 
+	private double coutStockageTransfo;
 	
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -37,8 +27,11 @@ public class Transformateur4Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		this.coutStockageTransfo = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+		
 	}
-
+	
+	
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ7";
 	}
@@ -62,7 +55,7 @@ public class Transformateur4Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Cocoasis";
+		return "CocOasis";
 	}
 
 	// Renvoie les indicateurs
