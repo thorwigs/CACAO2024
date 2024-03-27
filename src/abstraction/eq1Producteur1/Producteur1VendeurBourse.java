@@ -31,7 +31,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 			if(cours>=prixSeuilMQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
-				this.Stock.put(f, this.Stock.get(f)-quantiteEnT);
+				
 			}
 		}
 		if (f.getGamme()==Gamme.HQ) {
