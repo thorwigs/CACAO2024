@@ -5,4 +5,7 @@ public class Producteur1 extends Producteur1Acteur  {
 	public Producteur1() {
 		super();
 	}
+	public void Next() {
+		super.next();
+	}
 }
