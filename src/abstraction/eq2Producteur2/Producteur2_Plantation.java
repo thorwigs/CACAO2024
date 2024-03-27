@@ -93,6 +93,6 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 		return production_cacao() * getPourcentage_MID();
 	}
 	
-}
+} 
 // 1hectare = 500kg / an cacao
 // implémenter la qualité 
