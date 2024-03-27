@@ -20,6 +20,10 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		// TODO Auto-generated method stub
 		
 	   double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
+	   Gamme gamme = f.getGamme();
+	   boolean bio = f.isBio();
+		boolean equi = f.isEquitable();
+	   
 	   if (quantiteEnT!=0) {
 		   
 	  
@@ -27,6 +31,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 			if(cours>=prixSeuilMQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
+				this.Stock.put(f, this.Stock.get(f)-quantiteEnT);
 			}
 		}
 		if (f.getGamme()==Gamme.HQ) {
