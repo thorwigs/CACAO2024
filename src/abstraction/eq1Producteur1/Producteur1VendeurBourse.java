@@ -34,6 +34,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		if (f.getGamme()==Gamme.MQ) {
 			if(cours>=prixSeuilMQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+				
 				return quantiteEnT;
 				
 			}
@@ -45,8 +46,8 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 				return quantiteEnT;
 			}
 		}
-		if (f.getGamme()==Gamme.HQ) {
-			if(cours>=prixSeuilHQ) {
+		if (f.getGamme()==Gamme.BQ) {
+			if(cours>=prixSeuilBQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 				return quantiteEnT;
 			}
