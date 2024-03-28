@@ -37,6 +37,7 @@ public class Producteur1Acteur implements IActeur {
 	protected static double LabourNormal = 1.80;
 	protected static double LabourEnfant = 0.80;
 	protected static double LabourEquitable = 3;
+	protected double cout;
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
@@ -72,6 +73,7 @@ public class Producteur1Acteur implements IActeur {
 		this.nb_enfants = 3000;
 		this.nb_equitables = 1;
 		this.nb_employees = 100;
+		
 	}
 
 	public String getNom() {// NE PAS MODIFIER

@@ -12,6 +12,10 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 	public double  prixSeuilBQ ;
 	public double  prixSeuilMQ ;
 	private Journal journalBourse;
+	public Producteur1VendeurBourse() {
+		super();
+		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
+	}
 	
 	
 // Fatima-ezzahra
@@ -24,7 +28,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 	   boolean bio = f.isBio();
 		boolean equi = f.isEquitable();
 	   
-	   if (quantiteEnT!=0) {
+	   if (quantiteEnT!=0 && cours > this.cout) {
 		   
 	  
 		if (f.getGamme()==Gamme.MQ) {
@@ -37,6 +41,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		if (f.getGamme()==Gamme.HQ) {
 			if(cours>=prixSeuilHQ) {
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+				
 				return quantiteEnT;
 			}
 		}
@@ -47,7 +52,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 			}
 		}
 	   }
-		
+	   journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 		return 0;
 	}
 
