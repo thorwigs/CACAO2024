@@ -9,6 +9,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Acteur implements IActeur {
@@ -23,6 +24,7 @@ public class Producteur3Acteur implements IActeur {
 	
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
+		setQuantiteEnStock(Feve.F_BQ,100000); //quantite initiale de stock de BQ (a modifier)
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -83,11 +85,13 @@ public class Producteur3Acteur implements IActeur {
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
 	public void notificationFaillite(IActeur acteur) {
+		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());	
 	}
 
 	// Apres chaque operation sur votre compte bancaire, cette
 	// operation est appelee pour vous en informer
 	public void notificationOperationBancaire(double montant) {
+		this.journal.ajouter("Operation bancaire : "+montant+ " E");
 	}
 	
 	// Renvoie le solde actuel de l'acteur
