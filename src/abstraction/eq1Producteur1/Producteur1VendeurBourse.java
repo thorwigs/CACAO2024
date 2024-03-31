@@ -29,9 +29,9 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		// TODO Auto-generated method stub
 		
 	   double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
-	   Gamme gamme = f.getGamme();
-	   boolean bio = f.isBio();
-		boolean equi = f.isEquitable();
+	   //Gamme gamme = f.getGamme();
+	   //boolean bio = f.isBio();
+	   //boolean equi = f.isEquitable();
 	   
 	   if (quantiteEnT!=0 && cours > this.cout) {
 		   
@@ -44,7 +44,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 				
 			}
 			else {
-				return 1000;
+				return 0;
 			}
 		}
 		if (f.getGamme()==Gamme.HQ) {
@@ -54,7 +54,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 				return quantiteEnT;
 			}
 			else {
-				return 1000;
+				return 0;
 			}
 		}
 		if (f.getGamme()==Gamme.BQ) {
@@ -64,7 +64,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 				return offre;
 			}
 			else {
-				return 1000;
+				return 0;
 			}
 		}
 	   }

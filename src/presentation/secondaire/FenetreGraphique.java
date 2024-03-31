@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Random;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -645,6 +646,7 @@ public class FenetreGraphique extends JFrame implements MouseListener, Component
 		// On cree un graphique nomme "Testons" de 640 pixels de large par 480 de haut
 		// Le graphique comporte 2 courbes: "une belle courbe" et "puissance 1.4"
 		// La seconde courbe possede une marge d'erreur sur l'erreur
+		Random r= new Random();
 		FenetreGraphique g2=new FenetreGraphique("Testons", 640, 480);
 		c=new Courbe("un belle courbe",226); 
 		for (int x=0; x<=50; x++) {
@@ -653,7 +655,7 @@ public class FenetreGraphique extends JFrame implements MouseListener, Component
 		g2.ajouter(c);
 		c=new Courbe("puissance 1.4",140);
 		for (int x=0; x<=50; x++) {
-			c.ajouter(4*x, Math.pow(x,1.4), Math.abs(Filiere.random.nextDouble()*x));
+			c.ajouter(4*x, Math.pow(x,1.4), Math.abs(r.nextDouble()*x));
 		}
 		g2.ajouter(c);
 
