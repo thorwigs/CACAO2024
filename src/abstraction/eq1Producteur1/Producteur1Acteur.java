@@ -41,10 +41,7 @@ public class Producteur1Acteur implements IActeur {
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
-		Production();
-		Stockage();
-	}
-	public void Production() {
+		
 		this.ProdParStep = new HashMap<Feve, Double>();
 		this.ProdParStep.put(Feve.F_BQ,1.0 );
 		this.ProdParStep.put(Feve.F_MQ,1.0 );
@@ -52,14 +49,11 @@ public class Producteur1Acteur implements IActeur {
 		this.ProdParStep.put(Feve.F_MQ_E,1.0 );
 		this.ProdParStep.put(Feve.F_HQ_E,1.0 );
 		this.ProdParStep.put(Feve.F_HQ_BE,1.0 );
-		
-		}
-	public void Stockage() {
-		//Still not sure about this need to be looked into a bit more
 		this.stock = new HashMap<Feve, Variable>();
 		for (Feve f : Feve.values()) {
 			Variable v = new Variable(f.toString(), null, this, 0.0, this.ProdParStep.get(f)*24, this.ProdParStep.get(f)*2 );
-			this.stock.put(f, v);
+			Variable vs = new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, ProdParStep.get(f)*24, ProdParStep.get(f)*6);
+			this.stock.put(f, vs);
 		}
 	}
 	public HashMap<Feve, Double> getProd(){
@@ -70,8 +64,8 @@ public class Producteur1Acteur implements IActeur {
 	}
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		this.nb_enfants = 3000;
-		this.nb_equitables = 1;
+		this.nb_enfants = 000;
+		this.nb_equitables = 0;
 		this.nb_employees = 100;
 		
 	}
