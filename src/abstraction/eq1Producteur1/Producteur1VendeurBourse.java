@@ -29,11 +29,9 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		// TODO Auto-generated method stub
 		
 	   double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
-	   //Gamme gamme = f.getGamme();
-	   //boolean bio = f.isBio();
-	   //boolean equi = f.isEquitable();
 	   
-	   if (quantiteEnT!=0 && cours > this.cout) {
+	   
+	   if (quantiteEnT!=0 && cours > this.cout) { // les trois gammes ont un seul cout?? 
 		   
 	  
 		if (f.getGamme()==Gamme.MQ) {
@@ -59,16 +57,16 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		}
 		if (f.getGamme()==Gamme.BQ) {
 			if(cours>=prixSeuilBQ) {
-				double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
+				//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-				return offre;
+				return quantiteEnT;
 			}
 			else {
 				return 0;
 			}
 		}
 	   }
-	   journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
+	 //  journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 		return 0;
 	   
 	
