@@ -136,7 +136,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (stockFeves.get(f)+restantDu(f)<20000) { 
+					if (stockFeves.get(f)+restantDu(f)<30000) { 
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
@@ -167,5 +167,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 			this.contratsEnCours.remove(c);
 		}
 		this.journalCC.ajouter("=================================");
+	}
+	
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalCC);
+		return jx;
 	}
 }

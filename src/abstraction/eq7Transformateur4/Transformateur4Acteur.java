@@ -128,8 +128,6 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.journal.ajouter("" + this.getChocolatsProduits());
 
 		this.getJournaux();
-		
-		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
