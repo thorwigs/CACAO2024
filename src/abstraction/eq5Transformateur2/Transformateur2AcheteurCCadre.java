@@ -14,7 +14,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur2AcheteurCCadre extends Transformateur2VendeurCCadre implements IAcheteurContratCadre {
+public class Transformateur2AcheteurCCadre extends Transformateur2Acteur implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;

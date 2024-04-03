@@ -7,7 +7,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
-public class Transformateur2AcheteurBourse extends Transformateur2Acteur implements IAcheteurBourse {
+public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre implements IAcheteurBourse {
 	private Journal journalBourse;
 	private double achatMaxParStep;
 	

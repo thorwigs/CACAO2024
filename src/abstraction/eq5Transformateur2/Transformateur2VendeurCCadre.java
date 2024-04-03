@@ -7,7 +7,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur2VendeurCCadre extends Transformateur2Acteur implements IVendeurContratCadre {
+public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	
 	public void next() {
 		super.next();
