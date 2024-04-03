@@ -60,7 +60,7 @@ public class RomuActeur implements IActeur {
 		
 		this.coutStockageProducteur = new VariableReadOnly("cout moyen stockage producteur", "<html>Le cout moyen du stockage par step d'une Tomme de produit chez un producteur</html>",this, 0.0, 100.0, 7.5);
 		this.journal = new Journal(this.getNom()+" journal", this);
-		this.coutMiseEnRayon  = new VariableReadOnly("Valeur mise en rayon par employe", "<html>Combien un employe met de valeur en rayon par step</html>",this, 1000.0, 100000.0, 10375.0 );
+		this.coutMiseEnRayon  = new VariableReadOnly("cout mise en rayon", "<html>Le cout pour la mise en rayon d'une tonne de chocolat</html>",this, 0.0, 1000.0, 34.19);
 	}
 
 	//========================================================
