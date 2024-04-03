@@ -43,15 +43,15 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
 		double capaciteTG = 0.1 * this.capaciteDeVente;
 		if (choco.getMarque()== "Chocoflow") {
-			return 0.06 * capaciteTG;
+			return 0.6 * capaciteTG;
 		}
 		else {
 			if(choco.getChocolat().isEquitable()) {
 				if(choco.getChocolat().getGamme()==Gamme.MQ) {
-					return 0.01 * capaciteTG;
+					return 0.1 * capaciteTG;
 				}
 				if(choco.getChocolat().getGamme()==Gamme.HQ) {
-					return 0.01 * capaciteTG;
+					return 0.15 * capaciteTG;
 				}
 			}
 		}
