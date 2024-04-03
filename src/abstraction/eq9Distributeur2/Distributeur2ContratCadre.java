@@ -14,7 +14,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
+public abstract class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
 
 	@Override
 	public boolean achete(IProduit produit) {
