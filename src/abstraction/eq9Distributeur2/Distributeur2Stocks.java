@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -15,6 +17,8 @@ public class Distributeur2Stocks extends Distributeur2Acteur{
 	protected Variable totalStocksChocoMarque;  
 	
 	
+
+
 	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
 		return this.stockChocoMarque;
 	}
