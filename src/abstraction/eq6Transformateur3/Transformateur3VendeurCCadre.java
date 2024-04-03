@@ -8,9 +8,9 @@ import abstraction.eqXRomu.contratsCadres.ExempleTransformateurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class TransformateurContratcadreVendeur extends ExempleTransformateurContratCadre implements IVendeurContratCadre{
+public class Transformateur3VendeurCCadre extends ExempleTransformateurContratCadre implements IVendeurContratCadre{
 
-	public TransformateurContratcadreVendeur(IProduit produit) {
+	public Transformateur3VendeurCCadre(IProduit produit) {
 		super(produit);
 		// TODO Auto-generated constructor stub
 	}
