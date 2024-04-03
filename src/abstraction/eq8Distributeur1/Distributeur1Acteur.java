@@ -119,8 +119,8 @@ public class Distributeur1Acteur implements IActeur {
 	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) {
-			if (p.equals(this.produit)) {
-				return this.stock_Choco.get(0);
+			if (stock_Choco.containsKey(p)) {
+				return stock_Choco.get(p);
 			} else{
 				return 0;
 			}
