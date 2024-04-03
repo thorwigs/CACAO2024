@@ -161,3 +161,4 @@ public class Transformateur1Acteur implements IActeur {
 		//Si l'acteur est autorisé, la méthode vérifie le type de produit demandé (p) 
 		//et renvoie la quantité en stock correspondante à ce produit pour cet acteur 
 		//Si le produit n'est pas présent en stock, la méthode renvoie 0.0
+//test
