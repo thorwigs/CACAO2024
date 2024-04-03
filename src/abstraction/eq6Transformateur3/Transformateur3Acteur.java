@@ -19,6 +19,8 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+
 public class Transformateur3Acteur implements IActeur {
 	
 	protected Journal journal;

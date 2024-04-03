@@ -1,12 +1,20 @@
 package abstraction.eq6Transformateur3;
 
+import java.util.LinkedList;
+
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.ExempleTransformateurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class VenteContratCadre extends Transformateur3Acteur implements IVendeurContratCadre{
+public class TransformateurContratcadreVendeur extends ExempleTransformateurContratCadre implements IVendeurContratCadre{
 
+	public TransformateurContratCadreVendeur(IProduit produit) {
+		super(produit);
+		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
+	}
+	
 	@Override
 	public boolean vend(IProduit produit) {
 		/**

@@ -6,3 +6,5 @@ public class Transformateur3 extends Transformateur3Acteur  {
 		super();
 	}
 }
+
+
