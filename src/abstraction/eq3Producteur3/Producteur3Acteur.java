@@ -13,15 +13,19 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur3Acteur implements IActeur {
+
+public abstract class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
 	private HashMap<IProduit,Integer> stocks;
+	//passable en parametre/indicateurs
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
-
+    
+    abstract HashMap<Feve,Double> quantite();
+    
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 	}
@@ -43,9 +47,12 @@ public class Producteur3Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
+
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCouts());
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -132,6 +139,9 @@ public class Producteur3Acteur implements IActeur {
 		}
 	}
 	
+	/**
+	 * @author Arthur
+	 */
 	protected void setQuantiteEnStock(IProduit p, double stock) {
 		//on set la valeur du stock ou la modifie si elle existe deja
 		this.stocks.put(p,(int)stock);
@@ -139,7 +149,7 @@ public class Producteur3Acteur implements IActeur {
 	/**
 	 * @author mammouYoussef
 	 */
-	 public double calculerCoutsStockage () {
+	 protected double calculerCoutsStockage () {
 	      double coutStockage = 0;
 	      double cout=Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 	      for (Integer quantite : stocks.values()) {
@@ -149,26 +159,45 @@ public class Producteur3Acteur implements IActeur {
 	 /**
 	  * @author mammouYoussef
 	  */		 
-	 public double calculerCoutsProduction () {
-	      double coutProductionBQ = 0;
-	      double coutProductionMQ = 0;
-	      double coutProductionHQ = 0;
-	     
-		    for (IProduit produit : stocks.keySet()) {
-		        int quantite = stocks.get(produit); // Récupération de la quantité produite
+     
+	 protected double calculerCoutsProduction() {
+		    double coutProductionBQ = 0;
+		    double coutProductionMQ = 0;
+		    double coutProductionHQ = 0;
+	
+	    HashMap<Feve, Double> quantitesProduites = quantite();
 
-		        // Calcul du coût de production pour la gamme de qualité concernée
-		        if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.BQ) {
-		            coutProductionBQ += quantite * coutUnitaireProductionBQ;
-		        } else if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.MQ) {
-		            coutProductionMQ += quantite * coutUnitaireProductionMQ;
-		        } else if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.HQ) {
-		            coutProductionHQ += quantite * coutUnitaireProductionHQ;
-		        }
-		    }
-		    return coutProductionBQ+coutProductionMQ+coutProductionHQ;
+	    for (Feve f : quantitesProduites.keySet()) {
+	        double quantite = quantitesProduites.get(f); // Récupération de la quantité produite
 
+	        // Calcul du coût de production pour la gamme de qualité concernée
+	        if (f.getGamme() == Gamme.BQ) {
+	            coutProductionBQ += quantite * coutUnitaireProductionBQ;
+	        } else if (f.getGamme() == Gamme.MQ) {
+	            
+	            coutProductionMQ += quantite * coutUnitaireProductionMQ;
+	        } else if (f.getGamme() == Gamme.HQ) {
+	          
+	            coutProductionHQ += quantite * coutUnitaireProductionHQ;
+	        }
+	    }
+	    return coutProductionBQ + coutProductionMQ + coutProductionHQ;
+	
+        }
+	 
+	 protected double calculerCouts() {
+		 return calculerCoutsProduction()+calculerCoutsStockage();
+		 
 	 }
-
-	   
+	 /**
+	  * @author Arthur
+	  * gestion des stocks pour les inputs de production (les outputs sont geres par les fonctions de ventes)
+	  */
+	 protected void gestionStock() {
+		 HashMap<Feve,Double> prod = quantite();
+		 for (Feve f : prod.keySet()) {
+			 this.setQuantiteEnStock(f, this.getQuantiteEnStock(f, this.cryptogramme)+prod.get(f));
+		 }
+	 }
+	 
 }

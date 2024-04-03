@@ -4,10 +4,9 @@ import java.util.HashMap;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur3Plantation extends Producteur3Acteur {
-
+public abstract class Producteur3Plantation extends Producteur3Acteur {
+	abstract HashMap<Feve,Double> quantite();
 
 /**
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
@@ -74,8 +73,7 @@ public class Producteur3Plantation extends Producteur3Acteur {
 			}
 		}
 		return ouvriers;
-	}
-	 
+	}	 
 
 }
 

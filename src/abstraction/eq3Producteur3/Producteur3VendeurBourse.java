@@ -7,7 +7,9 @@ import abstraction.eqXRomu.produits.Gamme;
 public class Producteur3VendeurBourse extends Producteur3Production implements IVendeurBourse {
 	
 	
-	@Override
+	/**
+	 * @author Arthur
+	 */
 	public double offre(Feve f, double cours) {
 		//verifier si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
 		//prendre en compte des couts de stocks dans couts (donc separer les tonnes produites par step dans une liste ou autre)
@@ -26,7 +28,9 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		}
 	}
 
-	@Override
+	/*
+	 * @author Arthur
+	 */
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double stock_inst = this.getQuantiteEnStock(f, this.cryptogramme);
 		if (quantiteEnT <= stock_inst) {
