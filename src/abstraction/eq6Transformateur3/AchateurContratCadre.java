@@ -13,7 +13,10 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class AchateurContratCadre extends Transformateur3Acteur implements IAcheteurContratCadre {
-
+	
+	public AchateurContratCadre() {
+		super();
+	}
 	@Override
 	public void initialiser() {
 		// TODO Auto-generated method stub

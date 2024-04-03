@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
+//commmentaire pour pascal
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -73,7 +73,7 @@ public class Transformateur3Acteur implements IActeur {
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
-		return new Color(158, 242, 226); 
+		return new Color(160, 242, 226); 
 	}
 
 	public String getDescription() {
