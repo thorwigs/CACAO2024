@@ -17,7 +17,7 @@ public class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 
-	protected HashMap<Feve,Variable> stock; //Feve = qualite et Variable = quantite
+	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
 	protected int nb_employes;
@@ -26,6 +26,10 @@ public class Producteur2Acteur implements IActeur {
 
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
+		this.stock = new HashMap<Feve,Double>();
+		this.stock.put(Feve.F_BQ, 100.0);
+		/*for (Feve f : Feve.values()) {
+		}*/
 	
 	}
 	

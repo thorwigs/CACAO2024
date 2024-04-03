@@ -35,7 +35,7 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
-
+	
 	//Stock dans Producteur2Acteur
 	
 	public void next() {
