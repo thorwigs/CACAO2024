@@ -1,6 +1,8 @@
 package abstraction.eq5Transformateur2;
 
 import java.awt.Color;
+import java.util.List;
+
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -56,6 +58,10 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	///////////////////////////////////////////////////////////////////////
 	// Notifs de la vente ou de la BlackList + Mise à jour JournalBourse //	
 	///////////////////////////////////////////////////////////////////////
+	public void next() {
+		super.next();
+		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+	}
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
@@ -64,6 +70,9 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	public void notificationBlackList(int dureeEnStep) {
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" BLACKLIST pendant "+dureeEnStep+" etapes");
 	}
-	
-	
+	public List<Journal> getJournaux() {
+		List<Journal> res=super.getJournaux();
+		res.add(journalBourse);
+		return res;
+	}
 }
