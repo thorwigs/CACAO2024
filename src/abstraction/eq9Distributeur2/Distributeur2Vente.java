@@ -16,7 +16,7 @@ public class Distributeur2Vente extends Distributeur2Stocks implements IDistribu
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-		return this.getQuantiteEnStock(choco, crypto);
+		return 10;//this.getQuantiteEnStock(choco, crypto);
 	}
 
 	@Override
@@ -30,6 +30,7 @@ public class Distributeur2Vente extends Distributeur2Stocks implements IDistribu
 		// TODO Auto-generated method stub
 		this.stockChocoMarque.put(choco, this.stockChocoMarque.get(choco)-quantite);
 		this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
+		System.out.println("vente");
 		
 	}
 
