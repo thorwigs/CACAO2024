@@ -165,14 +165,24 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 
 	@Override
 	public List<ChocolatDeMarque> getChocolatsProduits() {
-		// TODO Auto-generated method stub
-		return null;
+
+		if (this.chocosProduits.size()==0) {
+			Chocolat cmc = Chocolat.C_MQ_E;
+			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
+			this.chocosProduits.add(new ChocolatDeMarque(cmc, "LeaderKakao", pourcentageCacao));
+			
+			Chocolat chc = Chocolat.C_HQ_BE;
+			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+chc.getGamme()).getValeur());
+			this.chocosProduits.add(new ChocolatDeMarque(chc, "LeaderKakao", pourcentageCacao));
+		}
+		return this.chocosProduits;
 	}
 
 	@Override
 	public List<String> getMarquesChocolat() {
-		// TODO Auto-generated method stub
-		return null;
+		LinkedList<String> marques = new LinkedList<String>();
+		marques.add("LeaderKakao");
+		return marques;
 	}
 }
 
