@@ -8,6 +8,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur1AcheteurBourse extends Transformateur1Acteur implements IAcheteurBourse {
+	
 
 	protected Journal journalAchatBourse;
 	
@@ -43,12 +44,15 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
 		
+
 		this.journalAchatBourse.ajouter("- achat de "+quantiteEnT+"T de fèves "+f);
+
 
 	}
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
+		
 	}
 
 }
