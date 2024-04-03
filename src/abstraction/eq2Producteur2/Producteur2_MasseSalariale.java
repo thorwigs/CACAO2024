@@ -63,6 +63,4 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	public void mise_a_jour() {
 		
 	}
-	
-
 }
