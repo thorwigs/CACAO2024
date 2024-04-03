@@ -149,7 +149,13 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		double prix_AO  = propositionRetenue.getPrixT();
 		double quantite_AO = propositionRetenue.getQuantiteT();
 		journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+"   Vente par AO de "+quantite_AO+" T de "+feve_AO+" au prix de  "+prix_AO);
-
+		IAcheteurAO acheteur_AO=propositionRetenue.getOffre().getAcheteur();
+		
+		//ajouter un +1 au score de la blacklist pour cet acheteur pour avoir refusé l'offre
+		if (score_to_black_list.containsKey(acheteur_AO)) {
+			double score_actuel = score_to_black_list.get(acheteur_AO);
+			score_to_black_list.put(acheteur_AO, score_actuel - 1);
+		}
 		
 	}
 
