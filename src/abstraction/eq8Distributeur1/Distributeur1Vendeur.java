@@ -1,6 +1,5 @@
 package abstraction.eq8Distributeur1;
 
-import java.util.List;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
@@ -68,5 +67,6 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
 	
+
 
 }
