@@ -15,6 +15,7 @@ import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
@@ -49,8 +50,13 @@ public class Transformateur3Acteur implements IActeur {
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-		this.stockFeves=new HashMap<Feve,Double>();
-	
+		this.stockFeves = new HashMap<Feve,Double>();
+		stockFeves.put(Feve.F_BQ,0.0);
+		stockFeves.put(Feve.F_MQ,0.0);
+		stockFeves.put(Feve.F_MQ_E,0.0);
+		stockFeves.put(Feve.F_HQ,0.0);
+		stockFeves.put(Feve.F_HQ_E,0.0);
+		stockFeves.put(Feve.F_HQ_BE,0.0);
 	
 	}
 
