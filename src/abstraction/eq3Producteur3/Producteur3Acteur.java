@@ -189,5 +189,15 @@ public abstract class Producteur3Acteur implements IActeur {
 		 return calculerCoutsProduction()+calculerCoutsStockage();
 		 
 	 }
+	 /**
+	  * @author Arthur
+	  * gestion des stocks pour les inputs de production (les outputs sont geres par les fonctions de ventes)
+	  */
+	 protected void gestionStock() {
+		 HashMap<Feve,Double> prod = quantite();
+		 for (Feve f : prod.keySet()) {
+			 this.setQuantiteEnStock(f, this.getQuantiteEnStock(f, this.cryptogramme)+prod.get(f));
+		 }
+	 }
 	 
 }
