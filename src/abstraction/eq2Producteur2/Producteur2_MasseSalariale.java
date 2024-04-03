@@ -10,6 +10,7 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private double salaire_adulte_equitable;
 		
 	public void initialiser() {
+		super.initialiser();
 		int nb_employes =  3679200;
 		int nb_employes_equitable = 100800;
 		int nb_employes_enfants = 1260000; //25% au départ

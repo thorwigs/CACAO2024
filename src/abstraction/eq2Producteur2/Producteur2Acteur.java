@@ -17,7 +17,7 @@ public class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 
-	protected HashMap<Feve,Variable> stock; //Feve = qualite et Variable = quantite
+	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
 	protected int nb_employes;
@@ -30,8 +30,16 @@ public class Producteur2Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
-		stock = new HashMap <Feve, Variable>();
-	
+		stock = new HashMap <Feve, Double>();
+		stock.put(Feve.F_HQ_BE, 5.0);
+		stock.put(Feve.F_BQ, 40.0);
+		stock.put(Feve.F_MQ, 30.0);
+		stock.put(Feve.F_HQ,0.0);
+		stock.put(Feve.F_HQ_E, 0.0);
+		stock.put(Feve.F_MQ_E, 0.0);
+		for(Feve f: stock.keySet()) {
+			System.out.println("Pour "+f+"on a"+ stock.get(f));
+		}
 	}
 
 	public String getNom() {// NE PAS MODIFIER

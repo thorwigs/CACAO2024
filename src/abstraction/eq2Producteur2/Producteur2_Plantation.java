@@ -12,6 +12,7 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	
 	
 	public void initialiser() {
+		super.initialiser();
 		double nb_hectares_max = 5000000;
 		double nb_hectares_actuel = 5000000;
 		double prix_plantation_hectare = 0; // à définir
