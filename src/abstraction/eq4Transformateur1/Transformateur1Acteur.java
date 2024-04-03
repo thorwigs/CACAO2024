@@ -43,6 +43,21 @@ public class Transformateur1Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+
+		this.lesFeves = new LinkedList<Feve>();
+		this.journal.ajouter("Les Feves sont :");
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+			this.journal.ajouter("   - "+f);
+		}
+		
+		this.stockFeves=new HashMap<Feve,Double>();
+		for (Feve f : this.lesFeves) {
+			this.stockFeves.put(f, 20000.0);
+			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+		}
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -67,7 +82,7 @@ public class Transformateur1Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "équipe 4, transformateur 1 : LeaderKakao";
 	}
 
 	// Renvoie les indicateurs

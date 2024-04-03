@@ -20,8 +20,15 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 
 	@Override
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
+
+		// TODO Auto-generated method stub
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
+		
+
+		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
+		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
+
 	}
 
 	@Override
