@@ -2,7 +2,7 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Producteur2_Stocks extends Lot {
+public class Producteur2_Stocks extends Producteur2_Lot {
 	
 	private static final double SEUIL = 0; 
 	//seuil max de la production stockee (voir ce qu'on fait du reste: vente, poubelle, produit moins, ...)
@@ -17,7 +17,7 @@ public class Producteur2_Stocks extends Lot {
 	private int quantite_stockee_mq;
 	private int quantite_stockee_bq;
 	
-	private List<Lot> stock_total;
+	private List<Producteur2_Lot> stock_total;
 	
 	//méthode pour déterminer passage de haute_qualite à moyenne et de moyenne à basse
 	//méthode update pour mettre à jour à chaque tour le stock
@@ -26,7 +26,7 @@ public class Producteur2_Stocks extends Lot {
 	
 	public Producteur2_Stocks() {
 		super();
-		List<Lot> l = new ArrayList<Lot>();
+		List<Producteur2_Lot> l = new ArrayList<Producteur2_Lot>();
 	}
 	
 	public int getQuantite_stockee_hq() {
