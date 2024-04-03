@@ -9,10 +9,18 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	private double[] prix;
 	private String[] marques;
 	
-	
+	public Distributeur1Vendeur(ChocolatDeMarque[] chocos, double[] stocks, double capaciteDeVente, double[] prix, String[]marques) {
 		
+		
+	}
+
 	public double prix(ChocolatDeMarque choco) {
-		return 0;
+		int pos= (chocolats.indexOf(choco));
+		if (pos<0) {
+			return 0.0;
+		} else {
+			return prix[pos];
+		}
 	}
 
 

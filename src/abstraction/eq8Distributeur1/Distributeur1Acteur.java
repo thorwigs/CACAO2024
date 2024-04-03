@@ -19,6 +19,7 @@ public class Distributeur1Acteur implements IActeur {
 	protected IProduit produit;
 	protected Variable stock;
 	protected HashMap<ChocolatDeMarque, Double> données;
+	protected List<ChocolatDeMarque> chocolats;
 	
 	
 
