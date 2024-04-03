@@ -13,7 +13,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur1Acteur implements IActeur,IMarqueChocolat {
+public class Distributeur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
