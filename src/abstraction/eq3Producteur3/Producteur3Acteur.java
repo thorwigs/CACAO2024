@@ -175,10 +175,10 @@ public abstract class Producteur3Acteur implements IActeur {
 	        if (f.getGamme() == Gamme.BQ) {
 	            coutProductionBQ += quantite * coutUnitaireProductionBQ;
 	        } else if (f.getGamme() == Gamme.MQ) {
-	            // Ici, pas besoin de distinguer si la fève MQ est équitable ou non pour calculer le coût de production
+	            
 	            coutProductionMQ += quantite * coutUnitaireProductionMQ;
 	        } else if (f.getGamme() == Gamme.HQ) {
-	            // De même, pour les fèves HQ, le coût est calculé de la même manière, indépendamment de si elles sont équitables
+	          
 	            coutProductionHQ += quantite * coutUnitaireProductionHQ;
 	        }
 	    }
