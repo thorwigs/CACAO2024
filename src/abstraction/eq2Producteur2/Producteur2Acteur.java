@@ -34,7 +34,6 @@ public class Producteur2Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
-		stock = new HashMap <Feve, Variable>();
 	
 	}
 
@@ -125,7 +124,27 @@ public class Producteur2Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+			double quantite_stockee = 0;
+			for(Feve f : this.stock.keySet()) {
+				if(f.equals(p)){
+					quantite_stockee += this.stock.get(f);
+				}
+			}
+			return quantite_stockee;
+			//return 0; // A modifier
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+		}
+	}
+	
+	public double getStockTotal(int cryptogramme) {
+		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
+			double quantite_stockee = 0;
+			for(Feve f : this.stock.keySet()) {
+				quantite_stockee += this.stock.get(f);
+			}
+			return quantite_stockee;
+			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
