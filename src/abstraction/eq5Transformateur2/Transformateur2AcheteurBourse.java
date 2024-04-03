@@ -16,7 +16,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2Acteur impleme
 	 * -->
 	 */
 
-	
+
 
 	////////////////////////////////////////////
 	// Constructeur --> met à jour le journal //
