@@ -45,22 +45,26 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-					double parStep = 100;
-					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 26, parStep);
-					List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
-					if (vendeurs.size()>0) {
-						IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-						journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
-						if (contrat==null) {
-							journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+					if (this.stockFeves.get(f)<10000) {
+						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+						double parStep = 100;
+						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 26, parStep);
+						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
+						if (vendeurs.size()>0) {
+							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+							journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+							if (contrat==null) {
+								journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+							} else {
+								this.contratsEnCours.add(contrat);
+								journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							}
 						} else {
-							this.contratsEnCours.add(contrat);
-							journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
-						}
+							journalCC.ajouter("   pas de vendeur");
+					}
 					} else {
-						journalCC.ajouter("   pas de vendeur");
+						journalCC.ajouter(f+" suffisament de stock pour ne pas passer de contrat cadre");
 					}
 				}	
 		// On archive les contrats termines

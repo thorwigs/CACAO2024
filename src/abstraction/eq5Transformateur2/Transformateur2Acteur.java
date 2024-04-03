@@ -22,7 +22,8 @@ public class Transformateur2Acteur implements IActeur {
 	protected int cryptogramme;
 	private double coutStockage;
 	
-
+	private double STOCKINITIAL=1000.0;
+	
 	protected List<Feve> lesFeves;
 	protected List<Chocolat> lesChocolats;
 	private List<ChocolatDeMarque>chocosProduits;
@@ -54,8 +55,8 @@ public class Transformateur2Acteur implements IActeur {
 		
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : Feve.values()) {
-			this.stockFeves.put(f, 1000.0);
-			this.totalStocksFeves.ajouter(this, 1000.0, this.cryptogramme);
+			this.stockFeves.put(f, STOCKINITIAL);
+			this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de 1000 tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		
@@ -68,8 +69,8 @@ public class Transformateur2Acteur implements IActeur {
 		}
 		this.stockChoco=new HashMap<Chocolat,Double>();
 		for (Chocolat c : Chocolat.values()) {
-			this.stockChoco.put(c, 1000.0);
-			this.totalStocksChoco.ajouter(this, 1000.0, this.cryptogramme);
+			this.stockChoco.put(c, STOCKINITIAL);
+			this.totalStocksChoco.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de 1000 tonnes de : "+c+" au stock total de Chocolat // stock total : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 		}
