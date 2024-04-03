@@ -76,6 +76,9 @@ public class Transformateur3Acteur implements IActeur {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape() );
 		this.journal.ajouter("=== STOCKS === ");
 		this.journal.ajouter ("cout moyen stockage producteur" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4);
+		for (Feve f : stockFeves.keySet()) {
+			this.journal.ajouter("Stock de "+f+" = "+this.stockFeves.get(f));
+		}
 				// mon commentaire perso
 	
 	}
