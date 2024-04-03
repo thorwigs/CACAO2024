@@ -13,7 +13,8 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur3Acteur implements IActeur {
+
+public abstract class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
@@ -22,7 +23,9 @@ public class Producteur3Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
-
+    
+    abstract HashMap<Feve,Double> quantite();
+    
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 	}
@@ -157,26 +160,30 @@ public class Producteur3Acteur implements IActeur {
 	 /**
 	  * @author mammouYoussef
 	  */		 
-	 public double calculerCoutsProduction () {
-	      double coutProductionBQ = 0;
-	      double coutProductionMQ = 0;
-	      double coutProductionHQ = 0;
-	     
-		    for (IProduit produit : stocks.keySet()) {
-		        int quantite = stocks.get(produit); // Récupération de la quantité produite
 
-		        // Calcul du coût de production pour la gamme de qualité concernée
-		        if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.BQ) {
-		            coutProductionBQ += quantite * coutUnitaireProductionBQ;
-		        } else if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.MQ) {
-		            coutProductionMQ += quantite * coutUnitaireProductionMQ;
-		        } else if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.HQ) {
-		            coutProductionHQ += quantite * coutUnitaireProductionHQ;
-		        }
-		    }
-		    return coutProductionBQ+coutProductionMQ+coutProductionHQ;
+     
+	 public double calculerCoutsProduction() {
+		    double coutProductionBQ = 0;
+		    double coutProductionMQ = 0;
+		    double coutProductionHQ = 0;
+	
+	    HashMap<Feve, Double> quantitesProduites = quantite();
 
+	    for (Feve f : quantitesProduites.keySet()) {
+	        double quantite = quantitesProduites.get(f); // Récupération de la quantité produite
+
+	        // Calcul du coût de production pour la gamme de qualité concernée
+	        if (f.getGamme() == Gamme.BQ) {
+	            coutProductionBQ += quantite * coutUnitaireProductionBQ;
+	        } else if (f.getGamme() == Gamme.MQ) {
+	            
+	            coutProductionMQ += quantite * coutUnitaireProductionMQ;
+	        } else if (f.getGamme() == Gamme.HQ) {
+	          
+	            coutProductionHQ += quantite * coutUnitaireProductionHQ;
+	        }
+	    }
+	    return coutProductionBQ + coutProductionMQ + coutProductionHQ;
+	
+        }
 	 }
-
-	   
-}
