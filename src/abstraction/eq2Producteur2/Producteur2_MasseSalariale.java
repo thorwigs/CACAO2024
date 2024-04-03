@@ -1,3 +1,5 @@
+
+// Classe faite par Noémie
 package abstraction.eq2Producteur2;
 
 public class Producteur2_MasseSalariale extends Producteur2_Stocks {
@@ -10,6 +12,7 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private double salaire_adulte_equitable;
 		
 	public void initialiser() {
+		super.initialiser();
 		int nb_employes =  3679200;
 		int nb_employes_equitable = 100800;
 		int nb_employes_enfants = 1260000; //25% au départ
@@ -48,6 +51,13 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		else {
 			return salaire_adulte;
 		}
+	}
+	
+	public double cout_par_step() { // Renvoie le coût total lié à la main d'oeuvre par step
+		double enfants = getNb_employes_enfants()* getSalaire("enfant");
+		double adultes_eq = getNb_employes_equitable()*getSalaire("adulte équitable");
+		double adultes = getNb_employes()*getSalaire("adulte"); 
+		return enfants + adultes_eq + adultes;
 	}
 	
 	public void mise_a_jour() {

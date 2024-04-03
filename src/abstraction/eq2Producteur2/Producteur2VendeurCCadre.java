@@ -41,10 +41,12 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		/*for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-			if (stock.get(f).getValeur()-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
+		System.out.println("sto "+stock);
+		System.out.println("feves en stock"+stock.keySet());
+		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+			if (stock.get(f)-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				double parStep = Math.max(100, (stock.get(f)-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
 				if (acheteurs.size()>0) {
@@ -70,7 +72,7 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 		}
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
-		}*/
+		}
 		this.journalCC.ajouter("=================================");
 	}
 
@@ -114,7 +116,7 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 	}
 
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Feve") && stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)>1200;
+		return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200;
 	}
 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
@@ -126,22 +128,22 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 				&& ec.getQuantiteTotale()>=1200  // au moins 100 tonnes par step pendant 6 mois
 				&& ec.getStepFin()-ec.getStepDebut()>=11   // duree totale d'au moins 12 etapes
 				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8 // ca doit demarrer dans moins de 4 mois
-				&& ec.getQuantiteTotale()<stock.get((Feve)produit).getValeur()-restantDu((Feve)produit);
+				&& ec.getQuantiteTotale()<stock.get((Feve)produit)-restantDu((Feve)produit);
 				if (!acceptable) {
-					if (!produit.getType().equals("Feve") || stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)<1200) {
+					if (!produit.getType().equals("Feve") || stock.get((Feve)produit)-restantDu((Feve)produit)<1200) {
 						if (!produit.getType().equals("Feve")) {
 							journalCC.ajouter("      ce n'est pas une feve : je retourne null");
 						} else {
-							journalCC.ajouter("      je n'ai que "+(stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))+" de disponible (moins de 1200) : je retourne null");
+							journalCC.ajouter("      je n'ai que "+(stock.get((Feve)produit)-restantDu((Feve)produit))+" de disponible (moins de 1200) : je retourne null");
 						}
 						return null;
 					}
-					if (ec.getQuantiteTotale()<=stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)) {
+					if (ec.getQuantiteTotale()<=stock.get((Feve)produit)-restantDu((Feve)produit)) {
 						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 					} else {
-						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12))));
-						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12)));
+						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit)-restantDu((Feve)produit)/12))));
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit)-restantDu((Feve)produit)/12)));
 					}
 				}
 				journalCC.ajouter("      j'accepte l'echeancier");
@@ -186,7 +188,7 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 			} else {
 				journalCC.ajouter("      contreproposition("+contrat.getPrix()+") retourne "+prix.get(0)*1.05);
 				return prix.get(0)*1.05;
-			}
+	 		}
 		}
 	}
 
@@ -195,10 +197,10 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-		double stockActuel = stock.get(produit).getValeur((Integer)cryptogramme);
+		double stockActuel = stock.get(produit);
 		double aLivre = Math.min(quantite, stockActuel);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stock.get(produit).setValeur(this, aLivre, (Integer)cryptogramme);
+		stock.put((Feve) produit,stock.get((Feve) produit)-aLivre);
 		return aLivre;
 	} 
 }
