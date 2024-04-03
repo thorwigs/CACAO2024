@@ -2,6 +2,8 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.produits.Feve;
+
 public class Producteur2_Stocks extends Producteur2_Lot {
 	
 	private static final double SEUIL = 0; 
@@ -65,6 +67,10 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		return DELAI_MQ_BQ;
 	}
 	
+	public List<Producteur2_Lot> getStock_total() {
+		return this.stock_total;
+	}
+	
 	/*public void action_seuil() {
 		if(this.getQuantiteEnStock())
 	}*/
@@ -89,7 +95,45 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 			
 		}
 	} 
-
+	
+	public void lot_to_hashmap() {
+		List<Producteur2_Lot> l = getStock_total();
+		double feve_bq = 0;
+		double feve_mq = 0;
+		double feve_hq = 0;
+		double feve_mq_e= 0;
+		double feve_hq_e = 0;
+		double feve_hq_be = 0;
+		
+		for (int i = 0; i < getStock_total().size(); i++) {
+		      if (l.get(i).getType_feve() == Feve.F_BQ) {
+		    	  feve_bq += l.get(i).getQuantite();
+		      }
+		      else if (l.get(i).getType_feve() == Feve.F_MQ) {
+		    	  feve_mq += l.get(i).getQuantite();
+		      }
+		      else if (l.get(i).getType_feve() == Feve.F_HQ) {
+		    	  feve_hq += l.get(i).getQuantite();
+		      }
+		      else if (l.get(i).getType_feve() == Feve.F_MQ_E) {
+		    	  feve_mq_e += l.get(i).getQuantite();
+		      }
+		      else if (l.get(i).getType_feve() == Feve.F_HQ_E) {
+		    	  feve_hq_e += l.get(i).getQuantite();
+		      }
+		      else if (l.get(i).getType_feve() == Feve.F_HQ_BE) {
+		    	  feve_hq_be += l.get(i).getQuantite();
+		      }
+		}
+		
+		stock.put(Feve.F_BQ, feve_bq);
+		stock.put(Feve.F_MQ, feve_mq);
+		stock.put(Feve.F_HQ, feve_hq);
+		stock.put(Feve.F_MQ_E, feve_mq_e);
+		stock.put(Feve.F_HQ_E, feve_hq_e);
+		stock.put(Feve.F_HQ_BE, feve_hq_be);	
+	}
 }
+
 
 	
