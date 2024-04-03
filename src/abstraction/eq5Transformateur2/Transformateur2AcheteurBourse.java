@@ -1,5 +1,6 @@
 package abstraction.eq5Transformateur2;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -8,11 +9,13 @@ import abstraction.eqXRomu.produits.Gamme;
 
 public class Transformateur2AcheteurBourse extends Transformateur2Acteur implements IAcheteurBourse {
 	private Journal journalBourse;
+	private double achatMaxParStep;
 	
 	/* A faire : 
 	 * --> Stratégie sur la demande (nbr de tonne demandée)
 	 * -->
 	 */
+
 	
 
 	////////////////////////////////////////////
@@ -28,6 +31,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2Acteur impleme
 	// Demande //
 	/////////////
 	public double demande(Feve f, double cours) {
+
 		//à faire : faire les strat sur le nbr de tonne demandé sur BQ
 		//à faire : faire les strat sur le nbr de tonne demandé sur HQ
 		
@@ -46,6 +50,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2Acteur impleme
 			return 0;
 		}
 	}
+	
 
 	
 	///////////////////////////////////////////
