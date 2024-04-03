@@ -156,7 +156,7 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	}
 	
 	public List<Producteur2_Lot> lot_type_feve(Feve type_feve){
-		List<Producteur2_Lot> lst_lot  = this.stock_total;
+		List<Producteur2_Lot> lst_lot  = this.stock_total; 
 		List<Producteur2_Lot> lst_lot_feve  = new ArrayList<Producteur2_Lot>();
 		for(Producteur2_Lot lot : lst_lot) {
 			if (lot.getType_feve() == type_feve) {
