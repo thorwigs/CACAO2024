@@ -1,5 +1,6 @@
 package abstraction.eq1Producteur1;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
@@ -10,7 +11,6 @@ import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
-import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,18 +66,31 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	
 	
 	
+	public double revenus_bourse_seuil_AO(AppelDOffre offre,BourseCacao bourse) {
+		
+		
+		return bourse.getCours((Feve)(offre.getProduit())).getMax()*offre.getQuantiteT();
+	}
+	
+	public double revenues_AO_prix_defaut(AppelDOffre offre) 
+	{ 
+		double prix=prix_defaut_feve.get(offre.getProduit());
+		return offre.getQuantiteT()*prix;
+	}
+	
 	
 	public OffreVente proposerVente(AppelDOffre offre) {
 
-		
 		// TODO Auto-generated method stub
-	    final IAcheteurAO acheteur_AO=offre.getAcheteur();
+	     IAcheteurAO acheteur_AO=offre.getAcheteur();
 	     IProduit produit_AO=offre.getProduit();
+	     BourseCacao bourse =(BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+
 	     if (!(produit_AO instanceof Feve)) {
-				//journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+produit_AO.toString());
+				//journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" "+offre.getProduit());
 
 				return null;
-				
+
 			}
 	     Feve feve_AO = (Feve)produit_AO;
 	     
@@ -94,49 +107,51 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	    	 score_to_black_list.put(acheteur_AO, 0.0);
 		}
 	     
+	   //revenus AO pour n'importe quels quanties et qualité >revenues
+		// bourse pour les memes quanites qualites
+	    
+	    if (revenus_bourse_seuil_AO(offre,bourse )< revenues_AO_prix_defaut(offre)){
+	    	return new OffreVente(offre, this, feve_AO, prix_defaut_feve.get(feve_AO));	
+		}
 	     
 		if (black_list_Acheteur_AO.contains(acheteur_AO)) {
 			
 			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, l'acheteur "+acheteur_AO.getNom()+" est dans la liste noire ");
 			return null;
-			
 		}
-		else if(a_ne_pas_vendre.contains(feve_AO)) {
+		
+		//si feve figure dans la liste a ne pas vendre en par AOs
+		 if(a_ne_pas_vendre.contains(feve_AO)) {
 			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, le produit "+feve_AO+" n'est pas à vendre");
 
 			return null;
 			
 		}
 		
-		else if(quantite_stock<=quantite_AO) {
+		 if(quantite_stock<=quantite_AO) {
 			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, quantite_stock<=quantite_AO");
 			return null;
 		}
 		
 		
-		else if (quantite_AO<seuil_minimAO) {
+		 if (quantite_AO<seuil_minimAO || quantite_AO>seuil_maximAO) {
 			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, quantite_stock<=quantite_AO");
 
 			return null;
 		}
-		else if(quantite_AO>seuil_maximAO) {
-			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, quantite_stock<=quantite_AO");
-
-			return null;
-			
-		} 
+		
 		//on va ajouter une strategie pour savoir si on doit porcéder à une vente par appel d'offre 
 		//ou non qui dépend des prix en bourse ,les seuils sur les quanites min et max peuvent 
 		//changer si le revenu est égal ou supérieur à celui qu'on a pu génerer en bourse pour les quanites 
 		//seuil min et max
 		
 		
-		else {
+		
 			return new OffreVente(offre, this, feve_AO, prix_defaut_feve.get(feve_AO));
 			
 			
 			
-		}
+		
 		
 		
 	}
