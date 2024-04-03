@@ -8,7 +8,8 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	private double capaciteDeVente;
 	private double[] prix;
 	private String[] marques;
-
+	
+	
 		
 	public double prix(ChocolatDeMarque choco) {
 		return 0;
