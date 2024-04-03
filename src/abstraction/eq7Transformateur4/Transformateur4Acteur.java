@@ -26,12 +26,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	private Journal journal;
 	private double coutStockageTransfo; //pour simplifier, on aura juste a appeler cette variable pour nos coût de stockage
 	protected List<Feve> lesFeves; //la liste de toutes les fèves qui existent
-	private List<ChocolatDeMarque>chocosProduits; //liste des types de chocolats qui peuvent être produit
+	private List<ChocolatDeMarque>chocosProduits; //liste de tout les chocolat qu'on peut produire, mais qu'on ne va pas forcement produire
 	protected HashMap<Feve, Double> stockFeves; //un truc qui contiendra tout nos stocks pour chaque fèves
 	protected HashMap<Chocolat, Double> stockChoco; //idem pour les chocolats, donc on aura 2 chocos (un BQ/MH et un HQ)
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; //idem pour les chocolat de marques, donc on aura un seul choco, le HQ de stockChoco une fois qu'on lui aura apposé la marque Mirage
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
-	protected List<ChocolatDeMarque> chocolatCocOasis;
+	protected List<ChocolatDeMarque> chocolatCocOasis;//liste de tout les chocolats que nous produisons
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
