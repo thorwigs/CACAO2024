@@ -24,12 +24,24 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
+	
+	/**
+	 * @author mammouYoussef
+	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return 0;
+	    IProduit produit = contrat.getProduit();
+	    if (!(produit instanceof Feve)) { return 0;}
+	    
+	    Feve feve = (Feve) produit;
+	    double prixBase=0;
+	     if (feve.getGamme() == Gamme.MQ) {
+	        prixBase = 3000; // à modifier
+	    } else if (feve.getGamme() == Gamme.HQ) {
+	       prixBase = 4000; // à modifier
+	    }
+	    return prixBase * 1.2; // Ajouter une marge de profit par exemple de 20% à modifier
 	}
+
 
 	@Override
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
