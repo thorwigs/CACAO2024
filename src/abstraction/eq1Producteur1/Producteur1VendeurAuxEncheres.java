@@ -15,16 +15,17 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 	
 	private double prixEnchereBq;
 	
-	private double prixEnchereHqEqui;
-	private double prixEnchereHqBio;
-	private double prixEnchereHq;
-	private double prixEnchereHqBioEqui;
+	private double prixEnchereHqEqui = 0;
+	private double prixEnchereHqBio=0;
+	private double prixEnchereHq=0;
+	private double prixEnchereHqBioEqui=0;
 	
-	private double prixEnchereMq;
-	private double prixEnchereMqEqui;
-	private double prixEnchereMqbio;
-	private double prixEnchereMqBioEqui;
+	private double prixEnchereMq=0;
+	private double prixEnchereMqEqui=0;
+	private double prixEnchereMqbio=0;
+	private double prixEnchereMqBioEqui=0;
 	protected Journal journalEncheres;
+	
 	
 	
 	// Fatima-ezzahra 
