@@ -28,8 +28,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
 		
 
-		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
-		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
+		
 
 	}
 
