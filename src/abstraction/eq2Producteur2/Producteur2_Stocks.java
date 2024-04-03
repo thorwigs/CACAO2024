@@ -2,6 +2,7 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur2_Stocks extends Producteur2_Lot {
@@ -11,14 +12,18 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 	//déterminer ce qu'on fait en fonction de comment on est proche du seuil max
 	
 	//private final int PRIX_STOCK_TONNE = 0; récupérable via la filière
+	
 	//méthode calculant le coût de stockage total
 	
-	private static final double DELAI_HQ_MQ = 0;
-	private static final double DELAI_MQ_BQ = 0;
 	
-	private int quantite_stockee_hq;
+	
+	private static final double DELAI_HQ_MQ = 4;
+	private static final double DELAI_MQ_BQ = 8;
+	private static final double DELAI_BQ_JETE = 12;
+	
+	/*private int quantite_stockee_hq;
 	private int quantite_stockee_mq;
-	private int quantite_stockee_bq;
+	private int quantite_stockee_bq;*/
 	
 	private List<Producteur2_Lot> stock_total;
 	
@@ -32,7 +37,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		List<Producteur2_Lot> stock_total = new ArrayList<Producteur2_Lot>();
 	}
 	
-	public int getQuantite_stockee_hq() {
+	/*public int getQuantite_stockee_hq() {
 		return quantite_stockee_hq;
 	}
 	
@@ -54,7 +59,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 	
 	public void setQuantite_stockee_bq(int quantite_stockee_bq) {
 		this.quantite_stockee_bq = quantite_stockee_bq;
-	}
+	}*/
 	
 	public static double getSeuil() {
 		return SEUIL;
@@ -144,6 +149,23 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		stock.put(Feve.F_MQ_E, feve_mq_e);
 		stock.put(Feve.F_HQ_E, feve_hq_e);
 		stock.put(Feve.F_HQ_BE, feve_hq_be);	
+	}
+	
+	public void changement_qualite() {
+		for(Producteur2_Lot lot : this.stock_total) {
+			if((lot.getType_feve() == Feve.F_HQ_E || lot.getType_feve() == Feve.F_HQ_BE) && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_HQ_MQ)) {
+				lot.setType_feve(Feve.F_MQ_E);
+			}
+			if(lot.getType_feve() == Feve.F_HQ && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_HQ_MQ)) {
+				lot.setType_feve(Feve.F_MQ);
+			}
+			if((lot.getType_feve() == Feve.F_MQ_E || lot.getType_feve() == Feve.F_MQ) && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_MQ_BQ)) {
+				lot.setType_feve(Feve.F_BQ);
+			}
+			if(lot.getType_feve() == Feve.F_BQ && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_BQ_JETE)) {
+				this.retire_lot(lot);
+			}
+		}
 	}
 }
 
