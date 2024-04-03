@@ -1,17 +1,13 @@
 package abstraction.eq5Transformateur2;
 
 import java.awt.Color;
-import java.util.List;
-
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
-import abstraction.eqXRomu.contratsCadres.Echeancier;
-import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+
 
 public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre implements IAcheteurBourse {
 	private Journal journalBourse;
@@ -69,11 +65,5 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" BLACKLIST pendant "+dureeEnStep+" etapes");
 	}
 	
-	// Ajoute les autres transactions des autres groupes
-	public List<Journal> getJournaux() {
-		List<Journal> res=super.getJournaux();
-		res.add(journalBourse);
-		return res;
-	}
 	
 }
