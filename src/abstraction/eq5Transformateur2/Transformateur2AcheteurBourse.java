@@ -66,7 +66,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai acheté "+quantiteEnT+" T de "+f+"");
 	}
 	public void notificationBlackList(int dureeEnStep) {
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je suis blackliste pour une duree de "+dureeEnStep+" etapes");
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" BLACKLIST pendant "+dureeEnStep+" etapes");
 	}
 	
 	// Ajoute les autres transactions des autres groupes
