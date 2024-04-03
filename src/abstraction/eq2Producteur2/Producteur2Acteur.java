@@ -30,6 +30,7 @@ public class Producteur2Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		stock = new HashMap <Feve, Variable>();
 	
 	}
 
