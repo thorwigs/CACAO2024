@@ -30,7 +30,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		h.put(Feve.F_MQ, surfaceMQ);
 		h.put(Feve.F_HQ, surfaceBQ);
 	//on augmente la surface 
-		achatPlantation(h);
+	//	achatPlantation(h);
 		return h;
 	}
 
@@ -38,7 +38,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * Cette methode determine la surface supplementaire a acheter pour chaque type de feve
 	 * Elle s'appuie sur la production et les ventes du step precedent
 	 * @author Alexis
-	 */
+	 
 	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
 		for (Feve f : surfaces.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
@@ -51,6 +51,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		}
 		return surfaces;
 	}
+	*/
 	
 ///Gestion de la main d'oeuvre///
 

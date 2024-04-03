@@ -23,11 +23,15 @@ public abstract class Producteur3Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
-    
+    private HashMap<Feve,Variable> prodfeve ;
     abstract HashMap<Feve,Double> quantite();
     
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
+		this.prodfeve = new HashMap<Feve,Variable>();
+		for (Feve f : Feve.values()) {
+			this.prodfeve.put(f,  new Variable("Prod "+f, this, 0.0));
+		}
 	}
 	
 	public void initialiser() {
@@ -47,12 +51,15 @@ public abstract class Producteur3Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
-
+	protected abstract HashMap<Feve,Double> newQuantite();
+	
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCouts());
-		
+		for (Feve f : Feve.values()) {
+			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -66,8 +73,13 @@ public abstract class Producteur3Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		for (Feve f : Feve.values()) {
+			res.add(prodfeve.get(f));
+		}
 		return res;
 	}
+
+	
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
