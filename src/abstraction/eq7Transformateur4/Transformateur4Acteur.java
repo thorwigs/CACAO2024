@@ -96,6 +96,18 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		this.journal.ajouter("Stock initial chocolat de marque : ");
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
+		
+		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
+		
+		for (ChocolatDeMarque c : chocolatCocOasis) {
+			this.stockChocoMarque.put(c, 30000.0); //le premier element de stockchocomarque coorespond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 30000, cryptogramme);
+			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
+		}
+		
+		
+		
 		
 		
 		
@@ -128,9 +140,16 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//on paye notre coût de stockage:
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
+
+
+		this.journal.ajouter("" + this.getMarquesChocolat());
+		this.journal.ajouter("" + this.getChocolatsProduits());
+		for (ChocolatDeMarque c : chocolatCocOasis) {
+			this.journal.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
+		}
 		
-		
-		
+		this.getJournaux();
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -212,10 +231,11 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	@Override
 	public List<ChocolatDeMarque> getChocolatsProduits() {  
 		// TODO Auto-generated method stub
-		if (this.chocolatCocOasis.size()==0){
-			this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		if (this.chocosProduits.size()==0){
+			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 		}
-		return this.chocolatCocOasis;
+		return this.chocosProduits;
 	}
 
 	@Override
