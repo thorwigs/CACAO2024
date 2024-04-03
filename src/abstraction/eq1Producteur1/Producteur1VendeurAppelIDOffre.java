@@ -63,11 +63,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		this.supAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
 		score_to_black_list=new HashMap<IAcheteurAO, Double>();
 	}
-	public List<Journal> getJournaux() {
-		List<Journal> jx=super.getJournaux();
-		jx.add(journalAO);
-		return jx;
-	}
+	
 	
 	
 	
@@ -178,6 +174,10 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		
 	}
 	
-	
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalAO);
+		return jx;
+	}
 
 }
