@@ -37,6 +37,8 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 	
 	public void next() {
 		super.next();
+	}
+		/*
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f).getValeur()-restantDu(f)>100) { // au moins 100 tonnes par step pendant 6 mois
@@ -58,6 +60,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 					journalCC.ajouter("   pas d'acheteur");
 				}
 			}
+			
 		}
 		// On archive les contrats termines
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -200,5 +203,42 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		stock.get(produit).setValeur(this, aLivre, (Integer)cryptogramme);
 		return aLivre;
+	}
+	*/
+
+	@Override
+	public boolean vend(IProduit produit) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double propositionPrix(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

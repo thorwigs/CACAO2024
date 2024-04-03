@@ -32,44 +32,42 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_equitables;
 	private double coutStockage;
 	//This /|\
-	protected HashMap<Feve, Double> ProdParStep;
+	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Variable> stock;
 	protected static double LabourNormal = 1.80;
 	protected static double LabourEnfant = 0.80;
 	protected static double LabourEquitable = 3;
+	protected static double Part = 0.25;
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
-		Production();
-		Stockage();
-	}
-	public void Production() {
-		this.ProdParStep = new HashMap<Feve, Double>();
-		this.ProdParStep.put(Feve.F_BQ,1.0 );
-		this.ProdParStep.put(Feve.F_MQ,1.0 );
 		
-		this.ProdParStep.put(Feve.F_MQ_E,1.0 );
-		this.ProdParStep.put(Feve.F_HQ_E,1.0 );
-		this.ProdParStep.put(Feve.F_HQ_BE,1.0 );
+		this.prodParStep = new HashMap<Feve, Double>();
+		this.prodParStep.put(Feve.F_BQ,10000.0 );
+		this.prodParStep.put(Feve.F_MQ,1.0 );
+		this.prodParStep.put(Feve.F_HQ, 1.0);
+		this.prodParStep.put(Feve.F_MQ_E,1.0 );
+		this.prodParStep.put(Feve.F_HQ_E,1.0 );
+		this.prodParStep.put(Feve.F_HQ_BE,1.0 );
 		
-		}
-	public void Stockage() {
+		
+	
 		//Still not sure about this need to be looked into a bit more
 		this.stock = new HashMap<Feve, Variable>();
 		for (Feve f : Feve.values()) {
-			Variable v = new Variable(f.toString(), null, this, 0.0, this.ProdParStep.get(f)*24, this.ProdParStep.get(f)*2 );
+			Variable v =  new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
 			this.stock.put(f, v);
 		}
 	}
 	public HashMap<Feve, Double> getProd(){
-		return this.ProdParStep;
+		return this.prodParStep;
 	}
 	public double getCoutStockage() {
 		return this.coutStockage;
 	}
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		this.nb_enfants = 3000;
+		this.nb_enfants = 0;
 		this.nb_equitables = 1;
 		this.nb_employees = 100;
 	}

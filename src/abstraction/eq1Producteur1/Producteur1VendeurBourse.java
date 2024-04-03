@@ -66,7 +66,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 			}
 		}
 	   }
-	 //  journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
+	   journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 		return 0;
 	   
 	
