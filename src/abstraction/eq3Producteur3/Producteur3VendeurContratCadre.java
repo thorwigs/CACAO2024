@@ -34,20 +34,40 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    
 	    Feve feve = (Feve) produit;
 	    double prixBase=0;
-	     if (feve.getGamme() == Gamme.MQ) {
-	        prixBase = 3000; // à modifier
-	    } else if (feve.getGamme() == Gamme.HQ) {
-	       prixBase = 4000; // à modifier
+	     if (feve.getGamme() == Gamme.HQ) {
+	        prixBase = 3000; // à ajuster selon l'équitable et bio équitable
+	    } else if (feve.getGamme() == Gamme.MQ) {
+	       prixBase = 1910;
 	    }
+	  // Ajustements selon équitable et bio
+	      if (feve.isEquitable() && feve.isBio()) {
+	           prixBase = 3400; // Prix pour bio-équitable
+	      } else if (feve.isEquitable()) {
+	           prixBase = 3200; // Prix pour équitable 
+	      }
 	    return prixBase * 1.2; // Ajouter une marge de profit par exemple de 20% à modifier
 	}
 
+	/**
+	 * @author mammouYoussef
+	 */
 
 	@Override
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return 0;
+	    IProduit produit = contrat.getProduit();
+	    if (!(produit instanceof Feve)) {
+	        return 0; }
+	    double prixPropose = contrat.getPrix();
+	    double prixMinimal= propositionPrix(contrat)/1.2;
+	    // Si le prix proposé est supérieur au prixMinimal, accepter le prix proposé
+	    if (prixPropose > prixMinimal) {
+	        return prixPropose;
+	    } else {
+	        // Sinon, retourner le prix Minimal
+	        return prixMinimal;
+	    }
 	}
+
 
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
