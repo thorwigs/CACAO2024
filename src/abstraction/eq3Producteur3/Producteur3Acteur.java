@@ -24,6 +24,7 @@ public abstract class Producteur3Acteur implements IActeur {
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
     private HashMap<Feve,Variable> prodfeve ;
+    //abstract
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     
@@ -73,17 +74,14 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-<<<<<<< HEAD
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCouts());
+		//On paie les couts lies a la production et au stockage
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
+		//On met a jour les indicateurs de prodfeve
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
 		}
-=======
-		//On paie les couts lies a la production et au stockage
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
 		//On gere nos intrants de production
 		gestionStock();
->>>>>>> branch 'main' of https://github.com/arthurl7389/CACAO2024
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

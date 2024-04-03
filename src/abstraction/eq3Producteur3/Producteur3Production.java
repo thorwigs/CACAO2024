@@ -12,7 +12,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	protected double kg_ha_MQ = 26.5625 ;
 	protected double kg_ha_HQ = 25.0 ;
 	protected double kg_ha_HQ_E = 22.5 ;     					//sans pesticide (bio équitable)
-	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps;
+	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>();;
 	
 	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
 		prodTemps.put(0, d0);
