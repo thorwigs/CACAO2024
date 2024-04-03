@@ -1,7 +1,13 @@
 package abstraction.eq5Transformateur2;
 
+import java.awt.Color;
+import java.util.List;
+
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.contratsCadres.Echeancier;
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
@@ -17,7 +23,6 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	 */
 
 
-
 	////////////////////////////////////////////
 	// Constructeur --> met à jour le journal //
 	////////////////////////////////////////////
@@ -25,7 +30,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		super();
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
 	}
-	
+
 	
 	/////////////	
 	// Demande //
@@ -52,17 +57,23 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	}
 	
 
-	
-	///////////////////////////////////////////
-	// Notifs de la vente ou de la BlackList //	
-	///////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	// Notifs de la vente ou de la BlackList + Mise à jour JournalBourse //	
+	///////////////////////////////////////////////////////////////////////
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai acheté "+quantiteEnT+" T de "+f+"");
 	}
 	public void notificationBlackList(int dureeEnStep) {
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je suis blackliste pour une duree de "+dureeEnStep+" etapes");
 	}
 	
-
+	// Ajoute les autres transactions des autres groupes
+	public List<Journal> getJournaux() {
+		List<Journal> res=super.getJournaux();
+		res.add(journalBourse);
+		return res;
+	}
+	
 }
