@@ -41,6 +41,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		//Stratégie sur le BQ
 		if (f.getGamme()==Gamme.BQ) {
 			return 50;
+
 		}
 		
 		//Stratégie sur le MQ
@@ -65,10 +66,10 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai acheté "+quantiteEnT+" T de "+f+"");
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+"");
 	}
 	public void notificationBlackList(int dureeEnStep) {
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" BLACKLIST pendant "+dureeEnStep+" etapes");
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" ## BLACKLIST ## pendant "+dureeEnStep+" etapes");
 	}
 	public List<Journal> getJournaux() {
 		List<Journal> res=super.getJournaux();
