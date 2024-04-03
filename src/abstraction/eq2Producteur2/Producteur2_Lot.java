@@ -3,21 +3,13 @@ package abstraction.eq2Producteur2;
 import abstraction.eqXRomu.produits.*;
 import abstraction.eqXRomu.filiere.*;
 
-public class Producteur2_Lot extends Producteur2Acteur {
+public class Producteur2_Lot {
 	
 	private int etape;
 	private double quantite;
 	private Feve type_feve;
 	
-	public Producteur2_Lot() {
-		super();
-		this.etape = Filiere.LA_FILIERE.getEtape();
-		this.quantite = 0;
-		this.type_feve = Feve.F_BQ;
-	}
-	
 	public Producteur2_Lot(double quantite, Feve type_feve) {
-		super();
 		this.etape = Filiere.LA_FILIERE.getEtape();
 		this.quantite = quantite;
 		this.type_feve = type_feve;

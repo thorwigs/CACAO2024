@@ -41,8 +41,8 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		System.out.println("sto "+stock);
-		System.out.println("feves en stock"+stock.keySet());
+		//System.out.println("stock "+stock);
+		//System.out.println("feves en stock"+stock.keySet());
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
