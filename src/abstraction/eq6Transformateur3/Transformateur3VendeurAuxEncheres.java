@@ -19,7 +19,7 @@ public class Transformateur3VendeurAuxEncheres extends Transformateur3AcheteurBo
 	private SuperviseurVentesAuxEncheres supEncheres;
 	protected Journal journalEncheres;
 
-	public TransformateurXVendeurAuxEncheres() {
+	public Transformateur3VendeurAuxEncheres() {
 		super();
 		this.journalEncheres = new Journal(this.getNom()+" journal Encheres", this);
 	}
