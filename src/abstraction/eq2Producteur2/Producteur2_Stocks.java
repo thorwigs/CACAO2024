@@ -75,6 +75,10 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		if(this.getQuantiteEnStock())
 	}*/
 	
+	public void retire_lot(Producteur2_Lot  l) {
+		
+	}
+	
 	public void mise_a_jour(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQE, double quantite_rest_HQ, double quantite_rest_HQE, double quantite_rest_HQBE) {
 		if(quantite_rest_BQ != 0) {
 			
@@ -96,7 +100,10 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		}
 	} 
 	
+	
 	public void lot_to_hashmap() {
+		// Faite par Noémie
+		// Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
 		List<Producteur2_Lot> l = getStock_total();
 		double feve_bq = 0;
 		double feve_mq = 0;
@@ -106,7 +113,10 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		double feve_hq_be = 0;
 		
 		for (int i = 0; i < getStock_total().size(); i++) {
-		      if (l.get(i).getType_feve() == Feve.F_BQ) {
+			  if (l.get(i).getQuantite() == 0){
+				  this.retire_lot(l.get(i));
+			  }
+			  else if (l.get(i).getType_feve() == Feve.F_BQ) {
 		    	  feve_bq += l.get(i).getQuantite();
 		      }
 		      else if (l.get(i).getType_feve() == Feve.F_MQ) {
