@@ -26,8 +26,7 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	private List<Producteur2_Lot> stock_total;
 	protected Journal journalStocks;
 	
-	//méthode pour déterminer passage de haute_qualite à moyenne et de moyenne à basse
-	//méthode update pour mettre à jour à chaque tour le stock
+	//méthode pour gérer ce qui est retiré des stocks ou non
 	
 	//FILIERE.getEtape() pour avoir le numéro d'étape
 	
