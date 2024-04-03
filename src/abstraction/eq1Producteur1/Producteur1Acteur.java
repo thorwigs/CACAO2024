@@ -44,7 +44,7 @@ public class Producteur1Acteur implements IActeur {
 		
 		this.prodParStep = new HashMap<Feve, Double>();
 		this.prodParStep.put(Feve.F_BQ,10000.0 );
-		this.prodParStep.put(Feve.F_MQ,1.0 );
+		this.prodParStep.put(Feve.F_MQ,10000.0 );
 		this.prodParStep.put(Feve.F_HQ, 1.0);
 		this.prodParStep.put(Feve.F_MQ_E,1.0 );
 		this.prodParStep.put(Feve.F_HQ_E,1.0 );
