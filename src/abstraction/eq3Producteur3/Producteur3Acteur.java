@@ -136,16 +136,20 @@ public class Producteur3Acteur implements IActeur {
 		//on set la valeur du stock ou la modifie si elle existe deja
 		this.stocks.put(p,(int)stock);
 	}
-	
-	 public double calculerCoutsStockage() {
+	/**
+	 * @author mammouYoussef
+	 */
+	 public double calculerCoutsStockage () {
 	      double coutStockage = 0;
 	      double cout=Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 	      for (Integer quantite : stocks.values()) {
 	          coutStockage += quantite * cout  ;}
 	      return coutStockage;
 	      }
-   
-	 public double calculerCoutsProduction() {
+	 /**
+	  * @author mammouYoussef
+	  */		 
+	 public double calculerCoutsProduction () {
 	      double coutProductionBQ = 0;
 	      double coutProductionMQ = 0;
 	      double coutProductionHQ = 0;
