@@ -95,7 +95,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		
 		this.journal.ajouter("Stock initial chocolat de marque : ");
-		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		ChocolatDeMarque choco1 = new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80);
+		this.chocolatCocOasis.add(choco1);
+		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
+		this.stockChocoMarque.put(choco1, 30000.0); //le premier element de stockchocomarque coorespond a mirage
+		this.totalStocksChocoMarque.ajouter(this, 30000, cryptogramme);
+		this.journal.ajouter(" stock("+choco1+")->"+this.stockChocoMarque.get(choco1));
+		
 		
 		
 		
@@ -126,6 +132,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 
 		this.journal.ajouter("" + this.getMarquesChocolat());
 		this.journal.ajouter("" + this.getChocolatsProduits());
+		this.journal.ajouter("stock de mirage est "+ this.stockChocoMarque.get(chocolatCocOasis.get(0)));
 
 		this.getJournaux();
 	}
