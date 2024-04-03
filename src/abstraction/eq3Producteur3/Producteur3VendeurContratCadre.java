@@ -27,7 +27,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    Feve f = (Feve) contrat.getProduit();
 	    double quantiteDisponible = this.getQuantiteEnStock(f, this.cryptogramme);
 	    // Echeancier proposé par l'acheteur
-	    Echeancier echeancierPropose = contrat.getEcheancier();
+	    Echeancier echeancierPropose = contrat.getEcheancier() ;
 	    
 	    // Si la quantité totale demandée dépasse la quantité disponible, 
 	    // on divise la quantité disponible par le nombre d'échéances dans l'échéancier initial pour trouver la nouvelle quantité par échéance.
