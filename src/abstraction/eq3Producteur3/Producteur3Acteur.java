@@ -76,12 +76,15 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		//On paie les couts lies a la production et au stockage
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
-		//On met a jour les indicateurs de prodfeve
-		for (Feve f : Feve.values()) {
-			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
-		}
 		//On gere nos intrants de production
 		gestionStock();
+		//MaJ des quantites produites pour chaque type de feve
+		
+		//Actuellement ce code bug (surement du au fait que touts les types de feves ne sont pas instancies
+		//Attention, newQuantite est ce qui est produit et a secher, quantite est ce qui est produit et pret a etre vendu ou stocker (1 tour avant)
+		/*for (Feve f : Feve.values()) {
+			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
+		}*/ 
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
