@@ -74,7 +74,10 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	    final IAcheteurAO acheteur_AO=offre.getAcheteur();
 	     IProduit produit_AO=offre.getProduit();
 	     if (!(produit_AO instanceof Feve)) {
+				//journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+produit_AO.toString());
+
 				return null;
+				
 			}
 	     Feve feve_AO = (Feve)produit_AO;
 	     
