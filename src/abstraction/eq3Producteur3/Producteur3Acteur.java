@@ -25,6 +25,7 @@ public abstract class Producteur3Acteur implements IActeur {
     private double coutUnitaireProductionHQ = 2.0;
     
     abstract HashMap<Feve,Double> quantite();
+    abstract void setProdTemps();
     
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
