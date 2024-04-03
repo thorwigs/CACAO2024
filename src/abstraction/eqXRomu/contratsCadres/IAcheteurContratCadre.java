@@ -24,7 +24,7 @@ public interface IAcheteurContratCadre extends IActeur {
 	 * 
 	 * @param contrat. Notamment, getEcheancier() appelee sur le contrat retourne
 	 *                 l'echeancier que le vendeur vient de proposer.
-	 * @return Retourne null si l'acheteur souhaite mettre fin aux negociations (et
+	 * @return Retoune null si l'acheteur souhaite mettre fin aux negociation (et
 	 *         abandonner du coup ce contrat). Retourne le meme echeancier que celui
 	 *         du contrat (contrat.getEcheancier()) si l'acheteur est d'accord pour
 	 *         un tel echeancier. Sinon, retourne un nouvel echeancier que le
