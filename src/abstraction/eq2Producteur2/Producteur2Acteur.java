@@ -59,6 +59,7 @@ public class Producteur2Acteur implements IActeur {
 	public void next() {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

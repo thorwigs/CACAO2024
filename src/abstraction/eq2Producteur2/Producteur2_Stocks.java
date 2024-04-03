@@ -1,11 +1,13 @@
 package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
-
 import abstraction.eqXRomu.general.Journal;
+
+import abstraction.eqXRomu.filiere.Filiere;
+
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur2_Stocks extends Producteur2_Lot {
+public class Producteur2_Stocks extends Producteur2Acteur {
 	
 	private static final double SEUIL = 0; 
 	//seuil max de la production stockee (voir ce qu'on fait du reste: vente, poubelle, produit moins, ...)
@@ -82,6 +84,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		this.stock_total.remove(l);
 	}
 	
+	
 
 	public void mise_a_jour(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQ_E, double quantite_rest_HQ, double quantite_rest_HQ_E, double quantite_rest_HQ_BE) {
 		if(quantite_rest_BQ != 0) {
@@ -148,6 +151,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		stock.put(Feve.F_HQ_BE, feve_hq_be);	
 	}
 	
+
 	public void mettreajour_journal() {
 		journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
 		journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
@@ -158,6 +162,12 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 	}
 	
 	
+
+	public double cout_total_stock() {
+		double cout_moyen = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
+		return cout_moyen* getStockTotal(this.cryptogramme);
+	}
+
 }
 
 
