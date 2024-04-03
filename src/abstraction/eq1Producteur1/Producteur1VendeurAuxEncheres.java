@@ -5,6 +5,8 @@ import java.util.List;
 
 import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
@@ -22,6 +24,13 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 	private double prixEnchereMqEqui;
 	private double prixEnchereMqbio;
 	private double prixEnchereMqBioEqui;
+	protected Journal journalEncheres;
+	
+	
+	// Fatima-ezzahra 
+	public void initialiser() {
+     Journal journalEncheres = new Journal(this.getNom()+" journal Encheres", this);
+	}
 	
 	public Enchere choisir(List<Enchere> propositions) {
 		int i = propositions.size();
@@ -40,40 +49,50 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 	
 		    if (gamme ==  Gamme.BQ ) {
 		    	if (prix >= prixEnchereBq ) {
+		    		journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    		return propositions.get(indice);
 		    	}
-		    	else return null;
+		    	else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    		return null;
 		    }
 		    	
 		    	else if (gamme == Gamme.MQ) {
 		    		if (bio) {
 		    			if (equitable) {
 		    				if (prix >=  prixEnchereMqBioEqui ) {
+		    					journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    					return propositions.get(indice);
 		    					
 		    	             }
-		    				else return null;
+		    				else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    					return null;
 		    			}
 		    			else if (prix >= prixEnchereMqbio ) {
+		    				journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    				return propositions.get(indice);
 		    			}
-		    			else return null;
+		    			else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    				return null;
 		    			
 		    		}
 		    		else if (equitable){
 		    			if (prix >= prixEnchereMqEqui ) {
+		    				journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    				return propositions.get(indice);
 		    				
 		    			}
-		    			else return null;
+		    			else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    				return null;
 		    			
 		    		}
 		    		
 		    		else if (prix >=  prixEnchereMq) {
+		    			journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    			return propositions.get(indice);
 		    			
 		    		}
-		    		else return null;
+		    		else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    			return null;
 		    		
 		    		
 		    		
@@ -85,31 +104,39 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 		    		if (bio) {
 		    			if (equitable) {
 		    				if (prix >=  prixEnchereHqBioEqui ) {
+		    					journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    					return propositions.get(indice);
 		    					
 		    	             }
-		    				else return null;
+		    				else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    					return null;
 		    			}
 		    			else if (prix >= prixEnchereHqBio) {
+		    				journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    				return propositions.get(indice);
 		    			}
-		    			else return null;
+		    			else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    				return null;
 		    			
 		    		}
 		    		else if (equitable){
 		    			if (prix >= prixEnchereHqEqui ) {
+		    				journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    				return propositions.get(indice);
 		    				
 		    			}
-		    			else return null;
+		    			else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    				return null;
 		    			
 		    		}
 		    		
 		    		else if (prix >=  prixEnchereHq) {
+		    			journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +propositions.get(0).getQuantiteT() +"du produit"+ propositions.get(0).getProduit()+"au prix"+prix);
 		    			return propositions.get(indice);
 		    			
 		    		}
-		    		else return null;
+		    		else journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+"On met en vente la quantité   " +0 +"du produit"+ propositions.get(0).getProduit());
+		    			return null;
 		    		
 		    		
 		    		
@@ -118,11 +145,7 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 		    	}
 		    return null;
 		    	
-		    	
-		    
-		    
-		
-	
 	}
+	
 
 }
