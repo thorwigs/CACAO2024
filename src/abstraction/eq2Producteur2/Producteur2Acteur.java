@@ -40,7 +40,7 @@ public class Producteur2Acteur implements IActeur {
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
 		for(Feve f: stock.keySet()) {
-			System.out.println("Pour "+f+"on a"+ stock.get(f));
+			//System.out.println("Pour "+f+"on a"+ stock.get(f));
 		}
 	}
 
