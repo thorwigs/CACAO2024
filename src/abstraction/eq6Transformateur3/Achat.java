@@ -1,32 +1,23 @@
-package abstraction.eq4Transformateur1;
+package abstraction.eq6Transformateur3;
 
 import java.awt.Color;
 import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
-import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse implements IVendeurContratCadre {
+public class Achat extends Transformateur3Acteur implements IAcheteurContratCadre {
 
-	private static int PRIX_DEFAUT = 4500;
-	
-	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
-	protected Journal journalCC;
-	
 	@Override
 	public void initialiser() {
-		super.initialiser();
-		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
-		
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -50,7 +41,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	@Override
 	public void next() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -74,19 +65,19 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	@Override
 	public void setCryptogramme(Integer crypto) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void notificationFaillite(IActeur acteur) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void notificationOperationBancaire(double montant) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -107,26 +98,34 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		return 0;
 	}
 
+	/**
+	 * Methode appelee par le SuperviseurVentesContratCadre lors des negociations
+	 * sur l'echeancier afin de connaitre la contreproposition de l'acheteur. Les
+	 * precedentes propositions d'echeancier peuvent etre consultees via un appel a
+	 * la methode getEcheanciers() sur le contrat passe en parametre.
+	 * 
+	 * @param contrat. Notamment, getEcheancier() appelee sur le contrat retourne
+	 *                 l'echeancier que le vendeur vient de proposer.
+	 * @return Retoune null si l'acheteur souhaite mettre fin aux negociation (et
+	 *         abandonner du coup ce contrat). Retourne le meme echeancier que celui
+	 *         du contrat (contrat.getEcheancier()) si l'acheteur est d'accord pour
+	 *         un tel echeancier. Sinon, retourne un nouvel echeancier que le
+	 *         superviseur soumettra au vendeur.
+	 */
 	@Override
-	public boolean vend(IProduit produit) {
+	public boolean achete(IProduit produit) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public double propositionPrix(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -134,13 +133,13 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
-		return 0;
+
 	}
 
 }
