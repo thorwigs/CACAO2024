@@ -50,7 +50,6 @@ public class Transformateur2VendeurBourse extends Transformateur2AcheteurBourse 
 		return quantiteEnT;
 	}
 	public void notificationBlackList(int dureeEnStep) {
-		// TODO Auto-generated method stub
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je suis blackliste pour une duree de "+dureeEnStep+" etapes");
 	}
 	
