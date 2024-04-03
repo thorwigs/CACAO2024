@@ -73,17 +73,15 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-<<<<<<< HEAD
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCouts());
-		for (Feve f : Feve.values()) {
-			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
-		}
-=======
 		//On paie les couts lies a la production et au stockage
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
 		//On gere nos intrants de production
 		gestionStock();
->>>>>>> branch 'main' of https://github.com/arthurl7389/CACAO2024
+		//MaJ des quantites produites pour chaque type de feve
+		for (Feve f : Feve.values()) {
+			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
