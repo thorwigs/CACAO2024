@@ -87,7 +87,7 @@ public class Transformateur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		this.journal.ajouter("etape = " + Filiere.LA_FILIERE.getEtape()+ " à l'année " + Filiere.LA_FILIERE.getAnnee());
+		this.journal.ajouter("===ETAPE = " + Filiere.LA_FILIERE.getEtape()+ " A L'ANNEE " + Filiere.LA_FILIERE.getAnnee()+"===");
 		this.journal.ajouter("=====STOCKS=====");
 		this.journal.ajouter("prix stockage chez producteur : "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("Quantité en stock de feves : "+stockFeves);
