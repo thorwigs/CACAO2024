@@ -6,7 +6,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public abstract class Producteur3Production extends Producteur3Plantation { 
+public class Producteur3Production extends Producteur3Plantation { 
 	// prix production/ha.step
 	protected double kg_ha_BQ = 28.125 ;						//avec pesticide
 	protected double kg_ha_MQ = 26.5625 ;
