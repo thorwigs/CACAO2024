@@ -9,7 +9,9 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 	
 	@Override
 	public double offre(Feve f, double cours) {
-		//verifier si cours>couts sinon pas de ventes
+		//verifier si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
+		//prendre en compte des couts de stocks dans couts (donc separer les tonnes produites par step dans une liste ou autre)
+		
 		//vendre par bourse ce qui n'est pas vendue par contrat cadre
 		//vendre toute la production BQ en bourse
 		
@@ -26,8 +28,20 @@ public class Producteur3VendeurBourse extends Producteur3Acteur implements IVend
 
 	@Override
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		//on envoie ce que l'on a promis (a modifier si on propose plus que nos stocks)
-		return quantiteEnT;
+		double stock_inst = this.getQuantiteEnStock(f, this.cryptogramme);
+		if (quantiteEnT <= stock_inst) {
+			//on verifie que l'on puisse fournir la quantite demande
+			//il faut modifier les stocks suite a la vente
+			this.setQuantiteEnStock(f, stock_inst-quantiteEnT);
+			this.journal.ajouter("Vente de "+quantiteEnT+" feves "+f.getGamme()+" pour "+coursEnEuroParT*quantiteEnT+" E");
+			//on envoie ce que l'on a promis
+			return quantiteEnT;
+		} else {
+			//on ne peut pas tout fournir, on envoie tout le stock
+			this.setQuantiteEnStock(f, 0);
+			this.journal.ajouter("Vente de "+stock_inst+" feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
+			return stock_inst;
+		}
 	}
 
 	@Override

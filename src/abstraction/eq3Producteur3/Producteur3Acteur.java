@@ -2,24 +2,29 @@ package abstraction.eq3Producteur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	private HashMap<IProduit,Integer> stocks;
 
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 	}
 	
 	public void initialiser() {
+		this.stocks = new HashMap<IProduit,Integer>();
+		setQuantiteEnStock(Feve.F_BQ,100000); //quantite initiale de stock de BQ (a modifier)
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -80,11 +85,13 @@ public class Producteur3Acteur implements IActeur {
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
 	public void notificationFaillite(IActeur acteur) {
+		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());	
 	}
 
 	// Apres chaque operation sur votre compte bancaire, cette
 	// operation est appelee pour vous en informer
 	public void notificationOperationBancaire(double montant) {
+		this.journal.ajouter("Operation bancaire : "+montant+ " E");
 	}
 	
 	// Renvoie le solde actuel de l'acteur
@@ -109,9 +116,20 @@ public class Producteur3Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+			//on renvoie la valeur (null => 0)
+			if (this.stocks.get(p) != null) {
+				return this.stocks.get(p);
+			}
+			else {
+				return 0;
+			}
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+	
+	protected void setQuantiteEnStock(IProduit p, double stock) {
+		//on set la valeur du stock ou la modifie si elle existe deja
+		this.stocks.put(p,(int)stock);
 	}
 }
