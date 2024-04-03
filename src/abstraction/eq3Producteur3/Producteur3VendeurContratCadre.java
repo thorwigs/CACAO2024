@@ -22,9 +22,29 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	/**
 	 * @author mammouYoussef
 	 */
+	
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getEcheancier();
+	    Feve f = (Feve) contrat.getProduit();
+	    double quantiteDisponible = this.getQuantiteEnStock(f, this.cryptogramme);
+	    // Echeancier proposé par l'acheteur
+	    Echeancier echeancierPropose = contrat.getEcheancier();
+	    
+	    // Si la quantité totale demandée dépasse la quantité disponible, 
+	    // on divise la quantité disponible par le nombre d'échéances dans l'échéancier initial pour trouver la nouvelle quantité par échéance.
+	    if (echeancierPropose.getQuantiteTotale() > quantiteDisponible) {
+	        int nbEcheances = echeancierPropose.getNbEcheances();
+	        double quantiteParEcheance = quantiteDisponible / nbEcheances;
+	        
+	        // Création d'un nouvel échéancier avec la nouvelle quantité
+	        Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut(), nbEcheances, quantiteParEcheance);
+	        return nouvelEcheancier;
+	    } else {
+	        // Si la quantité demandée peut être couverte par le stock disponible,
+	        // on accepte l'échéancier proposé sans modification.
+	        return echeancierPropose;
+	    }
 	}
+
 	
 	/**
 	 * @author mammouYoussef
