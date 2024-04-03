@@ -95,7 +95,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		if(quantite_rest_HQ_BE != 0) {
 			this.stock_total.add(new Producteur2_Lot(quantite_rest_HQ_BE, Feve.F_HQ_BE));
 		}
-	} 
+	}
 	
 	public void lot_to_hashmap() {
 		List<Producteur2_Lot> l = getStock_total();
