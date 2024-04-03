@@ -2,6 +2,7 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur2_Stocks extends Producteur2_Lot {
@@ -21,6 +22,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 	private int quantite_stockee_bq;
 	
 	private List<Producteur2_Lot> stock_total;
+	protected Journal journalStocks;
 	
 	//méthode pour déterminer passage de haute_qualite à moyenne et de moyenne à basse
 	//méthode update pour mettre à jour à chaque tour le stock
@@ -145,6 +147,17 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		stock.put(Feve.F_HQ_E, feve_hq_e);
 		stock.put(Feve.F_HQ_BE, feve_hq_be);	
 	}
+	
+	public void mettreajour_journal() {
+		journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
+		journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
+		journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
+		journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
+		journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
+		journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
+	}
+	
+	
 }
 
 
