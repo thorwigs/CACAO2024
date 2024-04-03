@@ -103,18 +103,15 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Acteur imple
 	}
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		
 	}
+	
 
 }
