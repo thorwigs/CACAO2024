@@ -8,15 +8,18 @@ import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
+import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur4Acteur implements IActeur {
+public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarque, IMarqueChocolat {
 	
 	protected int cryptogramme;
 	private Journal journal;
@@ -65,7 +68,9 @@ public class Transformateur4Acteur implements IActeur {
 			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
-		
+	
+
+
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 		
 		//on créé la Hashmap de pourcentageTransfo, qu'on va compléter ensuite avec les infos connues par tout le monde ; ne va peut être pas servir...
@@ -89,6 +94,7 @@ public class Transformateur4Acteur implements IActeur {
 		
 		
 		// à continuer..
+
 	}
 	
 	
@@ -112,9 +118,11 @@ public class Transformateur4Acteur implements IActeur {
 		//on paye notre coût de stockage:
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
-		
-		
+		this.journal.ajouter("" + this.getMarquesChocolat());
+
 		this.getJournaux();
+		
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -191,5 +199,20 @@ public class Transformateur4Acteur implements IActeur {
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+
+	@Override
+	public List<ChocolatDeMarque> getChocolatsProduits() {  
+		// TODO Auto-generated method stub
+		this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		return this.chocosProduits;
+	}
+
+	@Override
+	public List<String> getMarquesChocolat() {
+		// TODO Auto-generated method stub
+		LinkedList<String> marques = new LinkedList<String>();
+		marques.add("Mirage");
+		return marques;
 	}
 }
