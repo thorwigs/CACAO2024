@@ -4,11 +4,10 @@ import java.util.List;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
-import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Gamme;
 
-public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistributeurChocolatDeMarque, IMarqueChocolat {
+public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistributeurChocolatDeMarque {
 	private double capaciteDeVente;
 	private double[] prix;
 	private String[] marques;
@@ -42,7 +41,6 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		}
 	}
 
-
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
 		double capaciteTG = 0.1 * this.capaciteDeVente;
 		if (choco.getMarque()== "Chocoflow") {
@@ -61,21 +59,13 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		return 0;
 
 	}
-
-
+	
 	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
 		
 	}
 
-
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
 		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
-	}
-
-	@Override
-	public List<String> getMarquesChocolat() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 
