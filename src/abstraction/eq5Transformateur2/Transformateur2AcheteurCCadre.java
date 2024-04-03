@@ -77,6 +77,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 			journalCC.ajouter("Archivage du contrat "+c);
 			this.contratsEnCours.remove(c);
 		}
+		this.journalCC.ajouter("Nombre de contrats en cours : "+this.contratsEnCours.size());
 		this.journalCC.ajouter("=================================");
 	}
 	
