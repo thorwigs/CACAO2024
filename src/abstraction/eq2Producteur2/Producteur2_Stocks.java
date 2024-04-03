@@ -88,6 +88,6 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		if(quantite_rest_HQBE != 0) {
 			
 		}
-	}
+	} 
 
 }
