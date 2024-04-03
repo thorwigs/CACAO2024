@@ -182,6 +182,16 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
 	}
 	
+	public List<Producteur2_Lot> lot_type_feve(Feve type_feve){
+		List<Producteur2_Lot> lst_lot  = this.stock_total;
+		List<Producteur2_Lot> lst_lot_feve  = new ArrayList<Producteur2_Lot>();
+		for(Producteur2_Lot lot : lst_lot) {
+			if (lot.getType_feve() == type_feve) {
+				lst_lot_feve.add(lot);
+			}
+		}
+		return lst_lot_feve;
+	}
 	
 
 	public double cout_total_stock() {
