@@ -31,7 +31,7 @@ public class TransformateurXActeur  implements IActeur, IMarqueChocolat, IFabric
 
 	protected Journal journal;
 	protected int cryptogramme;
-	private double coutStockage; 
+	private double coutStockage;
 
 	protected List<Feve> lesFeves;
 	private List<ChocolatDeMarque>chocosProduits;
