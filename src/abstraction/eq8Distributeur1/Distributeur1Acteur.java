@@ -118,8 +118,8 @@ public class Distributeur1Acteur implements IActeur,IMarqueChocolat {
 	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) {
-			if (p.equals(this.produit)) {
-				return this.stock.getValeur();
+			if (stock_Choco.containsKey(p)) {
+				return stock_Choco.get(p);
 			} else{
 				return 0;
 			}
