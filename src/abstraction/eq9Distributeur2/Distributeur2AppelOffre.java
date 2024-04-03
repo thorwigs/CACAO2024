@@ -25,4 +25,5 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 		return meilleureProp;
 	}
 
+	
 }
