@@ -17,7 +17,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	
 	/* A faire : 
 	 * --> Stratégie sur la demande (nbr de tonne demandée)
-	 * -->
+	 * --> 
 	 */
 
 
