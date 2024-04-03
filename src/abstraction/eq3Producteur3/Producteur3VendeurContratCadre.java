@@ -3,6 +3,7 @@ package abstraction.eq3Producteur3;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
@@ -35,12 +36,13 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	        if (quantiteDemandee <= quantiteDisponible) {
 	            // Si la quantité demandée pour l'échéance peut être satisfaite, ajouter cette quantité à l'échéancier
 	            nouvelEcheancier.ajouter(quantiteDemandee);
-	            // mettre à jour le stock
-	            this.setQuantiteEnStock(f, quantiteDisponible - quantiteDemandee);
 	        } else {
-	            // Si la quantité demandée pour l'échéance ne peut pas être totalement satisfaite, proposer la quantité disponible
-	            nouvelEcheancier.ajouter(quantiteDisponible);
-	            this.setQuantiteEnStock(f, 0);
+	        	if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+	        		// Si la quantité demandée pour l'échéance ne peut pas être totalement satisfaite, proposer la quantité disponible
+	        		nouvelEcheancier.ajouter(quantiteDisponible);
+	        	} else {
+	        		nouvelEcheancier = null;
+	        	}
 	        }
 	    }
 	    return nouvelEcheancier;
