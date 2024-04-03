@@ -3,12 +3,14 @@ package abstraction.eq5Transformateur2;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
@@ -33,11 +35,24 @@ public class Transformateur2Acteur implements IActeur {
 	
 	
 	public Transformateur2Acteur() {
-		this.journal = new Journal(this.getNom()+" journal", this);	
+		this.journal = new Journal(this.getNom()+" journal", this);
+		this.totalStocksFeves = new VariablePrivee("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 	
 	public void initialiser() {
+		this.lesFeves = new LinkedList<Feve>();
+		this.journal.ajouter("Les Feves sont :");
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+		}
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+		
+		this.stockFeves=new HashMap<Feve,Double>();
+		for (Feve f : Feve.values()) {
+			this.stockFeves.put(f, 1000.0);
+			this.totalStocksFeves.ajouter(this, 1000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 1000 tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+		}
 		}
 
 	public String getNom() {// NE PAS MODIFIER
