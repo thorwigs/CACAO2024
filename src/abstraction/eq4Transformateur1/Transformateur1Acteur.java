@@ -147,9 +147,17 @@ public class Transformateur1Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+			if (p instanceof Feve) {
+                return stockFeves.getOrDefault((Feve) p, 0.0);
+            } else if (p instanceof Chocolat) {
+                return stockChoco.getOrDefault((Chocolat) p, 0.0);
+            } else if (p instanceof ChocolatDeMarque) {
+                return stockChocoMarque.getOrDefault((ChocolatDeMarque) p, 0.0);
+            }
+        }
+        return 0.0;
 		}
 	}
-}
+		//Si l'acteur est autorisé, la méthode vérifie le type de produit demandé (p) 
+		//et renvoie la quantité en stock correspondante à ce produit pour cet acteur 
+		//Si le produit n'est pas présent en stock, la méthode renvoie 0.0
