@@ -1,6 +1,8 @@
 package abstraction.eq3Producteur3;
 
 import java.util.HashMap;
+
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -28,18 +30,27 @@ public class Producteur3Plantation extends Producteur3Acteur {
 		h.put(Feve.F_BQ, surfaceHQ); 
 		h.put(Feve.F_MQ, surfaceMQ);
 		h.put(Feve.F_HQ, surfaceBQ);
-	//on achete 
-		for (Feve f : h.keySet()) {
-			h.put(f, )
-		}
-		 
-		
+	//on augmente la surface 
+		achatPlantation(h);
 		return h;
 	}
 
-	protected double achatPlantation(Feve f) {
-		double surface
-		return surface
+	/**
+	 * Cette methode determine la surface supplementaire a acheter pour chaque type de feve
+	 * Elle s'appuie sur la production et les ventes du step precedent
+	 * @author Alexis
+	 */
+	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
+		for (Feve f : surfaces.keySet()) {
+			double supp = 0; //initialisation de la surface supplementaire
+			double delta = Filiere.LA_FILIERE; // difference entre ventes et production
+			if (delta > ) { // si on vend plus que ce que l'on produit
+				supp += 10;
+				
+			}
+			surfaces.put(f, surfaces.get(f)+supp);
+		}
+		return surfaces;
 	}
 	
 ///Gestion de la main d'oeuvre///
