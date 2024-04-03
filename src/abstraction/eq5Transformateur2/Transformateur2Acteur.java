@@ -24,6 +24,7 @@ public class Transformateur2Acteur implements IActeur {
 	
 
 	protected List<Feve> lesFeves;
+	protected List<Chocolat> lesChocolats;
 	private List<ChocolatDeMarque>chocosProduits;
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
@@ -38,13 +39,16 @@ public class Transformateur2Acteur implements IActeur {
 	public Transformateur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.totalStocksFeves = new VariablePrivee("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
-	}
+		this.totalStocksChoco = new VariablePrivee("Eq5TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksChocoMarque = new VariablePrivee("Eq5TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
+}
 	
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
 		this.journal.ajouter("Les Feves sont :");
 		for (Feve f : Feve.values()) {
 			this.lesFeves.add(f);
+			this.journal.ajouter("   - "+f);
 		}
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
@@ -53,6 +57,20 @@ public class Transformateur2Acteur implements IActeur {
 			this.stockFeves.put(f, 1000.0);
 			this.totalStocksFeves.ajouter(this, 1000.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 1000 tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+		}
+		
+		this.lesChocolats = new LinkedList<Chocolat>();
+		this.journal.ajouter("Les Chocolats sont :");
+		for (Chocolat c : Chocolat.values()) {
+			this.lesChocolats.add(c);
+			this.journal.ajouter("   - "+c);
+
+		}
+		this.stockChoco=new HashMap<Chocolat,Double>();
+		for (Chocolat c : Chocolat.values()) {
+			this.stockChoco.put(c, 1000.0);
+			this.totalStocksChoco.ajouter(this, 1000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 1000 tonnes de : "+c+" au stock total de Chocolat // stock total : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 		}
 
@@ -75,8 +93,8 @@ public class Transformateur2Acteur implements IActeur {
 		this.journal.ajouter("Quantité en stock de feves : "+stockFeves);
 		this.journal.ajouter("Quantité en stock de Chocolat : "+stockChoco);
 		this.journal.ajouter("Quantité en stock de chocolat de marque : " +stockChocoMarque);
-		this.journal.ajouter("stocks feves : "+this.totalStocksFeves);
-		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco);
+		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
