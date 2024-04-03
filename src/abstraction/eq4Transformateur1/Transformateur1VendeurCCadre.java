@@ -170,7 +170,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		if (prixCC==0.0) {
 			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
-		double res = prixCC*1.25;
+		double res = Math.max(prixCC*1.25, (double)PRIX_DEFAUT);
 		journalCC.ajouter("      propositionPrix retourne "+res);
 		return res;
 	}
