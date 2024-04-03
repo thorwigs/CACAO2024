@@ -6,9 +6,9 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double prix_plantation_hectare;
 	
 	protected int qualitee;
-	protected double pourcentage_HI = 0.02;
-	protected double pourcentage_MID = 0.38;
-	protected double pourcentage_LOW = 0.6;
+	protected double pourcentage_HQ = 0.02;
+	protected double pourcentage_MQ = 0.38;
+	protected double pourcentage_BQ = 0.6;
 	
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
@@ -50,28 +50,28 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 		this.prix_plantation_hectare = prix_plantation_hectare;
 	}
 	
-	public double getPourcentage_HI() {
-		return pourcentage_HI;
+	public double getPourcentage_HQ() {
+		return pourcentage_HQ;
 	}
 
-	public void setPourcentage_HI(double pourcentage_HI) {
-		this.pourcentage_HI = pourcentage_HI;
+	public void setPourcentage_HQ(double pourcentage_HQ) {
+		this.pourcentage_HQ = pourcentage_HQ;
 	}
 
-	public double getPourcentage_MID() {
-		return pourcentage_MID;
+	public double getPourcentage_MQ() {
+		return pourcentage_MQ;
 	}
 
-	public void setPourcentage_MID(double pourcentage_MID) {
-		this.pourcentage_MID = pourcentage_MID;
+	public void setPourcentage_MQ(double pourcentage_MQ) {
+		this.pourcentage_MQ = pourcentage_MQ;
 	}
 
-	public double getPourcentage_LOW() {
-		return pourcentage_LOW;
+	public double getPourcentage_BQ() {
+		return pourcentage_BQ;
 	}
 
-	public void setPourcentage_LOW(double pourcentage_LOW) {
-		this.pourcentage_LOW = pourcentage_LOW;
+	public void setPourcentage_BQ(double pourcentage_BQ) {
+		this.pourcentage_BQ = pourcentage_BQ;
 	}
 	
 	
@@ -91,14 +91,14 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	}
 	
 	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
-		return production_cacao() * getPourcentage_HI();
+		return production_cacao() * getPourcentage_HQ();
 	}
 	
 	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en kg
-		return production_cacao() * getPourcentage_LOW();
+		return production_cacao() * getPourcentage_BQ();
 	}
 	public double production_MQ() { // retourne la production de cacao de moyenne qualité sur 2 semaines en kg
-		return production_cacao() * getPourcentage_MID();
+		return production_cacao() * getPourcentage_MQ();
 	}
 	
 	
