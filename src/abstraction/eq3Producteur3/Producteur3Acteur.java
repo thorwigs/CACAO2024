@@ -44,9 +44,12 @@ public class Producteur3Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
+
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCoutsStockage ());
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCoutsProduction ());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
