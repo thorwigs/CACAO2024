@@ -44,6 +44,12 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
+						for(IVendeurContratCadre v : vendeurs) {
+							if (v instanceof Transformateur3Acteur){
+								vendeurs.remove(v);
+								break;
+							}
+						}
 						if (vendeurs.size()>0) {
 							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
 							journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");

@@ -30,7 +30,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);		
+		super.notificationNouveauContratCadre(contrat);
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
