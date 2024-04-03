@@ -28,9 +28,13 @@ public class Transformateur3VendeurAuxEncheres extends Transformateur3AcheteurBo
 		super.initialiser();
 		this.supEncheres = (SuperviseurVentesAuxEncheres)(Filiere.LA_FILIERE.getActeur("Sup.Encheres"));
 		this.prixRetenus = new HashMap<ChocolatDeMarque, List<Double>>();
-		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
-			this.prixRetenus.put(cm, new LinkedList<Double>());
-		}		
+		if (this.stockChocoMarque != null) {
+	        for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
+	            this.prixRetenus.put(cm, new LinkedList<Double>());
+	        }
+	    } else {
+	        this.stockChocoMarque = new HashMap<ChocolatDeMarque, Double>(); // Gérer le cas où this.stockChocoMarque est null, peut-être initialiser d'une manière appropriée
+	    }
 	}
 
 	public void next() {
