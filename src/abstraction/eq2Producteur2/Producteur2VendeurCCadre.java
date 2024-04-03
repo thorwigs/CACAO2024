@@ -23,8 +23,53 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	@Override
+	public double offre(Feve f, double cours) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void notificationBlackList(int dureeEnStep) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean vend(IProduit produit) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public double propositionPrix(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-	public Producteur2VendeurCCadre() {
+	/*public Producteur2VendeurCCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
@@ -128,12 +173,12 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8 // ca doit demarrer dans moins de 4 mois
 				&& ec.getQuantiteTotale()<stock.get((Feve)produit).getValeur()-restantDu((Feve)produit);
 				if (!acceptable) {
-					if (!produit.getType().equals("Feve")) { // || stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)<1200) {
+					if (!produit.getType().equals("Feve") || stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)<1200) {
 						if (!produit.getType().equals("Feve")) {
 							journalCC.ajouter("      ce n'est pas une feve : je retourne null");
-						} /*else {
+						} else {
 							journalCC.ajouter("      je n'ai que "+(stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))+" de disponible (moins de 1200) : je retourne null");
-						}*/
+						}
 						return null;
 					}
 					if (ec.getQuantiteTotale()<=stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)) {
@@ -200,5 +245,5 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		stock.get(produit).setValeur(this, aLivre, (Integer)cryptogramme);
 		return aLivre;
-	} 
+	} */
 }

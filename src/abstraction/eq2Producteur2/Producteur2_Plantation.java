@@ -10,6 +10,13 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double pourcentage_MID = 0.38;
 	protected double pourcentage_LOW = 0.6;
 	
+	protected double rend_pest_BQ = 0.9;
+	protected double rend_pest_MQ = 0.85;
+	protected double rend_pest_HQ = 0.80;
+	protected double rend_no_pest_BQ = 0.82;
+	protected double rend_no_pest_MQ = 0.77;
+	protected double rend_no_pest_HQ = 0.72;
+	
 	
 	public void initialiser() {
 		double nb_hectares_max = 5000000;
@@ -68,12 +75,12 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	
 	
 	
-	public void planter(int quantitee) {
-		if (getNb_hectares_actuel() + quantitee > getNb_hectares_max()) { //achat impossible
+	public void planter(int quantite) {
+		if (getNb_hectares_actuel() + quantite > getNb_hectares_max()) { //achat impossible
 			return;
 		}
 		else { 
-			setNb_hectares_actuel(getNb_hectares_actuel() + quantitee);
+			setNb_hectares_actuel(getNb_hectares_actuel() + quantite);
 			// il reste à effectuer la transaction banquaire
 		}
 	}
@@ -82,17 +89,42 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 		return getNb_hectares_actuel() * 500 / 26;
 	}
 	
-	public double production_HI() { // retourne la productoin de cacao de haute qualité sur 2 semaines en kg
+	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
 		return production_cacao() * getPourcentage_HI();
 	}
 	
-	public double production_LOW() { // retourne la productoin de cacao de basse qualité sur 2 semaines en kg
+	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en kg
 		return production_cacao() * getPourcentage_LOW();
 	}
-	public double production_MID() { // retourne la productoin de cacao de moyenne qualité sur 2 semaines en kg
+	public double production_MQ() { // retourne la production de cacao de moyenne qualité sur 2 semaines en kg
 		return production_cacao() * getPourcentage_MID();
 	}
 	
+	
+	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en kilos
+	public double get_prod_no_pest_HQ() { 
+		return this.production_HQ() * rend_no_pest_HQ;
+	}
+	
+	public double get_prod_no_pest_MQ() {
+		return this.production_MQ() * rend_no_pest_MQ;
+	}
+	
+	public double get_prod_no_pest_BQ() {
+		return this.production_BQ() * rend_no_pest_BQ;
+	}
+	
+	public double get_prod_pest_HQ() {
+		return this.production_HQ() * rend_pest_HQ;
+	}
+	
+	public double get_prod_pest_MQ() {
+		return this.production_MQ() * rend_pest_MQ;
+	}
+	
+	public double get_prod_pest_BQ() {
+		return this.production_BQ() * rend_pest_BQ;
+	}
 } 
 // 1hectare = 500kg / an cacao
 // implémenter la qualité 
