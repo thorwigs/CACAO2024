@@ -39,5 +39,8 @@ public class Lot extends Producteur2Acteur {
 	public void setType_feve(Feve type_feve) {
 		this.type_feve = type_feve;
 	}	
-
 }
+
+
+
+

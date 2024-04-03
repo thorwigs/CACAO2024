@@ -91,3 +91,5 @@ public class Producteur2_Stocks extends Lot {
 	}
 
 }
+
+	
