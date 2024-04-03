@@ -23,7 +23,6 @@ public class Distributeur1Acteur implements IActeur {
 	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
 	
 	
-
 	public Distributeur1Acteur() {
 		this.journal= new Journal(this.getNom()+" journal", this);
 	}

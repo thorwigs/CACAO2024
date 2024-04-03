@@ -60,13 +60,14 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	}
 	
 	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
-		
+		int pos= (chocolats.indexOf(choco));
+		if (pos>=0) {
+			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
+			}
 	}
 
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
 		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
-	
-
 
 }
