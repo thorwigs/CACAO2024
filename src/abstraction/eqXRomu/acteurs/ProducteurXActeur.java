@@ -36,9 +36,8 @@ public class ProducteurXActeur  implements IActeur {
 		// faites par les clients finaux lors de la precedente annee, mais dans cette version basique
 		// on ne s'appuie que sur des moyennes
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_HQ_BE, PART*11215.0);
-		this.prodParStep.put(Feve.F_HQ_E, PART*11215.0);
-		this.prodParStep.put(Feve.F_HQ, PART*40000.0);
+		this.prodParStep.put(Feve.F_HQ_BE, PART*20830.0);
+		this.prodParStep.put(Feve.F_HQ_E, PART*41600.0);
 		this.prodParStep.put(Feve.F_MQ_E, PART*10400.0);
 		this.prodParStep.put(Feve.F_MQ, PART*52000.0);
 		this.prodParStep.put(Feve.F_BQ, PART*83320.0);
