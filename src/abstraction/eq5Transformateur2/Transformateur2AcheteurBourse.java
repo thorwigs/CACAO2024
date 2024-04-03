@@ -12,7 +12,7 @@ import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 
 
 public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre implements IAcheteurBourse {
-	private Journal journalBourse;
+	protected Journal journalBourse;
 	private double achatMaxParStep;
 	
 	/* A faire : 
