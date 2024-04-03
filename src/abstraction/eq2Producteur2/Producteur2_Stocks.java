@@ -2,6 +2,8 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.produits.Feve;
+
 public class Producteur2_Stocks extends Producteur2_Lot {
 	
 	private static final double SEUIL = 0; 
@@ -9,6 +11,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 	//déterminer ce qu'on fait en fonction de comment on est proche du seuil max
 	
 	//private final int PRIX_STOCK_TONNE = 0; récupérable via la filière
+	//méthode calculant le coût de stockage total
 	
 	private static final double DELAI_HQ_MQ = 0;
 	private static final double DELAI_MQ_BQ = 0;
@@ -26,7 +29,7 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 	
 	public Producteur2_Stocks() {
 		super();
-		List<Producteur2_Lot> l = new ArrayList<Producteur2_Lot>();
+		List<Producteur2_Lot> stock_total = new ArrayList<Producteur2_Lot>();
 	}
 	
 	public int getQuantite_stockee_hq() {
@@ -69,24 +72,24 @@ public class Producteur2_Stocks extends Producteur2_Lot {
 		if(this.getQuantiteEnStock())
 	}*/
 	
-	public void mise_a_jour(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQE, double quantite_rest_HQ, double quantite_rest_HQE, double quantite_rest_HQBE) {
+	public void mise_a_jour(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQ_E, double quantite_rest_HQ, double quantite_rest_HQ_E, double quantite_rest_HQ_BE) {
 		if(quantite_rest_BQ != 0) {
-			
+			this.stock_total.add(new Producteur2_Lot(quantite_rest_BQ, Feve.F_BQ));
 		}
 		if(quantite_rest_MQ != 0) {
-			
+			this.stock_total.add(new Producteur2_Lot(quantite_rest_MQ, Feve.F_MQ));
 		}
-		if(quantite_rest_MQE != 0) {
-			
+		if(quantite_rest_MQ_E != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_rest_MQ_E, Feve.F_MQ_E));
 		}
 		if(quantite_rest_HQ != 0) {
-			
+			this.stock_total.add(new Producteur2_Lot(quantite_rest_HQ, Feve.F_HQ));
 		}
-		if(quantite_rest_HQE != 0) {
-			
+		if(quantite_rest_HQ_E != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_rest_HQ_E, Feve.F_HQ_E));
 		}
-		if(quantite_rest_HQBE != 0) {
-			
+		if(quantite_rest_HQ_BE != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_rest_HQ_BE, Feve.F_HQ_BE));
 		}
 	} 
 
