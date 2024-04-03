@@ -47,14 +47,19 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		return 0;
 	}//s'inspirer de AcheteurCC
 
-	//Honorer le contrat
+	//Après finalisation contrat 
 	
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
 	}//s'inspirer de AcheteurCC
 	
-	//Après finalisation contrat 
+	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+		journalCC.ajouter("Nouveau contrat :"+contrat);
+		this.contratsEnCours.add(contrat);
+	}
+	
+	//Honorer le contrat
 	
 	public double restantDu(Feve f) {
 		double res=0;			
