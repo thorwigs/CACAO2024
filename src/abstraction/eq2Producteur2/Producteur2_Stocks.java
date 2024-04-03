@@ -146,14 +146,7 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 
-	public void mettreajour_journal() {
-		journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
-		journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
-		journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
-		journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
-		journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
-		journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
-	}
+	
 	
 	public List<Producteur2_Lot> lot_type_feve(Feve type_feve){
 		List<Producteur2_Lot> lst_lot  = this.stock_total; 

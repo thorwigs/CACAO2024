@@ -58,6 +58,13 @@ public class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
+		this.journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
+		this.journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
+		this.journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
+		this.journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
+		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
