@@ -43,12 +43,12 @@ public class Producteur1Acteur implements IActeur {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_BQ,1000.0 );
-		this.prodParStep.put(Feve.F_MQ,1000.0 );
-		this.prodParStep.put(Feve.F_HQ, 1000.0);
-		this.prodParStep.put(Feve.F_MQ_E,1000.0 );
-		this.prodParStep.put(Feve.F_HQ_E,1000.0 );
-		this.prodParStep.put(Feve.F_HQ_BE,1000.0 );
+		this.prodParStep.put(Feve.F_BQ,10000.0 );
+		this.prodParStep.put(Feve.F_MQ,10000.0 );
+		this.prodParStep.put(Feve.F_HQ, 000.0);
+		this.prodParStep.put(Feve.F_MQ_E,0.0 );
+		this.prodParStep.put(Feve.F_HQ_E,0.0 );
+		this.prodParStep.put(Feve.F_HQ_BE,0.0 );
 		
 		
 	
