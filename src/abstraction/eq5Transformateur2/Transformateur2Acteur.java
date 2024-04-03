@@ -57,7 +57,7 @@ public class Transformateur2Acteur implements IActeur {
 		for (Feve f : Feve.values()) {
 			this.stockFeves.put(f, STOCKINITIAL);
 			this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
-			this.journal.ajouter("ajout de 1000 tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		
 		this.lesChocolats = new LinkedList<Chocolat>();
@@ -71,7 +71,7 @@ public class Transformateur2Acteur implements IActeur {
 		for (Chocolat c : Chocolat.values()) {
 			this.stockChoco.put(c, STOCKINITIAL);
 			this.totalStocksChoco.ajouter(this, STOCKINITIAL, this.cryptogramme);
-			this.journal.ajouter("ajout de 1000 tonnes de : "+c+" au stock total de Chocolat // stock total : "+this.totalStocksChoco.getValeur(this.cryptogramme));
+			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+c+" au stock total de Chocolat // stock total : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 		}
 
