@@ -50,6 +50,8 @@ public class Transformateur3Acteur implements IActeur {
 		this.lesFeves = new LinkedList<Feve>();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		this.stockFeves=new HashMap<Feve,Double>();
+	
+	
 	}
 
 	public String getNom() {// NE PAS MODIFIER
