@@ -10,6 +10,7 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Acteur implements IActeur {
@@ -17,6 +18,9 @@ public class Producteur3Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	private HashMap<IProduit,Integer> stocks;
+	private double coutUnitaireProductionBQ = 1.0;
+    private double coutUnitaireProductionMQ = 1.5;
+    private double coutUnitaireProductionHQ = 2.0;
 
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
@@ -140,6 +144,27 @@ public class Producteur3Acteur implements IActeur {
 	          coutStockage += quantite * cout  ;}
 	      return coutStockage;
 	      }
-	      
+   
+	 public double calculerCoutsProduction() {
+	      double coutProductionBQ = 0;
+	      double coutProductionMQ = 0;
+	      double coutProductionHQ = 0;
 	     
+		    for (IProduit produit : stocks.keySet()) {
+		        int quantite = stocks.get(produit); // Récupération de la quantité produite
+
+		        // Calcul du coût de production pour la gamme de qualité concernée
+		        if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.BQ) {
+		            coutProductionBQ += quantite * coutUnitaireProductionBQ;
+		        } else if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.MQ) {
+		            coutProductionMQ += quantite * coutUnitaireProductionMQ;
+		        } else if (produit instanceof Feve && ((Feve)produit).getGamme() == Gamme.HQ) {
+		            coutProductionHQ += quantite * coutUnitaireProductionHQ;
+		        }
+		    }
+		    return coutProductionBQ+coutProductionMQ+coutProductionHQ;
+
+	 }
+
+	   
 }
