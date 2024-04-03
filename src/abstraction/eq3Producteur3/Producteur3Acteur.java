@@ -150,7 +150,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	/**
 	 * @author mammouYoussef
 	 */
-	 public double calculerCoutsStockage () {
+	 protected double calculerCoutsStockage () {
 	      double coutStockage = 0;
 	      double cout=Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 	      for (Integer quantite : stocks.values()) {
@@ -162,7 +162,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	  */		 
 
      
-	 public double calculerCoutsProduction() {
+	 protected double calculerCoutsProduction() {
 		    double coutProductionBQ = 0;
 		    double coutProductionMQ = 0;
 		    double coutProductionHQ = 0;
