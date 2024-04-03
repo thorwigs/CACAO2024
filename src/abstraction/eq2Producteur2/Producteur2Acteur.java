@@ -13,11 +13,20 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	protected Journal journal;
+	protected int nb_employes;
+	protected int nb_employes_equitable;
+	protected int nb_employes_enfants;
 
 	public Producteur2Acteur() {
+		this.journal = new Journal(this.getNom()+" journal", this);
 	}
 	
 	public void initialiser() {
+		int nb_employes = 3300;
+		int nb_employes_equitable = 82;
+		int nb_employes_enfants = 840;
+		
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -33,6 +42,7 @@ public class Producteur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		this.journal.ajouter("étape="+Filiere.LA_FILIERE.getEtape());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -40,7 +50,7 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		 return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
 	}
 
 	// Renvoie les indicateurs
@@ -58,6 +68,7 @@ public class Producteur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(journal);
 		return res;
 	}
 
