@@ -46,7 +46,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if (this.stockFeves.get(f)<10000) {
-						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
 						double parStep = 100;
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 26, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
