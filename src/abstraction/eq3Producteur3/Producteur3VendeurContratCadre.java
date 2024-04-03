@@ -19,10 +19,11 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		}
 	}
 
-	@Override
+	/**
+	 * @author mammouYoussef
+	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return null;
+		return contrat.getEcheancier();
 	}
 	
 	/**
