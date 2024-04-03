@@ -11,6 +11,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur2Acteur implements IActeur {
@@ -26,7 +27,8 @@ public class Producteur2Acteur implements IActeur {
 
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
-	
+		this.stock = new HashMap<Feve, Double>();
+		
 	}
 	
 	public void initialiser() {
@@ -40,6 +42,7 @@ public class Producteur2Acteur implements IActeur {
 		for(Feve f: stock.keySet()) {
 			System.out.println("Pour "+f+"on a"+ stock.get(f));
 		}
+
 	}
 
 	public String getNom() {// NE PAS MODIFIER

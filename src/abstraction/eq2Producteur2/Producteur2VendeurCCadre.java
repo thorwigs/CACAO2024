@@ -130,12 +130,12 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8 // ca doit demarrer dans moins de 4 mois
 				&& ec.getQuantiteTotale()<stock.get((Feve)produit)-restantDu((Feve)produit);
 				if (!acceptable) {
-					if (!produit.getType().equals("Feve")) { // || stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)<1200) {
+					if (!produit.getType().equals("Feve") || stock.get((Feve)produit)-restantDu((Feve)produit)<1200) {
 						if (!produit.getType().equals("Feve")) {
 							journalCC.ajouter("      ce n'est pas une feve : je retourne null");
-						} /*else {
-							journalCC.ajouter("      je n'ai que "+(stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))+" de disponible (moins de 1200) : je retourne null");
-						}*/
+						} else {
+							journalCC.ajouter("      je n'ai que "+(stock.get((Feve)produit)-restantDu((Feve)produit))+" de disponible (moins de 1200) : je retourne null");
+						}
 						return null;
 					}
 					if (ec.getQuantiteTotale()<=stock.get((Feve)produit)-restantDu((Feve)produit)) {
