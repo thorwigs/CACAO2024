@@ -22,8 +22,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	private List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
 	
-	public Distributeur1AcheteurContratCadre() {
-		super();
+	public Distributeur1AcheteurContratCadre(double capaciteDeVente, double[] prix, String[]marques) {
+		super(capaciteDeVente,prix,marques);
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
 		this.contrat_term= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC= new Journal (this.getNom() + "journal CC", this);
@@ -92,13 +92,19 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 
 	public boolean achete(IProduit produit) {
+		double a = 0 ; 
+		for (int i=0; i<contrat_en_cours.size(); i++) {
+			if (contrat_en_cours.get(i).getProduit().equals(produit)) {
+				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
+			}
+		}
 		return (produit.getType().equals("ChocolatDeMarque")
-				&& this.stock_Choco.get(produit) <1000);  // a redéfinir + ce qu'on va recevoir
-
+				&& 30 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a );  
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
+			&& !this.achete(contrat.getProduit())) {
 			return null;
 		}
 		
@@ -108,7 +114,16 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			&&	contrat.getQuantiteTotale()>= 1000 ) { // a redéfinir
 					return x ; 
 		} else {
-			Echeancier y = new Echeancier ();
+			int a = Filiere.LA_FILIERE.getEtape()+1;
+			int b = 24 ; 
+			double d = 0.0 ;
+			for (int i =a-24; i<a ; i++ ) {
+				d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)contrat.getProduit(),i)/b;
+			}
+			
+			double c = ;
+			
+			Echeancier y = new Echeancier (a,b,c);
 			return y;
 		}
 	}
@@ -144,7 +159,13 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		return prix + (1350*(stock_Choco.get(p)*this.prix(((ChocolatDeMarque)p)))) + 120 / 10375;
 	}
 	
-	public double prevision () {
-		return 0;
+	public double prevision (IProduit p,int b) {
+		double d = 0.0;
+		int a = Filiere.LA_FILIERE.getEtape();
+		for (int i =a-24; i<a ; i++ ) {
+			d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)p,i)/b;
+		}
+		d = d * ((Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
+		return d ; 
 	}
 }
