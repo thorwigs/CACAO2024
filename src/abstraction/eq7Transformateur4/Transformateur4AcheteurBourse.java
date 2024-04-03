@@ -30,6 +30,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	public void next() {
 		super.next();
 	}
+
 	
 
 }
