@@ -36,7 +36,7 @@ public class Producteur2VendeurBourse extends Producteur2_Plantation implements 
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double retire = 10.0;
 		this.stock.get(f).retirer(this, retire, cryptogramme);
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f).getValeur((Integer)cryptogramme));
+		//journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f).getValeur((Integer)cryptogramme));
 		return retire;
 	}
 
