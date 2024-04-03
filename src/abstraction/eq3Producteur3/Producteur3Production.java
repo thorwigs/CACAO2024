@@ -8,13 +8,14 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Production extends Producteur3Plantation { 
 	// prix production/ha.step
-	protected double kg_ha_BQ = 83.3 ;
-	protected double kg_ha_MQ = 33.3 ;
-	protected double kg_ha_HQ = 16.6 ;
+	protected double kg_ha_BQ = 28.125 ;						//avec pesticide
+	protected double kg_ha_MQ = 26.5625 ;
+	protected double kg_ha_HQ = 25.0 ;
+	protected double kg_ha_HQ_E = 22.5 ;     					//sans pesticide (bio équitable)
 
 	/**
-	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao. 
-	 * Prend en compte les surfaces de plantaion et le prix
+	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao (et types bio/équitable). 
+	 * Prend en compte les surfaces de plantation et le prix.
 	 * @author galem (Gabin)
 	 */
 	protected HashMap<Feve,Double> quantite() {
@@ -42,7 +43,7 @@ public class Producteur3Production extends Producteur3Plantation {
 					}
 				}
 				else {											// HAUTE QUALITE (BIO EQUITABLE)
-					quantite.put(f1, kg_ha_HQ*plant.get(f1)); 
+					quantite.put(f1, kg_ha_HQ_E*plant.get(f1)); 
 				}
 
 			}
@@ -50,5 +51,6 @@ public class Producteur3Production extends Producteur3Plantation {
 		return quantite;
 
 	}
+
 
 }
