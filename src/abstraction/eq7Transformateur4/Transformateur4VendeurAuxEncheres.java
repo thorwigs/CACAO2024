@@ -97,4 +97,9 @@ public class Transformateur4VendeurAuxEncheres extends Transformateur4VendeurCon
 		this.journalEncheres.ajouter("=================================");
 	}
 
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalEncheres);
+		return jx;
+	}
 }

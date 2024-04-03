@@ -168,4 +168,10 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		}
 		this.journalCC.ajouter("=================================");
 	}
+	
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalCC);
+		return jx;
+	}
 }
