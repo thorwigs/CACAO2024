@@ -9,6 +9,7 @@ public class Producteur3Plantation extends Producteur3Acteur {
 	
 	protected HashMap<Feve,Double> maindoeuvre(HashMap<Feve,Double> surfaces) {
 		//renvoie le nombre d'ouvriers necessaires et le type de feve selon la superficie (en ha) et le type de plantation
+		//HashMap<Feve,Double> surfaces = plantation();
 		HashMap<Feve,Double> ouvriers = new HashMap<Feve,Double>();
 		for (Feve f : surfaces.keySet()) {
 			if (f.isBio()) {
@@ -21,4 +22,5 @@ public class Producteur3Plantation extends Producteur3Acteur {
 		}
 		return ouvriers;
 	}
+	 
 }
