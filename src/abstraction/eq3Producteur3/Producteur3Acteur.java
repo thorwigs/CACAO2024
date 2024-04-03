@@ -25,7 +25,7 @@ public abstract class Producteur3Acteur implements IActeur {
     private double coutUnitaireProductionHQ = 2.0;
     
     abstract HashMap<Feve,Double> quantite();
-    abstract void setProdTemps();
+    abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
@@ -33,7 +33,23 @@ public abstract class Producteur3Acteur implements IActeur {
 	
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
-		setQuantiteEnStock(Feve.F_BQ,100000); //quantite initiale de stock de BQ (a modifier)
+		//On set les stocks
+		setQuantiteEnStock(Feve.F_BQ,100000);
+		setQuantiteEnStock(Feve.F_MQ,100000);
+		setQuantiteEnStock(Feve.F_MQ_E,100000);
+		setQuantiteEnStock(Feve.F_HQ,100000);
+		setQuantiteEnStock(Feve.F_HQ_E,100000);
+		setQuantiteEnStock(Feve.F_HQ_BE,100000);
+		//
+		//On set les productions
+		HashMap<Feve,Double> d01 = new HashMap<Feve,Double>();
+		d01.put(Feve.F_BQ, 20000.0);
+		d01.put(Feve.F_MQ, 20000.0);
+		d01.put(Feve.F_MQ_E, 20000.0);
+		d01.put(Feve.F_HQ, 20000.0);
+		d01.put(Feve.F_HQ_E, 20000.0);
+		d01.put(Feve.F_HQ_BE, 20000.0);
+		setProdTemps(d01,d01);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -52,8 +68,10 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCouts());
-		
+		//On paie les couts lies a la production et au stockage
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
+		//On gere nos intrants de production
+		gestionStock();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

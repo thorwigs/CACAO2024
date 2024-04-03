@@ -95,7 +95,9 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		this.journal.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" de "+contrat.getProduit()+" a "+contrat.getPrix()+" E");		
 	}
 
-	@Override
+	/**
+	 * @author Arthur
+	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double stock_inst = this.getQuantiteEnStock((Feve)produit, this.cryptogramme);
 		if (quantite <= stock_inst) {

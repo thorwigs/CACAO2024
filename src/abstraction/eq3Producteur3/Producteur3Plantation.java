@@ -5,7 +5,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur3Plantation extends Producteur3Acteur {
 	abstract HashMap<Feve,Double> quantite();
-	abstract void setProdTemps();
+	abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
 /**
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
  * de qualité XQ
