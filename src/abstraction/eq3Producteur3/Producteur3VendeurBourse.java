@@ -37,13 +37,13 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 			//on verifie que l'on puisse fournir la quantite demande
 			//il faut modifier les stocks suite a la vente
 			this.setQuantiteEnStock(f, stock_inst-quantiteEnT);
-			this.journal.ajouter("Vente de "+quantiteEnT+" feves "+f.getGamme()+" pour "+coursEnEuroParT*quantiteEnT+" E");
+			this.journal.ajouter("Bourse: Vente de "+quantiteEnT+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*quantiteEnT+" E");
 			//on envoie ce que l'on a promis
 			return quantiteEnT;
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock
 			this.setQuantiteEnStock(f, 0);
-			this.journal.ajouter("Vente de "+stock_inst+" feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
+			this.journal.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
 			return stock_inst;
 		}
 	}
