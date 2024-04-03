@@ -14,29 +14,18 @@ public class TransformateurContratCadre implements IActeur {
 	protected int numero;
 	protected Variable stock;
 	protected Integer cryptogramme;
-	protected IProduit produit;
 	protected Journal journal;
 	protected SuperviseurVentesContratCadre supCCadre;
 
-	public TransformateurContratCadre(IProduit produit) {	
-		if (produit==null) {
-			throw new IllegalArgumentException("creation d'une instance de ExempleTransformateurContratCadre avec produit==null");
-		}		
+	public TransformateurContratCadre() { 
+		
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
-		this.produit=produit;
 		this.stock=new Variable(getNom()+" stock ", null, this, 0, 1000, 300);
 		this.journal = new Journal(this.getNom()+" activites", this);
 	}
 	
-	public String getNom() {
-		return "TCC"+this.numero+""+produit.toString();
-	}
-
-	public String getDescription() {
-		return "TransformateurContratCadre "+this.numero+" "+this.produit.toString();
-	}
-
+	
 	public Color getColor() {
 		return new Color(128+((numero)*(127/NB_INSTANCES)), 64+((numero)*(191/NB_INSTANCES)), 0);
 	}
@@ -86,16 +75,26 @@ public class TransformateurContratCadre implements IActeur {
 	public String toString() {
 		return this.getNom();
 	}
-	
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) {
-			if (p.equals(this.produit)) {
-				return this.stock.getValeur();
-			} else{
-				return 0;
-			}
-		} else {
-			return 0;
-		}
+
+
+	@Override
+	public String getNom() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 }

@@ -10,10 +10,12 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class TransformateurContratcadreVendeur extends ExempleTransformateurContratCadre implements IVendeurContratCadre{
 
-	public TransformateurContratCadreVendeur(IProduit produit) {
+	public TransformateurContratcadreVendeur(IProduit produit) {
 		super(produit);
-		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
+		// TODO Auto-generated constructor stub
 	}
+
+	
 	
 	@Override
 	public boolean vend(IProduit produit) {
