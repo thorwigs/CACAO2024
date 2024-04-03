@@ -7,34 +7,28 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurContratCadre implements IVendeurContratCadre {
 
-	@Override
 	public boolean vend(IProduit produit) {
 		// TODO Auto-generated method stub
 		return false;
-	}
+	}//s'inspirer de AcheteurCC
 
-	@Override
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}//même chose que dans AcheteurCC
 
-	@Override
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
+	}//même chose que dans AcheteurCC
 
-	@Override
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
+	}//s'inspirer de AcheteurCC
 }
