@@ -16,7 +16,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implements IVendeurContratCadre {
-private static int PRIX_DEFAUT = 4500;
+    private static int PRIX_DEFAUT = 4500;
 	
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;

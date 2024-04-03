@@ -226,8 +226,6 @@ public class BourseCacao implements IActeur, IAssermente {
 		Banque banque = Filiere.LA_FILIERE.getBanque();
 		for (Feve f : Feve.values()) {
 			if (!f.isEquitable()) {
-				this.journal.get(f).ajouter("Les acheteurs sont "+this.acheteurs);
-				this.journal.get(f).ajouter("Les vendeurs  sont "+this.vendeurs);
 				HashMap<IAcheteurBourse, Double> demandes=new HashMap<IAcheteurBourse, Double>();
 				double totalDemandes=0;
 				double cours = this.cours.get(f).getValeur();
