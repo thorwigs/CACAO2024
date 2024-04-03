@@ -1,15 +1,41 @@
 package abstraction.eq3Producteur3;
 
 import java.util.HashMap;
-
 import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur3Plantation extends Producteur3Acteur {
 
+
+/**
+ * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
+ * de qualité XQ
+ */
+	private double surfaceHQ;
+	private double surfaceMQ;
+	private double surfaceBQ;
+
+///Gestion de la plantation
+	/**
+	 * Le dictionnaire plantation a pour cle Feve 
+	 * et pour valeur la variable surfaceXQ associee du step precedent.
+	 * @author Alexis
+	 */
+	protected HashMap<Feve, Double> plantation() {
+		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
+		return h;
+	}
+
 	
-	protected HashMap<Feve,Double> maindoeuvre(HashMap<Feve,Double> surfaces) {
+///Gestion de la main d'oeuvre///
+
+	/**
+	 * Renvoie le nombre d'ouvriers necessaires et le type de feve 
+	 * selon la superficie (en ha) et le type de plantation
+	 * @author Arthur
+	*/
+	protected HashMap<Feve,Double> maindoeuvre() {
 		//renvoie le nombre d'ouvriers necessaires et le type de feve selon la superficie (en ha) et le type de plantation
-		//HashMap<Feve,Double> surfaces = plantation();
+		HashMap<Feve,Double> surfaces = plantation();
 		HashMap<Feve,Double> ouvriers = new HashMap<Feve,Double>();
 		for (Feve f : surfaces.keySet()) {
 			if (f.isBio()) {
@@ -23,4 +49,7 @@ public class Producteur3Plantation extends Producteur3Acteur {
 		return ouvriers;
 	}
 	 
+
 }
+
+
