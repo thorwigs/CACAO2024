@@ -16,23 +16,17 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//private final int PRIX_STOCK_TONNE = 0; récupérable via la filière
 	
-	//méthode calculant le coût de stockage total
-	
 	
 	
 	private static final double DELAI_HQ_MQ = 4;
 	private static final double DELAI_MQ_BQ = 8;
 	private static final double DELAI_BQ_JETE = 12;
 	
-	/*private int quantite_stockee_hq;
-	private int quantite_stockee_mq;
-	private int quantite_stockee_bq;*/
 	
 	private List<Producteur2_Lot> stock_total;
 	protected Journal journalStocks;
 	
-	//méthode pour déterminer passage de haute_qualite à moyenne et de moyenne à basse
-	//méthode update pour mettre à jour à chaque tour le stock
+	//méthode pour gérer ce qui est retiré des stocks ou non
 	
 	//FILIERE.getEtape() pour avoir le numéro d'étape
 	
@@ -41,29 +35,6 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		List<Producteur2_Lot> stock_total = new ArrayList<Producteur2_Lot>();
 	}
 	
-	/*public int getQuantite_stockee_hq() {
-		return quantite_stockee_hq;
-	}
-	
-	public void setQuantite_stockee_hq(int quantite_stockee_hq) {
-		this.quantite_stockee_hq = quantite_stockee_hq;
-	}
-	
-	public int getQuantite_stockee_mq() {
-		return quantite_stockee_mq;
-	}
-	
-	public void setQuantite_stockee_mq(int quantite_stockee_mq) {
-		this.quantite_stockee_mq = quantite_stockee_mq;
-	}
-	
-	public int getQuantite_stockee_bq() {
-		return quantite_stockee_bq;
-	}
-	
-	public void setQuantite_stockee_bq(int quantite_stockee_bq) {
-		this.quantite_stockee_bq = quantite_stockee_bq;
-	}*/
 	
 	public static double getSeuil() {
 		return SEUIL;
@@ -90,8 +61,9 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	}
 	
 	
-
-	public void mise_a_jour(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQ_E, double quantite_rest_HQ, double quantite_rest_HQ_E, double quantite_rest_HQ_BE) {
+	//Faite par Quentin
+	//Met à jour la liste des stocks en ajoutant les lots invendus
+	public void ajout_invendus(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQ_E, double quantite_rest_HQ, double quantite_rest_HQ_E, double quantite_rest_HQ_BE) {
 		if(quantite_rest_BQ != 0) {
 			this.stock_total.add(new Producteur2_Lot(quantite_rest_BQ, Feve.F_BQ));
 		}
@@ -112,10 +84,9 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 	
-	
+	//Faite par Noémie
+	//Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
 	public void lot_to_hashmap() {
-		// Faite par Noémie
-		// Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
 		List<Producteur2_Lot> l = getStock_total();
 		double feve_bq = 0;
 		double feve_mq = 0;
@@ -156,6 +127,8 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		stock.put(Feve.F_HQ_BE, feve_hq_be);	
 	}
 	
+	//Faite par Quentin
+	//Change la qualité des fèves en fonction de la durée de stockage
 	public void changement_qualite() {
 		for(Producteur2_Lot lot : this.stock_total) {
 			if((lot.getType_feve() == Feve.F_HQ_E || lot.getType_feve() == Feve.F_HQ_BE) && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_HQ_MQ)) {
@@ -193,7 +166,8 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		return lst_lot_feve;
 	}
 	
-
+	//Faite par Noémie
+	//Calcule le coût total de stockage
 	public double cout_total_stock() {
 		double cout_moyen = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		return cout_moyen* getStockTotal(this.cryptogramme);
