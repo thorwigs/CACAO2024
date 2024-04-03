@@ -2,27 +2,58 @@ package abstraction.eq5Transformateur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2Acteur implements IActeur {
 	
-	protected int cryptogramme;
 	protected Journal journal;
-	
+	protected int cryptogramme;
 	private double coutStockage;
+
+	protected List<Feve> lesFeves;
+	private List<ChocolatDeMarque>chocosProduits;
+	protected HashMap<Feve, Double> stockFeves;
+	protected HashMap<Chocolat, Double> stockChoco;
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
+	protected List<ChocolatDeMarque> chocolatsVillors;
+	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
+	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
+	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
+	
 	
 	public Transformateur2Acteur() {
-		this.journal = new Journal(this.getNom()+" journal", this);	}
+		this.journal = new Journal(this.getNom()+" journal", this);
+		this.totalStocksFeves = new VariablePrivee("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
+	}
 	
 	public void initialiser() {
+		this.lesFeves = new LinkedList<Feve>();
+		this.journal.ajouter("Les Feves sont :");
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+		}
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-	}
+		
+		this.stockFeves=new HashMap<Feve,Double>();
+		for (Feve f : Feve.values()) {
+			this.stockFeves.put(f, 1000.0);
+			this.totalStocksFeves.ajouter(this, 1000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 1000 tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+		}
+		}
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ5";
@@ -37,9 +68,14 @@ public class Transformateur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		this.journal.ajouter("etape = " + Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("===STOCKS===");
+		this.journal.ajouter("etape = " + Filiere.LA_FILIERE.getEtape()+ " à l'année " + Filiere.LA_FILIERE.getAnnee());
+		this.journal.ajouter("=====STOCKS=====");
 		this.journal.ajouter("prix stockage chez producteur : "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("Quantité en stock de feves : "+stockFeves);
+		this.journal.ajouter("Quantité en stock de Chocolat : "+stockChoco);
+		this.journal.ajouter("Quantité en stock de chocolat de marque : " +stockChocoMarque);
+		this.journal.ajouter("stocks feves : "+this.totalStocksFeves);
+		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
