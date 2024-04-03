@@ -4,7 +4,9 @@ import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur1AcheteurBourse extends Transformateur1Acteur implements IAcheteurBourse {
-
+	public Transformateur1AcheteurBourse() {
+		super();
+	}
 	/**
 	 * Retourne la quantite en tonnes de feves de type f desiree par l'acheteur 
 	 * sachant que le cours actuel de la feve f est cours
@@ -33,6 +35,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
+		
 	}
 
 }
