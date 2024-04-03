@@ -16,6 +16,7 @@ public class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceBQ;
 
 ///Gestion de la plantation
+	
 	/**
 	 * Le dictionnaire plantation a pour cle Feve 
 	 * et pour valeur la variable surfaceXQ associee du step precedent.
@@ -23,9 +24,23 @@ public class Producteur3Plantation extends Producteur3Acteur {
 	 */
 	protected HashMap<Feve, Double> plantation() {
 		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
+	//on recupere les surfaces du step precedent (pour l'instant valeurs arbitraires)
+		h.put(Feve.F_BQ, surfaceHQ); 
+		h.put(Feve.F_MQ, surfaceMQ);
+		h.put(Feve.F_HQ, surfaceBQ);
+	//on achete 
+		for (Feve f : h.keySet()) {
+			h.put(f, )
+		}
+		 
+		
 		return h;
 	}
 
+	protected double achatPlantation(Feve f) {
+		double surface
+		return surface
+	}
 	
 ///Gestion de la main d'oeuvre///
 
