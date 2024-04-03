@@ -18,7 +18,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	 * Prend en compte les surfaces de plantation et le prix.
 	 * @author galem (Gabin)
 	 */
-	protected HashMap<Feve,Double> quantite() {
+	protected HashMap<Feve,Double> newQuantite() {
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		HashMap<Feve,Double> plant = plantation();
 		for(Feve f1 : plant.keySet()) {
@@ -49,8 +49,24 @@ public class Producteur3Production extends Producteur3Plantation {
 			}
 		}
 		return quantite;
-
+		
+		
+	}	
+	//stockage dans le temps de 2 dictionnaires
+	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps() {
+		HashMap< Integer , HashMap<Feve,Double>> prodTemps = new HashMap< Integer , HashMap<Feve,Double>>();
+		prodTemps.put(0, prodTemps.get(1));
+		prodTemps.put(1, newQuantite());
+		return prodTemps;
+		
 	}
-
-
+	
+	//renvoie la quantité de fèves après séchage, soit 1 step avant (2 semaines plus tard)
+	// la quantité dispo pour la vente.
+	protected HashMap<Feve,Double> quantite(){
+		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
+		quantite=prodTemps().get(0);
+		return quantite;
+	}
+	
 }
