@@ -52,7 +52,7 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		}
 	}
 	
-	public double cout_par_step() {
+	public double cout_par_step() { // Renvoie le coût total lié à la main d'oeuvre par step
 		double enfants = getNb_employes_enfants()* getSalaire("enfant");
 		double adultes_eq = getNb_employes_equitable()*getSalaire("adulte équitable");
 		double adultes = getNb_employes()*getSalaire("adulte"); 
