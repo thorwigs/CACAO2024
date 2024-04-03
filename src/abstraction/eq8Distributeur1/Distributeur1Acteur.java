@@ -7,6 +7,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -17,8 +18,9 @@ public class Distributeur1Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	protected IProduit produit;
-	protected Variable stock;
-	protected HashMap<ChocolatDeMarque, Double> données;
+	protected List<ChocolatDeMarque> chocolats;
+	protected Variable totalStockChoco;
+	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
 	
 	
 
@@ -117,8 +119,8 @@ public class Distributeur1Acteur implements IActeur {
 	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) {
-			if (p.equals(this.produit)) {
-				return this.stock.getValeur();
+			if (stock_Choco.containsKey(p)) {
+				return stock_Choco.get(p);
 			} else{
 				return 0;
 			}
@@ -126,4 +128,5 @@ public class Distributeur1Acteur implements IActeur {
 			return 0;
 		}
 	}
+		
 }
