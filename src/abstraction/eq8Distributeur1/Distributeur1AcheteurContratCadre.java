@@ -103,12 +103,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		
 		Echeancier x = contrat.getEcheancier();
-		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72) {
-			if (this.achete(contrat.getProduit())) { 
-				if (contrat.getQuantiteTotale()>=1000) { // a redéfinir
+		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72
+			&& this.achete(contrat.getProduit()) 
+			&&	contrat.getQuantiteTotale()>= 1000 ) { // a redéfinir
 					return x ; 
-				}
-			}
 		} else {
 			Echeancier y = new Echeancier ();
 			return y;
@@ -120,11 +118,15 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			return 0.0;
 		}
 		
-		if (!this.vente_a_perte(contrat.getProduit(),contrat.getPrix())) {
-			
+		if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())<=this.prix(((ChocolatDeMarque)contrat.getProduit())) 
+			&& contrat.getPrix()<=Math.pow(contrat.getQuantiteTotale(),1/3)){ //peut être rajouter un coef
+				return contrat.getPrix();
 		}
 		
-		return 0.0;
+		else {
+			return Math.pow(contrat.getQuantiteTotale(),1/3)*(1-1/Math.pow(2, contrat.getListePrix().size()))  ;
+		}
+		
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
@@ -138,8 +140,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		this.totalStockChoco.ajouter(this, quantiteEnTonnes,cryptogramme);
 	}
 	
-	public boolean vente_a_perte(IProduit p, Double prix) {
-		return prix + (1350*(stock_Choco.get(p)*this.prix(((ChocolatDeMarque)p)))) + 120 / 10375 >= this.prix(((ChocolatDeMarque)p));
+	public double prix_a_perte(IProduit p, Double prix) {
+		return prix + (1350*(stock_Choco.get(p)*this.prix(((ChocolatDeMarque)p)))) + 120 / 10375;
 	}
 	
 	public double prevision () {
