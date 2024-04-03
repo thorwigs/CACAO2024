@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.Color;
 
 public class Transformateur4AcheteurContratCadre extends Transformateur4AcheteurBourse implements IAcheteurContratCadre{
+	
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
