@@ -30,7 +30,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected HashMap<Chocolat, Double> stockChoco; //idem pour les chocolats, donc on aura 2 chocos (un BQ/MH et un HQ)
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; //idem pour les chocolat de marques, donc on aura un seul choco, le HQ de stockChoco une fois qu'on lui aura apposé la marque Mirage
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
-	protected List<ChocolatDeMarque> chococolatCocOasis;
+	protected List<ChocolatDeMarque> chocolatCocOasis;
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
@@ -41,6 +41,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+		this.chocolatCocOasis = new LinkedList<ChocolatDeMarque>();
 	}
 	
 	public void initialiser() {
@@ -204,8 +205,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	@Override
 	public List<ChocolatDeMarque> getChocolatsProduits() {  
 		// TODO Auto-generated method stub
-		this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
-		return this.chocosProduits;
+		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		return this.chocolatCocOasis;
 	}
 
 	@Override
@@ -214,5 +215,6 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		LinkedList<String> marques = new LinkedList<String>();
 		marques.add("Mirage");
 		return marques;
+		
 	}
 }
