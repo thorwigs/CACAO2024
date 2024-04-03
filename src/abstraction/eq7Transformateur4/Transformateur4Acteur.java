@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
@@ -93,6 +94,10 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
 		
+		this.journal.ajouter("Stock initial chocolat de marque : ");
+		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		
+		
 		
 		// à continuer..
 
@@ -120,6 +125,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
 		this.journal.ajouter("" + this.getMarquesChocolat());
+		this.journal.ajouter("" + this.getChocolatsProduits());
 
 		this.getJournaux();
 		
@@ -205,7 +211,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	@Override
 	public List<ChocolatDeMarque> getChocolatsProduits() {  
 		// TODO Auto-generated method stub
-		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		if (this.chocolatCocOasis.size()==0){
+			this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		}
 		return this.chocolatCocOasis;
 	}
 
