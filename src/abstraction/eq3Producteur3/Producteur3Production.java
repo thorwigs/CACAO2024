@@ -6,13 +6,20 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur3Production extends Producteur3Plantation { 
+public abstract class Producteur3Production extends Producteur3Plantation { 
 	// prix production/ha.step
 	protected double kg_ha_BQ = 28.125 ;						//avec pesticide
 	protected double kg_ha_MQ = 26.5625 ;
 	protected double kg_ha_HQ = 25.0 ;
 	protected double kg_ha_HQ_E = 22.5 ;     					//sans pesticide (bio équitable)
-
+	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps;
+	
+	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
+		prodTemps.put(0, d0);
+		prodTemps.put(1, d1);
+	}
+	
+	
 	/**
 	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao (et types bio/équitable). 
 	 * Prend en compte les surfaces de plantation et le prix.
@@ -54,7 +61,6 @@ public class Producteur3Production extends Producteur3Plantation {
 	}	
 	//stockage dans le temps de 2 dictionnaires
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps() {
-		HashMap< Integer , HashMap<Feve,Double>> prodTemps = new HashMap< Integer , HashMap<Feve,Double>>();
 		prodTemps.put(0, prodTemps.get(1));
 		prodTemps.put(1, newQuantite());
 		return prodTemps;
