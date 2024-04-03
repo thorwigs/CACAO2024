@@ -51,8 +51,8 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCoutsStockage ());
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCoutsProduction ());
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", calculerCouts());
+	
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -160,7 +160,6 @@ public abstract class Producteur3Acteur implements IActeur {
 	  * @author mammouYoussef
 	  */		 
 
-     
 	 public double calculerCoutsProduction() {
 		    double coutProductionBQ = 0;
 		    double coutProductionMQ = 0;
@@ -185,4 +184,10 @@ public abstract class Producteur3Acteur implements IActeur {
 	    return coutProductionBQ + coutProductionMQ + coutProductionHQ;
 	
         }
+	 
+	 protected double calculerCouts() {
+		 return calculerCoutsProduction()+calculerCoutsStockage();
+		 
 	 }
+	 
+}
