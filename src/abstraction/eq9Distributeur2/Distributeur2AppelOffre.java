@@ -6,7 +6,7 @@ import java.util.List;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 
-public class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
+public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
 
 	@Override
 	public OffreVente choisirOV(List<OffreVente> propositions) {
