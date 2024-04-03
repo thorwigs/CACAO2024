@@ -18,6 +18,7 @@ public class Producteur3Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	private HashMap<IProduit,Integer> stocks;
+	//passable en parametre/indicateurs
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
@@ -132,6 +133,9 @@ public class Producteur3Acteur implements IActeur {
 		}
 	}
 	
+	/**
+	 * @author Arthur
+	 */
 	protected void setQuantiteEnStock(IProduit p, double stock) {
 		//on set la valeur du stock ou la modifie si elle existe deja
 		this.stocks.put(p,(int)stock);

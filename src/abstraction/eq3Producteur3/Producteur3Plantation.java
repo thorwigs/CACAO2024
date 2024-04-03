@@ -2,7 +2,6 @@ package abstraction.eq3Producteur3;
 
 import java.util.HashMap;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Plantation extends Producteur3Acteur {
 
