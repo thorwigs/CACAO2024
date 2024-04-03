@@ -22,7 +22,7 @@ public class Transformateur2Acteur implements IActeur {
 	protected int cryptogramme;
 	private double coutStockage;
 	
-	private double STOCKINITIAL=20000.0;
+	private static final double STOCKINITIAL=1000.0;
 	
 	protected List<Feve> lesFeves;
 	protected List<Chocolat> lesChocolats;
