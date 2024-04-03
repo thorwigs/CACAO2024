@@ -2,30 +2,43 @@ package abstraction.eq2Producteur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariableReadOnly;
+import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur2Acteur implements IActeur {
-	
 	protected int cryptogramme;
 	protected Journal journal;
+
+	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite
+	protected HashMap<Feve,Double> prodParStep;
+	private static final double PART=0.1;
 	protected int nb_employes;
 	protected int nb_employes_equitable;
 	protected int nb_employes_enfants;
 
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
+		this.stock = new HashMap<Feve, Double>();
 	}
 	
+
 	public void initialiser() {
-		int nb_employes = 3300;
-		int nb_employes_equitable = 82;
-		int nb_employes_enfants = 840;
+		stock = new HashMap <Feve, Double>();
+		stock.put(Feve.F_HQ_BE, 5.0);
+		stock.put(Feve.F_BQ, 40.0);
+		stock.put(Feve.F_MQ, 30.0);
+		stock.put(Feve.F_HQ,0.0);
+		stock.put(Feve.F_HQ_E, 0.0);
+		stock.put(Feve.F_MQ_E, 0.0);
 		
 	}
 
@@ -42,7 +55,16 @@ public class Producteur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		this.journal.ajouter("étape="+Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
+		this.journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
+		this.journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
+		this.journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
+		this.journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
+		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -50,7 +72,7 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		 return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
+		return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
 	}
 
 	// Renvoie les indicateurs
@@ -115,9 +137,25 @@ public class Producteur2Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+			double quantite_stockee_prod = this.stock.get(p);
+			return quantite_stockee_prod;
+			//return 0; // A modifier
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+		}
+	}
+	
+	public double getStockTotal(int cryptogramme) {
+		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
+			double quantite_stockee = 0;
+			for(Feve f : this.stock.keySet()) {
+				quantite_stockee += this.stock.get(f);
+			}
+			return quantite_stockee;
+			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
 }
+

@@ -43,12 +43,12 @@ public class Producteur1Acteur implements IActeur {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_BQ,10000.0 );
-		this.prodParStep.put(Feve.F_MQ,1.0 );
-		this.prodParStep.put(Feve.F_HQ, 1.0);
-		this.prodParStep.put(Feve.F_MQ_E,1.0 );
-		this.prodParStep.put(Feve.F_HQ_E,1.0 );
-		this.prodParStep.put(Feve.F_HQ_BE,1.0 );
+		this.prodParStep.put(Feve.F_BQ,1000.0 );
+		this.prodParStep.put(Feve.F_MQ,1000.0 );
+		this.prodParStep.put(Feve.F_HQ, 1000.0);
+		this.prodParStep.put(Feve.F_MQ_E,1000.0 );
+		this.prodParStep.put(Feve.F_HQ_E,1000.0 );
+		this.prodParStep.put(Feve.F_HQ_BE,1000.0 );
 		
 		
 	
@@ -67,11 +67,10 @@ public class Producteur1Acteur implements IActeur {
 	}
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		this.nb_enfants = 0;
-		this.nb_equitables = 1;
+		this.nb_enfants = 150;
+		this.nb_equitables = 30;
 		this.nb_employees = 100;
 	}
-
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ1";
 	}
