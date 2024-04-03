@@ -19,8 +19,10 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 		// TODO Auto-generated method stub
 	}
 	
+
 	public void next() {
 		super.next();
+		
 	}
 
 	

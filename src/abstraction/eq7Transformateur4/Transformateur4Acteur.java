@@ -121,13 +121,16 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
+		
+		
+	
+		
 		//on paye notre coût de stockage:
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
-		this.journal.ajouter("" + this.getMarquesChocolat());
-		this.journal.ajouter("" + this.getChocolatsProduits());
-
-		this.getJournaux();
+		
+		
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
