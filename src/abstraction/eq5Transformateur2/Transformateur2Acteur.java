@@ -14,6 +14,7 @@ import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2Acteur implements IActeur {
@@ -48,13 +49,15 @@ public class Transformateur2Acteur implements IActeur {
 		this.lesFeves = new LinkedList<Feve>();
 		this.journal.ajouter("Les Feves sont :");
 		for (Feve f : Feve.values()) {
+			if (f.getGamme()!=Gamme.HQ) {
 			this.lesFeves.add(f);
 			this.journal.ajouter("   - "+f);
+			}
 		}
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
 		this.stockFeves=new HashMap<Feve,Double>();
-		for (Feve f : Feve.values()) {
+		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, STOCKINITIAL);
 			this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
@@ -68,7 +71,7 @@ public class Transformateur2Acteur implements IActeur {
 
 		}
 		this.stockChoco=new HashMap<Chocolat,Double>();
-		for (Chocolat c : Chocolat.values()) {
+		for (Chocolat c : this.lesChocolats) {
 			this.stockChoco.put(c, STOCKINITIAL);
 			this.totalStocksChoco.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+c+" au stock total de Chocolat // stock total : "+this.totalStocksChoco.getValeur(this.cryptogramme));

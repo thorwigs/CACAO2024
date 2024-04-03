@@ -45,13 +45,13 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (this.stockFeves.get(f)<10000) {
+					if (this.stockFeves.get(f)<10000) { // Modifier quantité minimale avant achat
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
 						double parStep = 100; // Changer quantité par Step
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 26, parStep); // Changer le 26 (durée du contrat)
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
-							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size())); // Choisir le vendeur avec d'autres motifs
 							journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
