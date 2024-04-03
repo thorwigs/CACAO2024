@@ -111,6 +111,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		} 
 		else {
 			OffreVente offre_finale=new OffreVente(offre, null, produit_AO, prix_defaut_feve.get(produit_AO));
+			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" offre en attente faite "+offre_finale);
 			return offre_finale;
 			
 			
@@ -122,13 +123,16 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
 		// TODO Auto-generated method stub
+		journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" la propostion d'appel d'offre "+propositionRetenue+" est finalisée.");
+
 		
 	}
 
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
 		// TODO Auto-generated method stub
-		
+		journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" la propostion d'appel d'offre "+propositionRefusee+" est refusée.");
+
 	}
 	
 
