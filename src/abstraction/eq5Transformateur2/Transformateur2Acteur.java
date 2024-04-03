@@ -19,6 +19,7 @@ public class Transformateur2Acteur implements IActeur {
 	protected Journal journal;
 	protected int cryptogramme;
 	private double coutStockage;
+	
 
 	protected List<Feve> lesFeves;
 	private List<ChocolatDeMarque>chocosProduits;
