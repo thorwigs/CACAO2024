@@ -30,7 +30,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    Echeancier echeancierPropose = contrat.getEcheancier() ;
 	    
 	    // Si la quantité totale demandée dépasse la quantité disponible, 
-	    // on divise la quantité disponible par le nombre d'échéances dans l'échéancier initial pour trouver la nouvelle quantité par échéance.
+	    // Une stratégie qui reste à discuter: on divise la quantité disponible par le nombre d'échéances dans l'échéancier initial pour trouver la nouvelle quantité par échéance.
 	    if (echeancierPropose.getQuantiteTotale() > quantiteDisponible) {
 	        int nbEcheances = echeancierPropose.getNbEcheances();
 	        double quantiteParEcheance = quantiteDisponible / nbEcheances;
