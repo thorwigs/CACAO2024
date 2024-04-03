@@ -25,24 +25,25 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 	    Feve f = (Feve) contrat.getProduit();
-	    double quantiteDisponible = this.getQuantiteEnStock(f, this.cryptogramme);
-	    // Echeancier proposé par l'acheteur
-	    Echeancier echeancierPropose = contrat.getEcheancier() ;
-	    
-	    // Si la quantité totale demandée dépasse la quantité disponible, 
-	    // Une stratégie qui reste à discuter: on divise la quantité disponible par le nombre d'échéances dans l'échéancier initial pour trouver la nouvelle quantité par échéance.
-	    if (echeancierPropose.getQuantiteTotale() > quantiteDisponible) {
-	        int nbEcheances = echeancierPropose.getNbEcheances();
-	        double quantiteParEcheance = quantiteDisponible / nbEcheances;
-	        
-	        // Création d'un nouvel échéancier avec la nouvelle quantité
-	        Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut(), nbEcheances, quantiteParEcheance);
-	        return nouvelEcheancier;
-	    } else {
-	        // Si la quantité demandée peut être couverte par le stock disponible,
-	        // on accepte l'échéancier proposé sans modification.
-	        return echeancierPropose;
+	    Echeancier echeancierPropose = contrat.getEcheancier();
+	    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
+
+	    for ( int  step = echeancierPropose.getStepDebut() ; step <= echeancierPropose.getStepFin() ; step++) {
+	        double quantiteDemandee = echeancierPropose.getQuantite(step);
+	        double quantiteDisponible = this.getQuantiteEnStock(f, this.cryptogramme);
+
+	        if (quantiteDemandee <= quantiteDisponible) {
+	            // Si la quantité demandée pour l'échéance peut être satisfaite, ajouter cette quantité à l'échéancier
+	            nouvelEcheancier.ajouter(quantiteDemandee);
+	            // mettre à jour le stock
+	            this.setQuantiteEnStock(f, quantiteDisponible - quantiteDemandee);
+	        } else {
+	            // Si la quantité demandée pour l'échéance ne peut pas être totalement satisfaite, proposer la quantité disponible
+	            nouvelEcheancier.ajouter(quantiteDisponible);
+	            this.setQuantiteEnStock(f, 0);
+	        }
 	    }
+	    return nouvelEcheancier;
 	}
 
 	
