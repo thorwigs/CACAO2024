@@ -55,7 +55,7 @@ public class Distributeur1Acteur implements IActeur {
 			if (cm.getChocolat()==Chocolat.C_HQ_E) {
 				stock=12000;
 			}
-			else {
+			if (cm.getChocolat()==Chocolat.C_HQ_BE)  {
 				stock=12000;
 			}
 			this.stock_Choco.put(cm, stock);
