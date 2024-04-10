@@ -28,7 +28,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 			return null;
 		}
 		}
-		
+	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return contrat.getPrix();
 	}
