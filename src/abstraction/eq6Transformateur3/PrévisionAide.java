@@ -3,7 +3,7 @@ import java.util.*;
 
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
-//class pour les décisions d'achats
+//class pour les décisions de quantité d'achats
 public class PrévisionAide extends Transformateur3AcheteurBourse{
 	
 	private ArrayList<HashMap<Feve, Double>> historiquesStockFeves;
