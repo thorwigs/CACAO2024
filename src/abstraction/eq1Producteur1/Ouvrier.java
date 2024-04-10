@@ -41,7 +41,8 @@ public class Ouvrier extends Producteur1Acteur {
 		return this.isEquitable;
 		
 	}
-	public void setIsEquitable() {
+	public void setIsEquitable(boolean IsEquitable) {
+		this.isEquitable=IsEquitable;
 		
 	}
 	

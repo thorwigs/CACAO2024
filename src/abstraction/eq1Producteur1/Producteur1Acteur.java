@@ -79,16 +79,16 @@ public class Producteur1Acteur implements IActeur {
 		int enfants = 0;
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
-		if ((annee != 0)& (annee % 5 == 0) && croissant ) {
-			//enfants = this.nb_enfants - 10;
-			//this.nb_enfants=enfants;
+		if ((annee != 0)& (annee % 5 == 0) && croissant & (this.nb_enfants>=10)  ) {
+			enfants = this.nb_enfants - 10;
+			this.nb_enfants=enfants;
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal= nouveauSalaire;
 				
 				}
 			if (this.labourEnfant < 2 ) { 
-				double nouveauSalaireE = this.labourEnfant*1.08;
+				double nouveauSalaireE = this.labourEnfant*1.05;
 				this.labourEnfant= nouveauSalaireE;
 				
 				}
@@ -273,7 +273,10 @@ public class Producteur1Acteur implements IActeur {
 	    
 	}
 	
+	
+	
 	public void embauche() {
+		
 		
 	}
 	
@@ -296,7 +299,8 @@ public class Producteur1Acteur implements IActeur {
 		return 0;
 		
 	}
-	public void setNbOuv() {
+	public void setNbOuv(int nbouvrier) {
+		this.nb_employees=nbouvrier;
 		
 
 	}
