@@ -50,7 +50,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
-//		this.initialiser();
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
@@ -62,7 +61,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			
 		}
 		
-		this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
@@ -74,10 +72,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				if (vendeurs.size()==1) {
 					vendeur=vendeurs.get(0);
 				} else if (vendeurs.size()>1) {
-					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
+					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size())); // a améliorer dans la V2
 				}
 				if (vendeur!=null) {
-					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
 					int a = Filiere.LA_FILIERE.getEtape()+1;
 					int b = 24 ; 
 					double c = this.prevision(choc, b) ;	
@@ -140,15 +138,14 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 
 	public boolean achete(IProduit produit) {
-/*		double a = 0 ; 
+		double a = 0 ; 
 		for (int i=0; i<contrat_en_cours.size(); i++) {
 			if (contrat_en_cours.get(i).getProduit().equals(produit)) {
 				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 			}
 		}
 		return (produit.getType().equals("ChocolatDeMarque")
-				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer */
-		return true ; 
+				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer 
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -160,22 +157,22 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72
 			&& this.achete(contrat.getProduit()) 
 			&&	contrat.getQuantiteTotale()>= 30 ) {
-			if (contrat.getProduit().equals(Chocolat.C_BQ)
+			if (contrat.getProduit().toString().contains("C_BQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100)) {
 			} 
-			if ( contrat.getProduit().equals(Chocolat.C_MQ)
+			if ( contrat.getProduit().toString().contains("C_MQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*25)/(x.getNbEcheances()*100*100))  {
 				}
-			if (contrat.getProduit().equals(Chocolat.C_MQ_E)
+			if (contrat.getProduit().toString().contains("C_MQ_E")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
 				}
-			if (contrat.getProduit().equals(Chocolat.C_HQ)
+			if (contrat.getProduit().toString().contains("C_HQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100)) {
 				}
-			if (contrat.getProduit().equals(Chocolat.C_HQ_E)
+			if (contrat.getProduit().toString().contains("C_HQ_E")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
 				} 
-			if (contrat.getProduit().equals(Chocolat.C_HQ_BE)
+			if (contrat.getProduit().toString().contains("C_HQ_BE")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
 				}	
 		} else {

@@ -109,20 +109,21 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 						a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 					}
 				}
-			System.out.println(produit);
+				System.out.println(produit.toString());
+				System.out.println(produit.toString().contains("C_BQ"));
+//				System.out.println(Filiere.LA_FILIERE.getChocolatsProduits());
 				return (produit.getType().equals("ChocolatDeMarque")
 						&& this.stock_Choco.containsKey(produit)
 						&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
 						&& this.prevision(produit, 24) - this.stock_Choco.get(produit) - a <= 1000); 
-//				return true ; 
 			}
 	
 
-	public double prevision (IProduit p,int b) {
+	public double prevision (ChocolatDeMarque p,int b) {
 		double d = 0.0;
 		int a = Filiere.LA_FILIERE.getEtape();
 		for (int i =a-b; i<a ; i++ ) {
-			d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)p,i);
+			d = d + Filiere.LA_FILIERE.getVentes(p,i);
 		}
 		d = d * ((Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
 		return d ; 
