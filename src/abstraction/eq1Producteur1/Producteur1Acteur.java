@@ -12,6 +12,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,10 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_enfants;
 	protected int nb_equitables;
 	private double coutStockage;
+	//Haythem
+	private double coutUnitaireProductionBQ = 1.0;
+    private double coutUnitaireProductionMQ = 1.5;
+    private double coutUnitaireProductionHQ = 2.0;
 	//This /|\
 	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Variable> stock;
@@ -233,6 +238,28 @@ public class Producteur1Acteur implements IActeur {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+
+	// Haythem
+	protected double CoutsProd() {
+		double CoutProdBQ=0;
+		double CoutProdMQ=0;
+		double CoutProdHQ=0;
+		HashMap<Feve, Double> QuantiteDeProd =prodParStep;
+		for (Feve f : QuantiteDeProd.keySet()) {
+	        double quantite = QuantiteDeProd.get(f); 
+
+	        // Calcul du coût de production pour la gamme de qualité concernée
+	        if (f.getGamme() == Gamme.BQ) {
+	            CoutProdBQ += quantite * coutUnitaireProductionBQ;
+	        } else if (f.getGamme() == Gamme.MQ) {
+	            CoutProdMQ += quantite * coutUnitaireProductionMQ;
+	        } else if (f.getGamme() == Gamme.HQ) {
+	            CoutProdHQ += quantite * coutUnitaireProductionHQ;
+	        }
+	    }
+		
+	    return CoutProdBQ + CoutProdMQ + CoutProdHQ;
+	}
 	
 	public void embauche() {
 		
@@ -259,6 +286,6 @@ public class Producteur1Acteur implements IActeur {
 	}
 	public void setNbOuv() {
 		
-		
+
 	}
 }
