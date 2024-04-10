@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 
 
-public class Distributeur2Stocks extends Distributeur2Acteur{
+public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected List<ChocolatDeMarque> chocolatsVillors;
 	protected Variable totalStocksChocoMarque;  
@@ -35,11 +35,12 @@ public class Distributeur2Stocks extends Distributeur2Acteur{
 		chocosProduits= Filiere.LA_FILIERE.getChocolatsProduits();			
 		for (ChocolatDeMarque cm : chocosProduits) {
 			double quantite;
-			quantite= Filiere.LA_FILIERE.getVentes(cm, -24)*0.5;			
+			quantite= Filiere.LA_FILIERE.getVentes(cm, -24);			
 			this.stockChocoMarque.put(cm, quantite);
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
-			this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);
-		}}
+			this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);}
+			
+		}
 		
 		
 
@@ -47,8 +48,10 @@ public class Distributeur2Stocks extends Distributeur2Acteur{
 	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
 		return this.stockChocoMarque;
 	}
-	public double getStockChocoMarque(ChocolatDeMarque cm) {
-		return this.stockChocoMarque.get(cm);
+	public double getStockChocoMarque(ChocolatDeMarque cm,int crypto) {
+		if(this.cryptogramme==crypto) {
+		return this.stockChocoMarque.get(cm);}
+		return 0.0;
 	}
 
 }
