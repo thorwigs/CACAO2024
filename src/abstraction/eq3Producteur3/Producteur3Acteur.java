@@ -25,8 +25,8 @@ public abstract class Producteur3Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
-    //creation d'une variable qui donne la production pour chaque type de feve @alexis
-    private HashMap<Feve,Variable> prodfeve ;
+    //creation d'un tableau de variables qui donne la production pour chaque type de feve @alexis
+    protected HashMap<Feve,Variable> prodfeve ;
     //abstract
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
@@ -62,6 +62,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		d01.put(Feve.F_HQ_BE, 20000.0);
 		setProdTemps(d01,d01);
 	}
+	
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ3";

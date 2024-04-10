@@ -36,7 +36,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		h.put(Feve.F_MQ_E, surfaceMQE);
 		h.put(Feve.F_BQ, surfaceBQ);
 	//on augmente la surface 
-	//achatPlantation(h);
+		achatPlantation(h);
 		return h;
 	}
 
@@ -46,14 +46,13 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * @author Alexis
 	 */
 	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
-		for (Feve f : surfaces.keySet()) {
+		for (Feve f : prodfeve.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
-			double delta = Filiere.LA_FILIERE; // difference entre ventes et production
-			if (delta >) { // si on vend plus que ce que l'on produit
-				supp += 10;
-				
+			double delta = "ventes de f" - prodfeve.get(f).getValeur(); // difference entre vente et production de f
+			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit
+				supp += 10; 
 			}
-			surfaces.put(f, surfaces.get(f)+supp);
+			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f
 		}
 		return surfaces;
 	}
