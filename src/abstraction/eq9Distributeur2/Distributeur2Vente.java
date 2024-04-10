@@ -16,8 +16,9 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-
-		return this.getStockChocoMarque(choco,crypto);
+		if (this.getStockChocoMarque(choco,crypto) >=0 && this.stockChocoMarque.keySet().contains(choco)) {
+		return this.getStockChocoMarque(choco,crypto);}
+		return 0;
 	}
 
 	@Override
