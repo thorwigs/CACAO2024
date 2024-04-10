@@ -1,6 +1,7 @@
 package abstraction.eq9Distributeur2;
 
 import abstraction.eqXRomu.clients.ClientFinal;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
@@ -16,9 +17,9 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-		if (this.getStockChocoMarque(choco,crypto) >=0 && this.stockChocoMarque.keySet().contains(choco)) {
-		return this.getStockChocoMarque(choco,crypto);}
-		return 0;
+		
+		return this.getStockChocoMarque(choco,crypto);
+		
 	}
 
 	@Override

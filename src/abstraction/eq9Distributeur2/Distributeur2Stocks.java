@@ -32,7 +32,8 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16;
-		chocosProduits= Filiere.LA_FILIERE.getChocolatsProduits();			
+		chocosProduits= Filiere.LA_FILIERE.getChocolatsProduits();		
+
 		for (ChocolatDeMarque cm : chocosProduits) {
 			double quantite;
 			quantite= Filiere.LA_FILIERE.getVentes(cm, -24);			

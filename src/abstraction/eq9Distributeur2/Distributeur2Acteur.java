@@ -49,6 +49,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 		this.getJournaux().get(0).ajouter("Coût de stockage : "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
 		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
 		this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getStockChocoMarque(cm,this.cryptogramme));}
+	    System.out.println(Filiere.LA_FILIERE.getChocolatsProduits());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
