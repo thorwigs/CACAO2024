@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur2Acteur implements IActeur {
+public abstract class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 
@@ -156,6 +156,16 @@ public class Producteur2Acteur implements IActeur {
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+	public abstract double cout_total_stock();
+	public abstract double cout_humain_par_step();
+	
+	public double getCoutTotalParStep() {
+		double cout_stock = this.cout_total_stock();	
+		double cout_humain = this.cout_humain_par_step();
+		
+		double somme = cout_stock + cout_humain;
+		return somme;
 	}
 }
 
