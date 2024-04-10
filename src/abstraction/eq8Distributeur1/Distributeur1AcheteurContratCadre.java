@@ -35,7 +35,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
-		this.getJournaux().add(journalCC);
 	}
 
 	public String getNom() {
@@ -52,6 +51,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
+		this.initialiser();
 		this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 		for (IProduit produit : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			if (this.achete(produit)) {
@@ -86,7 +86,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 
 	public List<Journal> getJournaux() {
-		return(super.getJournaux());
+		List<Journal> jour = super.getJournaux();
+		jour.add(journalCC);
+		return jour;
 	}
 
 	public void setCryptogramme(Integer crypto) {
