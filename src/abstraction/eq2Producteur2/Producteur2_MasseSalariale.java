@@ -1,6 +1,5 @@
-
-// Classe faite par Noémie
 package abstraction.eq2Producteur2;
+import abstraction.eqXRomu.general.Journal;
 
 public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private int nb_employes ;
@@ -10,11 +9,12 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private double salaire_enfant;
 	private double salaire_adulte;
 	private double salaire_adulte_equitable;
-		
+	protected Journal journalMasseSalariale;
+			
 	public void initialiser() {
-		super.initialiser();
 		int nb_employes =  3679200;
-		int nb_employes_equitable = 100800;
+		int nb_employes_equitable = 100800;//2% init
+
 		int nb_employes_enfants = 1260000; //25% au départ
 		
 		int salaire_enfant =  1;
@@ -82,7 +82,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		if ((nb_emp - n) < 0) {
 			this.setNombreEmployes(categorie, 0);
 		}
-		else {
+		else { 
 			this.setNombreEmployes(categorie, nb_emp-n);
 		}
 	}
@@ -98,8 +98,21 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		double adultes = getNb_employes()*getSalaire("adulte"); 
 		return enfants + adultes_eq + adultes;
 	}
-	
+
+	// Fonction qui permet d'implémenter notre stratégie. 
+	// Si notre solde est supérieur au cout humain pour 10 tours
 	public void mise_a_jour() {
-		
+		double solde = this.getSolde();
+		if (solde > 10*cout_humain_par_step()){
+			int nb_enf = getNb_employes_enfants();
+			int modif = (int) Math.round(0.002*nb_enf);
+			int modif_equitable = (int) Math.round(modif*0.2);
+			
+			this.setNb_employes_enfants(nb_enf - modif);
+			this.setNb_employes_equitable(this.getNb_employes_equitable() + modif_equitable);
+			this.setNb_employes(this.getNb_employes() + modif - modif_equitable);
+		}
 	}
+	
+
 }

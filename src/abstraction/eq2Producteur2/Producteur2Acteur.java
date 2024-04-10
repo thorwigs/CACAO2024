@@ -24,7 +24,10 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected int nb_employes;
 	protected int nb_employes_equitable;
 	protected int nb_employes_enfants;
-
+	public abstract double get_prod_pest_BQ();
+	public abstract double get_prod_pest_MQ();
+	public abstract double get_prod_pest_HQ();
+	
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
@@ -39,14 +42,29 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.ajout_stock(Feve.F_HQ_E, 3076923.076);
 		this.lot_to_hashmap();
 		/*stock = new HashMap <Feve, Double>();
+=======
+		this.stock = new HashMap<Feve, Double>();
+		this.prodParStep= new HashMap<Feve, Double>();
+		stock = new HashMap <Feve, Double>();
+>>>>>>> branch 'main' of https://github.com/Quentin30502/CACAO2024
 		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
 		stock.put(Feve.F_MQ, 30.0);
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
+<<<<<<< HEAD
 		stock.put(Feve.F_MQ_E, 0.0);*/
+		stock.put(Feve.F_MQ_E, 0.0);
+		//initialisation prodparstep pour faire marcher get indicateur || à modifier
 		
+		prodParStep.put(Feve.F_HQ_BE, 0.0);
+		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
+		prodParStep.put(Feve.F_HQ, 0.0);
+		prodParStep.put(Feve.F_MQ_E, 0.0);
+		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
 	}
+	
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ2";
@@ -84,8 +102,15 @@ public abstract class Producteur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		for (Feve f: Feve.values() ) {
+			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, stock.get(f), prodParStep.get(f)*24, prodParStep.get(f)*6);
+			res.add(v);
+		}
 		return res;
 	}
+	
+	
+	
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
@@ -171,7 +196,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public double getCoutTotalParStep() {
 		double cout_stock = this.cout_total_stock();	
 		double cout_humain = this.cout_humain_par_step();
-		
+
 		double somme = cout_stock + cout_humain;
 		return somme;
 	}

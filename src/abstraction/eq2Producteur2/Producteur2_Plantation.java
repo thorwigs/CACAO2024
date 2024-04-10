@@ -1,9 +1,13 @@
 package abstraction.eq2Producteur2;
+import abstraction.eqXRomu.produits.Feve;
+
 
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double nb_hectares_max;
 	protected double nb_hectares_actuel;
 	protected double prix_plantation_hectare;
+	protected int nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
+
 	
 	protected int qualitee;
 	protected double pourcentage_HQ = 0.02;
@@ -17,14 +21,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	//protected double rend_no_pest_MQ = 0.77;
 	protected double rend_no_pest_HQ = 0.72;
 	
-	
-	public void initialiser() {
-		super.initialiser();
-		double nb_hectares_max = 5000000;
-		double nb_hectares_actuel = 5000000;
-		double prix_plantation_hectare = 0; // à définir
-		return;
-	}
 
 	public double getNb_hectares_max() {
 		return nb_hectares_max;
@@ -46,7 +42,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return prix_plantation_hectare;
 	}
 
-	public void setPrix_plantation_hectare(double prix_plantation_hectare) {
+	public void setPrix_plantation_hectare(int prix_plantation_hectare) {
 		this.prix_plantation_hectare = prix_plantation_hectare;
 	}
 	
@@ -74,15 +70,30 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.pourcentage_BQ = pourcentage_BQ;
 	}
 	
+	public int getNb_nouveau_hectares() {
+		return nb_nouveau_hectares;
+	}
+
+	public void setNb_nouveau_hectares(int nb_nouveau_hectares) {
+		this.nb_nouveau_hectares = nb_nouveau_hectares;
+	}
+	
+	public void initialiser() {
+		super.initialiser();
+		setNb_hectares_max(5000000);
+		setNb_hectares_actuel(5000000);
+		setPrix_plantation_hectare(500); // 500 euros
+		return;
+	}
 	
 	
-	public void planter(int quantite) {
-		if (getNb_hectares_actuel() + quantite > getNb_hectares_max()) { //achat impossible
+	
+	public void planter(double nb_hectares) {
+		if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
 			return;
 		}
 		else { 
-			setNb_hectares_actuel(getNb_hectares_actuel() + quantite);
-			// il reste à effectuer la transaction banquaire
+			setNb_hectares_actuel(getNb_hectares_actuel() + nb_hectares);
 		}
 	}
 	
@@ -91,9 +102,12 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
-		return production_cacao() * getPourcentage_HQ();
+		return production_cacao()* getPourcentage_HQ();
+		
 	}
+
 	
+
 	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en kg
 		return production_cacao() * getPourcentage_BQ();
 	}
@@ -104,20 +118,56 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en kilos
 	public double get_prod_no_pest_HQ() { 
-		return this.production_HQ() * rend_no_pest_HQ;
+		return this.production_HQ() * rend_no_pest_HQ; //feve HQ_BE
 	}
 	
+	
+	
 	public double get_prod_pest_HQ() {
-		return this.production_HQ() * rend_pest_HQ;
+		return this.production_HQ() * rend_pest_HQ; //feve HQ_E et HQ=0
 	}
 	
 	public double get_prod_pest_MQ() {
-		return this.production_MQ() * rend_pest_MQ;
+		return this.production_MQ() * rend_pest_MQ; //feve MQ=98%*get_prod_pest et MQ_E=2%*get_prod_pest
 	}
 	
 	public double get_prod_pest_BQ() {
-		return this.production_BQ() * rend_pest_BQ;
+		return this.production_BQ() * rend_pest_BQ; //feve BQ
+	}
+	
+	public void nouveau_stock() { // ajoute la producution sur 2 semaines aux stocks
+		ajout_stock(Feve.F_BQ, production_BQ());
+		ajout_stock (Feve.F_MQ, production_MQ());
+		ajout_stock(Feve.F_HQ_E, production_HQ());
+	}
+
+	public void achat_plantation() {
+		if (getStockTotal(this.cryptogramme) == 0.0) {
+			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
+				planter(nb_hectares_max - nb_hectares_actuel);
+			}
+			planter((int) (nb_hectares_actuel * 0.02)); //on replante 2% de la plantation actuel
+			setNb_nouveau_hectares((int) (nb_hectares_actuel * 0.02));
+		}
+	}
+	
+
+
+	public void modifie_prodParStep() {
+	    this.prodParStep.put(Feve.F_HQ, production_HQ());
+	    this.prodParStep.put(Feve.F_MQ, production_MQ());
+	    this.prodParStep.put(Feve.F_BQ, production_BQ());
+
+	    this.prodParStep.put(Feve.F_HQ_BE, 0.0);
+	    this.prodParStep.put(Feve.F_HQ_E, 0.0);
+	    this.prodParStep.put(Feve.F_MQ_E, 0.0);
+	}
+	
+	public double cout_plantation() {
+		return getNb_nouveau_hectares() * getPrix_plantation_hectare();
 	}
 } 
 // 1hectare = 500kg / an cacao
 // implémenter la qualité 
+
+// B219
