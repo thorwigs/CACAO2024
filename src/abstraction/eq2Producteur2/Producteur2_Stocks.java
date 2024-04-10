@@ -59,8 +59,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	
 	//Faite par Quentin
-	//Met à jour la liste des stocks en ajoutant les lots invendus
-	public void ajout_invendus(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQ_E, double quantite_rest_HQ, double quantite_rest_HQ_E, double quantite_rest_HQ_BE) {
+	//Met à jour la liste des stocks en ajoutant les lots produits
+	public void ajout_stock(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQ_E, double quantite_rest_HQ, double quantite_rest_HQ_E, double quantite_rest_HQ_BE) {
 		if(quantite_rest_BQ != 0) {
 			this.stock_total.add(new Producteur2_Lot(quantite_rest_BQ, Feve.F_BQ));
 		}
