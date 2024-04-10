@@ -283,6 +283,10 @@ public class Producteur1Acteur implements IActeur {
 		return this.nb_enfants;
 		
 	}
+	public void setNbEnfant(int nbenfants) {
+		
+		this.nb_enfants=nbenfants;
+	}
 	
 	public int getNbOuv() {
 		return this.nb_employees;
