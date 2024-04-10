@@ -78,7 +78,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 					}
 				}
 //				System.out.println(produit.getType().equals("ChocolatDeMarque"));
-//			System.out.println(produit.getType());
+			System.out.println(produit);
 				return (produit.getType().equals("ChocolatDeMarque")
 						&& this.stock_Choco.containsKey(produit)
 						&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
