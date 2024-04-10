@@ -148,6 +148,8 @@ public abstract class Producteur3Acteur implements IActeur {
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
 		//On gere nos intrants de production
 		gestionStock();
+		//On met a jour les variables GammeStep
+		majGammeStep();
 		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
@@ -328,15 +330,34 @@ public abstract class Producteur3Acteur implements IActeur {
 			 this.setQuantiteEnStock(f, this.getQuantiteEnStock(f, this.cryptogramme)+prod.get(f));
 		 }
 	 }
-	 /*
+	 
+	 /**
+	  * @author Arthur
+	  * Dans le but de s'assurer de ne pas vendre a perte, on regarde les couts de chaque feve par step et leurs quantites
+	  *Cette fonction met a jour les variables associees
+	  */
 	 protected void majGammeStep() {
 		 //on ajoute la production du step (il faudra prendre en compte les ventes)
 		 for (Feve f : stockGammeStep.keySet()) {
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
 		 }
+		 //on ajoute les couts du step (attention aux ventes)
 		 for (Feve f : coutGammeStep.keySet()) {
-			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), null) ;
+			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f));
+			for (Integer step : coutGammeStep.get(f).keySet()) {
+				coutGammeStep.get(f).put(step, coutGammeStep.get(f).get(step)+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*stockGammeStep.get(f).get(step));			}
+		 }
+	 }
+	 
+	 /**
+	  * @author Arthur
+	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee
+	  * On vend en priorite les vieilles feves
+	  */
+	 /*protected double coutRevient(Feve f,double quantite) {
+		 double accu = 0.0;
+		 for (double step : stockGammeStep.keySet()) {
+			 
 		 }
 	 }*/
-	 
 }
