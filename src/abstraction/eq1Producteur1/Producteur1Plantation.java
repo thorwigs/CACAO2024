@@ -2,26 +2,32 @@ package abstraction.eq1Producteur1;
 
 import java.util.HashMap;
 
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur1Plantation extends Producteur1VendeurAuxEncheres implements IPlantation{
 	protected double nombreHec = 3E6;
 	protected double nombreHecMax = 5E6;
-	protected double i;
+	protected Journal journalPlantation;
 	protected HashMap<Feve, Double> plantation;
 	public void next() {
 		super.next();
 	}
 	public Producteur1Plantation() {
-		plantation = new HashMap<Feve, Double>();
+		super();
+		
+		this.journalPlantation = new Journal(this.getNom()+"   journal Plantation",this);
 		
 	}
 
+
 	@Override
 	public HashMap<Feve, Double> plantation() {
-		// TODO Auto-generated method stub
-		
-		return null;
+		plantation = new HashMap<Feve, Double>();
+		plantation.put(Feve.F_BQ,0.7*this.nombreHec );
+		plantation.put(Feve.F_MQ, 0.28*this.nombreHec);
+		plantation.put(Feve.F_HQ, 0.02*this.nombreHec);
+		return plantation;
 	}
 
 	@Override
