@@ -21,6 +21,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 	}
 	
 	
+	
 // Fatima-ezzahra
 	@Override
 	
@@ -31,7 +32,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 	   double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
 	   
 	   
-	   if (quantiteEnT!=0) { // les trois gammes ont un seul cout?? 
+	   if (quantiteEnT!=0) { 
 		   
 	  
 		if (f.getGamme()==Gamme.MQ) {
@@ -97,6 +98,11 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
 		return res;
+		
+		
+		
+		
+		
 	}
 
 }
