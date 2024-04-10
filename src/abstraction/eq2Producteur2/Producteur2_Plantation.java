@@ -25,7 +25,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.nb_hectares_actuel=50000000;
 		this.nb_hectares_max=5000000;
 		this.prix_plantation_hectare=0;
-		System.out.println(production_HQ());
+		
 	}
 
 	public int getNb_hectares_max() {
