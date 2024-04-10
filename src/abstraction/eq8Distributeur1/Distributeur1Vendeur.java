@@ -8,6 +8,7 @@ import java.util.List;
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Gamme;
@@ -16,12 +17,14 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	protected double capaciteDeVente;
 	protected  HashMap<ChocolatDeMarque, Double> ListPrix;
 	protected String[] marques;
+	protected Journal journalVente;
 	
 	public Distributeur1Vendeur() {
 		super();
 		this.capaciteDeVente=120000;  //capacite de vente par step
 		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
 		this.marques = new String[chocolats.size()];
+		this.journalVente= new Journal (this.getNom() + " journal des ventes", this);
 	}
 
 
@@ -55,10 +58,16 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			return 0;
 		}
 	}
+	
+	public List<Journal> getJournaux() {
+		List<Journal> jour = super.getJournaux();
+		jour.add(journalVente);
+		return jour;
+	}
 
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		if (crypto!=this.cryptogramme) {
-			journal.ajouter("Quelqu'un essaye de me pirater !");
+			journalVente.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
 		} else {
 			int pos= (chocolats.indexOf(choco));
@@ -97,15 +106,15 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	}
 
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
-		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
+		journalVente.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
 	public void next() {
 		super.next();
-		journal.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
+		journalVente.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
 			for (int i=0; i<this.chocolats.size(); i++) {
-			journal.ajouter("Le prix moyen du chocolat \""+chocolats.get(i).getNom()+"\" a l'etape precedente etait de "+Filiere.LA_FILIERE.prixMoyen(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-1));
-			journal.ajouter("Les ventes de chocolat \""+chocolats.get(i)+" il y a un an etaient de "+Filiere.LA_FILIERE.getVentes(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-24));
+			journalVente.ajouter("Le prix moyen du chocolat \""+chocolats.get(i).getNom()+"\" a l'etape precedente etait de "+Filiere.LA_FILIERE.prixMoyen(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-1));
+			journalVente.ajouter("Les ventes de chocolat \""+chocolats.get(i)+" il y a un an etaient de "+Filiere.LA_FILIERE.getVentes(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-24));
 			}
 		}
 	}
