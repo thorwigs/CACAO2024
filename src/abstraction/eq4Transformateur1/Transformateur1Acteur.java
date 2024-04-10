@@ -101,6 +101,14 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.journal.ajouter("étape : "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage chez producteur : "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
+		for (Feve f : stockFeves.keySet()) {
+			this.journal.ajouter(" - Stock de feves "+f.getGamme()+" : "+stockFeves.get(f));
+		}
+		
+		for (ChocolatDeMarque cm : stockChocoMarque.keySet()) {
+			this.journal.ajouter(" - Stock de "+cm.getNom()+" : "+stockChocoMarque.get(cm));
+		}
+		
 		double nbTonnesProduites = 0.0;
 		//transformation des feves en chocolat
 		for (Feve f : this.pourcentageTransfo.keySet()) {
