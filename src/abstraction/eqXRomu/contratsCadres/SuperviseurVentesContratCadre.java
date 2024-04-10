@@ -1,14 +1,23 @@
 package abstraction.eqXRomu.contratsCadres;
 
 import java.awt.Color;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.*;
 import abstraction.eqXRomu.general.*;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
@@ -20,7 +29,8 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	private List<ContratCadre> contratsEnCours;
 	private List<ContratCadre> contratsTermines;
 	private HashMap<IActeur, Integer> cryptos;
-
+    private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
+    
 	public static final int MAX_MEME_VENDEUR_PAR_STEP = 15; 
 	// Au cours d'un meme step un acheteur peut negocier au plus MAX_MEME_VENDEUR_PAR_STEP
 	// fois avec le meme vendeur. Si l'acheteur demande a negocier avec le vendeur v alors qu'il a 
@@ -39,6 +49,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	}
 
 	public void initialiser() {
+		aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph.");
 	}
 
 	public List<IVendeurContratCadre> getVendeurs(IProduit produit) {
@@ -413,8 +424,37 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		recapitulerContratsEnCours();
 		gererLesEcheancesDesContratsEnCours();
 		archiverContrats();
+		contratsToCSV();
 	}
 
+	public String contratToCSV(ContratCadre cc) {
+		return cc.getNumero()+";"+cc.getVendeur()+";"+cc.getAcheteur()+";"+cc.getProduit()+";"+cc.getPrix()+";"+cc.getTeteGondole()+";"+cc.getQuantiteTotale()+";"+cc.getEcheancier().getStepDebut()+";"+cc.getEcheancier().getStepFin()+";";
+	}
+	public void contratsToCSV() {
+	//	Variable aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph");
+		if (this.aff.getValeur()!=0.0) {
+
+
+					try {
+						PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CC.csv")));
+						aEcrire.println("NUM;VENDEUR;ACHETEUR;PRODUIT;PRIX;TG;QUANTITE;STEPDEBUT;STEPFIN");
+						for (ContratCadre cc : this.contratsEnCours) {						
+							aEcrire.println( contratToCSV(cc) );
+//							System.out.println(s);
+						}
+						for (ContratCadre cc : this.contratsTermines) {						
+							aEcrire.println( contratToCSV(cc) );
+						}
+						aEcrire.close();
+					}
+					catch (IOException e) {
+						throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
+					}
+				
+		}	
+
+	}
+	
 	public String getDescription() {
 		return this.getNom();
 	}
