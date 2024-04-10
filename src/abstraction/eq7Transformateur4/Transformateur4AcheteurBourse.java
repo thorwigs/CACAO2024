@@ -15,7 +15,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	
 	public Transformateur4AcheteurBourse () {
 		super();
-		this.journalBourse = new Journal(this.getNom()+" journalBourse", this);
+		this.journalBourse = new Journal(this.getNom()+" journal Bourse achat", this);
 	}
 	
 
@@ -45,6 +45,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 		return res;
 	}
 
+	
 
 
 }

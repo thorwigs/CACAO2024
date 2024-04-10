@@ -140,8 +140,6 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//on paye notre coût de stockage:
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
-
-
 		this.journal.ajouter("" + this.getMarquesChocolat());
 		this.journal.ajouter("" + this.getChocolatsProduits());
 		for (ChocolatDeMarque c : chocolatCocOasis) {

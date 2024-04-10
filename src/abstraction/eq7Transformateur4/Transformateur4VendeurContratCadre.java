@@ -15,13 +15,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
-	protected Journal journalCC;
+	protected Journal journalCCvente;
 
 	public Transformateur4VendeurContratCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalCCvente = new Journal(this.getNom()+" journal CC vente", this);
 	}
 	
 	public boolean vend(IProduit produit) {
@@ -55,7 +55,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	}//s'inspirer de AcheteurCC
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);
+		journalCCvente.ajouter("Nouveau contrat :"+contrat);
 		this.contratsEnCours.add(contrat);
 	}
 	
@@ -83,5 +83,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		
 	public void next() {
 		// TODO Auto-generated method stub
+	}
+	
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalCCvente);
+		return jx;
 	}
 }
