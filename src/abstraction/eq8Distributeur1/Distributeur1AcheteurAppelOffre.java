@@ -16,8 +16,8 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 	private SuperviseurVentesAO supAO;
 	protected Journal journalAO;
 	
-	public Distributeur1AcheteurAppelOffre(double capaciteDeVente,double[] prix,String[] marques) {
-		super(capaciteDeVente,prix,marques);
+	public Distributeur1AcheteurAppelOffre() {
+		super();
 		this.journalAO= new Journal (this.getNom() +"Journal AO", this);
 	}
 	public void initialiser() {
