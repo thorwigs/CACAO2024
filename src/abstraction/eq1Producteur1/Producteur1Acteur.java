@@ -272,7 +272,10 @@ public class Producteur1Acteur implements IActeur {
 	    return CoutProdBQ + CoutProdMQ + CoutProdHQ;
 	}
 	
+	
+	
 	public void embauche() {
+		
 		
 	}
 	
@@ -295,7 +298,8 @@ public class Producteur1Acteur implements IActeur {
 		return 0;
 		
 	}
-	public void setNbOuv() {
+	public void setNbOuv(int nbouvrier) {
+		this.nb_employees=nbouvrier;
 		
 
 	}
