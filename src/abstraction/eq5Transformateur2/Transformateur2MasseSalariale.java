@@ -17,6 +17,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	protected double salaire;//salaire par step
 	protected double coutLicenciement1Salarie;
 	protected double capaciteTransformation;// tonnes transformées par 1 salarié par step
+	protected double coutAdjuvants;//cout des adjuvants pour 1 tonne de chocolat
+	protected double coutMachines;//cout des machines pour 1 tonne de chocolat
 	
 	
 	public Transformateur2MasseSalariale() {
@@ -28,6 +30,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		salaire = 2000;
 		coutLicenciement1Salarie = 4*salaire;
 		capaciteTransformation = 3.7;
+		coutAdjuvants = 1200;
+		coutMachines=8;
 	}
 	
 	
@@ -37,7 +41,14 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		return 2;
 	}
 	public double CoutTransformation(Chocolat c) {
-		return 2;
+		double tx = 0;
+		if (c.getType().equals("BQ")) {
+			tx = 0.3; //Taux cacao BQ
+		}
+		else {
+			tx = 0.5; //Taux cacao MQ
+		}
+		return (NbSalaries*(1-tx)*coutAdjuvants+NbSalaries*coutMachines); //Formule du doc criteres de la simulation
 	}
 	///////////////////////////////////////////////////////
 	
