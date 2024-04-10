@@ -1,6 +1,7 @@
 package abstraction.eq9Distributeur2;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,11 +15,18 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
+public abstract class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
 
+	protected Journal journal_CC;
+	
+	public Distributeur2ContratCadre() {
+		super();
+		this.journal_CC= new Journal(this.getNom()+" journal Contrat Cadre", this);
+	}
+	
 	@Override
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("ChocolatDeMarque"); // verifier stock //acheter du Chocolat pour notre marque
+		return produit.getType().equals("ChocolatDeMarque"); // verifier stock 
 	}
 
 	@Override
@@ -52,20 +60,27 @@ public class Distributeur2ContratCadre extends Distributeur2Vente implements IAc
 		}
 		return contrat.getPrix();
 	}
-
+	
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		
+		this.getJournaux().get(1).ajouter("Nouveau Contrat Cadre : "+contrat.toString());
 	}
 
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
+		this.getJournaux().get(1).ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat #"+contrat.getNumero());
+		
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
 		}
 	}
 
 	
+	
+	public List<Journal> getJournaux() {
+		List<Journal> res= super.getJournaux();
+		res.add(this.journal_CC);
+		return res;
+	}
 	
 }
