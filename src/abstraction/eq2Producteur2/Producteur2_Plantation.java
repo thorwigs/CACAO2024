@@ -1,5 +1,7 @@
 package abstraction.eq2Producteur2;
 
+import java.util.List;
+
 import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
@@ -18,6 +20,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_HQ = 0.80;
 	protected double rend_no_pest_HQ = 0.72;
 	
+	//private List<Producteur2_Lot> stock_total;
+	//protected Journal journalPlantation;
 
 	public double getNb_hectares_max() {
 		return nb_hectares_max;
@@ -161,6 +165,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		setNb_nouveau_hectares(0);
 		return res;
 	}
+	
+
 	
 } 
 // 1hectare = 500kg / an cacao
