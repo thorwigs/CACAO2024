@@ -76,15 +76,15 @@ public class Producteur1Acteur implements IActeur {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
 		float croissement =0 ;
-		int enfants = 0;
+		int enfants = this.nb_enfants;
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 		if ((annee != 0)& (annee % 5 == 0) && croissant & (this.nb_enfants>=10)  ) {
-			enfants = this.nb_enfants - 10;
-			this.nb_enfants=enfants;
+			
+			this.setNbEnfant(enfants-10);
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
-				this.labourNormal= nouveauSalaire;
+				this.labourNormal = nouveauSalaire;
 				
 				}
 			if (this.labourEnfant < 2 ) { 
