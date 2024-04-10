@@ -6,6 +6,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected int nb_hectares_max;
 	protected int nb_hectares_actuel;
 	protected int prix_plantation_hectare;
+	protected int nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
 	
 	protected int qualitee;
 	protected double pourcentage_HQ = 0.02;
@@ -20,6 +21,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_no_pest_HQ = 0.72;
 	
 	public Producteur2_Plantation() {
+		//initialisation EFFICACE
 		this.nb_hectares_actuel=50000000;
 		this.nb_hectares_max=5000000;
 		this.prix_plantation_hectare=0;
@@ -76,11 +78,16 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.pourcentage_BQ = pourcentage_BQ;
 	}
 	
+	public int getNb_nouveau_hectares() {
+		return nb_nouveau_hectares;
+	}
+
+	public void setNb_nouveau_hectares(int nb_nouveau_hectares) {
+		this.nb_nouveau_hectares = nb_nouveau_hectares;
+	}
+	
 	public void initialiser() {
 		super.initialiser();
-//		setNb_hectares_max(5000000);
-//		setNb_hectares_actuel(5000000);
-//		setPrix_plantation_hectare(0); // à définir
 
 	}
 	
@@ -143,19 +150,19 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void nouveau_stock() { // ajoute la producution sur 2 semaines aux stocks
 		ajout_stock(production_BQ(),production_MQ(),0,production_HQ(),0,0);
 	}
-	
-	public void achat_hectare(int nb_hectare) { //fonction permettant d'achter un hectare
-		cout_plantation();
-	}
+
 	public void achat_plantation() {
 		if (getStockTotal(this.cryptogramme) == 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
 				planter(nb_hectares_max - nb_hectares_actuel);
 			}
 			planter((int) (nb_hectares_actuel * 0.02)); //on replante 2% de la plantation actuel
+			setNb_nouveau_hectares((int) (nb_hectares_actuel * 0.02));
 		}
 	}
 	
+
+
 	public void modifie_prodParStep() {
 	    this.prodParStep.put(Feve.F_HQ, production_HQ());
 	    this.prodParStep.put(Feve.F_MQ, production_MQ());
@@ -167,7 +174,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double cout_plantation() {
-		return 0 ;
+		return getNb_nouveau_hectares() * getPrix_plantation_hectare();
 	}
 } 
 // 1hectare = 500kg / an cacao
