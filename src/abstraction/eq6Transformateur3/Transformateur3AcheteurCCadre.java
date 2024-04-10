@@ -23,7 +23,7 @@ import abstraction.eq8Distributeur1.*;
 import abstraction.eq9Distributeur2.*;
 
 
-public class Transformateur3AcheteurCCadre extends Transformateur3Acteur implements IAcheteurContratCadre {
+public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
