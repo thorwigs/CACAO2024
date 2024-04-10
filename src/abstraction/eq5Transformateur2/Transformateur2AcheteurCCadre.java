@@ -106,16 +106,16 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
 		} else if (contrat.getEcheancier().getNbEcheances()<78 && contrat.getEcheancier().getQuantiteTotale()>35000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,35000) ; // Changer valeur par step demandée
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,35000) ; // Durée trop courte et trop de quantité
 		
 		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()>35000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,35000) ; // Changer valeur par step demandée
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,35000) ; // Durée trop longue et trop de quantité
+		
+		} else if (contrat.getEcheancier().getNbEcheances()<78 && contrat.getEcheancier().getQuantiteTotale()<20000) {
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Durée trop longue et trop peu de quantité
 		
 		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()<20000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Changer valeur par step demandée
-		
-		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()<20000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Changer valeur par step demandée
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Durée trop longue et trop peu de quantité
 		}
 		else {
 			return contrat.getEcheancier();
@@ -124,14 +124,8 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		if (contrat.getEcheancier().getQuantiteTotale()*5<contrat.getPrix()) {
-			this.journalCC.ajouter("=========NEGOCIATION===========");
-			this.journalCC.ajouter("Proposition d'un nouveau prix de : "+contrat.getEcheancier().getQuantiteTotale()*5);
-			this.journalCC.ajouter("===============================");
-			return contrat.getEcheancier().getQuantiteTotale()*5;
+			return contrat.getEcheancier().getQuantiteTotale()*5; // Prix trop élevé
 		} else {
-			this.journalCC.ajouter("=========NEGOCIATION===========");
-			this.journalCC.ajouter("Acceptation de la proposition de : "+contrat.getPrix());
-			this.journalCC.ajouter("===============================");
 			return contrat.getPrix();
 			}
 	}
