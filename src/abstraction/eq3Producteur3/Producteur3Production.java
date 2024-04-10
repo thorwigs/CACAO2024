@@ -11,7 +11,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	protected double kg_ha_BQ = 28.125 ;						//avec pesticide
 	protected double kg_ha_MQ = 26.5625 ;
 	protected double kg_ha_HQ = 25.0 ;
-	protected double kg_ha_HQ_E = 22.5 ;     					//sans pesticide (bio équitable)
+	protected double kg_ha_HQ_BE = 22.5 ;     					//sans pesticide (bio équitable)
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>();;
 	
 	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
@@ -25,6 +25,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	 * Prend en compte les surfaces de plantation et le prix.
 	 * @author galem (Gabin)
 	 */
+	
 	protected HashMap<Feve,Double> newQuantite() {
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		HashMap<Feve,Double> plant = plantation();
@@ -51,7 +52,7 @@ public class Producteur3Production extends Producteur3Plantation {
 					}
 				}
 				else {											// HAUTE QUALITE (BIO EQUITABLE)
-					quantite.put(f1, kg_ha_HQ_E*plant.get(f1)); 
+					quantite.put(f1, kg_ha_HQ_BE*plant.get(f1)); 
 				}
 
 			}
