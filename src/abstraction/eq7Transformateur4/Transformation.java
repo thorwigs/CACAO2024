@@ -14,25 +14,27 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 	public void next() {
 		super.next();
 		double stock_hg_be = this.stockFeves.get(Feve.F_HQ_BE);
+		//là on va aussi demandé les autres stocks
 		double peutproduireemploye = this.tauxproductionemploye*this.nbemployeCDI; //pour l'instant ça c'est 375, mais ça pourra évoluer si on change le nb d'employé
 		//là faudras s'adapter, pour utiliser qu'une partie de la main d'oeuvre pour faire tel ou tel chocolat, pour l'instant on fait qu'un seul chocolat
+		double qtutile1 ; //correspond à la qte de fève qu'on va effectivement transformer
+		//là faudras mettre les autres qte de fève utilisées
 		if (stock_hg_be > 0) {
 			if (stock_hg_be > peutproduireemploye) {
 				//on a assez en stock, on produit un maximum
-				this.stockFeves.replace(Feve.F_HQ_BE, stock_hg_be - peutproduireemploye);//on retire peutproduireemploye du stock de feve haut de gamme pour faire du chocolat
-				double qtechocoproduit = peutproduireemploye*this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE); //la qte de choco produit à partir de peutproduireemploye
-				double payermachine = peutproduireemploye*this.coutmachine; //prix des machines car on transforme une certaine qté de fèves
-				double payeradjuvant = this.coutadjuvant*8;
+				qtutile1 = peutproduireemploye;
 			} else {
-				this.stockFeves.replace(abstraction.eqXRomu.produits.Feve.F_HQ_BE, 0.0);
-				//on retire tout notre stock de haut de gamme pour faire du chocolat
-				
+				//on retire tout notre stock de feve pour faire du chocolat
+				qtutile1 = stock_hg_be;
 			}
-				
-		
+			this.stockFeves.replace(Feve.F_HQ_BE, stock_hg_be - qtutile1);//on retire qtutile1 du stock de feve haut de gamme pour faire du chocolat
+			double qtechocoproduit = qtutile1*this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE); //la qte de choco produit à partir de qtutile1
+			//ajouter le stocks à cocoasis
+			double payermachine = qtutile1*this.coutmachine; //prix des machines car on transforme une certaine qté de fèves
+			double pourcentageadjuvant = this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE)-1;
+			double payeradjuvant = this.coutadjuvant*pourcentageadjuvant*qtutile1;
 		} //else : on fait rien car on peut pas produire
-		
-		//là on paye les trucs généraux : cout fixe des machines, employés qu'on doit payer dans tous les cas, etc...
+		//là on paye les trucs : généraux (cout fixe des machines, employés qu'on doit payer dans tous les cas) et les cout qu'on vient de calculer(payermachine, payeradjuvant)
 		
 		
 		
