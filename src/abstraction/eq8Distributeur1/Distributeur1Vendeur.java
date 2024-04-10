@@ -1,28 +1,58 @@
 package abstraction.eq8Distributeur1;
 
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
+import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Gamme;
 
 public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistributeurChocolatDeMarque {
-	private double capaciteDeVente;
-	private double[] prix;
-	private String[] marques;
+	protected double capaciteDeVente;
+	protected  HashMap<ChocolatDeMarque, Double> ListPrix;
+	protected String[] marques;
 	
 	public Distributeur1Vendeur() {
 		super();
+		this.capaciteDeVente=120000;  //capacite de vente par step
+		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
+		this.marques = new String[chocolats.size()];
 	}
 
 
+	public void setPrix(ChocolatDeMarque choco) {
+		if (choco.getChocolat()==Chocolat.C_BQ) {
+			ListPrix.put(choco, (double) 10000);
+		}
+		if (choco.getChocolat()==Chocolat.C_MQ) {
+			ListPrix.put(choco, (double) 20000);
+		}
+		if (choco.getChocolat()==Chocolat.C_MQ_E) {
+			ListPrix.put(choco, (double) 25000);
+		}
+		if (choco.getChocolat()==Chocolat.C_HQ) {
+			ListPrix.put(choco, (double) 60000);
+		}
+		if (choco.getChocolat()==Chocolat.C_HQ_E) {
+			ListPrix.put(choco, (double) 80000);
+		}
+		if (choco.getChocolat()==Chocolat.C_HQ_BE) {
+			ListPrix.put(choco, (double) 100000);
+		}
+	}
+	
+	
 	public double prix(ChocolatDeMarque choco) {
-		int pos= (chocolats.indexOf(choco));
-		if (pos<0) {
-			return 0.0;
-		} else {
-			return prix[pos];
+		if (ListPrix.containsKey(choco)) {
+			return ListPrix.get(choco);
+		} 
+		else {
+			return 0;
 		}
 	}
 
