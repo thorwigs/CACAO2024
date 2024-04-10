@@ -39,10 +39,10 @@ public class Producteur1Acteur implements IActeur {
 	//This /|\
 	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Variable> stock;
-	protected static double LabourNormal = 1.80;
-	protected static double LabourEnfant = 0.80;
-	protected static double LabourEquitable = 3;
-	protected static double Part = 0.25;
+	protected  double labourNormal = 1.80;
+	protected double labourEnfant = 0.80;
+	protected  double labourEquitable = 3;
+	protected double Part = 0.25;
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
@@ -56,6 +56,7 @@ public class Producteur1Acteur implements IActeur {
 		this.prodParStep.put(Feve.F_HQ_BE,0.0 );
 		
 		
+		
 	
 		//Still not sure about this need to be looked into a bit more
 		this.stock = new HashMap<Feve, Variable>();
@@ -64,6 +65,31 @@ public class Producteur1Acteur implements IActeur {
 			this.stock.put(f, v);
 		}
 	}
+	public void amelioration() {
+		int etape = Filiere.LA_FILIERE.getEtape();
+		int annee = Filiere.LA_FILIERE.getAnnee(etape);
+		float croissement =0 ;
+		int enfants = 0;
+		if ((annee != 0)& (annee % 5 == 0) & (croissement > 0.12) ) {
+			enfants = this.nb_enfants - 10;
+			this.nb_enfants=enfants;
+			if (this.labourNormal < 2.5 ) { 
+				double nouveauSalaire = this.labourNormal*1.8;
+				this.labourNormal= nouveauSalaire;
+				
+				}
+			if (this.labourEnfant < 2 ) { 
+				double nouveauSalaireE = this.labourEnfant*1.8;
+				this.labourEnfant= nouveauSalaireE;
+				
+				}
+			
+			
+		}
+		
+	}
+	
+	
 	public HashMap<Feve, Double> getProd(){
 		return this.prodParStep;
 	}
@@ -104,9 +130,10 @@ public class Producteur1Acteur implements IActeur {
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = (this.nb_employees*this.LabourNormal+this.nb_enfants*this.LabourEnfant+this.nb_equitables*this.LabourEquitable)*15;
+		double Labor = (this.nb_employees*this.labourNormal+this.nb_enfants*this.labourEnfant+this.nb_equitables*this.labourEquitable)*15;
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+		this.amelioration();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
