@@ -8,6 +8,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
@@ -17,7 +18,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur2Acteur implements IActeur {
+public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 	
 	protected Journal journal;
 	protected int cryptogramme;
@@ -186,16 +187,38 @@ public class Transformateur2Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			if (p.getType()=="Feve") {
-				return this.stockFeves.get(p);
+			if (p.getType().equals("Feve")) {
+				if (this.stockFeves.keySet().contains(p)) {
+					return this.stockFeves.get(p);
+				} else {
+					return 0.0;
+				}
+			} else if (p.getType().equals("Chocolat")) {
+				if (this.stockChoco.keySet().contains(p)) {
+					return this.stockChoco.get(p);
+				} else {
+					return 0.0;
+				}
+			} else {
+				if (this.stockChocoMarque.keySet().contains(p)) {
+					return this.stockChocoMarque.get(p);
+				} else {
+					return 0.0;
+				}
 			}
-			if (p.getType()=="Chocolat") {
-				return this.stockChoco.get(p);
-			}
-			if (p.getType()=="ChocolatDeMarque") {
-				return this.stockChocoMarque.get(p);
-			}
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
-		return 0.0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+	}
+
+	
+	
+	////////////////////////////////////////////////////////
+	//        Déclaration de la marque CacaoFusion        //
+	////////////////////////////////////////////////////////
+	public List<String> getMarquesChocolat() {
+		LinkedList<String> marques = new LinkedList<String>();
+		marques.add("CacaoFusion");
+		return marques;
 	}
 }

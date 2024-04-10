@@ -49,8 +49,8 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if (this.stockFeves.get(f)<1200) { // Modifier quantité minimale avant achat
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
-						double parStep = 100; // Changer quantité par Step
-						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 5, parStep); // Changer le 5 (durée du contrat)
+						double parStep = 35000; // Changer quantité par Step
+						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep); // Changer le 5 (durée du contrat)
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
 							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size())); // Choisir le vendeur avec d'autres motifs
@@ -105,8 +105,20 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
-		} else {
-			return contrat.getEcheancier(); // retourne l'échéancier proposé par le vendeur
+		} else if (contrat.getEcheancier().getNbEcheances()<78 && contrat.getEcheancier().getQuantiteTotale()>35000) {
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,35000) ; // Changer valeur par step demandée
+		
+		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()>35000) {
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,35000) ; // Changer valeur par step demandée
+		
+		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()<20000) {
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Changer valeur par step demandée
+		
+		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()<20000) {
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Changer valeur par step demandée
+		}
+		else {
+			return contrat.getEcheancier();
 		}
 	}
 
