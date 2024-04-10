@@ -43,12 +43,12 @@ public class PrévisionAide extends Transformateur3AcheteurBourse{
 	public HashMap<Feve,Integer> Decision(){
 		HashMap<Feve, Integer> Decision = new HashMap<>();
 		if(historiquesStockFeves.size()<=1) {
-			Decision.put(Feve.F_BQ,20);
-			Decision.put(Feve.F_MQ,20);
-			Decision.put(Feve.F_MQ_E,20);
-			Decision.put(Feve.F_HQ,20);
-			Decision.put(Feve.F_HQ_E,20);
-			Decision.put(Feve.F_HQ_BE,20);
+			Decision.put(Feve.F_BQ,20000);
+			Decision.put(Feve.F_MQ,20000);
+			Decision.put(Feve.F_MQ_E,20000);
+			Decision.put(Feve.F_HQ,20000);
+			Decision.put(Feve.F_HQ_E,20000);
+			Decision.put(Feve.F_HQ_BE,20000);
 		
 		}
 		else {
