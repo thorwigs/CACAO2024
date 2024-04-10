@@ -2,14 +2,18 @@ package abstraction.eq8Distributeur1;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
+import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -17,6 +21,7 @@ public class Distributeur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	private double coutStockage;
 	protected IProduit produit;
 	protected List<ChocolatDeMarque> chocolats;
 	protected Variable totalStockChoco;
@@ -25,9 +30,38 @@ public class Distributeur1Acteur implements IActeur {
 	
 	public Distributeur1Acteur() {
 		this.journal= new Journal(this.getNom()+" journal", this);
+		this.chocolats = new LinkedList<ChocolatDeMarque>();
+		this.totalStockChoco = new VariablePrivee("Eq8DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 	
 	public void initialiser() {
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16;
+		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
+		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+		for (ChocolatDeMarque cm : chocolats) {
+			double stock = 0;
+			if (cm.getChocolat()==Chocolat.C_BQ) {
+				stock=96000;
+			}
+			if (cm.getChocolat()==Chocolat.C_MQ) {
+				stock=60000;
+			}
+			if (cm.getChocolat()==Chocolat.C_MQ_E) {
+				stock=12000;
+			}
+			if (cm.getChocolat()==Chocolat.C_HQ) {
+				stock=48000;
+			}
+			if (cm.getChocolat()==Chocolat.C_HQ_E) {
+				stock=12000;
+			}
+			else {
+				stock=12000;
+			}
+			this.stock_Choco.put(cm, stock);
+			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stock_Choco.get(cm));
+			this.totalStockChoco.ajouter(this, stock, cryptogramme);
+		}
 	}
 
 	public String getNom() {// NE PAS MODIFIER
