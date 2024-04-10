@@ -26,29 +26,29 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	
 	public void next() {
 		super.next();
-		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC6.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Chocolat c : stockChoco.keySet()) { 
 			if (stockChoco.get(c)-restantDu(c)>2000) { 
-				this.journalCC.ajouter("   "+c+" suffisamment en stock pour passer un CC");
+				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+					journalCC6.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
 					if (contrat==null) {
-						journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+						journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
 					} else {
 						this.contratsEnCours.add(contrat);
-						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+						journalCC6.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
 					}
 				} else {
-					journalCC.ajouter("   pas d'acheteur");
+					journalCC6.ajouter("   pas d'acheteur");
 				}
 			}
 		}
-		// On archive les contrats termines
+		//On archive les contrats termines
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0) {
 				this.contratsTermines.add(c);
@@ -57,7 +57,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
 		}
-		this.journalCC.ajouter("=================================");
+		this.journalCC6.ajouter("=================================");
 	}
 
 	public double restantDu(Chocolat c) {
@@ -72,7 +72,6 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
-		jx.add(journalCC);
 		return jx;
 	}
 
@@ -99,7 +98,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
+		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
 		stockFeves.put((Feve)produit, stockFeves.get((Feve)produit)-quantite);
 		totalStocksFeves.retirer(this, quantite, cryptogramme);
 		return quantite;

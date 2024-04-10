@@ -29,13 +29,13 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	protected List<ExemplaireContratCadre> contratsEnCours;
 	protected List<ExemplaireContratCadre> contratsTermines;
 
-	protected Journal journalCC;
+	protected Journal journalCC6;
 
 	public Transformateur3AcheteurCCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalCC6 = new Journal(this.getNom()+" journal CC6", this);
 	}
 
 	public void initialiser() {
@@ -46,7 +46,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	public void next() {
 		super.next();
 		
-		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC6.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		/*
 		HashMap<Feve, Integer> Decision = super.Decision();
 		for(Feve f : Decision.keySet()) {
@@ -57,7 +57,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		*/
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if (stockFeves.get(f)+restantDu(f)<20000) { 
-						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+						this.journalCC6.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
@@ -74,16 +74,16 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 						}
 						if (vendeurs.size()>0) {
 							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+							journalCC6.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
-								journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
 							} else {
 								this.contratsEnCours.add(contrat);
-								journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								journalCC6.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
 							}
 						} else {
-							journalCC.ajouter("   pas de vendeur");
+							journalCC6.ajouter("   pas de vendeur");
 						}
 					}
 				}
@@ -94,10 +94,10 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			}
 		}
 		for (ExemplaireContratCadre c : this.contratsTermines) {
-			journalCC.ajouter("Archivage du contrat "+c);
+			journalCC6.ajouter("Archivage du contrat "+c);
 			this.contratsEnCours.remove(c);
 		}
-		this.journalCC.ajouter("=================================");
+		this.journalCC6.ajouter("=================================");
 		
 	}
 
@@ -121,7 +121,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
-		jx.add(journalCC);
+		jx.add(journalCC6);
 		return jx;
 	}
 
@@ -185,12 +185,12 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);
+		journalCC6.ajouter("Nouveau contrat :"+contrat);
 		this.contratsEnCours.add(contrat);
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
+		journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
