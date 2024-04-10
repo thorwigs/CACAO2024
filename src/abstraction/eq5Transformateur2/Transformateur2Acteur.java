@@ -81,8 +81,10 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.journal.ajouter("Les Chocolats de marque sont :");
 		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			this.chocosProduits.add(cm);
-			this.journal.ajouter("   - "+cm);
+			if (Filiere.LA_FILIERE.getMarquesDistributeur().contains(cm.getMarque()) || cm.getMarque().equals("CacaoFusion")){
+				this.chocosProduits.add(cm);
+				this.journal.ajouter("   - "+cm);
+			}
 		}
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 		for (ChocolatDeMarque cm : this.chocosProduits) {
@@ -218,7 +220,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 	////////////////////////////////////////////////////////
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();
-		marques.add("CacaoFusion");
+		//marques.add("CacaoFusion");
 		return marques;
 	}
 }
