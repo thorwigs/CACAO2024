@@ -1,5 +1,3 @@
-
-// Classe faite par Noémie
 package abstraction.eq2Producteur2;
 import abstraction.eqXRomu.general.Journal;
 
@@ -14,7 +12,6 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	protected Journal journalMasseSalariale;
 			
 	public void initialiser() {
-		super.initialiser();
 		int nb_employes =  3679200;
 		int nb_employes_equitable = 100800;//2% init
 
@@ -101,7 +98,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		double adultes = getNb_employes()*getSalaire("adulte"); 
 		return enfants + adultes_eq + adultes;
 	}
-	
+
 	// Fonction qui permet d'implémenter notre stratégie. 
 	// Si notre solde est supérieur au cout humain pour 10 tours
 	public void mise_a_jour() {
@@ -116,4 +113,6 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 			this.setNb_employes(this.getNb_employes() + modif - modif_equitable);
 		}
 	}
+	
+
 }
