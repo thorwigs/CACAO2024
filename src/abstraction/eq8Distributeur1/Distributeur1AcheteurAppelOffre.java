@@ -109,7 +109,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 						a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 					}
 				}
-//				System.out.println(produit.getType().equals("ChocolatDeMarque"));
 			System.out.println(produit);
 				return (produit.getType().equals("ChocolatDeMarque")
 						&& this.stock_Choco.containsKey(produit)
@@ -118,7 +117,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 //				return true ; 
 			}
 	
-<<<<<<< HEAD
+
 	public double prevision (IProduit p,int b) {
 		double d = 0.0;
 		int a = Filiere.LA_FILIERE.getEtape();
@@ -127,9 +126,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		}
 		d = d * ((Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
 		return d ; 
-	}
-=======
->>>>>>> branch 'main' of https://github.com/ghwiwi/CACAO2024
-	
+	}	
 
 }
