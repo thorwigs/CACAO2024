@@ -176,7 +176,6 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		}
 		return prix((Feve) contrat.getProduit());
 		
-		
 
 		
 	}
