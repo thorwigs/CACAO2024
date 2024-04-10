@@ -58,12 +58,12 @@ public class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
+		/*this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
 		this.journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
 		this.journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
 		this.journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
 		this.journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
-		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
+		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");*/
 		
 	}
 
@@ -135,16 +135,19 @@ public class Producteur2Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+	//Faite par Quentin
+	//Retourne la quantité stockée pour un type de produit (un type de fève)
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee_prod = this.stock.get(p);
 			return quantite_stockee_prod;
-			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
 	
+	//Faite par Quentin
+	//Retourne la quantité totale de fèves stockée
 	public double getStockTotal(int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee = 0;
@@ -152,7 +155,6 @@ public class Producteur2Acteur implements IActeur {
 				quantite_stockee += this.stock.get(f);
 			}
 			return quantite_stockee;
-			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}

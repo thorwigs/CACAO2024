@@ -26,12 +26,11 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	private List<Producteur2_Lot> stock_total;
 	protected Journal journalStocks;
 	
-	//méthode pour gérer ce qui est retiré des stocks ou non
-	
 	//FILIERE.getEtape() pour avoir le numéro d'étape
 	
 	public Producteur2_Stocks() {
 		super();
+		this.journalStocks = new Journal(this.getNom()+" journalStocks", this);
 		List<Producteur2_Lot> stock_total = new ArrayList<Producteur2_Lot>();
 	}
 	
@@ -52,10 +51,6 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		return this.stock_total;
 	}
 	
-	/*public void action_seuil() {
-		if(this.getQuantiteEnStock())
-	}*/
-	
 	public void retire_lot(Producteur2_Lot  l) {
 		this.stock_total.remove(l);
 	}
@@ -63,24 +58,24 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//Faite par Quentin
 	//Met à jour la liste des stocks en ajoutant les lots produits
-	public void ajout_stock(double quantite_rest_BQ, double quantite_rest_MQ, double quantite_rest_MQ_E, double quantite_rest_HQ, double quantite_rest_HQ_E, double quantite_rest_HQ_BE) {
-		if(quantite_rest_BQ != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_rest_BQ, Feve.F_BQ));
+	public void ajout_stock(double quantite_BQ, double quantite_MQ, double quantite_MQ_E, double quantite_HQ, double quantite_HQ_E, double quantite_HQ_BE) {
+		if(quantite_BQ != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_BQ, Feve.F_BQ));
 		}
-		if(quantite_rest_MQ != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_rest_MQ, Feve.F_MQ));
+		if(quantite_MQ != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_MQ, Feve.F_MQ));
 		}
-		if(quantite_rest_MQ_E != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_rest_MQ_E, Feve.F_MQ_E));
+		if(quantite_MQ_E != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_MQ_E, Feve.F_MQ_E));
 		}
-		if(quantite_rest_HQ != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_rest_HQ, Feve.F_HQ));
+		if(quantite_HQ != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_HQ, Feve.F_HQ));
 		}
-		if(quantite_rest_HQ_E != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_rest_HQ_E, Feve.F_HQ_E));
+		if(quantite_HQ_E != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_HQ_E, Feve.F_HQ_E));
 		}
-		if(quantite_rest_HQ_BE != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_rest_HQ_BE, Feve.F_HQ_BE));
+		if(quantite_HQ_BE != 0) {
+			this.stock_total.add(new Producteur2_Lot(quantite_HQ_BE, Feve.F_HQ_BE));
 		}
 	}
 	
@@ -146,13 +141,13 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 
-	
-	
+	//Faite par Noémie
+	//Retourne la liste des lots avec le même type de fèves
 	public List<Producteur2_Lot> lot_type_feve(Feve type_feve){
 		List<Producteur2_Lot> lst_lot  = this.stock_total; 
 		List<Producteur2_Lot> lst_lot_feve  = new ArrayList<Producteur2_Lot>();
 		for(Producteur2_Lot lot : lst_lot) {
-			if (lot.getType_feve() == type_feve) {
+			if(lot.getType_feve() == type_feve) {
 				lst_lot_feve.add(lot);
 			}
 		}
@@ -163,7 +158,45 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	//Calcule le coût total de stockage
 	public double cout_total_stock() {
 		double cout_moyen = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		return cout_moyen* getStockTotal(this.cryptogramme);
+		return cout_moyen * getStockTotal(this.cryptogramme);
+	}
+	
+	//Faite par Quentin
+	//Met à jour la liste des lots dans le stock en fonction du type de fève et de la quantité à vendre souhaités
+	public double stock_a_vendre(Feve type_feve, double quantite_demandee) {
+		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
+		double quantite_prise = 0;
+		for(Producteur2_Lot l : lst_lot_feve) {
+			if(quantite_prise == quantite_demandee) {
+				return quantite_prise;
+			}
+			else {
+				if(quantite_prise + l.getQuantite() <= quantite_demandee) {
+					quantite_prise += l.getQuantite();
+					this.retire_lot(l);
+				}
+				else {
+					l.setQuantite(l.getQuantite() - (quantite_demandee - quantite_prise));
+					quantite_prise += (quantite_demandee - quantite_prise);
+				}
+			}
+			
+		}
+		
+		return quantite_prise;
+	}
+	
+	//Faite par Quentin
+	//Ajoute les nouvelles informations sur le stock au journal du stock
+	public void ajout_stock_journal() {
+		this.journalStocks.ajouter("La quantité de fèves_HQ en stock est de "+this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_BE en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_BE, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_MQ en stock est de "+this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
+		
 	}
 }
 
