@@ -16,7 +16,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.general.Variable;
 
-public class Transformateur2AcheteurCCadre extends Transformateur2Acteur implements IAcheteurContratCadre {
+public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
@@ -84,9 +84,9 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 		this.journalCC.ajouter("=================================");
 	}
 	
-	////////////
-	// Getter //
-	////////////
+	/////////////////////////////////////
+	// Ajoute notre journal aux autres //
+	/////////////////////////////////////
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalCC);
