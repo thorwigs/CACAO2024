@@ -31,13 +31,29 @@ public abstract class Producteur2Acteur implements IActeur {
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
+	}
+	
+	public abstract void ajout_stock(Feve type_feve, double quantite);
+	public abstract void lot_to_hashmap();
+	
+	public void initialiser() {
+		this.ajout_stock(Feve.F_BQ, 103846153.8);
+		this.ajout_stock(Feve.F_MQ, 62115384.62);
+		this.ajout_stock(Feve.F_HQ_E, 3076923.076);
+		this.lot_to_hashmap();
+		/*stock = new HashMap <Feve, Double>();
+=======
+		this.stock = new HashMap<Feve, Double>();
 		this.prodParStep= new HashMap<Feve, Double>();
 		stock = new HashMap <Feve, Double>();
+>>>>>>> branch 'main' of https://github.com/Quentin30502/CACAO2024
 		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
 		stock.put(Feve.F_MQ, 30.0);
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
+<<<<<<< HEAD
+		stock.put(Feve.F_MQ_E, 0.0);*/
 		stock.put(Feve.F_MQ_E, 0.0);
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier
 		
@@ -47,12 +63,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_MQ_E, 0.0);
 		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
 		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
-	}
-	
-
-	public void initialiser() {
-		
-		
 	}
 
 	public String getNom() {// NE PAS MODIFIER
