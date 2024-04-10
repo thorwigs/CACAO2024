@@ -77,9 +77,11 @@ public class Producteur1Acteur implements IActeur {
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
 		float croissement =0 ;
 		int enfants = 0;
-		if ((annee != 0)& (annee % 5 == 0) & (croissement > 0.12) ) {
-			enfants = this.nb_enfants - 10;
-			this.nb_enfants=enfants;
+		int size = this.croissanceParStep.size();
+		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
+		if ((annee != 0)& (annee % 5 == 0) && croissant ) {
+			//enfants = this.nb_enfants - 10;
+			//this.nb_enfants=enfants;
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal= nouveauSalaire;
@@ -166,7 +168,7 @@ public class Producteur1Acteur implements IActeur {
 		
 		this.getJournaux().get(0).ajouter("La croissance economique est :"+(this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
 		this.croissanceParStep.add((this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
-		
+		this.getJournaux().get(0).ajouter("Les nouveaux salaire sont:"+ this.labourNormal);
 		this.amelioration();
 
 	}
