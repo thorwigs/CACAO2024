@@ -123,7 +123,7 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	}
 	
 	public double get_prod_pest_MQ() {
-		return this.production_MQ() * rend_pest_MQ; //feve MQ=97.26*get_prod_pest et MQ_E=2.74*get_prod_pest
+		return this.production_MQ() * rend_pest_MQ; //feve MQ=98%*get_prod_pest et MQ_E=2%*get_prod_pest
 	}
 	
 	public double get_prod_pest_BQ() {
