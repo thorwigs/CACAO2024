@@ -24,8 +24,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	private List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
 	
-	public Distributeur1AcheteurContratCadre(double capaciteDeVente, double[] prix, String[]marques) {
-		super(capaciteDeVente,prix,marques);
+	public Distributeur1AcheteurContratCadre() {
+		super();
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
 		this.contrat_term= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC= new Journal (this.getNom() + "journal CC", this);

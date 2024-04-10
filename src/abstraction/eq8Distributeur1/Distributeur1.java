@@ -1,8 +1,8 @@
 package abstraction.eq8Distributeur1;
 
-public class Distributeur1 extends Distributeur1Acteur  {
+public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	
 	public Distributeur1() {
-		super();
+		super() ;
 	}
 }
