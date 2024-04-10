@@ -60,7 +60,7 @@ public class Producteur1Acteur implements IActeur {
 		this.prodParStep.put(Feve.F_MQ_E,Part*0.0 );
 		this.prodParStep.put(Feve.F_HQ_E,Part*0.0 );
 		this.prodParStep.put(Feve.F_HQ_BE,Part*0.0 );
-		
+	
 		
 		
 		
@@ -110,6 +110,8 @@ public class Producteur1Acteur implements IActeur {
 		this.nb_equitables = 30;
 		this.nb_employees = 100;
 		this.soldeInitiale = this.getSolde();
+		this.soldeParStep.add(this.soldeInitiale);
+		this.croissanceParStep = new ArrayList<Double>();
 		//soldeParStep.add(this.getSolde());
 	}
 	public String getNom() {// NE PAS MODIFIER
@@ -118,7 +120,10 @@ public class Producteur1Acteur implements IActeur {
 	
 	public void CroissanceEconomique() {
 		this.croissanceParStep = new ArrayList<Double>();
-		for (double solde : this.soldeParStep) {
+		for (int i = 0; i < this.soldeParStep.size()-1; i++) {
+			double crois = (this.soldeParStep.get(i+1)-this.soldeParStep.get(i))/this.soldeParStep.get(i-1);
+			
+			this.croissanceParStep.add(crois);
 			
 		}
 		
@@ -157,7 +162,11 @@ public class Producteur1Acteur implements IActeur {
 		double diffSolde = this.getSolde()-this.soldeInitiale;
 		this.getJournaux().get(0).ajouter("Le solde a l'etape " + Filiere.LA_FILIERE.getEtape() + "est augemente de :"+ this.getSolde());
 		this.soldeParStep.add(this.getSolde());
-
+		int i = this.soldeParStep.size();
+		
+		this.getJournaux().get(0).ajouter("La croissance economique est :"+(this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
+		this.croissanceParStep.add((this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
+		
 		this.amelioration();
 
 	}
