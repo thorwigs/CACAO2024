@@ -69,6 +69,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	
 	////// A FINIR //////////////////////////////////////////
 	public void next() {
+		
 		super.next();
 		
 	}
