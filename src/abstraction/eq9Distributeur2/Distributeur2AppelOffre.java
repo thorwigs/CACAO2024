@@ -44,7 +44,7 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 		for (ChocolatDeMarque chocolat : this.stockChocoMarque.keySet()) {
 			if (this.stockChocoMarque.get(chocolat)<=0) {
 				
-				Double quantite = Filiere.LA_FILIERE.getVentes(chocolat, -24)*0.5;
+				Double quantite = Filiere.LA_FILIERE.getVentes(chocolat, -24);
 				OffreVente propRetenue=((SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO")).acheterParAO(this,this.cryptogramme,chocolat,quantite);
 				this.getJournaux().get(2).ajouter("On manque de "+chocolat+" et on en cherche "+quantite);
 				if (propRetenue != null) {
