@@ -20,7 +20,8 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	
 
 	public double demande(Feve f, double cours) {
-		D = 1;
+		
+		D = 20;
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 		return D;
 	}
@@ -43,6 +44,12 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
 		return res;
+	}
+	
+	public void next() {
+		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		super.next();
+		
 	}
 
 	

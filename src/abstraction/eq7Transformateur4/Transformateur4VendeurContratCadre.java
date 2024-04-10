@@ -82,7 +82,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	//Next
 		
 	public void next() {
-		// TODO Auto-generated method stub
+		super.next();
 	}
 	
 	public List<Journal> getJournaux() {
