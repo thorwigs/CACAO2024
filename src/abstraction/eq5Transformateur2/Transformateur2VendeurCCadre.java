@@ -9,7 +9,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	
-	public Transformateur2VendeurCCadre (IProduit produit) {
+	public Transformateur2VendeurCCadre () {
 		super();
 	}
 	
