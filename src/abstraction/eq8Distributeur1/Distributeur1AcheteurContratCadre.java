@@ -24,8 +24,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	private List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
 	
-	public Distributeur1AcheteurContratCadre(double capaciteDeVente, double[] prix, String[]marques) {
-		super(capaciteDeVente,prix,marques);
+	public Distributeur1AcheteurContratCadre() {
+		super();
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
 		this.contrat_term= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC= new Journal (this.getNom() + "journal CC", this);
@@ -35,7 +35,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
-		
 	}
 
 	public String getNom() {
@@ -52,9 +51,11 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
+		this.initialiser();
+		this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 		for (IProduit produit : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			if (this.achete(produit)) {
-				journal.ajouter("Recherche d'un vendeur aupres de qui acheter");
+				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(produit);
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
@@ -66,12 +67,14 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
 				}
 				if (vendeur!=null) {
-					journal.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
-					journal.ajouter("-->aboutit au contrat "+cc);
+					this.journalCC.ajouter("-->aboutit au contrat "+cc);
 				}
 			}
 		}
+		
+		
 	}
 	
 	public List<Variable> getIndicateurs() {
@@ -83,7 +86,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 
 	public List<Journal> getJournaux() {
-		return(super.getJournaux());
+		List<Journal> jour = super.getJournaux();
+		jour.add(journalCC);
+		return jour;
 	}
 
 	public void setCryptogramme(Integer crypto) {
@@ -114,14 +119,15 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 
 	public boolean achete(IProduit produit) {
-		double a = 0 ; 
+/*		double a = 0 ; 
 		for (int i=0; i<contrat_en_cours.size(); i++) {
 			if (contrat_en_cours.get(i).getProduit().equals(produit)) {
 				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 			}
 		}
 		return (produit.getType().equals("ChocolatDeMarque")
-				&& 30 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a );  
+				&& 30 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); */
+		return true ; 
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
