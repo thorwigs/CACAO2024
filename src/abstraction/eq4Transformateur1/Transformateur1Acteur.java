@@ -56,22 +56,16 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		}
 		
 		this.stockFeves=new HashMap<Feve,Double>();
-		/*
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 20000.0);
-			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			this.stockFeves.put(f, 0.0);
+			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
 		}
-		*/
 		
 		this.stockChoco=new HashMap<Chocolat,Double>();
-		/*
 		for (Chocolat c : Chocolat.values()) {
-			this.stockChoco.put(c, 20000.0);
-			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			this.stockChoco.put(c, 0.0);
+			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 		}
-		*/
 		
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
@@ -108,33 +102,31 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		//transformation des feves en chocolat
 		for (Feve f : this.pourcentageTransfo.keySet()) {
 			for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
-				if (this.stockFeves.get(f) != null) {
-					int transfo = this.stockFeves.get(f).intValue();//V1 capacite de tranformation illimitee ... (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
-					if (transfo>0) {
-						this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
-						this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+Journal.entierSur6(transfo)+" T de "+f+" en :"+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
-	
-						// La moitie (newChoco) sera stockee sous forme de chocolat, l'autre moitie directement etiquetee "Villors"
-						boolean tropDeChoco = this.totalStocksChoco.getValeur((Integer)cryptogramme)>100000;
-						double newChoco = tropDeChoco ? 0.0 : ((transfo/2.0)*this.pourcentageTransfo.get(f).get(c)); // la moitie en chocolat tant qu'on n'en n'a pas trop
-						double newChocoMarque = ((transfo)*this.pourcentageTransfo.get(f).get(c))-newChoco;
-						if (newChoco>0.0) {
-							this.stockChoco.put(c, this.stockChoco.get(c)+newChoco);
-							this.totalStocksChoco.ajouter(this, newChoco, cryptogramme);
-							this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChoco,3,2)+" T de "+c);
-						}
-						int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
-						ChocolatDeMarque cm= new ChocolatDeMarque(c, "LeaderKakao", pourcentageCacao);
-						double scm = this.stockChocoMarque.keySet().contains(cm) ?this.stockChocoMarque.get(cm) : 0.0;
-						this.stockChocoMarque.put(cm, scm+newChocoMarque);
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChocoMarque,3,2)+" T de "+cm);
-						this.totalStocksChocoMarque.ajouter(this,newChocoMarque, this.cryptogramme);
-						//this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f));
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c));
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
+				int transfo = this.stockFeves.get(f).intValue();//V1 capacite de tranformation illimitee ... (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
+				if (transfo>0) {
+					this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
+					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+Journal.entierSur6(transfo)+" T de "+f+" en :"+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
+
+					// La moitie (newChoco) sera stockee sous forme de chocolat, l'autre moitie directement etiquetee "Villors"
+					boolean tropDeChoco = this.totalStocksChoco.getValeur((Integer)cryptogramme)>100000;
+					double newChoco = tropDeChoco ? 0.0 : ((transfo/2.0)*this.pourcentageTransfo.get(f).get(c)); // la moitie en chocolat tant qu'on n'en n'a pas trop
+					double newChocoMarque = ((transfo)*this.pourcentageTransfo.get(f).get(c))-newChoco;
+					if (newChoco>0.0) {
+						this.stockChoco.put(c, this.stockChoco.get(c)+newChoco);
+						this.totalStocksChoco.ajouter(this, newChoco, cryptogramme);
+						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChoco,3,2)+" T de "+c);
 					}
+					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
+					ChocolatDeMarque cm= new ChocolatDeMarque(c, "LeaderKakao", pourcentageCacao);
+					double scm = this.stockChocoMarque.keySet().contains(cm) ?this.stockChocoMarque.get(cm) : 0.0;
+					this.stockChocoMarque.put(cm, scm+newChocoMarque);
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChocoMarque,3,2)+" T de "+cm);
+					this.totalStocksChocoMarque.ajouter(this,newChocoMarque, this.cryptogramme);
+					//this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f));
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c));
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
 				}
 			}
 		}

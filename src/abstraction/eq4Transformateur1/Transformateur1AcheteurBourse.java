@@ -31,7 +31,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	 * ici 20000 correspond au stock total de fèves voulues - à changer en fonction dans la simulation
 	 */
 	public double demande(Feve f, double cours) {
-		if (this.stockFeves.get(f) != null && this.stockFeves.get(f)<20000) {
+		if (this.stockFeves.get(f)<20000) {
 			return Math.max(20000-this.stockFeves.get(f),  10); 
 		}
 		return 0;
