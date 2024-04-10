@@ -23,11 +23,14 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 	
 	public void next() {
 		super.next();
-		double critere = 200.0;
+		double critere = 2000000.0;
 		this.lescouts = new LinkedList<Double>();//on initialise avec une liste vide (supprime les données du step precedent)
 		double peutproduireemploye = this.tauxproductionemploye*this.nbemployeCDI; //pour l'instant ça c'est 375, mais ça pourra évoluer si on change le nb d'employé
 		//il faudras s'adapter, pour utiliser qu'une partie de la main d'oeuvre pour faire tel ou tel chocolat, pour l'instant on fait qu'un seul chocolat
 		for (ChocolatDeMarque c : chocolatCocOasis) {
+			
+			//ATTENTION il faut ici une vérification de la gamme du chocolat pour savoir quelle type de fève on va utiliser
+			
 			double qtutile1 = 0; //correspond à la qte de fève qu'on va effectivement transformer
 			double stock_hg_be = this.stockFeves.get(Feve.F_HQ_BE);
 			if (this.stockChocoMarque.get(c) < critere) {
@@ -61,6 +64,10 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			a_payer = a_payer + i;
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtTransformation", a_payer); //on paye tout d'un coup
+		//TEST :
+		for (ChocolatDeMarque c : chocolatCocOasis) {
+			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
+		}
 
 	}
 	
