@@ -44,14 +44,14 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_HQ_BE, 0.0);
 		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
 		prodParStep.put(Feve.F_HQ, 0.0);
-		prodParStep.put(Feve.F_MQ_E, 0.02*this.get_prod_pest_MQ());
-		prodParStep.put(Feve.F_MQ, 0.98*this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_MQ_E, 0.0);
+		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
 		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
 	}
 	
 
 	public void initialiser() {
-
+		
 		
 	}
 

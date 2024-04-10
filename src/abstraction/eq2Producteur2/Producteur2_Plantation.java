@@ -20,11 +20,16 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_HQ = 0.80;
 	protected double rend_no_pest_HQ = 0.72;
 	
-	//private List<Producteur2_Lot> stock_total;
-	//protected Journal journalPlantation;
+	public Producteur2_Plantation() {
+		//initialisation EFFICACE
+		this.nb_hectares_actuel=5000000;
+		this.nb_hectares_max=500000;
+		this.prix_plantation_hectare=0;
+		
+	} 
 
-	public double getNb_hectares_max() {
-		return nb_hectares_max;
+	public int getNb_hectares_max() {
+		return this.nb_hectares_max;
 	}
 
 	public void setNb_hectares_max(int nb_hectares_max) {
@@ -32,15 +37,15 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 
 	public int getNb_hectares_actuel() {
-		return nb_hectares_actuel;
+		return this.nb_hectares_actuel;
 	}
 
 	public void setNb_hectares_actuel(int nb_hectares_actuel) {
 		this.nb_hectares_actuel = nb_hectares_actuel;
 	}
 
-	public double getPrix_plantation_hectare() {
-		return prix_plantation_hectare;
+	public int getPrix_plantation_hectare() {
+		return this.prix_plantation_hectare;
 	}
 
 	public void setPrix_plantation_hectare(int prix_plantation_hectare) {
@@ -48,9 +53,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double getPourcentage_HQ() {
-		return pourcentage_HQ;
+		return this.pourcentage_HQ;
 	}
-
+	
+	
+	
 	public void setPourcentage_HQ(double pourcentage_HQ) {
 		this.pourcentage_HQ = pourcentage_HQ;
 	}
@@ -81,10 +88,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void initialiser() {
 		super.initialiser();
-		setNb_hectares_max(5000000);
-		setNb_hectares_actuel(5000000);
-		setPrix_plantation_hectare(500); // 500 euros
-		return;
+
 	}
 	
 	
@@ -98,8 +102,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		}
 	}
 	
-	public double production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
-		return getNb_hectares_actuel() * 500 / 26;
+	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
+		long v=((long) getNb_hectares_actuel())*500/26;
+		return v;
 	}
 	
 	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
