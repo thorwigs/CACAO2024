@@ -54,9 +54,9 @@ public class Producteur1Acteur implements IActeur {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_BQ,Part*10000.0 );
-		this.prodParStep.put(Feve.F_MQ,Part*10000.0 );
-		this.prodParStep.put(Feve.F_HQ, Part*10000.0);
+		this.prodParStep.put(Feve.F_BQ,Part*10000000.0 );
+		this.prodParStep.put(Feve.F_MQ,Part*10000000.0 );
+		this.prodParStep.put(Feve.F_HQ, Part*10000000.0);
 		this.prodParStep.put(Feve.F_MQ_E,Part*0.0 );
 		this.prodParStep.put(Feve.F_HQ_E,Part*0.0 );
 		this.prodParStep.put(Feve.F_HQ_BE,Part*0.0 );

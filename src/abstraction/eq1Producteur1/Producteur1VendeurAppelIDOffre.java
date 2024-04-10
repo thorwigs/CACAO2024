@@ -12,6 +12,7 @@ import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,13 +36,13 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	private double prix_seuil_HQ;
 	private double prix_seuil_HQ_BE;
 	private double prix_seuil_HQ_E;
-	
-	private double seuil_minimAO; 	// quantité minimale à vendre pour un appel d'offre, cette 
-									//quantité est à négliger si les revenus dépassent 
-									//celle de la bourse
-	private double seuil_maximAO;	//quantité maximale à vendre 0par les appels d'offre , cette quantité 
-									//peut etre depassée si les revenus dépassent 
-									//ceux de la bourse
+	private int test=0;
+	private double seuil_minimAO=100;	// quantité minimale à vendre pour un appel d'offre, cette 
+										//quantité est à négliger si les revenus dépassent 
+										//celle de la bourse
+	private double seuil_maximAO=100000;	//quantité maximale à vendre 0par les appels d'offre , cette quantité 
+										//peut etre depassée si les revenus dépassent 
+										//ceux de la bourse
 	public HashMap <Feve,Double> prix_defaut_feve;//dictionnaire pour chaque feve et son prix
 	
 	protected ArrayList<Feve> a_ne_pas_vendre=new ArrayList<Feve>();//feve a ne pas vendre pour les AO
@@ -102,15 +103,19 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	     IProduit produit_AO=offre.getProduit();
 	     BourseCacao bourse =(BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 
-	     if (!(produit_AO instanceof Feve)) {
-				//journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+"testtest "+offre.getProduit());
-
-				return null;//si ce n'est pas un produit feve, rien ne se passe
+	     if (!(produit_AO instanceof Feve)) 
+	     	{
+				return null;
 
 			}
-	     Feve feve_AO = (Feve)produit_AO;
+	    	 
+	     
+	     
+	    	 Feve feve_AO = (Feve)produit_AO;
+	     
 	     
 	     if (!(prix_defaut_feve.keySet().contains(feve_AO))) {
+
 				return null;
 			}
 	     
@@ -118,43 +123,53 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	     double quantite_stock = this.getQuantiteEnStock( feve_AO , cryptogramme);
 	     
 	     //mettre a jour la black_list
-	     if (score_to_black_list.containsKey(acheteur_AO)==false) {
-				
-	    	 score_to_black_list.put(acheteur_AO, 0.0);
-		}
 	     
-	   //revenus AO pour n'importe quels quanties et qualité >revenues
+	     
+	   //revenus AO pour n'importe quelles quantités et qualités >revenues
 		// bourse pour les memes quanites qualites
+	     if(quantite_stock<=quantite_AO) {
+
+				journalAO.ajouter(" Appel d'offre impossible, le produit "+feve_AO+" est en rupture de stock");
+				return null;
+			 }
 	    
-	    if (revenus_bourse_seuil_AO(offre,bourse )< revenues_AO_prix_defaut(offre)){
-	    	return new OffreVente(offre, this, feve_AO, prix_defaut_feve.get(feve_AO));	
-		}
+	    // else if (revenus_bourse_seuil_AO(offre,bourse )< revenues_AO_prix_defaut(offre)){
+	    //	System.out.println("helloworld");
+	   // 	return new OffreVente(offre, this, offre.getProduit(), prix_defaut_feve.get(feve_AO));	
+		//}
 	     
-		if (black_list_Acheteur_AO.contains(acheteur_AO)) {
+	     else if (black_list_Acheteur_AO.contains(acheteur_AO)) {
 			
-			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, l'acheteur "+acheteur_AO.getNom()+" est dans la liste noire ");
+			journalAO.ajouter(" Appel d'offre impossible, l'acheteur "+acheteur_AO.getNom()+" est dans la liste noire ");
 			return null;
 		}
 		
 		//si feve figure dans la liste a ne pas vendre en par AOs
-		 if(a_ne_pas_vendre.contains(feve_AO)) {
-			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, le produit "+feve_AO+" n'est pas à vendre");
+	     else if(a_ne_pas_vendre.contains(feve_AO)) {
+			journalAO.ajouter(" Appel d'offre impossible, le produit "+feve_AO+" n'est pas à vendre en appel d'offre");
 
 			return null;
 			
 		}
 		
-		 if(quantite_stock<=quantite_AO-1000000) {
-
-			// journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+feve_AO.toString()+"");
-			return null;
-		}
+		 
+	     	
 		
 		
-		/* if (quantite_AO<seuil_minimAO || quantite_AO>seuil_maximAO) {
-
+	     else  if (quantite_AO<seuil_minimAO || quantite_AO>seuil_maximAO) {
+			if(quantite_AO<seuil_minimAO ) {
+				journalAO.ajouter(" Appel d'offre impossible,  Quantités demandés du produit( "+feve_AO+") <" +seuil_minimAO);
+				}
+			else if(quantite_AO>seuil_maximAO ) 
+				{
+				journalAO.ajouter(" Appel d'offre impossible,  Quantités demandés du produit( "+feve_AO+") >" +seuil_maximAO);
+				}
 			return null;
-		}*/
+			}
+
+
+			
+		
 		
 		//on va ajouter une strategie pour savoir si on doit porcéder à une vente par appel d'offre 
 		//ou non qui dépend des prix en bourse ,les seuils sur les quanites min et max peuvent 
@@ -166,58 +181,130 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		 
 			
 		 else {
-			 journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+feve_AO.toString()+"");
+			
+			double à_retirer =Math.min(this.stock.get(feve_AO).getValeur(), offre.getQuantiteT());
+			double prix= prix_defaut_feve.get(feve_AO);
+			super.notificationOperationBancaire(à_retirer*prix);
+			super.getSolde();
 
-			 return new OffreVente(offre, this, feve_AO, prix_defaut_feve.get(feve_AO));
-		 }}
+			 
+			 return new OffreVente(offre, this, offre.getProduit(),prix);
+		 }
 		 
 			
 
 			
 		
 		
-	
+	}
+	public void next() {
+		super.next();
+		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+
+	}
 
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
 		// TODO Auto-generated method stub
-		Feve feve_AO = (Feve)(propositionRetenue.getProduit());
-		double prix_AO  = propositionRetenue.getPrixT();
-		double quantite_AO = propositionRetenue.getQuantiteT();
-		journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+"   Vente par AO de "+quantite_AO+" T de "+feve_AO+" au prix de  "+prix_AO);
-		IAcheteurAO acheteur_AO=propositionRetenue.getOffre().getAcheteur();
+		Feve feve_AO = (Feve) propositionRetenue.getOffre().getProduit();
+			double à_retirer =Math.min(this.stock.get(feve_AO).getValeur(), propositionRetenue.getOffre().getQuantiteT());
+
+			this.stock.get(feve_AO).retirer(this, à_retirer, cryptogramme);
+			 journalAO.ajouter(Color.GREEN,propositionRetenue.getOffre().getAcheteur().getColor()," On vend "+à_retirer+" T de "+feve_AO +" à "+propositionRetenue.getOffre().getAcheteur());
+			
+			
+			IAcheteurAO acheteur_AO=propositionRetenue.getOffre().getAcheteur();
+			if (!(score_to_black_list.containsKey(acheteur_AO))) {
+				
+				score_to_black_list.put(acheteur_AO, 0.0);
+			}
+			IProduit produit_AO=propositionRetenue.getOffre().getProduit();
+			//ajouter un -1 au score de la blacklist pour cet acheteur pour avoir refusé l'offre
+			mise_a_jour_black_list(acheteur_AO, produit_AO,"notifierVenteAO");
 		
-		//ajouter un +1 au score de la blacklist pour cet acheteur pour avoir refusé l'offre
-		if (score_to_black_list.containsKey(acheteur_AO)) {
-			double score_actuel = score_to_black_list.get(acheteur_AO);
-			score_to_black_list.put(acheteur_AO, score_actuel - 1);
-		}
+		
+		
+		
 		
 	}
 
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
 		// TODO Auto-generated method stub
-		Feve feve_AO = (Feve)(propositionRefusee.getProduit());
-		double prix_AO  = propositionRefusee.getPrixT();
-		double quantite_AO = propositionRefusee.getQuantiteT();
-		IAcheteurAO acheteur_AO=propositionRefusee.getOffre().getAcheteur();
+
 		
-		//ajouter un +1 au score de la blacklist pour cet acheteur pour avoir refusé l'offre
-		if (score_to_black_list.containsKey(acheteur_AO)) {
-			double score_actuel = score_to_black_list.get(acheteur_AO);
-			score_to_black_list.put(acheteur_AO, score_actuel + 1);
+		Feve feve_AO = (Feve) propositionRefusee.getOffre().getProduit();
+			double prix_AO  = propositionRefusee.getPrixT();
+			double quantite_AO = propositionRefusee.getQuantiteT();
+			IAcheteurAO acheteur_AO=propositionRefusee.getOffre().getAcheteur();
+			IProduit produit_AO=propositionRefusee.getOffre().getProduit();
+		
+			journalAO.ajouter(Color.RED,Color.white,"   Echec de Vente"+" par AO de "+quantite_AO+" T de "+feve_AO+" au prix de  "+prix_AO+" " );
+			if (!(score_to_black_list.containsKey(acheteur_AO))) {
+				
+				score_to_black_list.put(acheteur_AO, 0.0);
+			}
+			//ajouter un +1 au score de la blacklist pour cet acheteur pour avoir refusé l'offre
+			mise_a_jour_black_list(acheteur_AO, produit_AO, "notifierPropositionNonRetenueAO");
+			
+			
+		
+			
+			
 		}
 		
-		  
-		journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+"   Echec de Vente par AO de "+quantite_AO+" T de "+feve_AO+" au prix de  "+prix_AO);
+	public void mise_a_jour_black_list(IAcheteurAO acheteur_AO,IProduit produit_AO ,String context) {// mettre a jour la lise norie selon que l'offre est acceptée ou refusée:context
 		
+		if (context.equals("notifierPropositionNonRetenueAO")) //si l'offre est refusée
+		{
+			if (score_to_black_list.containsKey(acheteur_AO)
+					&&(produit_AO instanceof Feve)) {
+				
+
+				double score_actuel = score_to_black_list.get(acheteur_AO);
+				score_to_black_list.put(acheteur_AO, score_actuel + 1);
+				
+			}
+			
+
+		}
+		else if (context.equals("notifierVenteAO")) { // sinon si l'offre est acceptée
+			if (score_to_black_list.containsKey(acheteur_AO)
+					&&(produit_AO instanceof Feve)) {
+				double score_actuel = score_to_black_list.get(acheteur_AO);
+				score_to_black_list.put(acheteur_AO, score_actuel - 1);
+				
+			}
+		}
+		
+		
+			
+				
+		
+		if ((score_to_black_list.get(acheteur_AO)<score_seuil_blacklist)&& (black_list_Acheteur_AO.contains(acheteur_AO))) {
+			
+			black_list_Acheteur_AO.remove(acheteur_AO);
+			
+			
+		}
+		if ((score_to_black_list.get(acheteur_AO)>score_seuil_blacklist)
+				&& !(black_list_Acheteur_AO.contains(acheteur_AO))) {
+			
+			black_list_Acheteur_AO.add(acheteur_AO);
+			
+			
+		}
 	}
+		  
+		
+		
+	
 	
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalAO);
 		return jx;
 	}
+	
 
 }
