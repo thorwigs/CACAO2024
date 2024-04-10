@@ -33,7 +33,6 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 			if (this.stockChocoMarque.get(chocolat)<=0) {
 				Double quantite = Filiere.LA_FILIERE.getVentes(chocolat, -24)*0.5;
 				((SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO")).acheterParAO(this,this.cryptogramme,chocolat,quantite);
-				this.journal.ajouter("J'aimerai bien faire un contrat cadre");
 			}
 		}
 	}
