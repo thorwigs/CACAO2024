@@ -37,6 +37,7 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 			//on verifie que l'on puisse fournir la quantite demande
 			//il faut modifier les stocks suite a la vente
 			this.setQuantiteEnStock(f, stock_inst-quantiteEnT);
+			this.journal_bourse.ajouter("Prix:"+coursEnEuroParT*quantiteEnT+" Cout:"+coutRevient(f,quantiteEnT));
 			this.journal_bourse.ajouter("Bourse: Vente de "+quantiteEnT+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*quantiteEnT+" E");
 			ventefevebourse.put(f, quantiteEnT);
 			//on envoie ce que l'on a promis

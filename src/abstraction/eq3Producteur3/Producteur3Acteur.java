@@ -339,15 +339,34 @@ public abstract class Producteur3Acteur implements IActeur {
 	  *Cette fonction met a jour les variables associees
 	  */
 	 protected void majGammeStep() {
-		 //on ajoute la production du step (il faudra prendre en compte les ventes)
+		 //on ajoute la production du step
 		 for (Feve f : stockGammeStep.keySet()) {
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
-		 }
-		 //on ajoute les couts du step (attention aux ventes)
-		 for (Feve f : coutGammeStep.keySet()) {
+			 
+		 //on ajoute les couts du step
 			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f));
-			for (Integer step : coutGammeStep.get(f).keySet()) {
-				coutGammeStep.get(f).put(step, coutGammeStep.get(f).get(step)+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*stockGammeStep.get(f).get(step));			}
+		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts + stockage supplementaire
+			LinkedList<Integer> steps = new LinkedList<Integer>();
+			steps.addAll(stockGammeStep.get(f).keySet());
+			Collections.sort(steps);
+			double venteF = ventefeve.get(f).getValeur();
+			for (Integer step : steps) {
+				double stockStep = stockGammeStep.get(f).get(step);
+				//on met a jour les stocks en destockant les plus vieilles feves
+				//on fait de meme avec les couts proportionnellement 
+				if (stockStep > venteF) {
+					stockGammeStep.get(f).put(step, stockStep-venteF);
+					coutGammeStep.get(f).put(step, (stockStep-venteF)/stockStep*coutGammeStep.get(f).get(step));
+				} else {
+					stockGammeStep.get(f).remove(step);
+					coutGammeStep.get(f).remove(step);
+				}
+			}
+			for (Integer step : steps) {
+				//On ajoute les frais de stockage si on a des stocks a ce step
+				if (coutGammeStep.get(f).containsKey(step)) {
+					coutGammeStep.get(f).put(step, coutGammeStep.get(f).get(step)+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*stockGammeStep.get(f).get(step));			}
+				}	
 		 }
 	 }
 	 
@@ -358,15 +377,18 @@ public abstract class Producteur3Acteur implements IActeur {
 	  */
 	 protected double coutRevient(Feve f,double quantiteDem) {
 		 double accu = 0.0;
+		 //On veut destocker step par step
 		 LinkedList<Integer> steps = new LinkedList<Integer>();
 		 steps.addAll(stockGammeStep.get(f).keySet());
 		 Collections.sort(steps);
 		 for (Integer step : steps) {
 			 double stockStep = stockGammeStep.get(f).get(step);
+			 //On ajoute les couts de revient en proportion de la quantite demandee
 			 if (stockStep > quantiteDem) {
 				 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
 			 } else {
 				 accu += coutGammeStep.get(f).get(step);
+				 quantiteDem -= stockGammeStep.get(f).get(step);
 			 }
 		 }
 		 return accu;
