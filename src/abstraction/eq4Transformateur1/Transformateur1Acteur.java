@@ -24,6 +24,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	protected int cryptogramme;
 	protected Journal journal;
 	private double coutStockage;
+	private double coutTransfo;
 
 	protected List<Feve> lesFeves;
 	private List<ChocolatDeMarque>chocosProduits;
