@@ -156,7 +156,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			&& !this.achete(contrat.getProduit())) {
 			return null;
 		}
-		
 		Echeancier x = contrat.getEcheancier();
 		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72
 			&& this.achete(contrat.getProduit()) 
