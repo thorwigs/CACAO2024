@@ -8,7 +8,7 @@ public class PrévisionAide extends Transformateur3AcheteurBourse{
 	
 	private ArrayList<HashMap<Feve, Double>> historiquesStockFeves;
 	private ArrayList<HashMap<Chocolat, Double>> historiquesStockChoco;
-	
+		
 	public PrévisionAide() {
 		super();
 		historiquesStockFeves = new ArrayList<>();
