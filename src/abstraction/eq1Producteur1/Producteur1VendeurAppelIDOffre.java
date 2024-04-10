@@ -103,7 +103,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	     BourseCacao bourse =(BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 
 	     if (!(produit_AO instanceof Feve)) {
-				journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+"testtest "+offre.getProduit());
+				//journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+"testtest "+offre.getProduit());
 
 				return null;//si ce n'est pas un produit feve, rien ne se passe
 
@@ -144,17 +144,17 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 		}
 		
-		 if(quantite_stock<=quantite_AO) {
-			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, quantite_stock<=quantite_AO");
+		 if(quantite_stock<=quantite_AO-1000000) {
+
+			// journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+feve_AO.toString()+"");
 			return null;
 		}
 		
 		
-		 if (quantite_AO<seuil_minimAO || quantite_AO>seuil_maximAO) {
-			journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" Appel d'offre impossible, quantite_stock<=quantite_AO");
+		/* if (quantite_AO<seuil_minimAO || quantite_AO>seuil_maximAO) {
 
 			return null;
-		}
+		}*/
 		
 		//on va ajouter une strategie pour savoir si on doit porcéder à une vente par appel d'offre 
 		//ou non qui dépend des prix en bourse ,les seuils sur les quanites min et max peuvent 
@@ -163,14 +163,20 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		
 		
 		
-			return new OffreVente(offre, this, feve_AO, prix_defaut_feve.get(feve_AO));
+		 
 			
+		 else {
+			 journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+feve_AO.toString()+"");
+
+			 return new OffreVente(offre, this, feve_AO, prix_defaut_feve.get(feve_AO));
+		 }}
+		 
 			
+
 			
 		
 		
-		
-	}
+	
 
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
