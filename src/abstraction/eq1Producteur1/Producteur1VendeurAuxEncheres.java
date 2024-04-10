@@ -1,5 +1,6 @@
 package abstraction.eq1Producteur1;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,21 +16,25 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 	
 	private double prixEnchereBq;
 	
-	private double prixEnchereHqEqui;
-	private double prixEnchereHqBio;
-	private double prixEnchereHq;
-	private double prixEnchereHqBioEqui;
+	private double prixEnchereHqEqui = 0;
+	private double prixEnchereHqBio=0;
+	private double prixEnchereHq=0;
+	private double prixEnchereHqBioEqui=0;
 	
-	private double prixEnchereMq;
-	private double prixEnchereMqEqui;
-	private double prixEnchereMqbio;
-	private double prixEnchereMqBioEqui;
+	private double prixEnchereMq=0;
+	private double prixEnchereMqEqui=0;
+	private double prixEnchereMqbio=0;
+	private double prixEnchereMqBioEqui=0;
 	protected Journal journalEncheres;
 	
 	
+	public Producteur1VendeurAuxEncheres() {
+		super();
+		this.journalEncheres =  new Journal(this.getNom()+" journal Encheres", this);
+	}
 	// Fatima-ezzahra 
 	public void initialiser() {
-     Journal journalEncheres = new Journal(this.getNom()+" journal Encheres", this);
+		super.initialiser();
 	}
 	
 	public Enchere choisir(List<Enchere> propositions) {
@@ -146,6 +151,10 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 		    return null;
 		    	
 	}
-	
+	public List<Journal> getJournaux() {
+		List<Journal> res= super.getJournaux();
+		res.add(this.journalEncheres);
+		return res;
+	}
 
 }
