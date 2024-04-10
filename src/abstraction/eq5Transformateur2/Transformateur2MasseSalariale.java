@@ -1,7 +1,9 @@
 package abstraction.eq5Transformateur2;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 
 /** 
  * Cette classe a pour objectif de :
@@ -70,6 +72,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////// A FINIR //////////////////////////////////////////
 	public void next() {
 		super.next();
+		// Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Transformation",this.CoutTransformation(); A completer
+		// Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Masse Salariale",this.CoutMasseSalariale(); A completer
+
 		
 	}
 	////////////////////////////////////////////////////////
