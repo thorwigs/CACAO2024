@@ -38,7 +38,7 @@ public class Distributeur1Acteur implements IActeur {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16;
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
 		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
-		System.out.println(chocolats);
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK =====");
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
 			if (cm.getChocolat()==Chocolat.C_BQ) {
@@ -60,8 +60,7 @@ public class Distributeur1Acteur implements IActeur {
 				stock=12000;
 			}
 			this.stock_Choco.put(cm, stock);
-			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK =====");
-			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stock_Choco.get(cm));
+			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,cm+"->"+this.stock_Choco.get(cm));
 			this.totalStockChoco.ajouter(this, stock, cryptogramme);
 		}
 	}
