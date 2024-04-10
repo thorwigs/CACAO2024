@@ -1,6 +1,6 @@
 package abstraction.eq2Producteur2;
 
-public class Producteur2_Plantation extends Producteur2_MasseSalariale {
+public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double nb_hectares_max;
 	protected double nb_hectares_actuel;
 	protected double prix_plantation_hectare;
@@ -13,8 +13,8 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
-	protected double rend_no_pest_BQ = 0.82;
-	protected double rend_no_pest_MQ = 0.77;
+	//protected double rend_no_pest_BQ = 0.82;
+	//protected double rend_no_pest_MQ = 0.77;
 	protected double rend_no_pest_HQ = 0.72;
 	
 	
@@ -105,14 +105,6 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en kilos
 	public double get_prod_no_pest_HQ() { 
 		return this.production_HQ() * rend_no_pest_HQ;
-	}
-	
-	public double get_prod_no_pest_MQ() {
-		return this.production_MQ() * rend_no_pest_MQ;
-	}
-	
-	public double get_prod_no_pest_BQ() {
-		return this.production_BQ() * rend_no_pest_BQ;
 	}
 	
 	public double get_prod_pest_HQ() {

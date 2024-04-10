@@ -52,27 +52,26 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.stock_total.remove(l);
 	}
 	
-	
 	//Faite par Quentin
-	//Met à jour la liste des stocks en ajoutant les lots produits
-	public void ajout_stock(double quantite_BQ, double quantite_MQ, double quantite_MQ_E, double quantite_HQ, double quantite_HQ_E, double quantite_HQ_BE) {
-		if(quantite_BQ != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_BQ, Feve.F_BQ));
+	//Met à jour la liste des stocks en ajoutant un lot produit
+	public void ajout_stock(Feve type_feve, double quantite) {
+		if(quantite != 0 && type_feve == Feve.F_BQ) {
+			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_BQ));
 		}
-		if(quantite_MQ != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_MQ, Feve.F_MQ));
+		if(quantite != 0 && type_feve == Feve.F_MQ) {
+			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_MQ));
 		}
-		if(quantite_MQ_E != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_MQ_E, Feve.F_MQ_E));
+		if(quantite != 0 && type_feve == Feve.F_MQ_E) {
+			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_MQ_E));
 		}
-		if(quantite_HQ != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_HQ, Feve.F_HQ));
+		if(quantite != 0 && type_feve == Feve.F_HQ) {
+			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ));
 		}
-		if(quantite_HQ_E != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_HQ_E, Feve.F_HQ_E));
+		if(quantite != 0 && type_feve == Feve.F_HQ_E) {
+			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ_E));
 		}
-		if(quantite_HQ_BE != 0) {
-			this.stock_total.add(new Producteur2_Lot(quantite_HQ_BE, Feve.F_HQ_BE));
+		if(quantite != 0 && type_feve == Feve.F_HQ_BE) {
+			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ_BE));
 		}
 	}
 	
@@ -186,12 +185,12 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	//Faite par Quentin
 	//Ajoute les nouvelles informations sur le stock au journal du stock
 	public void ajout_stock_journal() {
-		this.journalStocks.ajouter("La quantité de fèves_HQ en stock est de "+this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_HQ_BE en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_BE, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_MQ en stock est de "+this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_HQ en stock est de "+this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_BE en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_BE, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_MQ en stock est de "+this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
 		
 	}

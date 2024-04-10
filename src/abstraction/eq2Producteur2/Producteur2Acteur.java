@@ -30,15 +30,21 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.stock = new HashMap<Feve, Double>();
 	}
 	
-
+	public abstract void ajout_stock(Feve type_feve, double quantite);
+	public abstract void lot_to_hashmap();
+	
 	public void initialiser() {
-		stock = new HashMap <Feve, Double>();
+		this.ajout_stock(Feve.F_BQ, 103846153.8);
+		this.ajout_stock(Feve.F_MQ, 62115384.62);
+		this.ajout_stock(Feve.F_HQ_E, 3076923.076);
+		this.lot_to_hashmap();
+		/*stock = new HashMap <Feve, Double>();
 		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
 		stock.put(Feve.F_MQ, 30.0);
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
-		stock.put(Feve.F_MQ_E, 0.0);
+		stock.put(Feve.F_MQ_E, 0.0);*/
 		
 	}
 
