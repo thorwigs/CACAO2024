@@ -16,7 +16,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	public void next() {
 		super.next();
 	}
-
+	
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("Chocolat") && this.getQuantiteEnStock(produit, cryptogramme)>0;
 	}
