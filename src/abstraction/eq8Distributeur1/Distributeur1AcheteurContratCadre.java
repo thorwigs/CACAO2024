@@ -31,7 +31,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		this.journalCC= new Journal (this.getNom() + "journal CC", this);
 	}
 	
-	
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
