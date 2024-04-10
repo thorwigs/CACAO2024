@@ -13,8 +13,10 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
+import abstraction.eqXRomu.general.Variable;
 
-public class Transformateur2AcheteurCCadre extends Transformateur2Acteur implements IAcheteurContratCadre {
+public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
@@ -48,7 +50,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 					if (this.stockFeves.get(f)<1200) { // Modifier quantité minimale avant achat
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
 						double parStep = 100; // Changer quantité par Step
-						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 5, parStep); // Changer le 5 (durée du contrat)
+						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep); // Changer le 5 (durée du contrat)
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
 							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size())); // Choisir le vendeur avec d'autres motifs
@@ -82,9 +84,9 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 		this.journalCC.ajouter("=================================");
 	}
 	
-	////////////
-	// Getter //
-	////////////
+	/////////////////////////////////////
+	// Ajoute notre journal aux autres //
+	/////////////////////////////////////
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalCC);
@@ -101,7 +103,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		if (contrat.getProduit().getType().equals("f_HQ") || contrat.getProduit().getType().equals("f_HQ_BE") || contrat.getProduit().getType().equals("f_HQ_E")) {
+		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
 		} else {
 			return contrat.getEcheancier(); // retourne l'échéancier proposé par le vendeur
@@ -109,7 +111,17 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 	}
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix(); // retourne le prix proposé par le vendeur
+		if (contrat.getEcheancier().getQuantiteTotale()*5<contrat.getPrix()) {
+			this.journalCC.ajouter("=========NEGOCIATION===========");
+			this.journalCC.ajouter("Proposition d'un nouveau prix de : "+contrat.getEcheancier().getQuantiteTotale()*5);
+			this.journalCC.ajouter("===============================");
+			return contrat.getEcheancier().getQuantiteTotale()*5;
+		} else {
+			this.journalCC.ajouter("=========NEGOCIATION===========");
+			this.journalCC.ajouter("Acceptation de la proposition de : "+contrat.getPrix());
+			this.journalCC.ajouter("===============================");
+			return contrat.getPrix();
+			}
 	}
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
