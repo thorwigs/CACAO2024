@@ -25,9 +25,9 @@ import abstraction.eq9Distributeur2.*;
 
 
 public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAcheteurContratCadre {
-	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
+	protected SuperviseurVentesContratCadre supCC;
+	protected List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsTermines;
 
 	protected Journal journalCC;
 
