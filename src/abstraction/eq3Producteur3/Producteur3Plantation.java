@@ -12,9 +12,12 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
  * de qualité XQ
  */
-	private double surfaceHQ=10000;
-	private double surfaceMQ=10000;
-	private double surfaceBQ=10000;
+	private double surfaceHQ = 22.74*1000;
+	private double surfaceHQBE = 8.42*1000;
+	private double surfaceHQE = 7.58*1000;
+	private double surfaceMQ = 47.57*1000;
+	private double surfaceMQE = 11.89*1000;
+	private double surfaceBQ = 134.775*1000;
 
 ///Gestion de la plantation
 	
@@ -26,11 +29,14 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	protected HashMap<Feve, Double> plantation() {
 		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
 	//on recupere les surfaces du step precedent (pour l'instant valeurs arbitraires)
-		h.put(Feve.F_BQ, surfaceHQ); 
+		h.put(Feve.F_HQ, surfaceHQ);
+		h.put(Feve.F_HQ_BE, surfaceHQBE);
+		h.put(Feve.F_HQ_E, surfaceHQE);
 		h.put(Feve.F_MQ, surfaceMQ);
-		h.put(Feve.F_HQ, surfaceBQ);
+		h.put(Feve.F_MQ_E, surfaceMQE);
+		h.put(Feve.F_BQ, surfaceBQ);
 	//on augmente la surface 
-	//	achatPlantation(h);
+		achatPlantation(h);
 		return h;
 	}
 
@@ -38,20 +44,19 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * Cette methode determine la surface supplementaire a acheter pour chaque type de feve
 	 * Elle s'appuie sur la production et les ventes du step precedent
 	 * @author Alexis
-	 
+	 */
 	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
-		for (Feve f : surfaces.keySet()) {
+		for (Feve f : prodfeve.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
-			double delta = Filiere.LA_FILIERE; // difference entre ventes et production
-			if (delta > ) { // si on vend plus que ce que l'on produit
-				supp += 10;
-				
+			double delta = ventefeve.get(f).getValeur() - prodfeve.get(f).getValeur(); // difference entre vente et production de f
+			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit
+				supp += 10; 
 			}
-			surfaces.put(f, surfaces.get(f)+supp);
+			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f
 		}
 		return surfaces;
 	}
-	*/
+			 
 	
 ///Gestion de la main d'oeuvre///
 
