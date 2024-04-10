@@ -13,7 +13,7 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse implements IVendeurContratCadre {
-
+	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
 	@Override
 	public boolean vend(IProduit produit) {
 		//On accepte les contrats cadres sur le HQ et MQ
@@ -23,47 +23,66 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 			return false;
 		}
 	}
+	
+	public void next() {
+        super.next();
+        SetContratsEnCours();
+    }
+	
+	/**
+	 * @author mammouYoussef
+	 */
+	//Nettoyer la liste des contrats en cours, en éliminant ceux dont les obligations de livraison ont été entièrement satisfaites
+	public void SetContratsEnCours() {
+	    LinkedList<ExemplaireContratCadre> contratsAConserver = new LinkedList<>();
+	    for (ExemplaireContratCadre contrat : contratsEnCours) {
+	        if (contrat.getQuantiteRestantALivrer() > 0) {
+	            contratsAConserver.add(contrat);
+	        }
+	    }
+	    contratsEnCours = contratsAConserver;
+	}
+
 
 	/**
 	 * @author mammouYoussef
 	 */
-	
-	
-	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-	    Feve f = (Feve) contrat.getProduit();
-	    Echeancier echeancierPropose = contrat.getEcheancier();
-	    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
+	//Calculer et retourner la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
+	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
+	        double quantiteDisponible = 0.0; // Valeur par défaut
+	        if (quantite().containsKey(f)) {
+	            quantiteDisponible = quantite().get(f);
+	        }
 
-
-	    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
-	        double quantiteDemandee = echeancierPropose.getQuantite(step);
-	        
-	     // Obtenir la quantité produite pour chaque étape
-		    HashMap<Feve, Double> quantiteProduite = quantite();
-
-	        if (quantiteProduite.containsKey(f) && quantiteProduite.get(f) >= quantiteDemandee) {
-	            // Si la quantité produite est suffisante pour l'échéance, ajouter cette quantité à l'échéancier
-	            nouvelEcheancier.ajouter(quantiteDemandee);
-	        } else {
-	            // Si la quantité produite est insuffisante, proposer la quantité disponible pour cette étape
-	        	// simple vérification:
-	        	double quantiteDisponible;
-	        	if (quantiteProduite.containsKey(f)) {
-	        	    quantiteDisponible = quantiteProduite.get(f);
-	        	} else {
-	        	    quantiteDisponible = 0;
-	        	}
-	        	
-	            if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-	                nouvelEcheancier.ajouter(quantiteDisponible);
-	            } else {
-	                nouvelEcheancier = null; // dernier cas: On ne peut pas satisfaire le contrat
-	                break; // Sortir de la boucle car on ne peut pas honorer le contrat
+	        for (ExemplaireContratCadre contrat : contratsEnCours) {
+	            if (contrat.getProduit().equals(f)) {
+	                quantiteDisponible -= contrat.getQuantiteRestantALivrer();
 	            }
 	        }
+	        return quantiteDisponible;
 	    }
-	    return nouvelEcheancier;
-	}
+	 
+	 /**
+		 * @author mammouYoussef
+		 */
+	
+	 public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+	        Feve typeDeFeve = (Feve) contrat.getProduit();
+	        double quantiteDemandee = contrat.getEcheancier().getQuantiteTotale();
+	        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(typeDeFeve);
+	     
+	        if (quantiteDisponible >= quantiteDemandee) {
+	            // Si la quantité disponible est suffisante pour répondre à la demande :) accepter l'échéancier 
+	            contratsEnCours.add(contrat); // Ajouter le contrat à la liste des contrats en cours
+	            return contrat.getEcheancier();
+	        } else if (quantiteDisponible > 0) {
+	            // Si une partie de la demande peut être satisfaite, proposer un nouvel échéancier avec cette quantité disponible
+	            return new Echeancier(contrat.getEcheancier().getStepDebut(), contrat.getEcheancier().getNbEcheances(), quantiteDisponible);
+	        } else {
+	            // Si aucune quantité n'est disponible :( ne pas accepter le contrat
+	            return null;
+	        }
+	    }
 	
 	
 	/**
