@@ -253,10 +253,14 @@ public class TransformateurXActeur  implements IActeur, IMarqueChocolat, IFabric
 	}
 
 	public List<ChocolatDeMarque> getChocolatsProduits() {
+		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
 		if (this.chocosProduits.size()==0) {
 			for (Chocolat c : Chocolat.values()) {
 				int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 				this.chocosProduits.add(new ChocolatDeMarque(c, "Villors", pourcentageCacao));
+				for (String marque : marquesDistributeurs) {
+					this.chocosProduits.add(new ChocolatDeMarque(c, marque, pourcentageCacao));
+				}
 			}
 		}
 		return this.chocosProduits;
