@@ -29,6 +29,7 @@ public class Transformateur3VendeurAppelDOffre extends PrévisionAide implements
 
 	public void initialiser() {
 		super.initialiser();
+		this.stockChocoMarque = new HashMap<ChocolatDeMarque, Double>();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			this.prixAO.put(cm, new LinkedList<Double>());
