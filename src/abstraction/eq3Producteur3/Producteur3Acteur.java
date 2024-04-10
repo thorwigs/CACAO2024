@@ -31,10 +31,14 @@ public abstract class Producteur3Acteur implements IActeur {
     protected HashMap<Feve, Variable> ventefeve;
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
-    
+    //@youssef
+    private double salaireOuvrier = 2.6; 
+    private HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
+    private HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
+    abstract HashMap<Feve,Double> maindoeuvre();
     
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
@@ -72,6 +76,47 @@ public abstract class Producteur3Acteur implements IActeur {
 		d01.put(Feve.F_HQ_E, 20000.0);
 		d01.put(Feve.F_HQ_BE, 20000.0);
 		setProdTemps(d01,d01);
+		//On set les variables coutGammeStep
+		this.coutGammeStep = new HashMap<Feve,HashMap<Integer,Double>>();
+		HashMap<Integer,Double> bq0 = new HashMap<Integer,Double>();
+		bq0.put(0, 1000.0);
+		this.coutGammeStep.put(Feve.F_BQ, bq0);
+		HashMap<Integer,Double> mq0 = new HashMap<Integer,Double>();
+		mq0.put(0, 1000.0);
+		this.coutGammeStep.put(Feve.F_MQ, mq0);
+		HashMap<Integer,Double> mqE0 = new HashMap<Integer,Double>();
+		mqE0.put(0, 1000.0);
+		this.coutGammeStep.put(Feve.F_MQ_E, mqE0);
+		HashMap<Integer,Double> hq0 = new HashMap<Integer,Double>();
+		hq0.put(0, 1000.0);
+		this.coutGammeStep.put(Feve.F_HQ, hq0);
+		HashMap<Integer,Double> hqE0 = new HashMap<Integer,Double>();
+		hqE0.put(0, 1000.0);
+		this.coutGammeStep.put(Feve.F_HQ_E, hqE0);
+		HashMap<Integer,Double> hqBE0 = new HashMap<Integer,Double>();
+		hqBE0.put(0, 1000.0);
+		this.coutGammeStep.put(Feve.F_HQ_BE, hqBE0);
+		//On set les variables stockGammeStep
+		this.stockGammeStep = new HashMap<Feve,HashMap<Integer,Double>>();
+		HashMap<Integer,Double> bq00 = new HashMap<Integer,Double>();
+		bq00.put(0, 1000.0);
+		this.stockGammeStep.put(Feve.F_BQ, bq00);
+		HashMap<Integer,Double> mq00 = new HashMap<Integer,Double>();
+		mq00.put(0, 1000.0);
+		this.stockGammeStep.put(Feve.F_MQ, mq00);
+		HashMap<Integer,Double> mqE00 = new HashMap<Integer,Double>();
+		mqE00.put(0, 1000.0);
+		this.stockGammeStep.put(Feve.F_MQ_E, mqE00);
+		HashMap<Integer,Double> hq00 = new HashMap<Integer,Double>();
+		hq00.put(0, 1000.0);
+		this.stockGammeStep.put(Feve.F_HQ, hq00);
+		HashMap<Integer,Double> hqE00 = new HashMap<Integer,Double>();
+		hqE00.put(0, 1000.0);
+		this.stockGammeStep.put(Feve.F_HQ_E, hqE00);
+		HashMap<Integer,Double> hqBE00 = new HashMap<Integer,Double>();
+		hqBE00.put(0, 1000.0);
+		this.stockGammeStep.put(Feve.F_HQ_BE, hqBE00);		
+		
 	}
 	
 
@@ -247,8 +292,29 @@ public abstract class Producteur3Acteur implements IActeur {
 	
         }
 	 
+	 /**
+	  * @author mammouYoussef
+	  */	
+	 
+	  protected double coutMaindoeuvre() {
+		   //Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
+		  
+		  
+	        HashMap<Feve, Double> ouvriers = maindoeuvre();
+	        double coutMaindoeuvre = 0;
+	        
+	        // Pour chaque type de fève, calculer le coût de la main-d'œuvre en fonction du nombre d'ouvriers avec le même salaire fixé
+	        for (Feve f : ouvriers.keySet()) {
+	            double nbOuvriers = ouvriers.get(f); 
+	            coutMaindoeuvre += nbOuvriers * salaireOuvrier;  // 2.6 = Salaire par jour par ouvrier, le prix minimal (pour le pérou) décidé avec les autres producteurs
+	        }
+	        
+	        return  coutMaindoeuvre;
+	    }
+	
+	 
 	 protected double calculerCouts() {
-		 return calculerCoutsProduction()+calculerCoutsStockage();
+		 return calculerCoutsProduction()+calculerCoutsStockage()+coutMaindoeuvre();
 		 
 	 }
 	 
@@ -262,5 +328,15 @@ public abstract class Producteur3Acteur implements IActeur {
 			 this.setQuantiteEnStock(f, this.getQuantiteEnStock(f, this.cryptogramme)+prod.get(f));
 		 }
 	 }
+	 /*
+	 protected void majGammeStep() {
+		 //on ajoute la production du step (il faudra prendre en compte les ventes)
+		 for (Feve f : stockGammeStep.keySet()) {
+			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
+		 }
+		 for (Feve f : coutGammeStep.keySet()) {
+			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), null) ;
+		 }
+	 }*/
 	 
 }
