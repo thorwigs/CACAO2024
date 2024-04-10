@@ -77,6 +77,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			for (int i=0; i<this.chocolats.size(); i++) {
 			journal.ajouter("Le prix moyen du chocolat \""+chocolats.get(i).getNom()+"\" a l'etape precedente etait de "+Filiere.LA_FILIERE.prixMoyen(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-1));
 			journal.ajouter("Les ventes de chocolat \""+chocolats.get(i)+" il y a un an etaient de "+Filiere.LA_FILIERE.getVentes(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-24));
+			journal.ajouter("ajouter");
 			}
 		}
 	}
