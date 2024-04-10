@@ -12,12 +12,12 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
  * de qualité XQ
  */
-	private double surfaceHQ;
-	private double surfaceHQBE;
-	private double surfaceHQE;
-	private double surfaceMQ;
-	private double surfaceMQE;
-	private double surfaceBQ;
+	private double surfaceHQ = 22.74*1000;
+	private double surfaceHQBE = 8.42*1000;
+	private double surfaceHQE = 7.58*1000;
+	private double surfaceMQ = 47.57*1000;
+	private double surfaceMQE = 11.89*1000;
+	private double surfaceBQ = 134.775*1000;
 
 ///Gestion de la plantation
 	
