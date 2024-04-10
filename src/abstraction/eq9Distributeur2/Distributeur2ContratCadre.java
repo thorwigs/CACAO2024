@@ -19,6 +19,11 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 
 	protected Journal journal_CC;
 	
+	public Distributeur2ContratCadre() {
+		super();
+		this.journal_CC= new Journal(this.getNom()+" journal Contrat Cadre", this);
+	}
+	
 	@Override
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("ChocolatDeMarque"); // verifier stock //acheter du Chocolat pour notre marque
