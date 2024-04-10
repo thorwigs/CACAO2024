@@ -47,6 +47,8 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			totalStocksChocoMarque.ajouter(this, qtutile1, cryptogramme);
 			this.journalTransfo.ajouter("Stock après trnasfo " + this.totalStocksChocoMarque.getValeur(this.cryptogramme) );
 			
+			
+			
 			this.journalTransfo.ajouter("On à transformé " + qtutile1 + "T de Choco");
 		} //else : on fait rien car on peut pas produire
 		//là on paye les trucs : généraux (cout fixe des machines, employés qu'on doit payer dans tous les cas) et les cout qu'on vient de calculer(payermachine, payeradjuvant)

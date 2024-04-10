@@ -105,15 +105,18 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
-		
+					
+					
 		this.journal.ajouter("Stock initial chocolat de marque : ");
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 		
+		
+	
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 30000.0); //le premier element de stockchocomarque coorespond a mirage
+			this.stockChocoMarque.put(c, 30000.0); //le premier element de stockchocomarque correspond a mirage
 			this.totalStocksChocoMarque.ajouter(this, 30000, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
