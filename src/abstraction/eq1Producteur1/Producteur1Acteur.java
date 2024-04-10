@@ -39,21 +39,28 @@ public class Producteur1Acteur implements IActeur {
 	//This /|\
 	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Variable> stock;
+
+	protected double croissanceEco;
+	public static double soldeInitiale;
+	protected ArrayList<Double> croissanceParStep;
+	protected ArrayList<Double> soldeParStep ;
 	protected  double labourNormal = 1.80;
 	protected double labourEnfant = 0.80;
 	protected  double labourEquitable = 3;
 	protected double Part = 0.25;
 
+
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
-		
+		this.soldeParStep = new ArrayList<Double>();
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_BQ,10000.0 );
-		this.prodParStep.put(Feve.F_MQ,10000.0 );
-		this.prodParStep.put(Feve.F_HQ, 000.0);
-		this.prodParStep.put(Feve.F_MQ_E,0.0 );
-		this.prodParStep.put(Feve.F_HQ_E,0.0 );
-		this.prodParStep.put(Feve.F_HQ_BE,0.0 );
+		this.prodParStep.put(Feve.F_BQ,Part*10000.0 );
+		this.prodParStep.put(Feve.F_MQ,Part*10000.0 );
+		this.prodParStep.put(Feve.F_HQ, Part*10000.0);
+		this.prodParStep.put(Feve.F_MQ_E,Part*0.0 );
+		this.prodParStep.put(Feve.F_HQ_E,Part*0.0 );
+		this.prodParStep.put(Feve.F_HQ_BE,Part*0.0 );
+		
 		
 		
 		
@@ -96,15 +103,28 @@ public class Producteur1Acteur implements IActeur {
 	public double getCoutStockage() {
 		return this.coutStockage;
 	}
+
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		this.nb_enfants = 150;
 		this.nb_equitables = 30;
 		this.nb_employees = 100;
+		this.soldeInitiale = this.getSolde();
+		//soldeParStep.add(this.getSolde());
 	}
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ1";
 	}
+	
+	public void CroissanceEconomique() {
+		this.croissanceParStep = new ArrayList<Double>();
+		for (double solde : this.soldeParStep) {
+			
+		}
+		
+		
+	}
+	
 	
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
@@ -133,7 +153,13 @@ public class Producteur1Acteur implements IActeur {
 		double Labor = (this.nb_employees*this.labourNormal+this.nb_enfants*this.labourEnfant+this.nb_equitables*this.labourEquitable)*15;
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+
+		double diffSolde = this.getSolde()-this.soldeInitiale;
+		this.getJournaux().get(0).ajouter("Le solde a l'etape " + Filiere.LA_FILIERE.getEtape() + "est augemente de :"+ this.getSolde());
+		this.soldeParStep.add(this.getSolde());
+
 		this.amelioration();
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

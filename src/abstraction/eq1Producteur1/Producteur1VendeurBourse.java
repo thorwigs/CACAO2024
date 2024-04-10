@@ -21,6 +21,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 	}
 	
 	
+	
 // Fatima-ezzahra
 	@Override
 	
