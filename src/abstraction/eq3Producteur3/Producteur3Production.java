@@ -26,6 +26,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	 * @author galem (Gabin)
 	 */
 	
+	//renvoie la quantité produite au step actuel
 	protected HashMap<Feve,Double> newQuantite() {
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		HashMap<Feve,Double> plant = plantation();
