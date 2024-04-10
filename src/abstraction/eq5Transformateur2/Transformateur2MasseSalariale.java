@@ -2,6 +2,7 @@ package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
@@ -40,19 +41,12 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		// modif des stocks
 		return 2;
 	}
-	public double CoutTransformation(Chocolat c) {
-		double tx = 0;
-		if (c.getType().equals("BQ")) {
-			tx = 0.3; //Taux cacao BQ
-		}
-		else {
-			tx = 0.5; //Taux cacao MQ
-		}
-		return (NbSalaries*(1-tx)*coutAdjuvants+NbSalaries*coutMachines); //Formule du Gdoc criteres de la simulation
+	
+	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
+		// 8 = coût machines pour une tonne par step
+		// 1200 = coût adjuvants pour une tonne par step
+		return tonnes*8 + tonnes*(1-cm.getPourcentageCacao())*1200 ;
 	}
-	///////////////////////////////////////////////////////
-	
-	
 	
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
@@ -85,9 +79,5 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		super.next();
 		// Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Transformation",this.CoutTransformation(); A completer
 		// Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Masse Salariale",this.CoutMasseSalariale(); A completer
-
-		
-	}
-	////////////////////////////////////////////////////////
-
+		}
 }
