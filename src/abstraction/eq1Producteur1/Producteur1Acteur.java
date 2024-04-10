@@ -34,14 +34,17 @@ public class Producteur1Acteur implements IActeur {
 	//This /|\
 	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Variable> stock;
-	protected static double LabourNormal = 1.80;
-	protected static double LabourEnfant = 0.80;
-	protected static double LabourEquitable = 3;
-	protected static double Part = 0.25;
+
 	protected double croissanceEco;
 	public static double soldeInitiale;
 	protected ArrayList<Double> croissanceParStep;
 	protected ArrayList<Double> soldeParStep ;
+	protected  double labourNormal = 1.80;
+	protected double labourEnfant = 0.80;
+	protected  double labourEquitable = 3;
+	protected double Part = 0.25;
+
+
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
@@ -55,6 +58,7 @@ public class Producteur1Acteur implements IActeur {
 		
 		
 		
+		
 	
 		//Still not sure about this need to be looked into a bit more
 		this.stock = new HashMap<Feve, Variable>();
@@ -63,6 +67,31 @@ public class Producteur1Acteur implements IActeur {
 			this.stock.put(f, v);
 		}
 	}
+	public void amelioration() {
+		int etape = Filiere.LA_FILIERE.getEtape();
+		int annee = Filiere.LA_FILIERE.getAnnee(etape);
+		float croissement =0 ;
+		int enfants = 0;
+		if ((annee != 0)& (annee % 5 == 0) & (croissement > 0.12) ) {
+			enfants = this.nb_enfants - 10;
+			this.nb_enfants=enfants;
+			if (this.labourNormal < 2.5 ) { 
+				double nouveauSalaire = this.labourNormal*1.08;
+				this.labourNormal= nouveauSalaire;
+				
+				}
+			if (this.labourEnfant < 2 ) { 
+				double nouveauSalaireE = this.labourEnfant*1.08;
+				this.labourEnfant= nouveauSalaireE;
+				
+				}
+			
+			
+		}
+		
+	}
+	
+	
 	public HashMap<Feve, Double> getProd(){
 		return this.prodParStep;
 	}
@@ -116,12 +145,16 @@ public class Producteur1Acteur implements IActeur {
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = (this.nb_employees*this.LabourNormal+this.nb_enfants*this.LabourEnfant+this.nb_equitables*this.LabourEquitable)*15;
+		double Labor = (this.nb_employees*this.labourNormal+this.nb_enfants*this.labourEnfant+this.nb_equitables*this.labourEquitable)*15;
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+
 		double diffSolde = this.getSolde()-this.soldeInitiale;
 		this.getJournaux().get(0).ajouter("Le solde a l'etape " + Filiere.LA_FILIERE.getEtape() + "est augemente de :"+ this.getSolde());
 		this.soldeParStep.add(this.getSolde());
+
+		this.amelioration();
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -199,5 +232,33 @@ public class Producteur1Acteur implements IActeur {
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+	
+	public void embauche() {
+		
+	}
+	
+	public int getNbEnfant() {
+		return this.nb_enfants;
+		
+	}
+	
+	public int getNbOuv() {
+		return this.nb_employees;
+		
+	}
+	
+	public int getNbOuvEq() {
+		return this.nb_equitables;
+		
+	}
+	
+	public int getNbOuvEmbachés() {
+		return 0;
+		
+	}
+	public void setNbOuv() {
+		
+		
 	}
 }

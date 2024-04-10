@@ -22,7 +22,12 @@ import java.util.List;
 //J'ai ajoute ca car pourqoui pas? Ca nous aidera a remplir les offres des de
 public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre implements IVendeurAO{
 
-	//youssef ben abdeljelil//
+	
+	
+	
+	/*/////////////////////////////////////////////////////////////////////////////////
+	 /////////////////////////////////* youssef ben abdeljelil/////////////////////////
+	 */
 	//prix minimal pour chaque type de fève 
 	private double prix_seuil_BQ;
 	private double prix_seuil_MQ;
@@ -31,13 +36,17 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	private double prix_seuil_HQ_BE;
 	private double prix_seuil_HQ_E;
 	
-	private double seuil_minimAO;
-	private double seuil_maximAO;
-	public HashMap <Feve,Double> prix_defaut_feve;
+	private double seuil_minimAO; 	// quantité minimale à vendre pour un appel d'offre, cette 
+									//quantité est à négliger si les revenus dépassent 
+									//celle de la bourse
+	private double seuil_maximAO;	//quantité maximale à vendre 0par les appels d'offre , cette quantité 
+									//peut etre depassée si les revenus dépassent 
+									//ceux de la bourse
+	public HashMap <Feve,Double> prix_defaut_feve;//dictionnaire pour chaque feve et son prix
 	
 	protected ArrayList<Feve> a_ne_pas_vendre=new ArrayList<Feve>();//feve a ne pas vendre pour les AO
 	protected ArrayList<IAcheteurAO> black_list_Acheteur_AO=new ArrayList<IAcheteurAO>();//black list pour les acheteurs
-	protected HashMap <IAcheteurAO,Double> score_to_black_list;
+	protected HashMap <IAcheteurAO,Double> score_to_black_list; //dictionnaire pour chaque transfo et son scoredans la liste noire
 	
 	public static int score_seuil_blacklist=10;//score a partir duquel un achteur est ajouté au blacklist
 	private Journal journalAO;
@@ -60,8 +69,11 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		prix_defaut_feve.put(Feve.F_MQ_E,2600.0 );
 		prix_defaut_feve.put(Feve.F_HQ_E,3200.0 );
 		prix_defaut_feve.put(Feve.F_HQ_BE,3400.0 );
+		//initilaiser les prix, ceci peut varier
 		this.supAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
-		score_to_black_list=new HashMap<IAcheteurAO, Double>();
+		score_to_black_list=new HashMap<IAcheteurAO, Double>();	// initialiser un dictionnaire vide pour 
+																//les acteurs(transfo) 
+																//et leurs scores dans la liste noire
 	}
 	
 	
@@ -70,12 +82,16 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 		
 		
 		return bourse.getCours((Feve)(offre.getProduit())).getMax()*offre.getQuantiteT();
+		//évaluer les revenus si on vendait ces quantités en bourse
 	}
 	
 	public double revenues_AO_prix_defaut(AppelDOffre offre) 
 	{ 
 		double prix=prix_defaut_feve.get(offre.getProduit());
 		return offre.getQuantiteT()*prix;
+		//evaluer les revenus si on vendait par appel d'offre
+		//le choix szra fait entre la vente en bourse ou la vente 
+		//par appel d'offre selon les revenus de chaque méthode
 	}
 	
 	
@@ -89,7 +105,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	     if (!(produit_AO instanceof Feve)) {
 				//journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" "+offre.getProduit());
 
-				return null;
+				return null;//si ce n'est pas un produit feve, rien ne se passe
 
 			}
 	     Feve feve_AO = (Feve)produit_AO;
