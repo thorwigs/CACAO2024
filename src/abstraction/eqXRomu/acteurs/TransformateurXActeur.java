@@ -32,8 +32,6 @@ public class TransformateurXActeur  implements IActeur, IMarqueChocolat, IFabric
 	protected Journal journal;
 	protected int cryptogramme;
 	private double coutStockage;
-	protected Variable stockFeve; 
-	protected Feve feve; 
 
 	protected List<Feve> lesFeves;
 	private List<ChocolatDeMarque>chocosProduits;
@@ -107,13 +105,6 @@ public class TransformateurXActeur  implements IActeur, IMarqueChocolat, IFabric
 		}
 	}
 
-	public Feve getFeve() {
-		return this.feve;
-	}
-	
-	public Variable getStock() {
-		return this.stockFeve;
-	}
 	public String getNom() {
 		return "EQXT";
 	}
