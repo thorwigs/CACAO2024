@@ -2,7 +2,9 @@ package abstraction.eq3Producteur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -363,10 +365,19 @@ public abstract class Producteur3Acteur implements IActeur {
 	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee
 	  * On vend en priorite les vieilles feves
 	  */
-	 /*protected double coutRevient(Feve f,double quantite) {
+	 protected double coutRevient(Feve f,double quantiteDem) {
 		 double accu = 0.0;
-		 for (double step : stockGammeStep.keySet()) {
-			 
+		 LinkedList<Integer> steps = new LinkedList<Integer>();
+		 steps.addAll(stockGammeStep.get(f).keySet());
+		 Collections.sort(steps);
+		 for (Integer step : steps) {
+			 double stockStep = stockGammeStep.get(f).get(step);
+			 if (stockStep > quantiteDem) {
+				 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
+			 } else {
+				 accu += coutGammeStep.get(f).get(step);
+			 }
 		 }
-	 }*/
+		 return accu;
+	 }
 }
