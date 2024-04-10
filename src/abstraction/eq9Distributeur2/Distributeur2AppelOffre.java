@@ -7,10 +7,15 @@ import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
-
+	protected Journal journal_AO;
+	public Distributeur2AppelOffre() {
+		super();
+		this.journal_AO= new Journal(this.getNom()+" journal Contrat Cadre", this);
+	}
 	@Override
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		Double rapportmin=Double.MAX_VALUE;
@@ -35,6 +40,12 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 				((SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO")).acheterParAO(this,this.cryptogramme,chocolat,quantite);
 			}
 		}
+	}
+	
+	public List<Journal> getJournaux() {
+		List<Journal> res= super.getJournaux();
+		res.add(this.journal_AO);
+		return res;
 	}
 	
 }
