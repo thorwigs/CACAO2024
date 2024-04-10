@@ -20,6 +20,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalVCC;
+	protected Journal journalCCvente;
 
 	public Transformateur4VendeurContratCadre() {
 		super();
@@ -157,4 +158,5 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		jx.add(journalVCC);
 		return jx;
 	}
+
 }

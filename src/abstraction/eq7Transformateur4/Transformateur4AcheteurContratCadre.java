@@ -104,7 +104,6 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalACC.ajouter("Nouveau contrat :"+contrat);
-		this.contratsEnCours.add(contrat);
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
