@@ -10,8 +10,8 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur4AcheteurBourse extends Transformateur4Acteur implements IAcheteurBourse {
 
-	private Journal journalBourse;
-	public int demande;
+	protected Journal journalBourse;
+	private int D;
 	
 	public Transformateur4AcheteurBourse () {
 		super();
@@ -20,26 +20,24 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	
 
 	public double demande(Feve f, double cours) {
-		demande = 20;
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+demande+" T de "+f);
-		return demande;
+		D = 1;
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
+		return D;
 	}
+	
 	
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
+		
+		
+		this.journalBourse.ajouter("- achat de "+quantiteEnT+"T de fèves "+f);
 	}
 
 	public void notificationBlackList(int dureeEnStep) {
 		// TODO Auto-generated method stub
 	}
 	
-
-	public void next() {
-		super.next();
-		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		
-	}
 	
 	public List<Journal> getJournaux() {
 		List<Journal> res=super.getJournaux();
