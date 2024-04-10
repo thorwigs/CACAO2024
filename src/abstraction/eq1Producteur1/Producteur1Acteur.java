@@ -34,10 +34,10 @@ public class Producteur1Acteur implements IActeur {
 	//This /|\
 	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Variable> stock;
-	protected static double labourNormal = 1.80;
-	protected static double labourEnfant = 0.80;
-	protected static double labourEquitable = 3;
-	protected static double Part = 0.25;
+	protected  double labourNormal = 1.80;
+	protected double labourEnfant = 0.80;
+	protected  double labourEquitable = 3;
+	protected double Part = 0.25;
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
@@ -128,6 +128,7 @@ public class Producteur1Acteur implements IActeur {
 		double Labor = (this.nb_employees*this.labourNormal+this.nb_enfants*this.labourEnfant+this.nb_equitables*this.labourEquitable)*15;
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+		this.amelioration();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
