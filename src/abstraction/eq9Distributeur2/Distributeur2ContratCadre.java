@@ -26,12 +26,12 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	
 	@Override
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("ChocolatDeMarque"); // verifier stock //acheter du Chocolat pour notre marque
+		return produit.getType().equals("ChocolatDeMarque") || produit.getType().equals("Chocolat"); // verifier stock 
 	}
 
 	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque") || !contrat.getProduit().getType().equals("Chocolat")) {
 			return null;
 		}
 		Echeancier e = contrat.getEcheancier();
@@ -55,7 +55,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 
 	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque") || !contrat.getProduit().getType().equals("Chocolat")) {
 			return 0.;
 		}
 		return contrat.getPrix();
@@ -68,10 +68,13 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		this.getJournaux().get(1).ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat :"+contrat.toString());
+		this.getJournaux().get(1).ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat #"+contrat.getNumero());
 		
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
+		}
+		if (p.getType().equals("Chocolat")) {
+			
 		}
 	}
 

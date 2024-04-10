@@ -12,7 +12,7 @@ public class Distributeur2MarqueDistributeur extends Distributeur2AppelOffre imp
 	public List<String> getMarquesChocolat() {
 		// TODO Auto-generated method stub
 		LinkedList<String> choco = new LinkedList<String>();
-		choco.add("Chocolat");
+		choco.add("Ecacaodor");
 		return choco;
 	}
 
