@@ -7,6 +7,7 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
@@ -113,7 +114,6 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");	
-		ventefevecadre.put((Feve)contrat.getProduit(), contrat.getQuantiteTotale());
 	}
 
 	/**
@@ -127,11 +127,13 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 			this.setQuantiteEnStock((Feve)produit, stock_inst-quantite);
 			this.journal_contrat_cadre.ajouter("Livraison totale : "+quantite+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			//on envoie ce que l'on a promis
+			ventefevecadre.put((Feve)contrat.getProduit(), quantite);
 			return quantite;
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock
 			this.setQuantiteEnStock((Feve)produit, 0);
 			this.journal_contrat_cadre.ajouter("Livraison partielle : "+stock_inst+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
+			ventefevecadre.put((Feve)contrat.getProduit(), stock_inst);
 			return stock_inst;
 		}
 	}
