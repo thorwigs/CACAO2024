@@ -5,8 +5,11 @@ import java.util.List;
 
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
+import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
-public class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
+public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
 
 	@Override
 	public OffreVente choisirOV(List<OffreVente> propositions) {
@@ -25,4 +28,13 @@ public class Distributeur2AppelOffre extends Distributeur2ContratCadre implement
 		return meilleureProp;
 	}
 
+	public void FaireAppelDOffre() {
+		for (ChocolatDeMarque chocolat : this.stockChocoMarque.keySet()) {
+			if (this.stockChocoMarque.get(chocolat)<=0) {
+				Double quantite = Filiere.LA_FILIERE.getVentes(chocolat, -24)*0.5;
+				((SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO")).acheterParAO(this,this.cryptogramme,chocolat,quantite);
+			}
+		}
+	}
+	
 }
