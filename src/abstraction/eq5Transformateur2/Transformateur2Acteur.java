@@ -27,23 +27,26 @@ public class Transformateur2Acteur implements IActeur {
 	
 	protected List<Feve> lesFeves;
 	protected List<Chocolat> lesChocolats;
-	private List<ChocolatDeMarque>chocosProduits;
+	protected List<ChocolatDeMarque>chocosProduits;
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
-	protected List<ChocolatDeMarque> chocolatsVillors;
+	protected List<ChocolatDeMarque> chocolatsFusion;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 	
 	
+	////////////////////////////////////////////
+	// Constructor & Initialization of stocks //
+	////////////////////////////////////////////
 	public Transformateur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.totalStocksFeves = new VariablePrivee("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq5TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq5TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
-}
+	}
 	
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
@@ -62,13 +65,11 @@ public class Transformateur2Acteur implements IActeur {
 			this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
-		
 		this.lesChocolats = new LinkedList<Chocolat>();
 		this.journal.ajouter("Les Chocolats sont :");
 		for (Chocolat c : Chocolat.values()) {
 			this.lesChocolats.add(c);
 			this.journal.ajouter("   - "+c);
-
 		}
 		this.stockChoco=new HashMap<Chocolat,Double>();
 		for (Chocolat c : this.lesChocolats) {
@@ -76,7 +77,19 @@ public class Transformateur2Acteur implements IActeur {
 			this.totalStocksChoco.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+c+" au stock total de Chocolat // stock total : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
+		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+		this.journal.ajouter("Les Chocolats de marque sont :");
+		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			this.chocosProduits.add(cm);
+			this.journal.ajouter("   - "+cm);
 		}
+		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+		for (ChocolatDeMarque cm : this.chocosProduits) {
+			this.stockChocoMarque.put(cm, STOCKINITIAL);
+			this.totalStocksChocoMarque.ajouter(this, STOCKINITIAL, this.cryptogramme);
+			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+cm+" au stock total de Chocolat de marque // stock total : "+this.totalStocksChocoMarque.getValeur(this.cryptogramme));
+		}
+	}
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ5";
@@ -108,7 +121,7 @@ public class Transformateur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "Fuuuuuuusion";
 	}
 
 	// Renvoie les indicateurs
@@ -173,16 +186,27 @@ public class Transformateur2Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			if (p.getType()=="Feve") {
-				return this.stockFeves.get(p);
+			if (p.getType().equals("Feve")) {
+				if (this.stockFeves.keySet().contains(p)) {
+					return this.stockFeves.get(p);
+				} else {
+					return 0.0;
+				}
+			} else if (p.getType().equals("Chocolat")) {
+				if (this.stockChoco.keySet().contains(p)) {
+					return this.stockChoco.get(p);
+				} else {
+					return 0.0;
+				}
+			} else {
+				if (this.stockChocoMarque.keySet().contains(p)) {
+					return this.stockChocoMarque.get(p);
+				} else {
+					return 0.0;
+				}
 			}
-			if (p.getType()=="Chocolat") {
-				return this.stockChoco.get(p);
-			}
-			if (p.getType()=="ChocolatDeMarque") {
-				return this.stockChocoMarque.get(p);
-			}
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
-		return 0.0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 	}
 }
