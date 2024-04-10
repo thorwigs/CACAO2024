@@ -38,7 +38,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	    if (f == Feve.F_HQ_BE) {
 	        if (this.stockFeves.get(f) < stockCibleHQ) {
 	            return Math.max(stockCibleHQ - this.stockFeves.get(f), demandeMin);}}
-	    else if (f == Feve.F_MQ_E) {
+	    else if (f == Feve.F_MQ) {
 	        if (this.stockFeves.get(f) < stockCibleMQ) {
 	            return Math.max(stockCibleMQ - this.stockFeves.get(f), demandeMin);
 	        }
@@ -53,7 +53,6 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
 		
-
 		this.journalAchatBourse.ajouter("- achat de "+quantiteEnT+"T de fèves "+f);
 
 
