@@ -276,6 +276,18 @@ public class Producteur1Acteur implements IActeur {
 	
 	public void embauche() {
 		
+	/*	if(nombre ouvrier insuffisant pour production ){
+	 * à_embaucher=delta(requis-présent)
+	 * this.setNbOuv(this.getNbOuv()+à_embaucher);}
+	 * 
+	 * }
+		
+		
+		*/
+			}
+	
+	public void formation() {
+		
 		
 	}
 	
@@ -298,10 +310,7 @@ public class Producteur1Acteur implements IActeur {
 		
 	}
 	
-	public int getNbOuvEmbachés() {
-		return 0;
-		
-	}
+	
 	public void setNbOuv(int nbouvrier) {
 		this.nb_employees=nbouvrier;
 		
