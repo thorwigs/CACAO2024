@@ -110,7 +110,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");		
+		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");	
+		ventefevecadre.put((Feve)contrat.getProduit(), contrat.getQuantiteTotale());
 	}
 
 	/**

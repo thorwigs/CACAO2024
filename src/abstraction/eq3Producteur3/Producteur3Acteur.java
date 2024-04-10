@@ -26,7 +26,12 @@ public abstract class Producteur3Acteur implements IActeur {
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
     //creation d'un tableau de variables qui donne la production pour chaque type de feve @alexis
-    protected HashMap<Feve,Variable> prodfeve ;
+    protected HashMap<Feve, Variable> prodfeve;
+    //creation d'un tableau de variables qui donne les ventes pour chaque type de feve @alexis
+    protected HashMap<Feve, Variable> ventefeve;
+    protected HashMap<Feve, Double> ventefevebourse;
+    protected HashMap<Feve, Double> ventefevecadre;
+    
     //abstract
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
@@ -36,8 +41,14 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
 		this.journal_contrat_cadre = new Journal(this.getNom()+" journal contrat cadre",this);
 		this.prodfeve = new HashMap<Feve,Variable>();
+		this.ventefeve = new HashMap<Feve,Variable>();
+		this.ventefevebourse = new HashMap<Feve, Double>();
+		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
 			this.prodfeve.put(f,  new Variable("Prod "+f, this, 0.0));
+			this.ventefeve.put(f,  new Variable("Vente "+f, this, 0.0));
+			this.ventefevebourse.put(f, 0.0);
+			this.ventefevecadre.put(f, 0.0);
 		}
 	}
 	
@@ -92,11 +103,10 @@ public abstract class Producteur3Acteur implements IActeur {
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
 		//On gere nos intrants de production
 		gestionStock();
-		//MaJ des quantites produites pour chaque type de feve
-		
-		//MaJ variable prodfeve: quantite() donne ce qui est produit et pret a la vente, @alexis
+		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
+			this.ventefeve.get(f).setValeur(this, ventefevecadre.get(f)+ventefevebourse.get(f));
 		}
 	}
 
