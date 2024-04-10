@@ -231,7 +231,9 @@ public class Producteur1Acteur implements IActeur {
 	            CoutProdHQ += quantite * coutUnitaireProductionHQ;
 	        }
 	    }
+		
 	    return CoutProdBQ + CoutProdMQ + CoutProdHQ;
+	}
 	
 	public void embauche() {
 		
@@ -258,7 +260,6 @@ public class Producteur1Acteur implements IActeur {
 	}
 	public void setNbOuv() {
 		
-		
->>>>>>> branch 'main' of https://github.com/Haythem7/CACAO2024.git
+
 	}
 }
