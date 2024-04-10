@@ -53,5 +53,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 		return this.stockChocoMarque.get(cm);}
 		return 0.0;
 	}
+	
+	
 
 }
