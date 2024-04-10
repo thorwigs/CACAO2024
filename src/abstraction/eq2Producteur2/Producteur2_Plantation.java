@@ -1,16 +1,17 @@
 package abstraction.eq2Producteur2;
 
 import java.util.List;
-
 import abstraction.eqXRomu.produits.Feve;
 
+
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
-	protected int nb_hectares_max;
-	protected int nb_hectares_actuel;
-	protected int prix_plantation_hectare;
-	protected int nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
+	protected double nb_hectares_max;
+	protected double nb_hectares_actuel;
+	protected double prix_plantation_hectare;
+	protected double nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
+
 	
-	protected int qualitee;
+	protected int qualite;
 	protected double pourcentage_HQ = 0.02;
 	protected double pourcentage_MQ = 0.38;
 	protected double pourcentage_BQ = 0.6;
@@ -28,23 +29,23 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		
 	} 
 
-	public int getNb_hectares_max() {
+	public double getNb_hectares_max() {
 		return this.nb_hectares_max;
 	}
 
-	public void setNb_hectares_max(int nb_hectares_max) {
+	public void setNb_hectares_max(double nb_hectares_max) {
 		this.nb_hectares_max = nb_hectares_max;
 	}
 
-	public int getNb_hectares_actuel() {
-		return this.nb_hectares_actuel;
+	public double getNb_hectares_actuel() {
+		return nb_hectares_actuel;
 	}
 
-	public void setNb_hectares_actuel(int nb_hectares_actuel) {
+	public void setNb_hectares_actuel(double nb_hectares_actuel) {
 		this.nb_hectares_actuel = nb_hectares_actuel;
 	}
 
-	public int getPrix_plantation_hectare() {
+	public double getPrix_plantation_hectare() {
 		return this.prix_plantation_hectare;
 	}
 
@@ -78,7 +79,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.pourcentage_BQ = pourcentage_BQ;
 	}
 	
-	public int getNb_nouveau_hectares() {
+	public double getNb_nouveau_hectares() {
 		return nb_nouveau_hectares;
 	}
 
@@ -93,7 +94,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	
 	
-	public void planter(int nb_hectares) {
+	public void planter(double nb_hectares) {
 		if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
 			return;
 		}
@@ -126,7 +127,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public double get_prod_no_pest_HQ() { 
 		return this.production_HQ() * rend_no_pest_HQ; //feve HQ_BE
 	}
-		
+
 	public double get_prod_pest_HQ() {
 		return this.production_HQ() * rend_pest_HQ; //feve HQ_E et HQ=0
 	}
@@ -140,7 +141,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public void nouveau_stock() { // ajoute la producution sur 2 semaines aux stocks
-		ajout_stock(production_BQ(),production_MQ(),0,production_HQ(),0,0);
+		ajout_stock(Feve.F_BQ, production_BQ());
+		ajout_stock (Feve.F_MQ, production_MQ());
+		ajout_stock(Feve.F_HQ_E, production_HQ());
 	}
 
 	public void achat_plantation() {
