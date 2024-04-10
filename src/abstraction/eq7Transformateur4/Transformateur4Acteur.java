@@ -34,7 +34,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected List<ChocolatDeMarque> chocolatCocOasis;//liste de tout les chocolats que nous produisons
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
-	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
+	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque
+	
+	protected double coutadjuvant ; //la valeur du cout des adjuvant pour une tonne
+	protected double coutmachine ; //la valeur du cout des machines pour produire une tonne de chocolat, quelque soit le chocolat
+	protected double coutouvrier ; //la valeur a payé chaque step pour 1 employé
+	protected int nbemployeCDI ; //le nombre d'employé qu'on possède, pour l'instant on bosse qu'avec des CDI et ce nombre est fixe
+	protected double tauxproductionemploye ; //le taux qui permet de savoir ce qu'on peut produire avec nos employés
 
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -43,6 +49,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.chocolatCocOasis = new LinkedList<ChocolatDeMarque>();
+		this.coutadjuvant = 1200;
+		this.coutmachine = 8.0;
+		this.coutouvrier = 1000.0;
+		this.nbemployeCDI = 100;
+		this.tauxproductionemploye = 3.75;
+		
 	}
 	
 	public void initialiser() {
