@@ -99,6 +99,8 @@ public class Transformateur2Acteur implements IActeur {
 		this.journal.ajouter("Quantité en stock de chocolat de marque : " +stockChocoMarque);
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage);
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
