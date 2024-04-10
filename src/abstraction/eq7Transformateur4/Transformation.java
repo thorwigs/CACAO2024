@@ -24,7 +24,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 				double payermachine = peutproduireemploye*this.coutmachine; //prix des machines car on transforme une certaine qté de fèves
 				double payeradjuvant = this.coutadjuvant*8;
 			} else {
-				this.stockFeves.replace(abstraction.eqXRomu.produits.Feve.F_HQ_BE, 0.0);
+				this.stockFeves.replace(Feve.F_HQ_BE, 0.0);
 				//on retire tout notre stock de haut de gamme pour faire du chocolat
 				
 			}
