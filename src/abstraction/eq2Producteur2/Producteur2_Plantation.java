@@ -92,9 +92,12 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
-		return production_cacao() * getPourcentage_HQ();
+		return production_cacao()* getPourcentage_HQ();
+		
 	}
+
 	
+
 	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en kg
 		return production_cacao() * getPourcentage_BQ();
 	}
@@ -105,7 +108,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en kilos
 	public double get_prod_no_pest_HQ() { 
-		return this.production_HQ() * rend_no_pest_HQ;
+		return this.production_HQ() * rend_no_pest_HQ; //feve HQ_BE
 	}
 	
 	public double get_prod_no_pest_MQ() {
@@ -113,19 +116,19 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double get_prod_no_pest_BQ() {
-		return this.production_BQ() * rend_no_pest_BQ;
+		return this.production_BQ() * rend_no_pest_BQ; 
 	}
 	
 	public double get_prod_pest_HQ() {
-		return this.production_HQ() * rend_pest_HQ;
+		return this.production_HQ() * rend_pest_HQ; //feve HQ_E et HQ=0
 	}
 	
 	public double get_prod_pest_MQ() {
-		return this.production_MQ() * rend_pest_MQ;
+		return this.production_MQ() * rend_pest_MQ; //feve MQ=98%*get_prod_pest et MQ_E=2%*get_prod_pest
 	}
 	
 	public double get_prod_pest_BQ() {
-		return this.production_BQ() * rend_pest_BQ;
+		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	
 	public void nouveau_stock() { // ajoute la producution sur 2 semaines aux stocks

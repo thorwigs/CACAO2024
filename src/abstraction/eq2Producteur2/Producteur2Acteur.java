@@ -24,14 +24,14 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected int nb_employes;
 	protected int nb_employes_equitable;
 	protected int nb_employes_enfants;
-
+	public abstract double get_prod_pest_BQ();
+	public abstract double get_prod_pest_MQ();
+	public abstract double get_prod_pest_HQ();
+	
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
-	}
-	
-
-	public void initialiser() {
+		this.prodParStep= new HashMap<Feve, Double>();
 		stock = new HashMap <Feve, Double>();
 		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
@@ -39,6 +39,19 @@ public abstract class Producteur2Acteur implements IActeur {
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
+		//initialisation prodparstep pour faire marcher get indicateur || à modifier
+		
+		prodParStep.put(Feve.F_HQ_BE, 0.0);
+		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
+		prodParStep.put(Feve.F_HQ, 0.0);
+		prodParStep.put(Feve.F_MQ_E, 0.02*this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_MQ, 0.98*this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
+	}
+	
+
+	public void initialiser() {
+
 		
 	}
 
@@ -58,12 +71,12 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
+		/*this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
 		this.journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
 		this.journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
 		this.journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
 		this.journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
-		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
+		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");*/
 		
 	}
 
@@ -78,8 +91,15 @@ public abstract class Producteur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		for (Feve f: Feve.values() ) {
+			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, stock.get(f), prodParStep.get(f)*24, prodParStep.get(f)*6);
+			res.add(v);
+		}
 		return res;
 	}
+	
+	
+	
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
@@ -135,16 +155,19 @@ public abstract class Producteur2Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+	//Faite par Quentin
+	//Retourne la quantité stockée pour un type de produit (un type de fève)
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee_prod = this.stock.get(p);
 			return quantite_stockee_prod;
-			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
 	
+	//Faite par Quentin
+	//Retourne la quantité totale de fèves stockée
 	public double getStockTotal(int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee = 0;
@@ -152,7 +175,6 @@ public abstract class Producteur2Acteur implements IActeur {
 				quantite_stockee += this.stock.get(f);
 			}
 			return quantite_stockee;
-			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
@@ -163,7 +185,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public double getCoutTotalParStep() {
 		double cout_stock = this.cout_total_stock();	
 		double cout_humain = this.cout_humain_par_step();
-		
+
 		double somme = cout_stock + cout_humain;
 		return somme;
 	}
