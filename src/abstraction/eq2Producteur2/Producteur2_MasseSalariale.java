@@ -63,7 +63,7 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 			return this.getNb_employes_equitable();
 		}
 		else {
-			return this.getNb_employes();
+			return this.getNb_employes() ;
 		}
 	}
 	
