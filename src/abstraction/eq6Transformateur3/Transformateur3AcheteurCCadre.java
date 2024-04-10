@@ -1,6 +1,7 @@
 package abstraction.eq6Transformateur3;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,10 +24,11 @@ import abstraction.eq8Distributeur1.*;
 import abstraction.eq9Distributeur2.*;
 
 
-public class Transformateur3AcheteurCCadre extends Transformateur3Acteur implements IAcheteurContratCadre {
-	protected SuperviseurVentesContratCadre supCC;
-	protected List<ExemplaireContratCadre> contratsEnCours;
-	protected List<ExemplaireContratCadre> contratsTermines;
+public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAcheteurContratCadre {
+	private SuperviseurVentesContratCadre supCC;
+	private List<ExemplaireContratCadre> contratsEnCours;
+	private List<ExemplaireContratCadre> contratsTermines;
+
 	protected Journal journalCC;
 
 	public Transformateur3AcheteurCCadre() {
@@ -43,7 +45,16 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 
 	public void next() {
 		super.next();
+		
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		/*
+		HashMap<Feve, Integer> Decision = super.Decision();
+		for(Feve f : Decision.keySet()) {
+			if(Decision.get(f)>0) {
+				this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+			}
+		}
+		*/
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if (stockFeves.get(f)+restantDu(f)<20000) { 
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
@@ -87,6 +98,7 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 			this.contratsEnCours.remove(c);
 		}
 		this.journalCC.ajouter("=================================");
+		
 	}
 
 	public double restantDu(Feve f) {

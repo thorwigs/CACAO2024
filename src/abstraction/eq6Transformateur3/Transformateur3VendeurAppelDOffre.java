@@ -16,7 +16,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3VendeurAppelDOffre extends PrévisionAide implements IVendeurAO {
+public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurAuxEncheres implements IVendeurAO {
 
 	
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
@@ -29,6 +29,7 @@ public class Transformateur3VendeurAppelDOffre extends PrévisionAide implements
 
 	public void initialiser() {
 		super.initialiser();
+		this.stockChocoMarque = new HashMap<ChocolatDeMarque, Double>();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			this.prixAO.put(cm, new LinkedList<Double>());
