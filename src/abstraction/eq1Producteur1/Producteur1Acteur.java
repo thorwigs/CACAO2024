@@ -180,4 +180,32 @@ public class Producteur1Acteur implements IActeur {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+	
+	public void embauche() {
+		
+	}
+	
+	public int getNbEnfant() {
+		return this.nb_enfants;
+		
+	}
+	
+	public int getNbOuv() {
+		return this.nb_employees;
+		
+	}
+	
+	public int getNbOuvEq() {
+		return this.nb_equitables;
+		
+	}
+	
+	public int getNbOuvEmbachés() {
+		return 0;
+		
+	}
+	public void setNbOuv() {
+		
+		
+	}
 }
