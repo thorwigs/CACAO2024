@@ -64,7 +64,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
 		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
 	}
-	
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ2";

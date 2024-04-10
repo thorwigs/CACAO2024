@@ -6,10 +6,10 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double nb_hectares_max;
 	protected double nb_hectares_actuel;
 	protected double prix_plantation_hectare;
-	protected int nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
+	protected double nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
 
 	
-	protected int qualitee;
+	protected int qualite;
 	protected double pourcentage_HQ = 0.02;
 	protected double pourcentage_MQ = 0.38;
 	protected double pourcentage_BQ = 0.6;
@@ -21,9 +21,16 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	//protected double rend_no_pest_MQ = 0.77;
 	protected double rend_no_pest_HQ = 0.72;
 	
+	public Producteur2_Plantation() {
+		//initialisation EFFICACE
+		this.nb_hectares_actuel=50000000;
+		this.nb_hectares_max=5000000;
+		this.prix_plantation_hectare=0;
+		
+	}
 
 	public double getNb_hectares_max() {
-		return nb_hectares_max;
+		return this.nb_hectares_max;
 	}
 
 	public void setNb_hectares_max(double nb_hectares_max) {
@@ -39,7 +46,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 
 	public double getPrix_plantation_hectare() {
-		return prix_plantation_hectare;
+		return this.prix_plantation_hectare;
 	}
 
 	public void setPrix_plantation_hectare(int prix_plantation_hectare) {
@@ -47,9 +54,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double getPourcentage_HQ() {
-		return pourcentage_HQ;
+		return this.pourcentage_HQ;
 	}
-
+	
+	
+	
 	public void setPourcentage_HQ(double pourcentage_HQ) {
 		this.pourcentage_HQ = pourcentage_HQ;
 	}
@@ -70,7 +79,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.pourcentage_BQ = pourcentage_BQ;
 	}
 	
-	public int getNb_nouveau_hectares() {
+	public double getNb_nouveau_hectares() {
 		return nb_nouveau_hectares;
 	}
 
@@ -80,10 +89,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void initialiser() {
 		super.initialiser();
-		setNb_hectares_max(5000000);
-		setNb_hectares_actuel(5000000);
-		setPrix_plantation_hectare(500); // 500 euros
-		return;
+
 	}
 	
 	
@@ -97,8 +103,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		}
 	}
 	
-	public double production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
-		return getNb_hectares_actuel() * 500 / 26;
+	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
+		long v=((long) getNb_hectares_actuel())*500/26;
+		return v;
 	}
 	
 	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
