@@ -97,9 +97,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 		return res;
 	}
-	
-	
-	
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
@@ -181,13 +178,21 @@ public abstract class Producteur2Acteur implements IActeur {
 	}
 	public abstract double cout_total_stock();
 	public abstract double cout_humain_par_step();
+	public abstract double cout_plantation();
 	
 	public double getCoutTotalParStep() {
-		double cout_stock = this.cout_total_stock();	
-		double cout_humain = this.cout_humain_par_step();
-
-		double somme = cout_stock + cout_humain;
+		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
 		return somme;
+	}
+	
+	public void DebiteCoutParStep() {
+		retire_argent(this.cout_total_stock(), "coût des stocks");	
+		retire_argent(this.cout_humain_par_step(), "coût humain");	
+		retire_argent(this.cout_plantation(), "coût de la plantation");	
+	}
+	
+	public void retire_argent(double montant, String raison) {
+		Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, raison, montant);
 	}
 }
 

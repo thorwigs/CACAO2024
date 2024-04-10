@@ -194,6 +194,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"T");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
 		
+		
 	}
 }
 
