@@ -2,7 +2,7 @@
 // Classe faite par Noémie
 package abstraction.eq2Producteur2;
 
-public class Producteur2_MasseSalariale extends Producteur2_Stocks {
+public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private int nb_employes ;
 	private int nb_employes_equitable;
 	private int nb_employes_enfants;
@@ -14,7 +14,7 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	public void initialiser() {
 		super.initialiser();
 		int nb_employes =  3679200;
-		int nb_employes_equitable = 100800;
+		int nb_employes_equitable = 100800;//2.74% init
 		int nb_employes_enfants = 1260000; //25% au départ
 		
 		int salaire_enfant =  1;

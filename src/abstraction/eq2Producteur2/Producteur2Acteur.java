@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur2Acteur implements IActeur {
+public abstract class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 
@@ -24,14 +24,14 @@ public class Producteur2Acteur implements IActeur {
 	protected int nb_employes;
 	protected int nb_employes_equitable;
 	protected int nb_employes_enfants;
-
+	public abstract double get_prod_pest_BQ();
+	public abstract double get_prod_pest_MQ();
+	public abstract double get_prod_pest_HQ();
+	
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
-	}
-	
-
-	public void initialiser() {
+		this.prodParStep= new HashMap<Feve, Double>();
 		stock = new HashMap <Feve, Double>();
 		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
@@ -39,6 +39,19 @@ public class Producteur2Acteur implements IActeur {
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
+		//initialisation prodparstep pour faire marcher get indicateur || à modifier
+		
+		prodParStep.put(Feve.F_HQ_BE, 0.0);
+		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
+		prodParStep.put(Feve.F_HQ, 0.0);
+		prodParStep.put(Feve.F_MQ_E, 2.74*this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_MQ, 97.26*this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
+	}
+	
+
+	public void initialiser() {
+
 		
 	}
 
@@ -78,8 +91,15 @@ public class Producteur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		for (Feve f: Feve.values() ) {
+			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, stock.get(f), prodParStep.get(f)*24, prodParStep.get(f)*6);
+			res.add(v);
+		}
 		return res;
 	}
+	
+	
+	
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {

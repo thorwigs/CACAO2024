@@ -8,7 +8,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur2_Stocks extends Producteur2Acteur {
+public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	private static final double SEUIL = 0; 
 	//seuil max de la production stockee (voir ce qu'on fait du reste: vente, poubelle, produit moins, ...)
