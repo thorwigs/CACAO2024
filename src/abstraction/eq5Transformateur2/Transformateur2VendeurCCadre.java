@@ -22,15 +22,15 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	}
 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		if (contrat.getEcheancier().getQuantiteTotale()< totalStocksChoco.getValeur()) {
-			return contrat.getEcheancier();
+		if (contrat.getEcheancier().getQuantiteTotale()< totalStocksChoco.getValeur()){
+			return contrat.getEcheancier(); //peut être changé
 		}else {
 			return null;
 		}
 		}
 	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		return contrat.getPrix()+contrat.getPrix()*0.1;
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
