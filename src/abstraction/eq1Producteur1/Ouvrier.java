@@ -58,7 +58,7 @@ public class Ouvrier extends Producteur1Acteur {
 	
 	public void formation (Ouvrier o ) {
 		double ancienneteMin =10;
-		double augmentationRendement=0.2;
+		double augmentationRendement=0.5;
 		double augmentationSalaire=0.1*this.getSalaire();
 		if ( this.getAnciennete()<= ancienneteMin) {
 			this.setRendement(this.getRendement()+ augmentationRendement);
