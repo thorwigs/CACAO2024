@@ -1,6 +1,7 @@
 package abstraction.eq9Distributeur2;
 
 import abstraction.eqXRomu.clients.ClientFinal;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
@@ -16,7 +17,9 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-		return 10000;//this.getQuantiteEnStock(choco, crypto);
+		
+		return this.getStockChocoMarque(choco,crypto);
+		
 	}
 
 	@Override
@@ -39,6 +42,9 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
+	if (this.getStockChocoMarque(choco, crypto)==0.0) {
+		journal.ajouter("plus de chocolat"+choco+"");
+	}
 		
 	}
 

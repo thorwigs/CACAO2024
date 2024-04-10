@@ -12,6 +12,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,24 +32,36 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_enfants;
 	protected int nb_equitables;
 	private double coutStockage;
+	//Haythem
+	private double coutUnitaireProductionBQ = 1.0;
+    private double coutUnitaireProductionMQ = 1.5;
+    private double coutUnitaireProductionHQ = 2.0;
 	//This /|\
 	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Variable> stock;
-	protected static double LabourNormal = 1.80;
-	protected static double LabourEnfant = 0.80;
-	protected static double LabourEquitable = 3;
-	protected static double Part = 0.25;
+
+	protected double croissanceEco;
+	public static double soldeInitiale;
+	protected ArrayList<Double> croissanceParStep;
+	protected ArrayList<Double> soldeParStep ;
+	protected  double labourNormal = 1.80;
+	protected double labourEnfant = 0.80;
+	protected  double labourEquitable = 3;
+	protected double Part = 0.25;
+
 
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
-		
+		this.soldeParStep = new ArrayList<Double>();
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_BQ,1000.0 );
-		this.prodParStep.put(Feve.F_MQ,1000.0 );
-		this.prodParStep.put(Feve.F_HQ, 1000.0);
-		this.prodParStep.put(Feve.F_MQ_E,1000.0 );
-		this.prodParStep.put(Feve.F_HQ_E,1000.0 );
-		this.prodParStep.put(Feve.F_HQ_BE,1000.0 );
+		this.prodParStep.put(Feve.F_BQ,Part*10000.0 );
+		this.prodParStep.put(Feve.F_MQ,Part*10000.0 );
+		this.prodParStep.put(Feve.F_HQ, Part*10000.0);
+		this.prodParStep.put(Feve.F_MQ_E,Part*0.0 );
+		this.prodParStep.put(Feve.F_HQ_E,Part*0.0 );
+		this.prodParStep.put(Feve.F_HQ_BE,Part*0.0 );
+	
+		
 		
 		
 	
@@ -59,21 +72,66 @@ public class Producteur1Acteur implements IActeur {
 			this.stock.put(f, v);
 		}
 	}
+	public void amelioration() {
+		int etape = Filiere.LA_FILIERE.getEtape();
+		int annee = Filiere.LA_FILIERE.getAnnee(etape);
+		float croissement =0 ;
+		int enfants = this.nb_enfants;
+		int size = this.croissanceParStep.size();
+		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
+		if ((annee != 0)& (annee % 5 == 0) && croissant & (this.nb_enfants>=10)  ) {
+			
+			this.setNbEnfant(enfants-10);
+			if (this.labourNormal < 2.5 ) { 
+				double nouveauSalaire = this.labourNormal*1.08;
+				this.labourNormal = nouveauSalaire;
+				
+				}
+			if (this.labourEnfant < 2 ) { 
+				double nouveauSalaireE = this.labourEnfant*1.05;
+				this.labourEnfant= nouveauSalaireE;
+				
+				}
+			
+			
+		}
+		
+	}
+	
+	
 	public HashMap<Feve, Double> getProd(){
 		return this.prodParStep;
 	}
 	public double getCoutStockage() {
 		return this.coutStockage;
 	}
+
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		this.nb_enfants = 150;
 		this.nb_equitables = 30;
 		this.nb_employees = 100;
+		this.soldeInitiale = this.getSolde();
+		this.soldeParStep.add(this.soldeInitiale);
+		this.croissanceParStep = new ArrayList<Double>();
+		//soldeParStep.add(this.getSolde());
 	}
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ1";
 	}
+	
+	public void CroissanceEconomique() {
+		this.croissanceParStep = new ArrayList<Double>();
+		for (int i = 0; i < this.soldeParStep.size()-1; i++) {
+			double crois = (this.soldeParStep.get(i+1)-this.soldeParStep.get(i))/this.soldeParStep.get(i-1);
+			
+			this.croissanceParStep.add(crois);
+			
+		}
+		
+		
+	}
+	
 	
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
@@ -99,9 +157,21 @@ public class Producteur1Acteur implements IActeur {
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = (this.nb_employees*this.LabourNormal+this.nb_enfants*this.LabourEnfant+this.nb_equitables*this.LabourEquitable)*15;
+		double Labor = (this.nb_employees*this.labourNormal+this.nb_enfants*this.labourEnfant+this.nb_equitables*this.labourEquitable)*15;
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+
+		double diffSolde = this.getSolde()-this.soldeInitiale;
+		this.getJournaux().get(0).ajouter("Le solde a l'etape " + Filiere.LA_FILIERE.getEtape() + "est augemente de :"+ this.getSolde());
+		this.soldeParStep.add(this.getSolde());
+		int i = this.soldeParStep.size();
+		
+		this.getJournaux().get(0).ajouter("La croissance economique est :"+(this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
+		this.croissanceParStep.add((this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
+		this.getJournaux().get(0).ajouter("Les nouveaux salaire sont:"+ this.labourNormal);
+		this.amelioration();
+		this.getJournaux().get(0).ajouter("Le cout de production total a l'etape " + Filiere.LA_FILIERE.getEtape() + "est "+ this.CoutsProd());
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -179,5 +249,63 @@ public class Producteur1Acteur implements IActeur {
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+
+	// Haythem
+	protected double CoutsProd() {
+		double CoutProdBQ=0;
+		double CoutProdMQ=0;
+		double CoutProdHQ=0;
+		HashMap<Feve, Double> QuantiteDeProd =prodParStep;
+		for (Feve f : QuantiteDeProd.keySet()) {
+	        double quantite = QuantiteDeProd.get(f); 
+
+	        // Calcul du coût de production pour la gamme de qualité concernée
+	        if (f.getGamme() == Gamme.BQ) {
+	            CoutProdBQ += quantite * coutUnitaireProductionBQ;
+	        } else if (f.getGamme() == Gamme.MQ) {
+	            CoutProdMQ += quantite * coutUnitaireProductionMQ;
+	        } else if (f.getGamme() == Gamme.HQ) {
+	            CoutProdHQ += quantite * coutUnitaireProductionHQ;
+	        }
+	    }
+	    return CoutProdBQ + CoutProdMQ + CoutProdHQ;
+	    
+	}
+	
+	
+	
+	public void embauche() {
+		
+		
+	}
+	
+	public int getNbEnfant() {
+		return this.nb_enfants;
+		
+	}
+	public void setNbEnfant(int nbenfants) {
+		
+		this.nb_enfants=nbenfants;
+	}
+	
+	public int getNbOuv() {
+		return this.nb_employees;
+		
+	}
+	
+	public int getNbOuvEq() {
+		return this.nb_equitables;
+		
+	}
+	
+	public int getNbOuvEmbachés() {
+		return 0;
+		
+	}
+	public void setNbOuv(int nbouvrier) {
+		this.nb_employees=nbouvrier;
+		
+
 	}
 }
