@@ -48,7 +48,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		else {
 			tx = 0.5; //Taux cacao MQ
 		}
-		return (NbSalaries*(1-tx)*coutAdjuvants+NbSalaries*coutMachines); //Formule du doc criteres de la simulation
+		return (NbSalaries*(1-tx)*coutAdjuvants+NbSalaries*coutMachines); //Formule du Gdoc criteres de la simulation
 	}
 	///////////////////////////////////////////////////////
 	
