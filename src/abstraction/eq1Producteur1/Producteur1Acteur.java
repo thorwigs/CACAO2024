@@ -69,12 +69,12 @@ public class Producteur1Acteur implements IActeur {
 			enfants = this.nb_enfants - 10;
 			this.nb_enfants=enfants;
 			if (this.labourNormal < 2.5 ) { 
-				double nouveauSalaire = this.labourNormal*1.8;
+				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal= nouveauSalaire;
 				
 				}
 			if (this.labourEnfant < 2 ) { 
-				double nouveauSalaireE = this.labourEnfant*1.8;
+				double nouveauSalaireE = this.labourEnfant*1.08;
 				this.labourEnfant= nouveauSalaireE;
 				
 				}
