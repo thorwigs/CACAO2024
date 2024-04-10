@@ -2,6 +2,7 @@ package abstraction.eq1Producteur1;
 
 import java.util.HashMap;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
@@ -46,17 +47,32 @@ public class Producteur1Plantation extends Producteur1VendeurAuxEncheres impleme
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public void setHec(double hec) {
+		this.nombreHec = hec;
+	}
 
 	@Override
 	public void recruitWorkers(HashMap<Feve, Double> demand) {
 		// TODO Auto-generated method stub
 		
 	}
-	public void achat(int hec) {
-		if (this.nombreHec+hec > this.nombreHecMax) {
-			
+	public void achat(double hec) {
+		double cout = hec * 500;
+		if (this.nombreHec+hec > this.nombreHecMax && this.getSolde() > cout) {
+			this.journalPlantation.ajouter("On peut acheter la quantite demande; la quantite on peut acheter est: "+ (this.nombreHecMax-this.nombreHec));
+			this.achat(this.nombreHecMax-this.nombreHec);
 		}
-	}
+		else if(this.getSolde() < cout) {
+			this.journalPlantation.ajouter("On peut pas acheter la quantite demande car on n'a pas l'argent");
+		}
+		else {
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Cout d'acheter des hectares",cout );
+			this.setHec(this.nombreHec + hec);
+		}
+			
+		
+		}
+		
 
 	public HashMap<Feve, Double> prodAnnuel() {
 		this.prodAnnee.put(Feve.F_BQ,0.7*650*this.nombreHec);
@@ -72,9 +88,9 @@ public class Producteur1Plantation extends Producteur1VendeurAuxEncheres impleme
 			this.production.put(Feve.F_HQ, 0.8*this.prodAnnee.get(Feve.F_HQ));
 		}
 		else {
-			this.production.put(Feve.F_BQ,0.82*0.7*this.nombreHec);
-			this.production.put(Feve.F_MQ, 0.77*0.28*this.nombreHec);
-			this.production.put(Feve.F_HQ, 0.72*0.02*this.nombreHec);
+			this.production.put(Feve.F_BQ,0.82*this.prodAnnee.get(Feve.F_BQ));
+			this.production.put(Feve.F_MQ, 0.77*this.prodAnnee.get(Feve.F_MQ));
+			this.production.put(Feve.F_HQ, 0.72*this.prodAnnee.get(Feve.F_HQ));
 		}
 		return production;
 	}
