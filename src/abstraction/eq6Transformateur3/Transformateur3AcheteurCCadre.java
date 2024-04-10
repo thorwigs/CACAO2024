@@ -16,6 +16,12 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eq4Transformateur1.*;
+import abstraction.eq5Transformateur2.*;
+import abstraction.eq7Transformateur4.*;
+import abstraction.eq8Distributeur1.*;
+import abstraction.eq9Distributeur2.*;
+
 
 public class Transformateur3AcheteurCCadre extends Transformateur3Acteur implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
@@ -45,7 +51,12 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						for(IVendeurContratCadre v : vendeurs) {
-							if (v instanceof Transformateur3Acteur){
+							if (v instanceof Transformateur3Acteur || 
+									v instanceof Transformateur1Acteur ||
+									v instanceof Transformateur2Acteur ||
+									v instanceof Distributeur1Acteur ||
+									v instanceof Distributeur2Acteur
+									){
 								vendeurs.remove(v);
 								break;
 							}
