@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
@@ -57,10 +58,14 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 
 
 	}
+	public void next() {
+		super.next();
+		this.journalAchatBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+	}
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
-		
+		journalAchatBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" ## BLACKLIST ## pendant "+dureeEnStep+" etapes");
 	}
 
 }
