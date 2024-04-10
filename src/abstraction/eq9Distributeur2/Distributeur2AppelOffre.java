@@ -7,11 +7,24 @@ import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
-
-	@Override
+	protected Journal journal_AO;
+	public Distributeur2AppelOffre() {
+		super();
+		this.journal_AO= new Journal(this.getNom()+" journal Appel d'offre", this);
+	}
+	
+	
+	public void next() {
+		super.next();
+		this.FaireAppelDOffre();
+		}
+	
+	
+	
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		Double rapportmin=Double.MAX_VALUE;
 		OffreVente meilleureProp = null;
@@ -24,17 +37,26 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 				meilleureProp = proposition;
 			}
 		}
-		this.journal.ajouter(PropositionQuantitePrix.toString());
+		//this.getJournaux().get(2).ajouter("On a réaliser un appel d'offre "+PropositionQuantitePrix.toString());
+		this.getJournaux().get(2).ajouter("L'appel d'offre est réussie et l'option choisie est: "+meilleureProp.getQuantiteT() +" tonnes de "+meilleureProp.getProduit()+ "Pour un prix de "+meilleureProp.getPrixT());
 		return meilleureProp;
 	}
 
 	public void FaireAppelDOffre() {
 		for (ChocolatDeMarque chocolat : this.stockChocoMarque.keySet()) {
 			if (this.stockChocoMarque.get(chocolat)<=0) {
+				
 				Double quantite = Filiere.LA_FILIERE.getVentes(chocolat, -24)*0.5;
 				((SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO")).acheterParAO(this,this.cryptogramme,chocolat,quantite);
+				this.getJournaux().get(2).ajouter("On manque de "+chocolat+" et on en cherche "+quantite);
 			}
 		}
+	}
+	
+	public List<Journal> getJournaux() {
+		List<Journal> res= super.getJournaux();
+		res.add(this.journal_AO);
+		return res;
 	}
 	
 }
