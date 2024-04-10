@@ -25,9 +25,14 @@ public abstract class Producteur3Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
+    //creation d'un tableau de variables qui donne la production pour chaque type de feve @alexis
+    protected HashMap<Feve, Variable> prodfeve;
+    //creation d'un tableau de variables qui donne les ventes pour chaque type de feve @alexis
+    protected HashMap<Feve, Variable> ventefeve;
+    protected HashMap<Feve, Double> ventefevebourse;
+    protected HashMap<Feve, Double> ventefevecadre;
+    //@youssef
     private double salaireOuvrier = 2.6; 
-    
-    private HashMap<Feve,Variable> prodfeve ;
     private HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
     private HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
@@ -40,10 +45,17 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
 		this.journal_contrat_cadre = new Journal(this.getNom()+" journal contrat cadre",this);
 		this.prodfeve = new HashMap<Feve,Variable>();
+		this.ventefeve = new HashMap<Feve,Variable>();
+		this.ventefevebourse = new HashMap<Feve, Double>();
+		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
 			this.prodfeve.put(f,  new Variable("Prod "+f, this, 0.0));
+			this.ventefeve.put(f,  new Variable("Vente "+f, this, 0.0));
+			this.ventefevebourse.put(f, 0.0);
+			this.ventefevecadre.put(f, 0.0);
 		}
 	}
+	
 	
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
@@ -106,6 +118,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.stockGammeStep.put(Feve.F_HQ_BE, hqBE00);		
 		
 	}
+	
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ3";
@@ -135,13 +148,13 @@ public abstract class Producteur3Acteur implements IActeur {
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
 		//On gere nos intrants de production
 		gestionStock();
-		//MaJ des quantites produites pour chaque type de feve
-		
-		//Actuellement ce code bug (surement du au fait que touts les types de feves ne sont pas instancies
-		//Attention, newQuantite est ce qui est produit et a secher, quantite est ce qui est produit et pret a etre vendu ou stocker (1 tour avant)
-		/*for (Feve f : Feve.values()) {
-			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
-		}*/ 
+		//On met a jour les variables GammeStep
+		majGammeStep();
+		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis
+		for (Feve f : Feve.values()) {
+			this.prodfeve.get(f).setValeur(this, quantite().get(f));
+			this.ventefeve.get(f).setValeur(this, ventefevecadre.get(f)+ventefevebourse.get(f));
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -165,13 +178,13 @@ public abstract class Producteur3Acteur implements IActeur {
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
+		List<Variable> res = new ArrayList<Variable>();
 		return res;
 	}
 
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
+		List<Journal> res = new ArrayList<Journal>();
 		res.add(this.journal);
 		res.add(this.journal_bourse);
 		res.add(this.journal_contrat_cadre);
@@ -252,10 +265,10 @@ public abstract class Producteur3Acteur implements IActeur {
 	          coutStockage += quantite * cout  ;}
 	      return coutStockage;
 	      }
+	
 	 /**
 	  * @author mammouYoussef
 	  */		 
-     
 	 protected double calculerCoutsProduction() {
 		    double coutProductionBQ = 0;
 		    double coutProductionMQ = 0;
@@ -306,6 +319,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		 return calculerCoutsProduction()+calculerCoutsStockage()+coutMaindoeuvre();
 		 
 	 }
+	 
 	 /**
 	  * @author Arthur
 	  * gestion des stocks pour les inputs de production (les outputs sont geres par les fonctions de ventes)
@@ -316,15 +330,34 @@ public abstract class Producteur3Acteur implements IActeur {
 			 this.setQuantiteEnStock(f, this.getQuantiteEnStock(f, this.cryptogramme)+prod.get(f));
 		 }
 	 }
-	 /*
+	 
+	 /**
+	  * @author Arthur
+	  * Dans le but de s'assurer de ne pas vendre a perte, on regarde les couts de chaque feve par step et leurs quantites
+	  *Cette fonction met a jour les variables associees
+	  */
 	 protected void majGammeStep() {
 		 //on ajoute la production du step (il faudra prendre en compte les ventes)
 		 for (Feve f : stockGammeStep.keySet()) {
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
 		 }
+		 //on ajoute les couts du step (attention aux ventes)
 		 for (Feve f : coutGammeStep.keySet()) {
-			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), null) ;
+			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f));
+			for (Integer step : coutGammeStep.get(f).keySet()) {
+				coutGammeStep.get(f).put(step, coutGammeStep.get(f).get(step)+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*stockGammeStep.get(f).get(step));			}
+		 }
+	 }
+	 
+	 /**
+	  * @author Arthur
+	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee
+	  * On vend en priorite les vieilles feves
+	  */
+	 /*protected double coutRevient(Feve f,double quantite) {
+		 double accu = 0.0;
+		 for (double step : stockGammeStep.keySet()) {
+			 
 		 }
 	 }*/
-	 
 }
