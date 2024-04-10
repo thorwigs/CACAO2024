@@ -87,6 +87,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public void setCryptogramme(Integer crypto) {
 		this.cryptogramme = crypto;
 	}
+	
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
