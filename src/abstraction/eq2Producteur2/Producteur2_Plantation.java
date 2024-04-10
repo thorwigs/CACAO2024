@@ -16,8 +16,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
-	protected double rend_no_pest_BQ = 0.82;
-	protected double rend_no_pest_MQ = 0.77;
 	protected double rend_no_pest_HQ = 0.72;
 	
 
@@ -119,15 +117,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public double get_prod_no_pest_HQ() { 
 		return this.production_HQ() * rend_no_pest_HQ; //feve HQ_BE
 	}
-	
-	public double get_prod_no_pest_MQ() {
-		return this.production_MQ() * rend_no_pest_MQ;
-	}
-	
-	public double get_prod_no_pest_BQ() {
-		return this.production_BQ() * rend_no_pest_BQ; 
-	}
-	
+		
 	public double get_prod_pest_HQ() {
 		return this.production_HQ() * rend_pest_HQ; //feve HQ_E et HQ=0
 	}
@@ -167,8 +157,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double cout_plantation() {
-		return getNb_nouveau_hectares() * getPrix_plantation_hectare();
+		double res = getNb_nouveau_hectares() * getPrix_plantation_hectare();
+		setNb_nouveau_hectares(0);
+		return res;
 	}
+	
 } 
 // 1hectare = 500kg / an cacao
 // implémenter la qualité 
