@@ -62,30 +62,33 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
 		//On set les stocks
-		setQuantiteEnStock(Feve.F_BQ,100000);
-		setQuantiteEnStock(Feve.F_MQ,100000);
-		setQuantiteEnStock(Feve.F_MQ_E,100000);
-		setQuantiteEnStock(Feve.F_HQ,100000);
-		setQuantiteEnStock(Feve.F_HQ_E,100000);
-		setQuantiteEnStock(Feve.F_HQ_BE,100000);
-		//
-		//On set les productions
 		/**
-		 *Initialisation basé sur les quantités produites actuellement au Pérou
+		 *Initialisation basée sur les quantités produites actuellement au Pérou
+		 *On considère 2 steps de stocks
 		 *surface:
-		HQ_BE : 202 ha
-		HQ : 727,785 ha   (Non Bio équitable) 
-		MQ : 1 427 ha
-		BQ : 3 234.6 ha
+		HQ_BE : 8.42 ha 
+		HQ : 22.74 ha ; HQ_E : 7.58 ha  (Non Bio) 
+		MQ : 47.57 ha ; MQ_E : 11.89 
+		BQ : 134.775 ha 
+
 		 * @author galem (Gabin)
 		 */
+		setQuantiteEnStock(Feve.F_BQ,7.58);
+		setQuantiteEnStock(Feve.F_MQ,1.26);
+		setQuantiteEnStock(Feve.F_MQ_E,0.316);
+		setQuantiteEnStock(Feve.F_HQ,0.5685);
+		setQuantiteEnStock(Feve.F_HQ_E,0.19);
+		setQuantiteEnStock(Feve.F_HQ_BE,0.19);
+		//
+		//On set les productions
+	
 		HashMap<Feve,Double> d01 = new HashMap<Feve,Double>();
-		d01.put(Feve.F_BQ, 181.95);
-		d01.put(Feve.F_MQ, 60.6475);		//80% de HQ est non équitable
-		d01.put(Feve.F_MQ_E, 15.16);        //20% de MQ est équitable
-		d01.put(Feve.F_HQ, 41.70);			//60% de HQ est ni bio ni équitable
-		d01.put(Feve.F_HQ_E, 18.95);		//20% de HQ est équitable
-		d01.put(Feve.F_HQ_BE, 9.09);		//20% de HQ est bio équitable
+		d01.put(Feve.F_BQ, 3.79);
+		d01.put(Feve.F_MQ, 2.527);		//80% de HQ est non équitable
+		d01.put(Feve.F_MQ_E, 0.63);        //20% de MQ est équitable
+		d01.put(Feve.F_HQ, 1.137);			//60% de HQ est ni bio ni équitable
+		d01.put(Feve.F_HQ_E, 0.379);		//20% de HQ est équitable
+		d01.put(Feve.F_HQ_BE, 0.3789);		//20% de HQ est bio équitable
 		setProdTemps(d01,d01);
 		//On set les variables coutGammeStep
 		this.coutGammeStep = new HashMap<Feve,HashMap<Integer,Double>>();
