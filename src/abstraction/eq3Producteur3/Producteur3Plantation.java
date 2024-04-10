@@ -48,7 +48,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
 		for (Feve f : prodfeve.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
-			double delta = "ventes de f" - prodfeve.get(f).getValeur(); // difference entre vente et production de f
+			double delta = ventefeve.get(f).getValeur() - prodfeve.get(f).getValeur(); // difference entre vente et production de f
 			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit
 				supp += 10; 
 			}
