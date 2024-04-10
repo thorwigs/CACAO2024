@@ -8,7 +8,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur2_Stocks extends Producteur2Acteur {
+public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	private static final double SEUIL = 0; 
 	//seuil max de la production stockee (voir ce qu'on fait du reste: vente, poubelle, produit moins, ...)
@@ -16,13 +16,10 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//private final int PRIX_STOCK_TONNE = 0; récupérable via la filière
 	
-	
-	
 	private static final double DELAI_HQ_MQ = 4;
 	private static final double DELAI_MQ_BQ = 8;
 	private static final double DELAI_BQ_JETE = 12;
-	
-	
+		
 	private List<Producteur2_Lot> stock_total;
 	protected Journal journalStocks;
 	
@@ -140,7 +137,7 @@ public class Producteur2_Stocks extends Producteur2Acteur {
 			}
 		}
 	}
-
+	
 	//Faite par Noémie
 	//Retourne la liste des lots avec le même type de fèves
 	public List<Producteur2_Lot> lot_type_feve(Feve type_feve){

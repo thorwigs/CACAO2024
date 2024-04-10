@@ -52,8 +52,47 @@ public class Producteur2_MasseSalariale extends Producteur2_Stocks {
 			return salaire_adulte;
 		}
 	}
+
+	public int getNombreEmployes(String categorie) {
+		if (categorie == "enfant") {
+			return this.getNb_employes_enfants();
+		}
+		else if (categorie == "adulte équitable") {
+			return this.getNb_employes_equitable();
+		}
+		else {
+			return this.getNb_employes();
+		}
+	}
 	
-	public double cout_par_step() { // Renvoie le coût total lié à la main d'oeuvre par step
+	public void setNombreEmployes(String categorie, int d) {
+		if (categorie == "enfant") {
+			this.setNb_employes_enfants(d);
+		}
+		else if (categorie == "adulte équitable") {
+			this.setNb_employes_equitable(d);
+		}
+		else {
+			this.setNb_employes(d);
+		}
+	}
+	
+	public void licenciement(int n, String categorie) {
+		int nb_emp = getNombreEmployes(categorie);
+		if ((nb_emp - n) < 0) {
+			this.setNombreEmployes(categorie, 0);
+		}
+		else {
+			this.setNombreEmployes(categorie, nb_emp-n);
+		}
+	}
+	
+	public void embauche(int n, String categorie) {
+		int nb_emp = getNombreEmployes(categorie);
+		this.setNombreEmployes(categorie, nb_emp+n);
+	}
+	
+	public double cout_humain_par_step() { // Renvoie le coût total lié à la main d'oeuvre par step 
 		double enfants = getNb_employes_enfants()* getSalaire("enfant");
 		double adultes_eq = getNb_employes_equitable()*getSalaire("adulte équitable");
 		double adultes = getNb_employes()*getSalaire("adulte"); 
