@@ -8,11 +8,13 @@ import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -50,8 +52,28 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
+		for (IProduit produit : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			if (this.achete(produit)) {
+				journal.ajouter("Recherche d'un vendeur aupres de qui acheter");
+				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(produit);
+				if (vendeurs.contains(this)) {
+					vendeurs.remove(this);
+				}
+				IVendeurContratCadre vendeur = null;
+				if (vendeurs.size()==1) {
+					vendeur=vendeurs.get(0);
+				} else if (vendeurs.size()>1) {
+					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
+				}
+				if (vendeur!=null) {
+					journal.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
+					journal.ajouter("-->aboutit au contrat "+cc);
+				}
+			}
+		}
 	}
-
+	
 	public List<Variable> getIndicateurs() {
 		return(super.getIndicateurs());
 	}
@@ -111,20 +133,42 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		Echeancier x = contrat.getEcheancier();
 		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72
 			&& this.achete(contrat.getProduit()) 
-			&&	contrat.getQuantiteTotale()>= 1000 ) { // a redéfinir
-					return x ; 
+			&&	contrat.getQuantiteTotale()>= 30 ) {
+			if (contrat.getProduit().equals(Chocolat.C_BQ)
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100)) {
+			} 
+			if ( contrat.getProduit().equals(Chocolat.C_MQ)
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*25)/(x.getNbEcheances()*100*100))  {
+				}
+			if (contrat.getProduit().equals(Chocolat.C_MQ_E)
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
+				}
+			if (contrat.getProduit().equals(Chocolat.C_HQ)
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100)) {
+				}
+			if (contrat.getProduit().equals(Chocolat.C_HQ_E)
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
+				} 
+			if (contrat.getProduit().equals(Chocolat.C_HQ_BE)
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
+				}	
 		} else {
 			int a = Filiere.LA_FILIERE.getEtape()+1;
 			int b = 24 ; 
-			double c = 0.0 ;
-			for (int i =a-24; i<a ; i++ ) {
-				c = c + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)contrat.getProduit(),i)/b;
+			double c = this.prevision(contrat.getProduit(), b) ;	
+			double d = 0 ; 
+			for (int i=0; i<contrat_en_cours.size(); i++) {
+				if (contrat_en_cours.get(i).getProduit().equals(contrat.getProduit())) {
+					d = d + contrat_en_cours.get(i).getQuantiteRestantALivrer();
+				}
 			}
-			
-			Echeancier y = new Echeancier (a,b,c);
-			return y;
+			double e = this.stock_Choco.get(contrat.getProduit()); 
+		    x = new Echeancier (a,b,c-d-e);	
 		}
+		return x;
 	}
+	
+	
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
