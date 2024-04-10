@@ -23,11 +23,15 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public Producteur2_Plantation() {
 		//initialisation EFFICACE
-		this.nb_hectares_actuel=5000000;
-		this.nb_hectares_max=500000;
-		this.prix_plantation_hectare=0;
+		this.nb_hectares_actuel=5000000.0;
+		this.nb_hectares_max=5000000.0;
+
+
+		this.prix_plantation_hectare=0.0;
 		
+
 	} 
+
 
 	public double getNb_hectares_max() {
 		return this.nb_hectares_max;
@@ -91,9 +95,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		super.initialiser();
 
 	}
-	
-	
-	
+		
 	public void planter(double nb_hectares) {
 		if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
 			return;
