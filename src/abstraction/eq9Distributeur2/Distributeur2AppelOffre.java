@@ -14,7 +14,7 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 	protected Journal journal_AO;
 	public Distributeur2AppelOffre() {
 		super();
-		this.journal_AO= new Journal(this.getNom()+" journal Contrat Cadre", this);
+		this.journal_AO= new Journal(this.getNom()+" journal Appel d'offre", this);
 	}
 	@Override
 	public OffreVente choisirOV(List<OffreVente> propositions) {
