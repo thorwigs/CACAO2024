@@ -41,10 +41,14 @@ public class Distributeur2Stocks extends Distributeur2Acteur{
 			this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);
 		}}
 		
+		
 
 
 	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
 		return this.stockChocoMarque;
+	}
+	public double getStockChocoMarque(ChocolatDeMarque cm) {
+		return this.stockChocoMarque.get(cm);
 	}
 
 }
