@@ -6,22 +6,23 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur4AcheteurBourse extends Transformateur4Acteur implements IAcheteurBourse{
 
-	@Override
 	public double demande(Feve f, double cours) {
-		// TODO Auto-generated method stub
-		return 0;
+		return 20;
 	}
-
-	@Override
+	
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		// TODO Auto-generated method stub
-		
+		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
+		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
 	}
 
-	@Override
 	public void notificationBlackList(int dureeEnStep) {
 		// TODO Auto-generated method stub
-		
 	}
+	
+	public void next() {
+		super.next();
+	}
+
+	
 
 }
