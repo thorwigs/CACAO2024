@@ -95,9 +95,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		super.initialiser();
 
 	}
-	
-	
-	
+		
 	public void planter(double nb_hectares) {
 		if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
 			return;

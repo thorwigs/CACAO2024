@@ -75,6 +75,28 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 	
+	public void init_stock(Feve type_feve, double quantite) {
+		List<Producteur2_Lot> stocks =  new ArrayList<Producteur2_Lot>();
+		if(quantite != 0 && type_feve == Feve.F_BQ) {
+			stocks.add(new Producteur2_Lot(quantite, Feve.F_BQ,0));
+		}
+		if(quantite != 0 && type_feve == Feve.F_MQ) {
+			stocks.add(new Producteur2_Lot(quantite, Feve.F_MQ,0));
+		}
+		if(quantite != 0 && type_feve == Feve.F_MQ_E) {
+			stocks.add(new Producteur2_Lot(quantite, Feve.F_MQ_E,0));
+		}
+		if(quantite != 0 && type_feve == Feve.F_HQ) {
+			stocks.add(new Producteur2_Lot(quantite, Feve.F_HQ,0));
+		}
+		if(quantite != 0 && type_feve == Feve.F_HQ_E) {
+			stocks.add(new Producteur2_Lot(quantite, Feve.F_HQ_E,0));
+		}
+		if(quantite != 0 && type_feve == Feve.F_HQ_BE) {
+			stocks.add(new Producteur2_Lot(quantite, Feve.F_HQ_BE,0));
+		}
+		this.stock_total = stocks;
+	}
 	//Faite par Noémie
 	//Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
 	public void lot_to_hashmap() {
@@ -192,6 +214,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
+		
 		
 	}
 }

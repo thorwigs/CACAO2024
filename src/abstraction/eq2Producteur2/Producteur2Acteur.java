@@ -31,6 +31,27 @@ public abstract class Producteur2Acteur implements IActeur {
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
+		this.prodParStep= new HashMap<Feve, Double>();
+		this.init_stock(Feve.F_BQ, 103846153.8);
+		this.init_stock(Feve.F_MQ, 62115384.62);
+		this.init_stock(Feve.F_HQ_E, 3076923.076);
+		this.lot_to_hashmap();
+		
+		prodParStep.put(Feve.F_HQ_BE, 0.0);
+		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
+		prodParStep.put(Feve.F_HQ, 0.0);
+		prodParStep.put(Feve.F_MQ_E, 0.0);
+		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
+		
+	}
+	
+	public abstract void init_stock(Feve type_feve, double quantite);
+	public abstract void lot_to_hashmap();
+	
+	public void initialiser() {
+		
+	
 		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
 		stock.put(Feve.F_MQ, 30.0);
@@ -39,19 +60,8 @@ public abstract class Producteur2Acteur implements IActeur {
 		stock.put(Feve.F_MQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier
-//		prodParStep.put(Feve.F_HQ_BE, 0.0);
-//		prodParStep.put(Feve.F_HQ, 0.0);
-//		prodParStep.put(Feve.F_MQ_E, 0.0);
-//		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
-//		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
-//		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
 		
-	}
-	
-	public abstract void ajout_stock(Feve type_feve, double quantite);
-	public abstract void lot_to_hashmap();
-	
-	public void initialiser() {
+
 		
 	}
 
@@ -97,9 +107,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 		return res;
 	}
-	
-	
-	
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
@@ -181,13 +188,21 @@ public abstract class Producteur2Acteur implements IActeur {
 	}
 	public abstract double cout_total_stock();
 	public abstract double cout_humain_par_step();
+	public abstract double cout_plantation();
 	
 	public double getCoutTotalParStep() {
-		double cout_stock = this.cout_total_stock();	
-		double cout_humain = this.cout_humain_par_step();
-
-		double somme = cout_stock + cout_humain;
+		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
 		return somme;
+	}
+	
+	public void DebiteCoutParStep() {
+		retire_argent(this.cout_total_stock(), "coût des stocks");	
+		retire_argent(this.cout_humain_par_step(), "coût humain");	
+		retire_argent(this.cout_plantation(), "coût de la plantation");	
+	}
+	
+	public void retire_argent(double montant, String raison) {
+		Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, raison, montant);
 	}
 }
 
