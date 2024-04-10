@@ -51,19 +51,23 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
-		this.initialiser();
+//		this.initialiser();
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
 				contrat_en_cours.remove(contrat);
+			} else {
+				stock_Choco.put((ChocolatDeMarque)contrat.getProduit(),contrat.getQuantiteALivrerAuStep() );
+				totalStockChoco.ajouter(this, contrat.getQuantiteALivrerAuStep(), cryptogramme);
 			}
+			
 		}
 		
 		this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
-		for (IProduit produit : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			if (this.achete(produit)) {
+		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
-				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(produit);
+				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
@@ -77,18 +81,18 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
 					int a = Filiere.LA_FILIERE.getEtape()+1;
 					int b = 24 ; 
-					double c = this.prevision(produit, b) ;	
+					double c = this.prevision(choc, b) ;	
 					double d = 0 ; 
 					for (int i=0; i<contrat_en_cours.size(); i++) {
-						if (contrat_en_cours.get(i).getProduit().equals(produit)) {
+						if (contrat_en_cours.get(i).getProduit().equals(choc)) {
 							d = d + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 						}
 					}
-					double e = this.stock_Choco.get(produit); 
+					double e = this.stock_Choco.get(choc); 
 				    Echeancier x = new Echeancier (a,b,c-d-e);
-					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, x, cryptogramme,false);
+					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
 					this.journalCC.ajouter("-->aboutit au contrat "+cc);
-				}
+				}	
 			}
 		}
 		
