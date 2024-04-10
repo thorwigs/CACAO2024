@@ -3,6 +3,7 @@ package abstraction.eq5Transformateur2;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
 import abstraction.eqXRomu.produits.IProduit;
@@ -35,7 +36,11 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix()+contrat.getPrix()*0.1;
+		if (Filiere.random.nextDouble() < 0.2) { // 20% des cas
+	        return contrat.getPrix(); // ne refait pas de contreproposition
+	    } else {
+	        return contrat.getPrix() * 1.07; // Contreproposition de 7% à la hausse
+	    }
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
