@@ -83,6 +83,9 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		for (Feve f : stockFeves.keySet()) {
 			this.journal.ajouter("Stock de "+f+" = "+this.stockFeves.get(f));
 		}
+		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
+			this.journal.ajouter("Stock de "+cm+" = "+this.stockChocoMarque.get(cm));
+		}
 				// mon commentaire perso
 	
 	}
@@ -174,7 +177,13 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 
 	@Override
 	public List<ChocolatDeMarque> getChocolatsProduits() {
-		// TODO Auto-generated method stub
-		return null;
+		if (this.chocosProduits.size()==0) {
+			for (Chocolat c : Chocolat.values()) {
+				int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
+				this.chocosProduits.add(new ChocolatDeMarque(c, "ChocoSharks", pourcentageCacao));
+			}
+			
+		}
+		return this.chocosProduits;
 	}
 }
