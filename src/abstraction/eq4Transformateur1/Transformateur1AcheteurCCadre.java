@@ -12,6 +12,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse implements IAcheteurContratCadre {
@@ -56,14 +57,18 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
-		
+		journalCC.ajouter("Nouveau contrat :"+contrat);
+		this.contratsEnCours.add(contrat);
 	}
 
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
-		
+		journalCC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
+		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
+	}
 	}
 	
 
-}
+

@@ -5,7 +5,7 @@ import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 
-public class Distributeur2Vente extends Distributeur2Stocks implements IDistributeurChocolatDeMarque {
+public abstract class Distributeur2Vente extends Distributeur2Stocks implements IDistributeurChocolatDeMarque {
 
 	@Override
 	public double prix(ChocolatDeMarque choco) {
