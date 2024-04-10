@@ -11,10 +11,10 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	private double[] prix;
 	private String[] marques;
 	
-	public Distributeur1Vendeur(double capaciteDeVente, double[] prix, String[]marques) {
-		this.capaciteDeVente = capaciteDeVente;
-		this.prix = prix;
-		this.marques = marques;
+	public Distributeur1Vendeur(/*double capaciteDeVente, double[] prix, String[]marques*/) {
+//		this.capaciteDeVente = capaciteDeVente;
+//		this.prix = prix;
+//		this.marques = marques;
 	}
 
 	public double prix(ChocolatDeMarque choco) {
