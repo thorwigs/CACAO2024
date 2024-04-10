@@ -37,7 +37,7 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 				meilleureProp = proposition;
 			}
 		}
-		this.getJournaux().get(2).ajouter("On a réaliser un appel d'offre"+PropositionQuantitePrix.toString());
+		this.getJournaux().get(2).ajouter("On a réaliser un appel d'offre "+PropositionQuantitePrix.toString());
 		return meilleureProp;
 	}
 
