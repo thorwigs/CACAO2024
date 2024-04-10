@@ -97,6 +97,11 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
 		return res;
+		
+		
+		
+		
+		
 	}
 
 }

@@ -185,6 +185,7 @@ public class Producteur1Acteur implements IActeur {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+
 	// Haythem
 	protected double CoutsProd() {
 		double CoutProdBQ=0;
@@ -204,5 +205,33 @@ public class Producteur1Acteur implements IActeur {
 	        }
 	    }
 	    return CoutProdBQ + CoutProdMQ + CoutProdHQ;
+	
+	public void embauche() {
+		
+	}
+	
+	public int getNbEnfant() {
+		return this.nb_enfants;
+		
+	}
+	
+	public int getNbOuv() {
+		return this.nb_employees;
+		
+	}
+	
+	public int getNbOuvEq() {
+		return this.nb_equitables;
+		
+	}
+	
+	public int getNbOuvEmbachés() {
+		return 0;
+		
+	}
+	public void setNbOuv() {
+		
+		
+>>>>>>> branch 'main' of https://github.com/Haythem7/CACAO2024.git
 	}
 }
