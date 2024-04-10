@@ -9,6 +9,10 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	
+	public Transformateur2VendeurCCadre (IProduit produit) {
+		super();
+	}
+	
 	public void next() {
 		super.next();
 	}
@@ -18,9 +22,13 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	}
 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getEcheancier();
-	}
-
+		if (contrat.getEcheancier().getQuantiteTotale()< totalStocksChoco.getValeur()) {
+			return contrat.getEcheancier();
+		}else {
+			return null;
+		}
+		}
+		
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return contrat.getPrix();
 	}
