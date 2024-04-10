@@ -31,12 +31,27 @@ public abstract class Producteur2Acteur implements IActeur {
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
-		this.ajout_stock(Feve.F_BQ, 103846153.8);
-		this.ajout_stock(Feve.F_MQ, 62115384.62);
-		this.ajout_stock(Feve.F_HQ_E, 3076923.076);
+		this.prodParStep= new HashMap<Feve, Double>();
+		this.init_stock(Feve.F_BQ, 103846153.8);
+		this.init_stock(Feve.F_MQ, 62115384.62);
+		this.init_stock(Feve.F_HQ_E, 3076923.076);
 		this.lot_to_hashmap();
 		
-		this.prodParStep= new HashMap<Feve, Double>();
+		prodParStep.put(Feve.F_HQ_BE, 0.0);
+		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
+		prodParStep.put(Feve.F_HQ, 0.0);
+		prodParStep.put(Feve.F_MQ_E, 0.0);
+		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
+		
+	}
+	
+	public abstract void init_stock(Feve type_feve, double quantite);
+	public abstract void lot_to_hashmap();
+	
+	public void initialiser() {
+		
+	
 		/*stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
 		stock.put(Feve.F_MQ, 30.0);
@@ -46,18 +61,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		stock.put(Feve.F_MQ_E, 0.0);*/
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier
 		
-		prodParStep.put(Feve.F_HQ_BE, 0.0);
-		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
-		prodParStep.put(Feve.F_HQ, 0.0);
-		prodParStep.put(Feve.F_MQ_E, 0.0);
-		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
-		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
-	}
-	
-	public abstract void ajout_stock(Feve type_feve, double quantite);
-	public abstract void lot_to_hashmap();
-	
-	public void initialiser() {
+		
 	}
 
 	public String getNom() {// NE PAS MODIFIER
