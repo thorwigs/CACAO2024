@@ -25,7 +25,14 @@ public abstract class Producteur3Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
-    private HashMap<Feve,Variable> prodfeve ;
+    //creation d'un tableau de variables qui donne la production pour chaque type de feve @alexis
+    protected HashMap<Feve, Variable> prodfeve;
+    //creation d'un tableau de variables qui donne les ventes pour chaque type de feve @alexis
+    protected HashMap<Feve, Variable> ventefeve;
+    protected HashMap<Feve, Double> ventefevebourse;
+    protected HashMap<Feve, Double> ventefevecadre;
+    //@youssef
+    private double salaireOuvrier = 2.6; 
     private HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
     private HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
@@ -38,10 +45,17 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
 		this.journal_contrat_cadre = new Journal(this.getNom()+" journal contrat cadre",this);
 		this.prodfeve = new HashMap<Feve,Variable>();
+		this.ventefeve = new HashMap<Feve,Variable>();
+		this.ventefevebourse = new HashMap<Feve, Double>();
+		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
 			this.prodfeve.put(f,  new Variable("Prod "+f, this, 0.0));
+			this.ventefeve.put(f,  new Variable("Vente "+f, this, 0.0));
+			this.ventefevebourse.put(f, 0.0);
+			this.ventefevecadre.put(f, 0.0);
 		}
 	}
+	
 	
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
@@ -104,6 +118,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.stockGammeStep.put(Feve.F_HQ_BE, hqBE00);		
 		
 	}
+	
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ3";
@@ -135,13 +150,11 @@ public abstract class Producteur3Acteur implements IActeur {
 		gestionStock();
 		//On met a jour les variables GammeStep
 		majGammeStep();
-		//MaJ des quantites produites pour chaque type de feve
-		
-		//Actuellement ce code bug (surement du au fait que touts les types de feves ne sont pas instancies
-		//Attention, newQuantite est ce qui est produit et a secher, quantite est ce qui est produit et pret a etre vendu ou stocker (1 tour avant)
-		/*for (Feve f : Feve.values()) {
-			this.prodfeve.get(f).setValeur(this, newQuantite().get(f));
-		}*/ 
+		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis
+		for (Feve f : Feve.values()) {
+			this.prodfeve.get(f).setValeur(this, quantite().get(f));
+			this.ventefeve.get(f).setValeur(this, ventefevecadre.get(f)+ventefevebourse.get(f));
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -165,13 +178,13 @@ public abstract class Producteur3Acteur implements IActeur {
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
+		List<Variable> res = new ArrayList<Variable>();
 		return res;
 	}
 
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
+		List<Journal> res = new ArrayList<Journal>();
 		res.add(this.journal);
 		res.add(this.journal_bourse);
 		res.add(this.journal_contrat_cadre);
@@ -252,10 +265,10 @@ public abstract class Producteur3Acteur implements IActeur {
 	          coutStockage += quantite * cout  ;}
 	      return coutStockage;
 	      }
+	
 	 /**
 	  * @author mammouYoussef
 	  */		 
-     
 	 protected double calculerCoutsProduction() {
 		    double coutProductionBQ = 0;
 		    double coutProductionMQ = 0;
@@ -281,10 +294,32 @@ public abstract class Producteur3Acteur implements IActeur {
 	
         }
 	 
+	 /**
+	  * @author mammouYoussef
+	  */	
+	 
+	  protected double coutMaindoeuvre() {
+		   //Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
+		  
+		  
+	        HashMap<Feve, Double> ouvriers = maindoeuvre();
+	        double coutMaindoeuvre = 0;
+	        
+	        // Pour chaque type de fève, calculer le coût de la main-d'œuvre en fonction du nombre d'ouvriers avec le même salaire fixé
+	        for (Feve f : ouvriers.keySet()) {
+	            double nbOuvriers = ouvriers.get(f); 
+	            coutMaindoeuvre += nbOuvriers * salaireOuvrier;  // 2.6 = Salaire par jour par ouvrier, le prix minimal (pour le pérou) décidé avec les autres producteurs
+	        }
+	        
+	        return  coutMaindoeuvre;
+	    }
+	
+	 
 	 protected double calculerCouts() {
-		 return calculerCoutsProduction()+calculerCoutsStockage();
+		 return calculerCoutsProduction()+calculerCoutsStockage()+coutMaindoeuvre();
 		 
 	 }
+	 
 	 /**
 	  * @author Arthur
 	  * gestion des stocks pour les inputs de production (les outputs sont geres par les fonctions de ventes)
