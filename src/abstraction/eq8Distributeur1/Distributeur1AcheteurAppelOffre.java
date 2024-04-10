@@ -34,6 +34,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		super.next();
 	}
 	
+	
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		
 		return null;
