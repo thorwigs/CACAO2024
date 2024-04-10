@@ -244,6 +244,5 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		LinkedList<String> marques = new LinkedList<String>();
 		marques.add("Mirage");
 		return marques;
-		
 	}
 }
