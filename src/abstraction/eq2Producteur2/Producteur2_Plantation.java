@@ -2,7 +2,7 @@ package abstraction.eq2Producteur2;
 
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur2_Plantation extends Producteur2_MasseSalariale {
+public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected int nb_hectares_max;
 	protected int nb_hectares_actuel;
 	protected int prix_plantation_hectare;
@@ -141,7 +141,6 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 				planter(nb_hectares_max - nb_hectares_actuel);
 			}
 			planter((int) (nb_hectares_actuel * 0.02)); //on replante 2% de la plantation actuel
-			// math.ceil permet de récupèrer la partie entière supérieure
 		}
 	}
 	
