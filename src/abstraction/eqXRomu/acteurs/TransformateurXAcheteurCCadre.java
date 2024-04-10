@@ -68,7 +68,6 @@ public class TransformateurXAcheteurCCadre extends TransformateurXAcheteurBourse
 			this.contratsEnCours.remove(c);
 		}
 		this.journalCC.ajouter("=================================");
-		
 	}
 
 	public double restantDu(Feve f) {
