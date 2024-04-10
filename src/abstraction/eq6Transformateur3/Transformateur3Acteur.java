@@ -131,7 +131,7 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "Transformateur 3 : ChocoSharks";
 	}
 
 	// Renvoie les indicateurs
