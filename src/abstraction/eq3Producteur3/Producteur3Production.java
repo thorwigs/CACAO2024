@@ -41,6 +41,7 @@ public class Producteur3Production extends Producteur3Plantation {
 				}
 			}	
 			else if (f1.getGamme() == Gamme.HQ) {      
+			
 				if ( f1.isBio() == false) {
 					if (f1.isEquitable()== false) { 			// HAUTE QUALITE (NI BIO NI EQUITABLE)
 						quantite.put(f1, kg_ha_HQ*plant.get(f1));

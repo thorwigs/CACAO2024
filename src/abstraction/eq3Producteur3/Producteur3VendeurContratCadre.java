@@ -1,5 +1,7 @@
 package abstraction.eq3Producteur3;
 
+import java.util.HashMap;
+
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
@@ -24,25 +26,38 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * @author mammouYoussef
 	 */
 	
+	
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 	    Feve f = (Feve) contrat.getProduit();
 	    Echeancier echeancierPropose = contrat.getEcheancier();
 	    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
 
-	    for ( int  step = echeancierPropose.getStepDebut() ; step <= echeancierPropose.getStepFin() ; step++) {
-	        double quantiteDemandee = echeancierPropose.getQuantite(step);
-	        double quantiteDisponible = this.getQuantiteEnStock(f, this.cryptogramme);
 
-	        if (quantiteDemandee <= quantiteDisponible) {
-	            // Si la quantité demandée pour l'échéance peut être satisfaite, ajouter cette quantité à l'échéancier
+	    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
+	        double quantiteDemandee = echeancierPropose.getQuantite(step);
+	        
+	     // Obtenir la quantité produite pour chaque étape
+		    HashMap<Feve, Double> quantiteProduite = quantite();
+
+	        if (quantiteProduite.containsKey(f) && quantiteProduite.get(f) >= quantiteDemandee) {
+	            // Si la quantité produite est suffisante pour l'échéance, ajouter cette quantité à l'échéancier
 	            nouvelEcheancier.ajouter(quantiteDemandee);
 	        } else {
-	        	if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-	        		// Si la quantité demandée pour l'échéance ne peut pas être totalement satisfaite, proposer la quantité disponible
-	        		nouvelEcheancier.ajouter(quantiteDisponible);
+	            // Si la quantité produite est insuffisante, proposer la quantité disponible pour cette étape
+	        	// simple vérification:
+	        	double quantiteDisponible;
+	        	if (quantiteProduite.containsKey(f)) {
+	        	    quantiteDisponible = quantiteProduite.get(f);
 	        	} else {
-	        		nouvelEcheancier = null;
+	        	    quantiteDisponible = 0;
 	        	}
+	        	
+	            if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+	                nouvelEcheancier.ajouter(quantiteDisponible);
+	            } else {
+	                nouvelEcheancier = null; // dernier cas: On ne peut pas satisfaire le contrat
+	                break; // Sortir de la boucle car on ne peut pas honorer le contrat
+	            }
 	        }
 	    }
 	    return nouvelEcheancier;
@@ -95,7 +110,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		this.journal.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");		
+		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");		
 	}
 
 	/**
@@ -107,13 +122,13 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 			//on verifie que l'on puisse fournir la quantite demande
 			//il faut modifier les stocks suite a la vente
 			this.setQuantiteEnStock((Feve)produit, stock_inst-quantite);
-			this.journal.ajouter("Livraison totale : "+quantite+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
+			this.journal_contrat_cadre.ajouter("Livraison totale : "+quantite+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			//on envoie ce que l'on a promis
 			return quantite;
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock
 			this.setQuantiteEnStock((Feve)produit, 0);
-			this.journal.ajouter("Livraison partielle : "+stock_inst+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
+			this.journal_contrat_cadre.ajouter("Livraison partielle : "+stock_inst+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			return stock_inst;
 		}
 	}

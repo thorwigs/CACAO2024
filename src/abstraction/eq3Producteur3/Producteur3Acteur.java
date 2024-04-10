@@ -18,6 +18,8 @@ public abstract class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
+	protected Journal journal_bourse;
+	protected Journal journal_contrat_cadre;
 	private HashMap<IProduit,Integer> stocks;
 	//passable en parametre/indicateurs
 	private double coutUnitaireProductionBQ = 1.0;
@@ -33,6 +35,8 @@ public abstract class Producteur3Acteur implements IActeur {
     
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
+		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
+		this.journal_contrat_cadre = new Journal(this.getNom()+" journal contrat cadre",this);
 		this.prodfeve = new HashMap<Feve,Variable>();
 		for (Feve f : Feve.values()) {
 			this.prodfeve.put(f,  new Variable("Prod "+f, this, 0.0));
@@ -117,6 +121,13 @@ public abstract class Producteur3Acteur implements IActeur {
 	
 	public void next() {
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
+		/**
+		 * Implémentation des journaux spécifiques à la bourse et aux contrats cadres
+		 * gagne en clarté
+		 * @author galem (Gabin)
+		 */
+		this.journal_bourse.ajouter("etape="+Filiere.LA_FILIERE.getEtape());		
+		this.journal_contrat_cadre.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		//On paie les couts lies a la production et au stockage
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
@@ -160,6 +171,8 @@ public abstract class Producteur3Acteur implements IActeur {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal);
+		res.add(this.journal_bourse);
+		res.add(this.journal_contrat_cadre);
 		return res;
 	}
 
