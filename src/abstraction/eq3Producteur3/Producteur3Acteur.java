@@ -25,6 +25,8 @@ public abstract class Producteur3Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
+    private double salaireOuvrier = 2.6; 
+    
     private HashMap<Feve,Variable> prodfeve ;
     private HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
     private HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
@@ -279,8 +281,29 @@ public abstract class Producteur3Acteur implements IActeur {
 	
         }
 	 
+	 /**
+	  * @author mammouYoussef
+	  */	
+	 
+	  protected double coutMaindoeuvre() {
+		   //Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
+		  
+		  
+	        HashMap<Feve, Double> ouvriers = maindoeuvre();
+	        double coutMaindoeuvre = 0;
+	        
+	        // Pour chaque type de fève, calculer le coût de la main-d'œuvre en fonction du nombre d'ouvriers avec le même salaire fixé
+	        for (Feve f : ouvriers.keySet()) {
+	            double nbOuvriers = ouvriers.get(f); 
+	            coutMaindoeuvre += nbOuvriers * salaireOuvrier;  // 2.6 = Salaire par jour par ouvrier, le prix minimal (pour le pérou) décidé avec les autres producteurs
+	        }
+	        
+	        return  coutMaindoeuvre;
+	    }
+	
+	 
 	 protected double calculerCouts() {
-		 return calculerCoutsProduction()+calculerCoutsStockage();
+		 return calculerCoutsProduction()+calculerCoutsStockage()+coutMaindoeuvre();
 		 
 	 }
 	 /**
