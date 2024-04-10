@@ -103,7 +103,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	     BourseCacao bourse =(BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 
 	     if (!(produit_AO instanceof Feve)) {
-				//journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+" "+offre.getProduit());
+				journalAO.ajouter(Filiere.LA_FILIERE.getEtape()+"testtest "+offre.getProduit());
 
 				return null;//si ce n'est pas un produit feve, rien ne se passe
 
