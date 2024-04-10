@@ -16,7 +16,15 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 		super();
 		this.journal_AO= new Journal(this.getNom()+" journal Appel d'offre", this);
 	}
-	@Override
+	
+	
+	public void next() {
+		super.next();
+		this.FaireAppelDOffre();
+		}
+	
+	
+	
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		Double rapportmin=Double.MAX_VALUE;
 		OffreVente meilleureProp = null;
@@ -29,7 +37,7 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 				meilleureProp = proposition;
 			}
 		}
-		this.journal.ajouter(PropositionQuantitePrix.toString());
+		this.getJournaux().get(2).ajouter("On a réaliser un appel d'offre"+PropositionQuantitePrix.toString());
 		return meilleureProp;
 	}
 
