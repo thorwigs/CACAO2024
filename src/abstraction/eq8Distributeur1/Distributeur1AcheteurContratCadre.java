@@ -116,12 +116,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		} else {
 			int a = Filiere.LA_FILIERE.getEtape()+1;
 			int b = 24 ; 
-			double d = 0.0 ;
+			double c = 0.0 ;
 			for (int i =a-24; i<a ; i++ ) {
-				d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)contrat.getProduit(),i)/b;
+				c = c + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)contrat.getProduit(),i)/b;
 			}
-			
-			double c = ;
 			
 			Echeancier y = new Echeancier (a,b,c);
 			return y;
