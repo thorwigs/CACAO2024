@@ -17,6 +17,7 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double rend_no_pest_MQ = 0.77;
 	protected double rend_no_pest_HQ = 0.72;
 	
+
 	
 	public void initialiser() {
 		super.initialiser();
@@ -35,7 +36,7 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	}
 
 	public double getNb_hectares_actuel() {
-		return nb_hectares_actuel;
+		return this.nb_hectares_actuel;
 	}
 
 	public void setNb_hectares_actuel(double nb_hectares_actuel) {
@@ -51,9 +52,11 @@ public class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	}
 	
 	public double getPourcentage_HQ() {
-		return pourcentage_HQ;
+		return this.pourcentage_HQ;
 	}
-
+	
+	
+	
 	public void setPourcentage_HQ(double pourcentage_HQ) {
 		this.pourcentage_HQ = pourcentage_HQ;
 	}

@@ -51,7 +51,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 
 	public void initialiser() {
-
+		
 		
 	}
 
