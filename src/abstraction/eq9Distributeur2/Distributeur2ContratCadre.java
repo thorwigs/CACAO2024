@@ -26,12 +26,12 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	
 	@Override
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("ChocolatDeMarque") || produit.getType().equals("Chocolat"); // verifier stock 
+		return produit.getType().equals("ChocolatDeMarque"); // verifier stock 
 	}
 
 	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque") || !contrat.getProduit().getType().equals("Chocolat")) {
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
 			return null;
 		}
 		Echeancier e = contrat.getEcheancier();
@@ -55,7 +55,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 
 	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque") || !contrat.getProduit().getType().equals("Chocolat")) {
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
 			return 0.;
 		}
 		return contrat.getPrix();
@@ -72,9 +72,6 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
-		}
-		if (p.getType().equals("Chocolat")) {
-			
 		}
 	}
 
