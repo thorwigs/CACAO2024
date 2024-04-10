@@ -21,7 +21,7 @@ public class Distributeur1Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
-	private double coutStockage;
+	protected double coutStockage;
 	protected IProduit produit;
 	protected List<ChocolatDeMarque> chocolats;
 	protected Variable totalStockChoco;
@@ -38,6 +38,7 @@ public class Distributeur1Acteur implements IActeur {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16;
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
 		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+		System.out.println(chocolats);
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
 			if (cm.getChocolat()==Chocolat.C_BQ) {
@@ -59,6 +60,7 @@ public class Distributeur1Acteur implements IActeur {
 				stock=12000;
 			}
 			this.stock_Choco.put(cm, stock);
+			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK =====");
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stock_Choco.get(cm));
 			this.totalStockChoco.ajouter(this, stock, cryptogramme);
 		}
@@ -150,6 +152,14 @@ public class Distributeur1Acteur implements IActeur {
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;
 	}
+	
+//	public List<ChocolatDeMarque> getChocolatsProduits() {
+//		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+//		Chocolat ch = Chocolat.C_HQ_E;
+//		int pourcentage =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ch.getGamme()).getValeur());
+//		this.chocolats.add(new ChocolatDeMarque(ch,"Chocoflow",pourcentage));
+//		return chocolats;
+//	}
 
 	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
