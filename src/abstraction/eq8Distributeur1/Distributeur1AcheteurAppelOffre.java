@@ -11,7 +11,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
-public class Distributeur1AcheteurAppelOffre extends Distributeur1Vendeur implements IAcheteurAO{
+public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContratCadre implements IAcheteurAO{
 	private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
 	private SuperviseurVentesAO supAO;
 	protected Journal journalAO;
