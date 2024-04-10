@@ -24,7 +24,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	protected int cryptogramme;
 	protected Journal journal;
 	private double coutStockage;
-	private double coutTransfo;
+	private double coutProduction;
+	private double coutMainDOeuvre;
 
 	protected List<Feve> lesFeves;
 	private List<ChocolatDeMarque>chocosProduits;
@@ -127,7 +128,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					this.totalStocksChocoMarque.ajouter(this,newChocoMarque, this.cryptogramme);
 					
 					nbTonnesProduites = nbTonnesProduites + transfo;
-					double coutProduction = transfo*(1-pourcentageCacao) * 1200 + transfo*8;
+					coutProduction = transfo*(1-pourcentageCacao) * 1200 + transfo*8;
 					if (coutProduction > 0.0) {
 						Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production", coutProduction);
 					}
@@ -141,12 +142,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		}
 		
 		//payer les couts
-		double coutStockage = (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage;
+		coutStockage = (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage;
 		if (coutStockage > 0.0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", coutStockage);
 		}
 		
-		double coutMainDOeuvre = 1000*0.27*nbTonnesProduites;
+		coutMainDOeuvre = 1000*0.27*nbTonnesProduites;
 		if (coutMainDOeuvre > 0.0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Main d'oeuvre", coutMainDOeuvre);
 		}
