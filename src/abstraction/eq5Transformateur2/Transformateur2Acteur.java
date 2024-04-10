@@ -202,6 +202,9 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 
 	
 	
+	////////////////////////////////////////////////////////
+	//        Déclaration de la marque CacaoFusion        //
+	////////////////////////////////////////////////////////
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();
 		marques.add("CacaoFusion");

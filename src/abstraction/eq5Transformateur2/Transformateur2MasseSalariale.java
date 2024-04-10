@@ -1,6 +1,8 @@
 package abstraction.eq5Transformateur2;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
 /** 
@@ -34,12 +36,13 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		// modif des stocks
 		return 2;
 	}
-	public double CoutTransformation(Chocolat c) {
-		return 2;
-	}
 	///////////////////////////////////////////////////////
 	
-	
+	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
+		// 8 = coût machines pour une tonne par step
+		// 1200 = coût adjuvants pour une tonne par step
+		return tonnes*8 + tonnes*(1-cm.getPourcentageCacao())*1200 ;
+	}
 	
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
@@ -69,9 +72,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	
 	////// A FINIR //////////////////////////////////////////
 	public void next() {
-		
 		super.next();
-		
 	}
 	////////////////////////////////////////////////////////
 
