@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
+//commmentaire pour pascal
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -15,10 +15,13 @@ import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+
 public class Transformateur3Acteur implements IActeur {
 	
 	protected Journal journal;
@@ -47,7 +50,14 @@ public class Transformateur3Acteur implements IActeur {
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-		this.stockFeves=new HashMap<Feve,Double>();
+		this.stockFeves = new HashMap<Feve,Double>();
+		stockFeves.put(Feve.F_BQ,0.0);
+		stockFeves.put(Feve.F_MQ,0.0);
+		stockFeves.put(Feve.F_MQ_E,0.0);
+		stockFeves.put(Feve.F_HQ,0.0);
+		stockFeves.put(Feve.F_HQ_E,0.0);
+		stockFeves.put(Feve.F_HQ_BE,0.0);
+	
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -71,7 +81,7 @@ public class Transformateur3Acteur implements IActeur {
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
-		return new Color(158, 242, 226); 
+		return new Color(160, 242, 226); 
 	}
 
 	public String getDescription() {
