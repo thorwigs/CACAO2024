@@ -1,6 +1,7 @@
 package abstraction.eq3Producteur3;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
@@ -62,7 +63,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    }
 	    return nouvelEcheancier;
 	}
-
+	
 	
 	/**
 	 * @author mammouYoussef
