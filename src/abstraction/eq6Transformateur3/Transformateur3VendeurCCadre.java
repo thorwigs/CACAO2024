@@ -23,10 +23,6 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		super();
 	}
 	
-	public void initialiser() {
-		super.initialiser();
-		
-	}
 	
 	public void next() {
 		super.next();
