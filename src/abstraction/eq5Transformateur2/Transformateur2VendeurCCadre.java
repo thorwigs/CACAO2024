@@ -9,6 +9,10 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	
+	public Transformateur2VendeurCCadre () {
+		super();
+	}
+	
 	public void next() {
 		super.next();
 	}
@@ -18,9 +22,13 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	}
 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getEcheancier();
-	}
-
+		if (contrat.getEcheancier().getQuantiteTotale()< totalStocksChoco.getValeur()) {
+			return contrat.getEcheancier();
+		}else {
+			return null;
+		}
+		}
+	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return contrat.getPrix();
 	}
@@ -30,7 +38,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);		
+		super.notificationNouveauContratCadre(contrat);
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
