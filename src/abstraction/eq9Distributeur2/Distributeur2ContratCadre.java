@@ -41,7 +41,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		super.next();
 		this.journal_CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) { 
-			if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000) {
+			if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000) {
 				this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
 				double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
@@ -56,6 +56,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 						this.contratsEnCours.add(contrat);
 						est_contratPasse=true;
 						journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+						journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
 						break;
 					}
 				}
@@ -79,7 +80,17 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	
 	@Override
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("ChocolatDeMarque"); // verifier stock 
+		if (produit.getType().equals("ChocolatDeMarque")) {
+			ChocolatDeMarque cm = (ChocolatDeMarque) produit;
+			if (this.stockChocoMarque.get(cm)!=null) {
+				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000;
+			} else {
+				return this.totalStocksChocoMarque.getValeur(cryptogramme)<100000;
+			}
+		} else {
+			return false;
+		}
+		
 	}
 
 	@Override
@@ -90,9 +101,10 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		Echeancier e = contrat.getEcheancier();
 		LinkedList<Double> quantites = new LinkedList<Double>();
 		boolean modif = false;
+		ChocolatDeMarque cm = (ChocolatDeMarque) contrat.getProduit();
 		for (int i=0; i<e.getNbEcheances(); i++) {
-			if (e.getQuantite(e.getStepDebut()+i)>this.getCapaciteStockage()) {
-				quantites.add((double)this.getCapaciteStockage());
+			if (e.getQuantite(e.getStepDebut()+i)>this.getCapaciteStockage()/12) {
+				quantites.add(Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12));
 				modif=true;
 			} else {
 				quantites.add(e.getQuantite(e.getStepDebut()+i));
@@ -126,6 +138,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
+			this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
 		}
 		if (Filiere.LA_FILIERE.getEtape() == contrat.getEcheancier().getStepFin()) {
 			this.contratsTermines.add(contrat);
