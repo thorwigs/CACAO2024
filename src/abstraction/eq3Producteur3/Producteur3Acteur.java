@@ -2,7 +2,9 @@ package abstraction.eq3Producteur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -60,21 +62,33 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
 		//On set les stocks
-		setQuantiteEnStock(Feve.F_BQ,100000);
-		setQuantiteEnStock(Feve.F_MQ,100000);
-		setQuantiteEnStock(Feve.F_MQ_E,100000);
-		setQuantiteEnStock(Feve.F_HQ,100000);
-		setQuantiteEnStock(Feve.F_HQ_E,100000);
-		setQuantiteEnStock(Feve.F_HQ_BE,100000);
+		/**
+		 *Initialisation basée sur les quantités produites actuellement au Pérou
+		 *On considère 2 steps de stocks
+		 *surface:
+		HQ_BE : 8.42 ha 
+		HQ : 22.74 ha ; HQ_E : 7.58 ha  (Non Bio) 
+		MQ : 47.57 ha ; MQ_E : 11.89 
+		BQ : 134.775 ha 
+
+		 * @author galem (Gabin)
+		 */
+		setQuantiteEnStock(Feve.F_BQ,7.58);
+		setQuantiteEnStock(Feve.F_MQ,1.26);
+		setQuantiteEnStock(Feve.F_MQ_E,0.316);
+		setQuantiteEnStock(Feve.F_HQ,0.5685);
+		setQuantiteEnStock(Feve.F_HQ_E,0.19);
+		setQuantiteEnStock(Feve.F_HQ_BE,0.19);
 		//
 		//On set les productions
+	
 		HashMap<Feve,Double> d01 = new HashMap<Feve,Double>();
-		d01.put(Feve.F_BQ, 20000.0);
-		d01.put(Feve.F_MQ, 20000.0);
-		d01.put(Feve.F_MQ_E, 20000.0);
-		d01.put(Feve.F_HQ, 20000.0);
-		d01.put(Feve.F_HQ_E, 20000.0);
-		d01.put(Feve.F_HQ_BE, 20000.0);
+		d01.put(Feve.F_BQ, 3.79);
+		d01.put(Feve.F_MQ, 2.527);		//80% de HQ est non équitable
+		d01.put(Feve.F_MQ_E, 0.63);        //20% de MQ est équitable
+		d01.put(Feve.F_HQ, 1.137);			//60% de HQ est ni bio ni équitable
+		d01.put(Feve.F_HQ_E, 0.379);		//20% de HQ est équitable
+		d01.put(Feve.F_HQ_BE, 0.3789);		//20% de HQ est bio équitable
 		setProdTemps(d01,d01);
 		//On set les variables coutGammeStep
 		this.coutGammeStep = new HashMap<Feve,HashMap<Integer,Double>>();
@@ -148,6 +162,8 @@ public abstract class Producteur3Acteur implements IActeur {
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
 		//On gere nos intrants de production
 		gestionStock();
+		//On met a jour les variables GammeStep
+		majGammeStep();
 		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
@@ -328,15 +344,65 @@ public abstract class Producteur3Acteur implements IActeur {
 			 this.setQuantiteEnStock(f, this.getQuantiteEnStock(f, this.cryptogramme)+prod.get(f));
 		 }
 	 }
-	 /*
+	 
+	 /**
+	  * @author Arthur
+	  * Dans le but de s'assurer de ne pas vendre a perte, on regarde les couts de chaque feve par step et leurs quantites
+	  *Cette fonction met a jour les variables associees
+	  */
 	 protected void majGammeStep() {
-		 //on ajoute la production du step (il faudra prendre en compte les ventes)
+		 //on ajoute la production du step
 		 for (Feve f : stockGammeStep.keySet()) {
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
+			 
+		 //on ajoute les couts du step
+			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f));
+		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts + stockage supplementaire
+			LinkedList<Integer> steps = new LinkedList<Integer>();
+			steps.addAll(stockGammeStep.get(f).keySet());
+			Collections.sort(steps);
+			double venteF = ventefeve.get(f).getValeur();
+			for (Integer step : steps) {
+				double stockStep = stockGammeStep.get(f).get(step);
+				//on met a jour les stocks en destockant les plus vieilles feves
+				//on fait de meme avec les couts proportionnellement 
+				if (stockStep > venteF) {
+					stockGammeStep.get(f).put(step, stockStep-venteF);
+					coutGammeStep.get(f).put(step, (stockStep-venteF)/stockStep*coutGammeStep.get(f).get(step));
+				} else {
+					stockGammeStep.get(f).remove(step);
+					coutGammeStep.get(f).remove(step);
+				}
+			}
+			for (Integer step : steps) {
+				//On ajoute les frais de stockage si on a des stocks a ce step
+				if (coutGammeStep.get(f).containsKey(step)) {
+					coutGammeStep.get(f).put(step, coutGammeStep.get(f).get(step)+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*stockGammeStep.get(f).get(step));			}
+				}	
 		 }
-		 for (Feve f : coutGammeStep.keySet()) {
-			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), null) ;
-		 }
-	 }*/
+	 }
 	 
+	 /**
+	  * @author Arthur
+	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee
+	  * On vend en priorite les vieilles feves
+	  */
+	 protected double coutRevient(Feve f,double quantiteDem) {
+		 double accu = 0.0;
+		 //On veut destocker step par step
+		 LinkedList<Integer> steps = new LinkedList<Integer>();
+		 steps.addAll(stockGammeStep.get(f).keySet());
+		 Collections.sort(steps);
+		 for (Integer step : steps) {
+			 double stockStep = stockGammeStep.get(f).get(step);
+			 //On ajoute les couts de revient en proportion de la quantite demandee
+			 if (stockStep > quantiteDem) {
+				 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
+			 } else {
+				 accu += coutGammeStep.get(f).get(step);
+				 quantiteDem -= stockGammeStep.get(f).get(step);
+			 }
+		 }
+		 return accu;
+	 }
 }

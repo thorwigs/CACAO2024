@@ -103,6 +103,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    if (prixPropose > prixMinimal) {
 	        return prixPropose;
 	    } else {
+
 	        // Sinon, retourner le prix Minimal
 	        return prixMinimal;
 	    }
