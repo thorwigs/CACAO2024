@@ -112,6 +112,8 @@ public class Transformateur2Acteur implements IActeur {
 		this.journal.ajouter("Quantité en stock de chocolat de marque : " +stockChocoMarque);
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage);
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -184,9 +186,16 @@ public class Transformateur2Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+			if (p.getType()=="Feve") {
+				return this.stockFeves.get(p);
+			}
+			if (p.getType()=="Chocolat") {
+				return this.stockChoco.get(p);
+			}
+			if (p.getType()=="ChocolatDeMarque") {
+				return this.stockChocoMarque.get(p);
+			}
 		}
+		return 0.0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 	}
 }
