@@ -30,11 +30,11 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		}
 	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		return contrat.getPrix()+contrat.getPrix()*0.1;
+		return contrat.getPrix();
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		return contrat.getPrix()+contrat.getPrix()*0.1;
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
