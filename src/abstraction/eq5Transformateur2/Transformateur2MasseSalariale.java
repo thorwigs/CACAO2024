@@ -1,5 +1,6 @@
 package abstraction.eq5Transformateur2;
 
+import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -73,6 +74,16 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////// A FINIR //////////////////////////////////////////
 	public void next() {
 		super.next();
+		
+		// Paiement des coût de la masse salariale
+		double TonnesTransformees = 2;
+		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", CoutMasseSalariale(TonnesTransformees));
+		
+		// Paiement des coût de transformation pour chaque chocolat de marque
+		/*for (ChocolatDeMarque cm : ) {
+			double tonnes = 1;
+			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût transformation de"+tonnes+"tonnes de"+cm.getMarque(), CoutMasseSalariale(TonnesTransformees));
+		}*/
 	}
 	////////////////////////////////////////////////////////
 
