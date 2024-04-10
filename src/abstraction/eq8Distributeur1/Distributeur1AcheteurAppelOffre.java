@@ -29,6 +29,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1Vendeur implem
 		}
 	}
 	
+	
 	public void next() {
 		
 	}
