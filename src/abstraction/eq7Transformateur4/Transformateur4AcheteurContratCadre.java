@@ -27,7 +27,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalACC = new Journal(this.getNom()+" journal CC", this);
+		this.journalACC = new Journal(this.getNom()+" journal CC achat", this);
 	}
 	
 	public void initialiser() {
