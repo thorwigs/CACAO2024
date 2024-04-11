@@ -2,9 +2,7 @@ package abstraction.eq1Producteur1;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
@@ -36,7 +34,6 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	private double prix_seuil_HQ;
 	private double prix_seuil_HQ_BE;
 	private double prix_seuil_HQ_E;
-	private int test=0;
 	private double seuil_minimAO=100;	// quantité minimale à vendre pour un appel d'offre, cette 
 										//quantité est à négliger si les revenus dépassent 
 										//celle de la bourse
@@ -187,8 +184,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			super.notificationOperationBancaire(à_retirer*prix);
 			super.getSolde();
 
-			 
-			 return new OffreVente(offre, this, offre.getProduit(),prix);
+			 System.out.println(prix);
+			 return new OffreVente(offre, this, offre.getProduit(),100.0);
 		 }
 		 
 			
