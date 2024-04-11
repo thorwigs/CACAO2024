@@ -38,14 +38,17 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 	
 	public void next() {
 		super.next();
+		System.out.println('4');
 		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+//			System.out.println(choc);
+			System.out.println("ycexviuc : "+this.achete(choc));
 			if (this.achete(choc)) {
 				double x = 1000 ;
 				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, choc, x);
 				journalAO.ajouter("   Je lance un appel d'offre de "+x+" T de "+choc);
 				if (ov!=null) {
-					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+produit+" au stock");
+					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
 					stock_Choco.put(choc, x);
 					totalStockChoco.ajouter(this, x, cryptogramme);
 				}
@@ -53,8 +56,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			}
 			
 		}
-
-		// On archive les contrats termines
 		this.journalAO.ajouter("=================================");
 	}
 	
@@ -109,13 +110,15 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 						a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 					}
 				}
-				System.out.println(produit.toString());
-				System.out.println(produit.toString().contains("C_BQ"));
-//				System.out.println(Filiere.LA_FILIERE.getChocolatsProduits());
-				return (produit.getType().equals("ChocolatDeMarque")
-						&& this.stock_Choco.containsKey(produit)
-						&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
-						&& this.prevision(produit, 24) - this.stock_Choco.get(produit) - a <= 1000); 
+//				System.out.println(produit.toString());
+//				System.out.println(this.stock_Choco);
+//				System.out.println( this.stock_Choco.containsKey(produit));
+
+				return (produit.getType().equals("ChocolatDeMarque"));
+//						&& this.stock_Choco.containsKey(produit)
+//						&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
+//						&& this.prevision(produit, 24) - this.stock_Choco.get(produit) - a <= 1000); 
+
 			}
 	
 

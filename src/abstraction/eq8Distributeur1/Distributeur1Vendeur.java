@@ -110,6 +110,8 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	}
 	public void next() {
 		super.next();
+		System.out.println('2');
+
 		journalVente.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
 			for (int i=0; i<this.chocolats.size(); i++) {

@@ -50,6 +50,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
+		System.out.println('3');
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
@@ -62,6 +63,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			System.out.println("vugciaale : " + this.achete(choc));
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
@@ -144,8 +146,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 			}
 		}
-		return (produit.getType().equals("ChocolatDeMarque")
-				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer 
+		return (produit.getType().equals("ChocolatDeMarque"));
+//				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer  
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -161,10 +163,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100)) {
 			} 
 			if ( contrat.getProduit().toString().contains("C_MQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*25)/(x.getNbEcheances()*100*100))  {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100))  {
 				}
 			if (contrat.getProduit().toString().contains("C_MQ_E")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100)) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100)) {
