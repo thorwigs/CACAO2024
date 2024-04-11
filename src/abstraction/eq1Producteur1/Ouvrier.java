@@ -1,6 +1,7 @@
 package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /*
@@ -13,6 +14,7 @@ public class Ouvrier extends Producteur1Acteur {
 	public boolean isEquitable;
 	public boolean isForme;
 	public boolean estEnfant;
+	//constructeur par défaut: nouveau employé non équitable,adulte,salaire minimal,rendement normal=1
 	public Ouvrier() {
 		this.rendement=1;
 		this.anciennete=0;
@@ -21,6 +23,7 @@ public class Ouvrier extends Producteur1Acteur {
 		this.isEquitable=false;
 		this.estEnfant=false;	
 	}
+	//constructeur par paramètres
 	public Ouvrier(double anciennete,double rendement,double salaire,boolean isForme,boolean isEquitable,boolean estEnfant) {
 		
 		this.rendement=rendement;
@@ -65,14 +68,49 @@ public class Ouvrier extends Producteur1Acteur {
 	public boolean getIsEnfant() {
 		return this.estEnfant;
 	}
+	
+	public void setIsEnfant(boolean estEnfant) {
+		this.estEnfant=estEnfant;
+	}
+	//cette méthode peut sembler bizarre mais on va mettre à jour l'age des enfants,
+	//après 10ans, un enfant devient un adulte
 		
+	public boolean equals(Object objet) {
+		return (objet instanceof Ouvrier)&&
+				(((Ouvrier) objet).getIsEquitable()==this.getIsEquitable())&&
+				((((Ouvrier) objet).getAnciennete()==this.getAnciennete()))&&
+				((((Ouvrier) objet).getIsForme()==this.getIsForme()))&&
+				((((Ouvrier) objet).getSalaire()==this.getSalaire()))&&
+				((((Ouvrier) objet).getRendement()==this.getRendement()));
+				//critères d'égalités de travailleurs
+	}
+	
+	public String toString() {
+	    return "Ouvrier{ " +
+	            " anciennete= " + anciennete +
+	            " , rendement= " + rendement +
+	            " , salaire= " + salaire +
+	            " , isEquitable= " + isEquitable +
+	            " , isForme= " + isForme +
+	            " , isEnfant= " + this.estEnfant +
+	            '}';
+	}
 		
+	public static class ComparateurAnciennete implements Comparator<Ouvrier> {
+	    @Override
+	    public int compare(Ouvrier o1, Ouvrier o2) {
+	        return Double.compare(o1.anciennete, o2.anciennete);
+	    }
+	}
+	//méthode pour baser la comparaison entre deux ouvriers SELON L4ANCIENNETE , 
+	//en effet, lors du licensiemnt, on licensie selon une ancienneté croissante
 	
 	public void formation (Ouvrier o ) {
-		double ancienneteMin =10;
-		double augmentationRendement=0.5;
-		double augmentationSalaire=0.1*this.getSalaire();
-		if (( this.getAnciennete()<= ancienneteMin) && 
+		double cout_formation=0;//dépend de l'ancienneté
+		double ancienneteMin =720;// ancienneté au moins de 2 ans pour faire une formation
+		double augmentationRendement=0.5;// le rendement augmente de 0.5
+		double augmentationSalaire=0.2*this.getSalaire(); //le salaire augmente de 0.2
+		if (( this.getAnciennete()>= ancienneteMin) && 
 				(!(this.getIsForme())) &&
 				(!(this.getIsEnfant())))
 		
@@ -90,111 +128,6 @@ public class Ouvrier extends Producteur1Acteur {
 		
 		
 	}
-	
-	public double getSalaireTotal(ArrayList<Ouvrier> listeOuvrier) {
-		
-		double s =0;
-		for (Ouvrier ouvrier : listeOuvrier) {
-			s=s+ouvrier.getSalaire();
-			
-		}
-		return s;
-		
-	}
-	public double getSalaireEquitable(ArrayList<Ouvrier> listeOuvrier, double salaireEquitable) {
-			
-			double s =0;
-			for (Ouvrier ouvrier : listeOuvrier) {
-				if (ouvrier.isEquitable) {
-					s=s+ouvrier.getSalaire();
-				}
-				
-				
-			}
-			return s;
-			
-		}
-	public double getSalaireEnfants(ArrayList<Ouvrier> listeOuvrier, double salaireEnfant) {
-			
-			double s =0;
-			for (Ouvrier ouvrier : listeOuvrier) {
-				if (ouvrier.getIsEnfant()) {
-					s=s+ouvrier.getSalaire();
-				}
-				
-				
-			}
-			return s;
-			
-		}
-
-
-
-
-	public int GetNombreOuvrierEquitable(ArrayList<Ouvrier> listeOuvrier) {
-		int s=0;
-		for (Ouvrier ouvrier : listeOuvrier) {
-			if (ouvrier.isEquitable) {
-				s=s+1;
-				
-			}
-			
-		}
-		return s;
-		
-	}
-	public int GetNombreOuvrierNonEquitable(ArrayList<Ouvrier> listeOuvrier) {
-		int s=GetNombreOuvrierEquitable(listeOuvrier);
-		
-		return listeOuvrier.size()-s;
-		
-	}
-	
-	public int getNombreOuvrierFormés(ArrayList<Ouvrier> listeOuvrier) {
-		
-		int s=0;
-		for (Ouvrier ouvrier : listeOuvrier) {
-			if (ouvrier.isForme) {
-				s=s+1;
-				
-			}
-			
-			
-		}
-		return s;
-	}
-	
-	public void addOuvrier(ArrayList<Ouvrier> listeOuvriers,int nombre_à_ajouter,double anciennete,double salaire,double rendement,boolean isEquitable,boolean isForme,boolean isEnfant) {
-		
-		for (int i = 0; i < nombre_à_ajouter; i++) {
-			Ouvrier ouvrier_a_ajouter=new Ouvrier(anciennete,rendement,salaire,isForme,isEquitable,isEnfant);
-			listeOuvriers.add(ouvrier_a_ajouter);
-			
-		}
-		
-	}
-	public boolean equals(Object objet) {
-		return (objet instanceof Ouvrier)&&
-				(((Ouvrier) objet).getIsEquitable()==this.getIsEquitable())&&
-				((((Ouvrier) objet).getAnciennete()==this.getAnciennete()))&&
-				((((Ouvrier) objet).getIsForme()==this.getIsForme()))&&
-				((((Ouvrier) objet).getSalaire()==this.getSalaire()))&&
-				((((Ouvrier) objet).getRendement()==this.getRendement()));
-				
-	}
-	public String toString() {
-	    return "Ouvrier{ " +
-	            " anciennete= " + anciennete +
-	            " , rendement= " + rendement +
-	            " , salaire= " + salaire +
-	            " , isEquitable= " + isEquitable +
-	            " , isForme= " + isForme +
-	            '}';
-	}
-	
-	
-	
-	
 	
 
 }

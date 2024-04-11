@@ -181,7 +181,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 			
 
-			 return new OffreVente(offre, this, offre.getProduit(),100.0);
+			 return new OffreVente(offre, this, offre.getProduit(),this.prix_defaut_feve.get(feve_AO));
 		 }
 		 
 			
