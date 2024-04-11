@@ -8,7 +8,6 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	
 	public void next() {
 		super.next();
-		System.out.println('5');
 
 	}
 }

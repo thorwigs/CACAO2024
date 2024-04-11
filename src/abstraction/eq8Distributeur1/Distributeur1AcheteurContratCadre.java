@@ -50,7 +50,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
-		System.out.println('3');
+		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
@@ -63,7 +63,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			System.out.println("vugciaale : " + this.achete(choc));
+			System.out.println("1"+this.achete(choc));
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
@@ -95,7 +95,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			}
 		}
 		
-		
+		this.journalCC.ajouter("=================================");
+
 	}
 	
 	public List<Variable> getIndicateurs() {
@@ -147,12 +148,14 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			}
 		}
 		return (produit.getType().equals("ChocolatDeMarque"));
+//				&& this.stock_Choco.containsKey(produit)
 //				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer  
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
-			&& !this.achete(contrat.getProduit())) {
+			|| !this.stock_Choco.containsKey(contrat.getProduit())
+			|| !this.achete(contrat.getProduit())) {
 			return null;
 		}
 		Echeancier x = contrat.getEcheancier();
@@ -232,7 +235,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		for (int i =a-b; i<a ; i++ ) {
 			d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)p,i);
 		}
-		d = d * ((Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
+		d = d * (1+(Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
 		return d ; 
 	}
 }

@@ -110,8 +110,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	}
 	public void next() {
 		super.next();
-		System.out.println('2');
-
+		this.journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		journalVente.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
 			for (int i=0; i<this.chocolats.size(); i++) {
@@ -119,6 +118,8 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			journalVente.ajouter("Les ventes de chocolat \""+chocolats.get(i)+" il y a un an etaient de "+Filiere.LA_FILIERE.getVentes(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-24));
 			}
 		}
+		this.journalVente.ajouter("=================================");
+
 	}
 
 }
