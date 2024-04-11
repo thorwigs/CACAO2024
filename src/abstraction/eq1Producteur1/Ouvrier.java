@@ -1,9 +1,7 @@
 package abstraction.eq1Producteur1;
 
-
-
-
-
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /*
  *///////////////////////////////////////YOUSSEF BEN ABDELJELIL//////////////////////////////
@@ -74,6 +72,40 @@ public class Ouvrier extends Producteur1Acteur {
 		
 		
 	}
+	
+	public double getSalaireTotal(ArrayList<Ouvrier> listeOuvrier) {
+		
+		double s =0;
+		for (Ouvrier ouvrier : listeOuvrier) {
+			s=s+ouvrier.getSalaire();
+			
+		}
+		return s;
+		
+	}
+	public int GetNombreOuvrierEquitable(ArrayList<Ouvrier> listeOuvrier) {
+		int s=0;
+		for (Ouvrier ouvrier : listeOuvrier) {
+			if (ouvrier.isEquitable) {
+				s=s+1;
+				
+			}
+			
+		}
+		return s;
+		
+	}
+	public int GetNombreOuvrierNonEquitable(ArrayList<Ouvrier> listeOuvrier) {
+		int s=GetNombreOuvrierEquitable(listeOuvrier);
+		
+		return listeOuvrier.size()-s;
+		
+	}
+	public double getSalaireEquitable(ArrayList<Ouvrier> listeOuvrier) {
+		
+		return getSalaireEquitable(listeOuvrier);
+	}
+	
 	
 	
 
