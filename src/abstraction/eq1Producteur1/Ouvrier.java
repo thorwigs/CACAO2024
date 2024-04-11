@@ -14,7 +14,7 @@ public class Ouvrier extends Producteur1Acteur {
 	public double salaire;
 	public boolean isEquitable;
 	public boolean isForme;
-	public Ouvrier(double anciennete,double rendement,double salaire) {
+	public Ouvrier(double anciennete,double rendement,double salaire,boolean isForme) {
 		
 		this.rendement=rendement;
 		this.anciennete=anciennete;

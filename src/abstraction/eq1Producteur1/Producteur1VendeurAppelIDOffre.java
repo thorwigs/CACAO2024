@@ -179,12 +179,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 		 else {
 			
-			double à_retirer =Math.min(this.stock.get(feve_AO).getValeur(), offre.getQuantiteT());
-			double prix= prix_defaut_feve.get(feve_AO);
-			super.notificationOperationBancaire(à_retirer*prix);
-			super.getSolde();
+			
 
-			 System.out.println(prix);
 			 return new OffreVente(offre, this, offre.getProduit(),100.0);
 		 }
 		 
@@ -207,8 +203,10 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			double à_retirer =Math.min(this.stock.get(feve_AO).getValeur(), propositionRetenue.getOffre().getQuantiteT());
 
 			this.stock.get(feve_AO).retirer(this, à_retirer, cryptogramme);
-			 journalAO.ajouter(Color.GREEN,propositionRetenue.getOffre().getAcheteur().getColor()," On vend "+à_retirer+" T de "+feve_AO +" à "+propositionRetenue.getOffre().getAcheteur());
-			
+			journalAO.ajouter(Color.GREEN,propositionRetenue.getOffre().getAcheteur().getColor()," On vend "+à_retirer+" T de "+feve_AO +" à "+propositionRetenue.getOffre().getAcheteur());
+			double prix= prix_defaut_feve.get(feve_AO);
+			super.notificationOperationBancaire(à_retirer*prix);
+			super.getSolde();
 			
 			IAcheteurAO acheteur_AO=propositionRetenue.getOffre().getAcheteur();
 			if (!(score_to_black_list.containsKey(acheteur_AO))) {
@@ -216,6 +214,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 				score_to_black_list.put(acheteur_AO, 0.0);
 			}
 			IProduit produit_AO=propositionRetenue.getOffre().getProduit();
+			
 			//ajouter un -1 au score de la blacklist pour cet acheteur pour avoir refusé l'offre
 			mise_a_jour_black_list(acheteur_AO, produit_AO,"notifierVenteAO");
 		
