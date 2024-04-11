@@ -40,7 +40,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		super.next();
 		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			System.out.println("2"+this.achete(choc));
 			if (this.achete(choc)) {
 				double x = 1000 ;
 				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, choc, x);
