@@ -103,7 +103,7 @@ public class Ouvrier extends Producteur1Acteur {
 	}
 	public double getSalaireEquitable(ArrayList<Ouvrier> listeOuvrier) {
 		
-		return getSalaireEquitable(listeOuvrier);
+		return getNbOuvEq()*3;
 	}
 	
 	
