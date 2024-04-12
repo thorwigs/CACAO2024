@@ -4,13 +4,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur2Acteur implements IActeur {
+public abstract class Distributeur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
@@ -40,10 +42,14 @@ public class Distributeur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
+	public abstract double getStockChocoMarque(ChocolatDeMarque cm, int crypto);
+	
 	public void next() {
 		this.getJournaux().get(0).ajouter("Step "+Filiere.LA_FILIERE.getEtape());
 		this.getJournaux().get(0).ajouter("Coût de stockage : "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
+		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+		this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getStockChocoMarque(cm,this.cryptogramme));}
+	    
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -83,6 +89,7 @@ public class Distributeur2Acteur implements IActeur {
 	public void setCryptogramme(Integer crypto) {
 		this.cryptogramme = crypto;
 	}
+	
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.

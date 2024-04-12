@@ -53,15 +53,17 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	public void initialiser() {
 		
-		/*stock.put(Feve.F_HQ_BE, 5.0);
+		
+		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
 		stock.put(Feve.F_MQ, 30.0);
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
-		stock.put(Feve.F_MQ_E, 0.0);*/
+		stock.put(Feve.F_MQ_E, 0.0);
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier
 		
+
 		
 	}
 
