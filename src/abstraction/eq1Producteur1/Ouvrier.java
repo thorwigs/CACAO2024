@@ -105,29 +105,7 @@ public class Ouvrier extends Producteur1Acteur {
 	//méthode pour baser la comparaison entre deux ouvriers SELON L4ANCIENNETE , 
 	//en effet, lors du licensiemnt, on licensie selon une ancienneté croissante
 	
-	public void formation (Ouvrier o ) {
-		double cout_formation=0;//dépend de l'ancienneté
-		double ancienneteMin =720;// ancienneté au moins de 2 ans pour faire une formation
-		double augmentationRendement=0.5;// le rendement augmente de 0.5
-		double augmentationSalaire=0.2*this.getSalaire(); //le salaire augmente de 0.2
-		if (( this.getAnciennete()>= ancienneteMin) && 
-				(!(this.getIsForme())) &&
-				(!(this.getIsEnfant())))
-		
-			{
-			this.setRendement(this.getRendement()+ augmentationRendement);
-			this.setSalaire(this.getSalaire()+augmentationSalaire);
-			this.setIsForme(true);
-		     int size = this.soldeParStep.size();
-		     double solde = this.soldeParStep.get(size);
-		     double k =5;
-		     this.soldeParStep.add(size-1, solde - k);
-		    	 
-		}
-		
-		
-		
-	}
+	
 	
 
 }

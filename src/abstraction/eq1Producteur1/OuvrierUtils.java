@@ -143,4 +143,32 @@ public static double getSalaireTotal(ArrayList<Ouvrier> listeOuvrier) {
 		}
 	}
 	
+	public static void formation (ArrayList<Ouvrier> liste_ouvriers, int nbr_à_former) {
+		double cout_formation=0;//dépend de l'ancienneté
+		double ancienneteMin =720;// ancienneté au moins de 2 ans pour faire une formation
+		double augmentationRendement=0.5;// le rendement augmente de 0.5
+		for (Ouvrier ouvrier : liste_ouvriers) {
+			double augmentationSalaire=0.2*ouvrier.getSalaire(); //le salaire augmente de 0.2
+			if (( ouvrier.getAnciennete()>= ancienneteMin) && 
+					(!(ouvrier.getIsForme())) &&
+					(!(ouvrier.getIsEnfant())))
+			
+				{
+				ouvrier.setRendement(ouvrier.getRendement()+ augmentationRendement);
+				ouvrier.setSalaire(ouvrier.getSalaire()+augmentationSalaire);
+				ouvrier.setIsForme(true);
+			     int size = ouvrier.soldeParStep.size();
+			     double solde = ouvrier.soldeParStep.get(size);
+			     double k =5;
+			     ouvrier.soldeParStep.add(size-1, solde - k);
+			    	 
+			}
+			
+		}
+		
+		
+		
+		
+	}
+	
 }

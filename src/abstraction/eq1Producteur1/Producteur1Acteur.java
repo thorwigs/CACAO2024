@@ -78,7 +78,6 @@ public class Producteur1Acteur implements IActeur {
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 		if ((annee != 0)& (annee % 5 == 0) && croissant & (OuvrierUtils.getNombreEnfants(liste_Ouvrier)>=10)  ) {
-			
 			OuvrierUtils.removeEmploye(this.liste_Ouvrier, 10, false, false, true);//remove 10 enfants
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
@@ -147,6 +146,8 @@ public class Producteur1Acteur implements IActeur {
 	public void next() {
 
 		OuvrierUtils.UpdateAnciennete(liste_Ouvrier);//mettre a jour l'anciennete
+		
+
 		double totalStock = 0;
 		for (Feve f : Feve.values()) {
 			this.stock.get(f).ajouter(this,this.getProd().get(f) );
