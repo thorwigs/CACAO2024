@@ -37,16 +37,44 @@ public class Producteur1Plantation extends Producteur1VendeurAuxEncheres impleme
 
 	@Override
 	public void adjustPlantationSize(HashMap<Feve, Double> adjustments) {
-		// TODO Auto-generated method stub
+	    for (Feve feve : adjustments.keySet()) {
+	        
+	        double adjustment = adjustments.get(feve);
+	        double currentSize = plantation.getOrDefault(feve, 0.0);
+	       
+	        double newSize = currentSize + adjustment;
+	        	
+	        if (newSize > nombreHecMax) {
+	            newSize = nombreHecMax;
+	        } else if (newSize < 0) {
+	            newSize = 0; 
+	        }
+	        
+	        
+	        plantation.put(feve, newSize);
+	        journalPlantation.ajouter(String.format("Adjusting %s plantation size by %.2f hectares", feve.name(), adjustment));
+	    }
 		
 	}
 	
 
 	@Override
 	public HashMap<Feve, Double> maindoeuvre() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		//return nombre d'ouvriers avec un rendement 1 necessaire
+		HashMap<Feve,Double> ouvriers = new HashMap<Feve,Double>();
+		for (Feve f : this.plantation().keySet()) {
+			if (f.isBio()) {
+				this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation bio est :"+ 1.5*this.plantation().get(f));
+				ouvriers.put(f, 1.5*this.plantation().get(f));
+			} else {
+				this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation est :"+ this.plantation().get(f));
+				ouvriers.put(f, this.plantation().get(f));
+			}
+		}
+		return ouvriers;
+		
+	}	 
+		
 	public void setHec(double hec) {
 		this.nombreHec = hec;
 	}
@@ -54,6 +82,9 @@ public class Producteur1Plantation extends Producteur1VendeurAuxEncheres impleme
 	@Override
 	public void recruitWorkers(HashMap<Feve, Double> demand) {
 		// TODO Auto-generated method stub
+		for (Feve feve : demand.keySet()) {
+			double requiredRendement = demand.get(feve);
+		}
 		
 	}
 	public void achat(double hec) {
