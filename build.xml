@@ -80,23 +80,6 @@
         	<formatter type="plain" usefile="true"/>
             <jvmarg line="-ea -Xmx4g"/>
             <classpath refid="CACAO2024.classpath"/>
-        	<sysproperty key="seed" value="1"/>
-        </junit>
-        <junit fork="yes" haltonfailure="true" showoutput="yes">
-            <formatter type="plain" usefile="false" />
-            <test name="presentation.FenetrePrincipaleTest" todir="${junit.output.dir}" outfile="output"/>
-        	<formatter type="plain" usefile="true"/>
-            <jvmarg line="-ea -Xmx4g"/>
-            <classpath refid="CACAO2024.classpath"/>
-        	<sysproperty key="seed" value="2"/>
-        </junit>
-        <junit fork="yes" haltonfailure="true" showoutput="yes">
-            <formatter type="plain" usefile="false" />
-            <test name="presentation.FenetrePrincipaleTest" todir="${junit.output.dir}" outfile="output"/>
-        	<formatter type="plain" usefile="true"/>
-            <jvmarg line="-ea -Xmx4g"/>
-            <classpath refid="CACAO2024.classpath"/>
-        	<sysproperty key="seed" value="3"/>
         </junit>
     </target>
     <target name="FiliereParDefaultTest">
@@ -107,23 +90,6 @@
         	<formatter type="plain" usefile="true"/>
             <jvmarg line="-ea"/>
             <classpath refid="CACAO2024.classpath"/>
-        	<sysproperty key="seed" value="1"/>
-        </junit>
-        <junit fork="yes" haltonfailure="true">
-            <formatter type="plain" usefile="false" />
-            <test name="abstraction.FiliereParDefaultTest" todir="${junit.output.dir}" outfile="output"/>
-        	<formatter type="plain" usefile="true"/>
-            <jvmarg line="-ea"/>
-            <classpath refid="CACAO2024.classpath"/>
-        	<sysproperty key="seed" value="2"/>
-        </junit>
-        <junit fork="yes" haltonfailure="true">
-            <formatter type="plain" usefile="false" />
-            <test name="abstraction.FiliereParDefaultTest" todir="${junit.output.dir}" outfile="output"/>
-        	<formatter type="plain" usefile="true"/>
-            <jvmarg line="-ea"/>
-            <classpath refid="CACAO2024.classpath"/>
-        	<sysproperty key="seed" value="3"/>
         </junit>
     </target>
     <target name="FenetrePrincipale">

@@ -52,9 +52,9 @@ public class Producteur1Acteur implements IActeur {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_BQ,Part*10000000.0 );
-		this.prodParStep.put(Feve.F_MQ,Part*10000000.0 );
-		this.prodParStep.put(Feve.F_HQ, Part*10000000.0);
+		this.prodParStep.put(Feve.F_BQ,Part*1000.0 );
+		this.prodParStep.put(Feve.F_MQ,Part*1000.0 );
+		this.prodParStep.put(Feve.F_HQ, Part*1000.0);
 		this.prodParStep.put(Feve.F_MQ_E,Part*0.0 );
 		this.prodParStep.put(Feve.F_HQ_E,Part*0.0 );
 		this.prodParStep.put(Feve.F_HQ_BE,Part*0.0 );
@@ -112,6 +112,7 @@ public class Producteur1Acteur implements IActeur {
 		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_enfants,0,labourEnfant,1,false,false,true);
 		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_equitables,0,labourEquitable,1,true,false,false);
 		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_employees_non_equitable,0,labourNormal,1,false,false,false);
+		
 
 		this.soldeInitiale = this.getSolde();
 		this.soldeParStep.add(this.soldeInitiale);

@@ -68,7 +68,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
-}
+	}
 	
 
 

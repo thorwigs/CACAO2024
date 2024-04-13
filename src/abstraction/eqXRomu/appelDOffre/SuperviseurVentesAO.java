@@ -1,17 +1,10 @@
 package abstraction.eqXRomu.appelDOffre;
 
 import java.awt.Color;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -27,14 +20,9 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 	private Banque laBanque;
 	private List<IVendeurAO> vendeurs; 
 
-	private List<VenteAO> ventes;
-	private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
-
-
 	public SuperviseurVentesAO() {
 		this.journal = new Journal("Journal "+this.getNom(), this);
 		this.vendeurs = new LinkedList<IVendeurAO>();
-		this.ventes = new LinkedList<VenteAO>();
 	}
 	public String getNom() {
 		return "Sup.AO";
@@ -48,7 +36,6 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 			}
 		}
 		this.laBanque = Filiere.LA_FILIERE.getBanque();
-		aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph.");
 	}
 
 	/**
@@ -105,7 +92,6 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 						this.laBanque.virer(acheteur, this.cryptos.get(acheteur), retenue.getVendeur(), retenue.getPrixT()*retenue.getOffre().getQuantiteT());
 						// On notifie l'acheteur que sa proposition a ete retenue afin qu'il mette a jour ses stocks. 
 						retenue.getVendeur().notifierVenteAO(retenue);
-						this.ventes.add(new VenteAO(Filiere.LA_FILIERE.getEtape(), retenue.getVendeur(), acheteur, retenue.getProduit(), retenue.getQuantiteT(), retenue.getPrixT()));
 						// on avertit les autres acheteurs que leur proposition n'a pas ete retenue
 						for (OffreVente p : propositions) {
 							if (!p.equals(retenue)) {
@@ -132,20 +118,6 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 	}
 
 	public void next() {
-		if (this.aff.getValeur()!=0.0) {
-			try {
-				PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"AO.csv")));
-				aEcrire.println("NUM;VENDEUR;ACHETEUR;PRODUIT;QUANTITE;PRIX");
-				for (VenteAO vente : this.ventes) {						
-					aEcrire.println( vente.toCSV() );
-				}
-				aEcrire.close();
-			}
-			catch (IOException e) {
-				throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
-			}
-		}	
-
 	}
 
 	public String getDescription() {
@@ -197,6 +169,6 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 		}
 	}
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		return 0; // La acteur non assermente n'ont pas a connaitre notre stock
+			return 0; // La acteur non assermente n'ont pas a connaitre notre stock
 	}
 }

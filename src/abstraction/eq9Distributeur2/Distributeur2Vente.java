@@ -11,16 +11,14 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public double prix(ChocolatDeMarque choco) {
 		// TODO Auto-generated method stub
-		if( Filiere.LA_FILIERE.getEtape() < 1) {
-		return 20000;}
-		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.95;
+		return 20000;
 	}
 
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
 		
-		return this.getStockChocoMarque(choco,crypto)*0.9;
+		return this.getStockChocoMarque(choco,crypto);
 		
 	}
 

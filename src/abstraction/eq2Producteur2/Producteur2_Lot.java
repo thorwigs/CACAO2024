@@ -15,12 +15,6 @@ public class Producteur2_Lot {
 		this.type_feve = type_feve;
 	}
 	
-	public Producteur2_Lot(double quantite, Feve type_feve, int etape) {
-		this.etape = etape;
-		this.quantite = quantite;
-		this.type_feve = type_feve;
-	}
-	
 	public int getEtape() {
 		return etape;
 	}

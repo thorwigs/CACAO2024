@@ -1,5 +1,8 @@
 package abstraction;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 import org.junit.Test;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -9,12 +12,7 @@ public class FiliereParDefaultTest {
 
 	@Test
 	public void testNext() {
-		
-		int seed = 0;
-		if (System.getProperty("seed") != null) 
-			seed = Integer.parseInt(System.getProperty("seed"));
-		
-		Filiere.LA_FILIERE = new FiliereParDefaut(seed);
+		Filiere.LA_FILIERE = new FiliereParDefaut(LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay());
 
 		Filiere.LA_FILIERE.initialiser();
 
