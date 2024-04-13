@@ -60,10 +60,11 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
 					}
 				} else {
-					journalCC.ajouter("   pas d'acheteur");
+					journalCC.ajouter("pas d'acheteur");
 				}
 			}
 		}
+		
 		// On archive les contrats termines
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0) {

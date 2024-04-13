@@ -1,5 +1,7 @@
 package abstraction.eq2Producteur2;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+
 
 public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private int nb_employes ;
@@ -9,19 +11,20 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private double salaire_enfant;
 	private double salaire_adulte;
 	private double salaire_adulte_equitable;
-	protected Journal journalMasseSalariale;
+	protected Journal journal_RH;
+	
 			
-	public void initialiser() {
-		int nb_employes =  3679200;
-		int nb_employes_equitable = 100800;//2% init
-
-		int nb_employes_enfants = 1260000; //25% au départ
+	public void initialiser_masse_salariale() {
+		this.journal = new Journal(this.getNom()+" journal_RH", this);
+		this.nb_employes =  3679200;
+		this.nb_employes_equitable = 100800;//2% init
+		this.nb_employes_enfants = 1260000; //25% au départ
 		
-		int salaire_enfant =  1;
-		int salaire_adulte = 2;
-		int salaire_adulte_equitable = 3;
-		
+		this.salaire_enfant =  1;
+		this.salaire_adulte = 2;
+		this.salaire_adulte_equitable = 3;
 	}
+	
 	public int getNb_employes() {
 		return nb_employes;
 	}
@@ -101,16 +104,24 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 
 	// Fonction qui permet d'implémenter notre stratégie. 
 	// Si notre solde est supérieur au cout humain pour 10 tours
-	public void mise_a_jour() {
+	public void next_RH() {
 		double solde = this.getSolde();
 		if (solde > 10*cout_humain_par_step()){
 			int nb_enf = getNb_employes_enfants();
-			int modif = (int) Math.round(0.002*nb_enf);
+			int modif = (int) Math.round(0.04*nb_enf);
 			int modif_equitable = (int) Math.round(modif*0.2);
+			System.out.println("\n ETAPE " + Filiere.LA_FILIERE.getEtape());
+			System.out.println("nombre d'enfants : " + this.getNb_employes_enfants());
+			System.out.println("nombre d'employes equitable : " + this.getNb_employes_equitable());
 			
 			this.setNb_employes_enfants(nb_enf - modif);
 			this.setNb_employes_equitable(this.getNb_employes_equitable() + modif_equitable);
 			this.setNb_employes(this.getNb_employes() + modif - modif_equitable);
+			
+			this.journal.ajouter("-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
+			this.journal.ajouter("nombre d'employes équitable :" + this.getNb_employes_equitable());
+			this.journal.ajouter("nombre d'employes adultes : "+ this.getNb_employes());
+			this.journal.ajouter("nombre d'employes enfants " + this.getNb_employes_enfants());
 		}
 	}
 	

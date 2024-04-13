@@ -44,15 +44,13 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_MQ_E, 0.0);
 		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
 		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
-	
-
 	}
 	
 	public abstract void init_stock(Feve type_feve, double quantite);
 	public abstract void lot_to_hashmap();
+	public abstract void initialiser_masse_salariale();
 	
 	public void initialiser() {
-		
 		
 		stock.put(Feve.F_HQ_BE, 5.0);
 		stock.put(Feve.F_BQ, 40.0);
@@ -61,11 +59,14 @@ public abstract class Producteur2Acteur implements IActeur {
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
+		this.initialiser_masse_salariale();
+		
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier
 		
 
 		
 	}
+
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ2";
@@ -79,6 +80,9 @@ public abstract class Producteur2Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
+	
+	protected abstract void next_RH();
+	
 	public void next() {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
@@ -89,7 +93,10 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
 		this.journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
 		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");*/
-		
+		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
+		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
+		this.DebiteCoutParStep();
+		this.next_RH();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -188,6 +195,8 @@ public abstract class Producteur2Acteur implements IActeur {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+	
+	// Fait par Noémie
 	public abstract double cout_total_stock();
 	public abstract double cout_humain_par_step();
 	public abstract double cout_plantation();
@@ -204,7 +213,10 @@ public abstract class Producteur2Acteur implements IActeur {
 	}
 	
 	public void retire_argent(double montant, String raison) {
-		Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, raison, montant);
+		if (montant>0) {
+			Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, raison, montant);
+		}
+			
 	}
 }
 
