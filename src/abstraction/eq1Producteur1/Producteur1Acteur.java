@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import abstraction.eq1Producteur1.OuvrierUtils.ResultatSuppression;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -78,7 +79,9 @@ public class Producteur1Acteur implements IActeur {
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 		if ((annee != 0)& (annee % 5 == 0) && croissant & (OuvrierUtils.getNombreEnfants(liste_Ouvrier)>=10)  ) {
-			OuvrierUtils.removeEmploye(this.liste_Ouvrier, 10, false, false, true);//remove 10 enfants
+			ResultatSuppression resultat =OuvrierUtils.removeEmploye(this.liste_Ouvrier, 10, false, false, true);//remove 10 enfants
+			ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
+			this.liste_Ouvrier=listeMiseAJour;			
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal = nouveauSalaire;
@@ -109,9 +112,9 @@ public class Producteur1Acteur implements IActeur {
 		int nb_equitables = 30;
 		int nb_employees_non_equitable = 100;
 		this.liste_Ouvrier=new ArrayList<Ouvrier>();
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_enfants,0,labourEnfant,1,false,false,true);
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_equitables,0,labourEquitable,1,true,false,false);
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_employees_non_equitable,0,labourNormal,1,false,false,false);
+		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_enfants,0,labourEnfant,1,false,false,true);
+		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_equitables,0,labourEquitable,1,true,false,false);
+		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_employees_non_equitable,0,labourNormal,1,false,false,false);
 
 		this.soldeInitiale = this.getSolde();
 		this.soldeParStep.add(this.soldeInitiale);
@@ -156,7 +159,7 @@ public class Producteur1Acteur implements IActeur {
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 		this.getJournaux().get(0).ajouter("Coût de stockage : "+this.getCoutStockage());
 		this.getJournaux().get(0).ajouter("Stock= "+ totalStock);
-		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ OuvrierUtils.GetNombreOuvrierNonEquitable(this.liste_Ouvrier));
+		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ OuvrierUtils.GetNombreOuvrierNonEquitable(this.liste_Ouvrier));
 		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ OuvrierUtils.GetNombreOuvrierEquitable(this.liste_Ouvrier));
 		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ OuvrierUtils.getNombreEnfants(this.liste_Ouvrier));
 		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\

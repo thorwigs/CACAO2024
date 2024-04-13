@@ -73,55 +73,74 @@ public static double getSalaireTotal(ArrayList<Ouvrier> listeOuvrier) {
 		return s;//retourne le nombre d'ouvriers ayant fait une formation
 	}
 	
-	public static void addOuvrier(ArrayList<Ouvrier> listeOuvriers,int nombre_à_ajouter,double anciennete,double salaire,double rendement,boolean isEquitable,boolean isForme,boolean isEnfant) {
+	public static ArrayList<Ouvrier> addOuvrier(ArrayList<Ouvrier> listeOuvriers, int nombre_à_ajouter, double anciennete, double salaire, double rendement, boolean isEquitable, boolean isForme, boolean isEnfant) {
+	    // Création d'une nouvelle liste qui est une copie de la liste originale
+	    ArrayList<Ouvrier> nouvelleListe = new ArrayList<>(listeOuvriers);
+
+	    // Ajout des nouveaux ouvriers à la nouvelle liste
+	    for (int i = 0; i < nombre_à_ajouter; i++) {
+	        Ouvrier ouvrier_a_ajouter = new Ouvrier(anciennete, rendement, salaire, isForme, isEquitable, isEnfant);
+	        nouvelleListe.add(ouvrier_a_ajouter);
+	    }
+
+	    // Retourner la nouvelle liste
+	    return nouvelleListe;
+	}
 		
-		for (int i = 0; i < nombre_à_ajouter; i++) {
-			Ouvrier ouvrier_a_ajouter=new Ouvrier(anciennete,rendement,salaire,isForme,isEquitable,isEnfant);
-			listeOuvriers.add(ouvrier_a_ajouter);
-			
-		}
-		
-	}   //ajouter un nombre d'ouvriers avec tous les parametres d'un ouvrier
+	  //ajouter un nombre d'ouvriers avec tous les parametres d'un ouvrier
+	
+	public static class ResultatSuppression {
+	    public ArrayList<Ouvrier> listeMiseAJour;
+	    public double indemniteTotale;
+
+	    public ResultatSuppression(ArrayList<Ouvrier> listeMiseAJour, double indemniteTotale) {
+	        this.listeMiseAJour = listeMiseAJour;
+	        this.indemniteTotale = indemniteTotale;
+	    }
+	}
 	
 	
-	public static double removeEmploye(ArrayList<Ouvrier> listeOuvriers, int nombreASupprimer, boolean isEquitable, boolean isForme, boolean isEnfant) {
+	public static ResultatSuppression removeEmploye(ArrayList<Ouvrier> listeOuvriers, int nombreASupprimer, boolean isEquitable, boolean isForme, boolean isEnfant) {
         // Créer une liste pour stocker temporairement les ouvriers à supprimer
-		int indenite_totale=0;//prime à donner
-        ArrayList<Ouvrier> ouvriersASupprimer = new ArrayList<>();
+		ArrayList<Ouvrier> copieListe = new ArrayList<>(listeOuvriers);
+	    ArrayList<Ouvrier> ouvriersASupprimer = new ArrayList<>();
+	    double indemniteTotale = 0;
 
         // Filtrer la liste en fonction des attributs isEquitable, isForme, et isEnfant
-        for (Ouvrier ouvrier : listeOuvriers) {
-            if (ouvrier.isEquitable == isEquitable && ouvrier.isForme == isForme && ouvrier.estEnfant == isEnfant) {
-                ouvriersASupprimer.add(ouvrier);
-            }
-        }
+	    for (Ouvrier ouvrier : copieListe) {
+	        if (ouvrier.isEquitable == isEquitable && ouvrier.isForme == isForme && ouvrier.estEnfant == isEnfant) {
+	            ouvriersASupprimer.add(ouvrier);
+	        }
+	    }
 
         // Trier la liste des ouvriers à supprimer par ancienneté
-        Collections.sort(ouvriersASupprimer,  new ComparateurAnciennete());
+	    Collections.sort(ouvriersASupprimer, (o1, o2) -> Double.compare(o1.getAnciennete(), o2.getAnciennete()));
 
         // Supprimer le nombre spécifié d'ouvriers de la liste principale, à partir de l'ancienneté la plus basse
-        for (int i = 0; i < Math.min(nombreASupprimer, ouvriersASupprimer.size()); i++) {
-            listeOuvriers.remove(ouvriersASupprimer.get(i));
-            double indemnité = 0;
-            double anciennetéEnAnnées = ouvriersASupprimer.get(i).getAnciennete() / 365;
-            double salaire = ouvriersASupprimer.get(i).getSalaire();
-            if (anciennetéEnAnnées <= 10) {
-                indemnité = (salaire*30 / 4) * anciennetéEnAnnées; // Un quart de mois de salaire par année pour les années jusqu'à 10
-            } else {
-                indemnité = (salaire*30 / 4) * 10; // Pour les premières 10 années
-                indemnité += (salaire*30 / 3) * (anciennetéEnAnnées - 10); // Un tiers de mois de salaire par année d'ancienneté après 10 ans
-            }
-            indenite_totale+=indemnité;
+	    for (int i = 0; i < Math.min(nombreASupprimer, ouvriersASupprimer.size()); i++) {
+	    	Ouvrier ouvrier = ouvriersASupprimer.get(i);
+	    	copieListe.remove(ouvrier);
+            
+            double anciennetéEnAnnées = ouvrier.getAnciennete() / 365;
+            double salaire = ouvrier.getSalaire();
+            double indemnité = anciennetéEnAnnées <= 10 ? (salaire * 30 / 4) * anciennetéEnAnnées : (salaire * 30 / 4) * 10 + (salaire * 30 / 3) * (anciennetéEnAnnées - 10);
+            indemniteTotale += indemnité;
+
 
             
-        }
-        return indenite_totale;
+	    }
+
+	    return new ResultatSuppression(copieListe, indemniteTotale);
+	}
 
         //une méthode permetttant de "licensier" des ouvriers 
         //selon un nombre en parametres et leurs types de 
         //travail(equitable,enfant,formation)
-        
-    }
+	//ResultatSuppression resultat = removeEmploye(listeOuvriers, 3, true, false, true);
+
+	// si on veut retourner la liste des oruvriers après supression , on fait:ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
+        //si on veut retounrer l'indemnite:double indemniteTotale = resultat.indemniteTotale;
+    
 	
 	public static void UpdateAnciennete(ArrayList<Ouvrier> liste_ouvriers) {
 		
