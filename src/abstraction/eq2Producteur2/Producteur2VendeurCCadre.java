@@ -200,8 +200,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double stockActuel = stock.get(produit);
 		double aLivre = Math.min(quantite, stockActuel);
+		this.stock_a_vendre((Feve) produit, quantite);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stock.put((Feve) produit,stock.get((Feve) produit)-aLivre);
+		//this.ajout_stock((Feve) produit, stock.get((Feve) produit)-aLivre);
 		return aLivre;
 	} 
 }

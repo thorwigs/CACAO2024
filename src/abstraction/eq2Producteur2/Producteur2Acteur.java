@@ -49,13 +49,13 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	public void initialiser() {
 		
-		stock.put(Feve.F_HQ_BE, 5.0);
-		stock.put(Feve.F_BQ, 40.0);
-		stock.put(Feve.F_MQ, 30.0);
+		/*stock.put(Feve.F_HQ_BE, 0.0);
+		stock.put(Feve.F_BQ, 0.0);
+		stock.put(Feve.F_MQ, 0.0);
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
-		stock.put(Feve.F_MQ_E, 0.0);
+		stock.put(Feve.F_MQ_E, 0.0);*/
 		
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier		
 	}
@@ -186,7 +186,6 @@ public abstract class Producteur2Acteur implements IActeur {
 			for(Feve f : this.stock.keySet()) {
 				quantite_stockee += this.stock.get(f);
 			}
-			System.out.println("quantite stockée " + quantite_stockee);
 			return quantite_stockee;
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock

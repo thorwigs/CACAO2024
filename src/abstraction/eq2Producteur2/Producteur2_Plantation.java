@@ -1,10 +1,10 @@
 package abstraction.eq2Producteur2;
-
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
+// Toutes les variables de poids de cacao sont en TONNES 
 
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double nb_hectares_max;
@@ -105,7 +105,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
-		long v=((long) getNb_hectares_actuel())*500/26;
+		long v =((long) getNb_hectares_actuel())/52; // 52 = 0.5 (tonnes) / 26 (tours de jeu en un an)
 		return v;
 	}
 	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
@@ -132,14 +132,27 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
+		double total = production_BQ() + production_MQ() + production_HQ();
 		ajout_stock(Feve.F_BQ, production_BQ());
 		ajout_stock(Feve.F_MQ, production_MQ());
 		ajout_stock(Feve.F_HQ_E, production_HQ());
 	}
+	
+	public void modifie_prodParStep() {
+	    this.prodParStep.put(Feve.F_HQ, production_HQ());
+	    this.prodParStep.put(Feve.F_MQ, production_MQ());
+	    this.prodParStep.put(Feve.F_BQ, production_BQ());
+	}
+	
+	public double cout_plantation() {
+		double res = getNb_nouveau_hectares() * getPrix_plantation_hectare();
+		setNb_nouveau_hectares(0);
+		return res;
+	}	
 
 	/* Cette fonction sert à implémenter notre stratégie
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
-	 * de notre production. C'est un signe qu'il faut acheter de nouveaux hectares.
+	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
 	 */
 	public void next_plantation() {
 		// On place dans le stock tout ce qu'on produit en un tour
@@ -154,18 +167,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 			setNb_nouveau_hectares((int) (nb_hectares_actuel * 0.02));
 		}
 	}
-
-	public void modifie_prodParStep() {
-	    this.prodParStep.put(Feve.F_HQ, production_HQ());
-	    this.prodParStep.put(Feve.F_MQ, production_MQ());
-	    this.prodParStep.put(Feve.F_BQ, production_BQ());
-	}
-	
-	public double cout_plantation() {
-		double res = getNb_nouveau_hectares() * getPrix_plantation_hectare();
-		setNb_nouveau_hectares(0);
-		return res;
-	}	
 } 
 // 1hectare = 500kg / an cacao
 // implémenter la qualité 
