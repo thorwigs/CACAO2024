@@ -12,7 +12,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double prix_plantation_hectare;
 	protected double nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
 
-	
 	protected int qualite;
 	protected double pourcentage_HQ = 0.02;
 	protected double pourcentage_MQ = 0.38;
@@ -143,6 +142,10 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * de notre production. C'est un signe qu'il faut acheter de nouveaux hectares.
 	 */
 	public void next_plantation() {
+		// On place dans le stock tout ce qu'on produit en un tour
+		this.nouveau_stock();
+		
+		// On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
 				planter(nb_hectares_max - nb_hectares_actuel);

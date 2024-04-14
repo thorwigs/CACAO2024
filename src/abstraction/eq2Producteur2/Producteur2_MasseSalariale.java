@@ -22,7 +22,6 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		
 	public void initialiser() {
 		super.initialiser();
-		System.out.println("INITIALISATION");
 		this.nb_employes = 3679200;  		  
 		this.nb_employes_equitable = 100800; // 2% au départ
 		this.nb_employes_enfants = 1260000;  // 25% au départ

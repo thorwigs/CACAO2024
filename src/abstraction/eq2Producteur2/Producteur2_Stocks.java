@@ -2,7 +2,7 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
 import abstraction.eqXRomu.general.Journal;
-
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -28,9 +28,13 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	public Producteur2_Stocks() {
 		super();
 		this.journalStocks = new Journal(this.getNom()+" journalStocks", this);
-		List<Producteur2_Lot> stock_total = new ArrayList<Producteur2_Lot>();
+		this.stock_total = new ArrayList<Producteur2_Lot>();
+		
 	}
 	
+	public void initialiser() {
+		super.initialiser();
+	}
 	
 	public static double getSeuil() {
 		return SEUIL;
@@ -54,6 +58,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//Faite par Quentin
 	//Met à jour la liste des stocks en ajoutant un lot produit
+	
 	public void ajout_stock(Feve type_feve, double quantite) {
 		if(quantite != 0 && type_feve == Feve.F_BQ) {
 			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_BQ));
@@ -73,6 +78,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		if(quantite != 0 && type_feve == Feve.F_HQ_BE) {
 			this.stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ_BE));
 		}
+		this.lot_to_hashmap();
 	}
 	
 	public void init_stock(Feve type_feve, double quantite) {
@@ -97,10 +103,12 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		}
 		this.stock_total = stocks;
 	}
+	
 	//Faite par Noémie
 	//Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
+	
 	public void lot_to_hashmap() {
-		List<Producteur2_Lot> l = getStock_total();
+		List<Producteur2_Lot> l = this.getStock_total();
 		double feve_bq = 0;
 		double feve_mq = 0;
 		double feve_hq = 0;
@@ -137,7 +145,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		stock.put(Feve.F_HQ, feve_hq);
 		stock.put(Feve.F_MQ_E, feve_mq_e);
 		stock.put(Feve.F_HQ_E, feve_hq_e);
-		stock.put(Feve.F_HQ_BE, feve_hq_be);	
+		stock.put(Feve.F_HQ_BE, feve_hq_be);
+		
 	}
 	
 	//Faite par Quentin
@@ -160,10 +169,12 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	}
 	
 	//Faite par Noémie
-	//Retourne la liste des lots avec le même type de fèves
+	//Retourne une liste contenant tous les lots d'un même type de fèves
 	public List<Producteur2_Lot> lot_type_feve(Feve type_feve){
+		
 		List<Producteur2_Lot> lst_lot  = this.stock_total; 
 		List<Producteur2_Lot> lst_lot_feve  = new ArrayList<Producteur2_Lot>();
+		
 		for(Producteur2_Lot lot : lst_lot) {
 			if(lot.getType_feve() == type_feve) {
 				lst_lot_feve.add(lot);
@@ -176,7 +187,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	//Calcule le coût total de stockage
 	public double cout_total_stock() {
 		double cout_moyen = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		return cout_moyen * getStockTotal(this.cryptogramme);
+		return cout_moyen * this.getStockTotal(this.cryptogramme);
 	}
 	
 	//Faite par Quentin
@@ -198,9 +209,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 					quantite_prise += (quantite_demandee - quantite_prise);
 				}
 			}
-			
 		}
-		
 		return quantite_prise;
 	}
 	
@@ -214,8 +223,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
-		
-		
+	}
+	
+	public void next_stocks() {
+		this.lot_to_hashmap();
+		System.out.println("STOCK TOTAL " + this.getStockTotal(this.cryptogramme) );
 	}
 }
 

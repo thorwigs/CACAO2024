@@ -76,6 +76,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	protected abstract void next_RH();
 	protected abstract void next_plantation();
+	protected abstract void next_stocks();
 	
 	public void next() {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
@@ -185,6 +186,7 @@ public abstract class Producteur2Acteur implements IActeur {
 			for(Feve f : this.stock.keySet()) {
 				quantite_stockee += this.stock.get(f);
 			}
+			System.out.println("quantite stockée " + quantite_stockee);
 			return quantite_stockee;
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
@@ -205,15 +207,16 @@ public abstract class Producteur2Acteur implements IActeur {
 	public void allNext() {
 		this.next_plantation();
 		this.next_RH();
+		this.next_stocks();
 	}
 	
 	public void DebiteCoutParStep() {
-		retire_argent(this.cout_total_stock(), "coût des stocks");	
-		retire_argent(this.cout_humain_par_step(), "coût humain");	
-		retire_argent(this.cout_plantation(), "coût de la plantation");	
+		retireArgent(this.cout_total_stock(), "coût des stocks");	
+		retireArgent(this.cout_humain_par_step(), "coût humain");	
+		retireArgent(this.cout_plantation(), "coût de la plantation");	
 	}
 	
-	public void retire_argent(double montant, String raison) {
+	public void retireArgent(double montant, String raison) {
 		if (montant>0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, raison, montant);
 		}
