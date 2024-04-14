@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -39,25 +40,30 @@ public class Distributeur1Acteur implements IActeur {
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
 		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK =====");
+		 Map<Chocolat, Integer> nombreMarquesParType = new HashMap<>();
+		    for (ChocolatDeMarque cm : chocolats) {
+		        Chocolat typeChoco = cm.getChocolat();
+		        nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
+	    }
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
 			if (cm.getChocolat()==Chocolat.C_BQ) {
-				stock=96000;
+				stock=96000/ nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1);
 			}
 			if (cm.getChocolat()==Chocolat.C_MQ) {
-				stock=60000;
+				stock=60000/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ, 1);
 			}
 			if (cm.getChocolat()==Chocolat.C_MQ_E) {
-				stock=12000;
+				stock=12000/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1);
 			}
 			if (cm.getChocolat()==Chocolat.C_HQ) {
-				stock=48000;
+				stock=48000/ nombreMarquesParType.getOrDefault(Chocolat.C_HQ, 1);
 			}
 			if (cm.getChocolat()==Chocolat.C_HQ_E) {
-				stock=12000;
+				stock=12000/ nombreMarquesParType.getOrDefault(Chocolat.C_HQ_E, 1);
 			}
 			if (cm.getChocolat()==Chocolat.C_HQ_BE)  {
-				stock=12000;
+				stock=12000/ nombreMarquesParType.getOrDefault(Chocolat.C_HQ_BE, 1);
 			}
 			this.stock_Choco.put(cm, stock);
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,cm+"->"+this.stock_Choco.get(cm));
