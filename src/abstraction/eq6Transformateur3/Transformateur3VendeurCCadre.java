@@ -26,7 +26,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	
 	public void next() {
 		super.next();
-		this.journalCC6.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
 		for (Chocolat c : stockChoco.keySet()) { 
 			if (stockChoco.get(c)-restantDu(c)>2000) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
@@ -57,7 +57,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
 		}
-		this.journalCC6.ajouter("=================================");
+		this.journalCC6.ajouter("=== Partie réception Fèves ====================");
 	}
 
 	public double restantDu(Chocolat c) {
@@ -99,8 +99,8 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		stockFeves.put((Feve)produit, stockFeves.get((Feve)produit)-quantite);
-		totalStocksFeves.retirer(this, quantite, cryptogramme);
+		stockChoco.put((Chocolat)produit, stockChoco.get((Chocolat)produit)-quantite);
+		totalStocksChoco.retirer(this, quantite, cryptogramme);
 		return quantite;
 	}
 }
