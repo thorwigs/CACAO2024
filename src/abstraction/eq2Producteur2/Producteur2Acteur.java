@@ -21,9 +21,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
-	protected int nb_employes;
-	protected int nb_employes_equitable;
-	protected int nb_employes_enfants;
+
 	public abstract double get_prod_pest_BQ();
 	public abstract double get_prod_pest_MQ();
 	public abstract double get_prod_pest_HQ();
@@ -48,7 +46,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	public abstract void init_stock(Feve type_feve, double quantite);
 	public abstract void lot_to_hashmap();
-	public abstract void initialiser_masse_salariale();
 	
 	public void initialiser() {
 		
@@ -59,12 +56,8 @@ public abstract class Producteur2Acteur implements IActeur {
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
-		this.initialiser_masse_salariale();
 		
-		//initialisation prodparstep pour faire marcher get indicateur || à modifier
-		
-
-		
+		//initialisation prodparstep pour faire marcher get indicateur || à modifier		
 	}
 
 
@@ -82,6 +75,7 @@ public abstract class Producteur2Acteur implements IActeur {
 
 	
 	protected abstract void next_RH();
+	protected abstract void next_plantation();
 	
 	public void next() {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
@@ -96,7 +90,8 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
 		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 		this.DebiteCoutParStep();
-		this.next_RH();
+		this.allNext();
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -204,6 +199,12 @@ public abstract class Producteur2Acteur implements IActeur {
 	public double getCoutTotalParStep() {
 		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
 		return somme;
+	}
+	
+	
+	public void allNext() {
+		this.next_plantation();
+		this.next_RH();
 	}
 	
 	public void DebiteCoutParStep() {
