@@ -4,6 +4,7 @@ package abstraction.eq8Distributeur1;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -21,7 +22,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	
 	public Distributeur1Vendeur() {
 		super();
-		this.capaciteDeVente=120000;  //capacite de vente par step
+		this.capaciteDeVente=120000.0;  //capacite de vente par step
 		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
 		this.marques = new String[chocolats.size()];
 		this.journalVente= new Journal (this.getNom() + " journal des ventes", this);
@@ -80,17 +81,23 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	}
 
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
-		double capaciteTG = 0.1 * this.capaciteDeVente;
+		double capaciteTG = 0.1 * this.quantiteEnVente(choco, crypto);
+		Map<Chocolat, Integer> nombreMarquesParType = new HashMap<>();
+	    for (ChocolatDeMarque cm : chocolats) {
+	        Chocolat typeChoco = cm.getChocolat();
+	        nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
+    }
+	    
 		if (choco.getMarque()== "Chocoflow") {
 			return 0.6 * capaciteTG;
 		}
 		else {
 			if(choco.getChocolat().isEquitable()) {
 				if(choco.getChocolat().getGamme()==Gamme.MQ) {
-					return 0.1 * capaciteTG;
+					return 0.1 * capaciteTG/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1);
 				}
 				if(choco.getChocolat().getGamme()==Gamme.HQ) {
-					return 0.15 * capaciteTG;
+					return 0.3 * capaciteTG / nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1);
 				}
 			}
 		}
