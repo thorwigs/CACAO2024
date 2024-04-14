@@ -50,7 +50,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 	public void next() {
 		super.next();
-//		this.initialiser();
+		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
@@ -62,7 +62,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			
 		}
 		
-		this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
@@ -74,10 +73,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				if (vendeurs.size()==1) {
 					vendeur=vendeurs.get(0);
 				} else if (vendeurs.size()>1) {
-					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
+					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size())); // a améliorer dans la V2
 				}
 				if (vendeur!=null) {
-					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
 					int a = Filiere.LA_FILIERE.getEtape()+1;
 					int b = 24 ; 
 					double c = this.prevision(choc, b) ;	
@@ -88,14 +87,15 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 						}
 					}
 					double e = this.stock_Choco.get(choc); 
-				    Echeancier x = new Echeancier (a,b,c-d-e);
+				    Echeancier x = new Echeancier (a,b,50);
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
 					this.journalCC.ajouter("-->aboutit au contrat "+cc);
 				}	
 			}
 		}
 		
-		
+		this.journalCC.ajouter("=================================");
+
 	}
 	
 	public List<Variable> getIndicateurs() {
@@ -140,43 +140,43 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 
 	public boolean achete(IProduit produit) {
-/*		double a = 0 ; 
+		double a = 0 ; 
 		for (int i=0; i<contrat_en_cours.size(); i++) {
 			if (contrat_en_cours.get(i).getProduit().equals(produit)) {
 				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 			}
 		}
-		return (produit.getType().equals("ChocolatDeMarque")
-				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer */
-		return true ; 
+		return (produit.getType().equals("ChocolatDeMarque"));
+//				&& this.stock_Choco.containsKey(produit)
+//				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer  
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
-			&& !this.achete(contrat.getProduit())) {
+			|| !this.stock_Choco.containsKey(contrat.getProduit())
+			|| !this.achete(contrat.getProduit())) {
 			return null;
 		}
-		
 		Echeancier x = contrat.getEcheancier();
 		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72
 			&& this.achete(contrat.getProduit()) 
 			&&	contrat.getQuantiteTotale()>= 30 ) {
-			if (contrat.getProduit().equals(Chocolat.C_BQ)
+			if (contrat.getProduit().toString().contains("C_BQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100)) {
 			} 
-			if ( contrat.getProduit().equals(Chocolat.C_MQ)
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*25)/(x.getNbEcheances()*100*100))  {
+			if ( contrat.getProduit().toString().contains("C_MQ")
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100))  {
 				}
-			if (contrat.getProduit().equals(Chocolat.C_MQ_E)
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
+			if (contrat.getProduit().toString().contains("C_MQ_E")
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100)) {
 				}
-			if (contrat.getProduit().equals(Chocolat.C_HQ)
+			if (contrat.getProduit().toString().contains("C_HQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100)) {
 				}
-			if (contrat.getProduit().equals(Chocolat.C_HQ_E)
+			if (contrat.getProduit().toString().contains("C_HQ_E")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
 				} 
-			if (contrat.getProduit().equals(Chocolat.C_HQ_BE)
+			if (contrat.getProduit().toString().contains("C_HQ_BE")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
 				}	
 		} else {
@@ -190,7 +190,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				}
 			}
 			double e = this.stock_Choco.get(contrat.getProduit()); 
-		    x = new Echeancier (a,b,c-d-e);	
+		    x = new Echeancier (a,b,50);	
 		}
 		return x;
 	}
@@ -202,11 +202,13 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			return 0.0;
 		}
 		
-		if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())<=this.prix(((ChocolatDeMarque)contrat.getProduit())) 
-			&& contrat.getPrix()<=Math.pow(contrat.getQuantiteTotale(),1/3)){ //peut être rajouter un coef
-				return contrat.getPrix();
+//		if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())<=this.prix(((ChocolatDeMarque)contrat.getProduit()))){
+//			&& contrat.getPrix()<=Math.pow(contrat.getQuantiteTotale(),1/3)){ //peut être rajouter un coef
+//				return contrat.getPrix();
+//		}
+		if (contrat.getPrix()>0) {
+			return contrat.getPrix();
 		}
-		
 		else {
 			return Math.pow(contrat.getQuantiteTotale(),1/3)*(1-1/Math.pow(2, contrat.getListePrix().size()))  ;
 		}
@@ -234,7 +236,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		for (int i =a-b; i<a ; i++ ) {
 			d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)p,i);
 		}
-		d = d * ((Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
+		d = d * (1+(Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
 		return d ; 
 	}
 }

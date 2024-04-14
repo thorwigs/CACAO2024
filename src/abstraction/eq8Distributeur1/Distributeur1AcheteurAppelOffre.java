@@ -45,7 +45,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, choc, x);
 				journalAO.ajouter("   Je lance un appel d'offre de "+x+" T de "+choc);
 				if (ov!=null) {
-					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+produit+" au stock");
+					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
 					stock_Choco.put(choc, x);
 					totalStockChoco.ajouter(this, x, cryptogramme);
 				}
@@ -53,8 +53,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			}
 			
 		}
-
-		// On archive les contrats termines
 		this.journalAO.ajouter("=================================");
 	}
 	
@@ -109,12 +107,24 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 						a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 					}
 				}
-				return (produit.getType().equals("ChocolatDeMarque")
-						&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
-						&& this.prevision(produit, 24) - this.stock_Choco.get(produit) - a <= 1000); 
-//				return true ; 
+
+
+				return (produit.getType().equals("ChocolatDeMarque"));
+		//				&& this.stock_Choco.containsKey(produit)
+	//					&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
+//						&& this.prevision(produit, 24) - this.stock_Choco.get(produit) - a <= 1000); 
+
 			}
 	
-	
+
+	public double prevision (ChocolatDeMarque p,int b) {
+		double d = 0.0;
+		int a = Filiere.LA_FILIERE.getEtape();
+		for (int i =a-b; i<a ; i++ ) {
+			d = d + Filiere.LA_FILIERE.getVentes(p,i);
+		}
+		d = d * ((Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
+		return d ; 
+	}	
 
 }
