@@ -80,7 +80,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	}
 
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
-		double capaciteTG = 0.1 * this.capaciteDeVente;
+		double capaciteTG = this.capaciteDeVente*ClientFinal.POURCENTAGE_MAX_EN_TG;
 		if (choco.getMarque()== "Chocoflow") {
 			return 0.6 * capaciteTG;
 		}
