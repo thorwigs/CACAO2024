@@ -57,7 +57,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	}
 	
 	public List<Journal> getJournaux() {
-		List<Journal> jx=super.getJournaux();
+		List<Journal> jx = super.getJournaux();
 		jx.add(journalStocks);
 		return jx;
 	}
@@ -248,8 +248,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				}
 			}
 		}
-		if (quantite_retiree+ this.getStockTotal(cryptogramme) < SEUIL) {
-			this.ajout_stock(type_feve, Math.min(quantite_retiree,quantite));
+		if (quantite + this.getStockTotal(cryptogramme) < SEUIL) {
+			this.ajout_stock(type_feve, quantite);
 		}
 	}
 	
@@ -257,15 +257,19 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	//Faite par Quentin
 	//Ajoute les nouvelles informations sur le stock au journal du stock
 	public void ajout_stock_journal() {
-		this.journalStocks.ajouter("La quantité de fèves_HQ en stock est de "+this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_HQ_BE en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_BE, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_MQ en stock est de "+this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"T");
-		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter(" ");
+		this.journalStocks.ajouter("------------ ETAPE " + Filiere.LA_FILIERE.getEtape() + " ---------------");
+		this.journalStocks.ajouter("La quantité de fèves_HQ en stock est de "+this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_BE en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_BE, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_MQ en stock est de "+this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("La quantité totale de fèves en stock est de "+this.getStockTotal(this.cryptogramme)+"T");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
 	}
+	
+	//Faite par Quentin
 	
 	public void next_stocks() {
 		this.lot_to_hashmap();

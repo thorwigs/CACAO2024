@@ -49,14 +49,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	public void initialiser() {
 		
-		/*stock.put(Feve.F_HQ_BE, 0.0);
-		stock.put(Feve.F_BQ, 0.0);
-		stock.put(Feve.F_MQ, 0.0);
-		stock.put(Feve.F_HQ,0.0);
-		stock.put(Feve.F_HQ_E, 0.0);
-		stock.put(Feve.F_MQ_E, 0.0);
-		stock.put(Feve.F_MQ_E, 0.0);*/
-		
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier		
 	}
 
@@ -82,12 +74,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		/*this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
-		this.journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
-		this.journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
-		this.journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
-		this.journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
-		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");*/
 		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
 		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 		this.DebiteCoutParStep();
