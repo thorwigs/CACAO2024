@@ -58,6 +58,10 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		return jx;
 	}
 	
+	public double getEmployes() {
+		return this.getNb_employes() + this.getNb_employes_enfants() + this.getNb_employes_equitable();
+	}
+	
 	public double getSalaire(String categorie) {
 		if (categorie == "enfant") {
 			return salaire_enfant;
@@ -118,7 +122,11 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		double adultes = getNb_employes()*getSalaire("adulte"); 
 		return enfants + adultes_eq + adultes;
 	}
-
+	
+	public double getPourcentage_enfants(){
+		return (this.getNb_employes_enfants()/this.getNb_employes()*100);
+	}
+	
 	/* Fonction qui permet d'implémenter notre stratégie. 
 	Si notre solde est supérieur à ce que nous coûte 10 tours de simulation
 	en ressources humaines on peut embaucher de nouveaux employés adultes dont une part en équitable.
@@ -140,10 +148,11 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 			this.embauche(modif_equitable, "adulte équitable");
 			this.embauche(nb_employes_modif - modif_equitable, "adulte");
 			
-			this.journalRH.ajouter("-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
+			this.journalRH.ajouter("\n-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
 			this.journalRH.ajouter("nombre d'employes équitable :" + this.getNb_employes_equitable());
 			this.journalRH.ajouter("nombre d'employes adultes : "+ this.getNb_employes());
 			this.journalRH.ajouter("nombre d'employes enfants " + this.getNb_employes_enfants());
+			this.journalRH.ajouter("pourcentage d'enfants " + this.getPourcentage_enfants());
 		}
 	}
 	
