@@ -4,6 +4,7 @@ package abstraction.eq8Distributeur1;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -21,7 +22,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	
 	public Distributeur1Vendeur() {
 		super();
-		this.capaciteDeVente=120000;  //capacite de vente par step
+		this.capaciteDeVente=120000.0;  //capacite de vente par step
 		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
 		this.marques = new String[chocolats.size()];
 		this.journalVente= new Journal (this.getNom() + " journal des ventes", this);
@@ -78,9 +79,24 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 		}
 	}
+	
+	public double quantiteEnVenteTotal() {
+		double x = 0.0;
+		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			x = x + this.quantiteEnVente(choc, cryptogramme);
+		}
+		return x;
+	}
 
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
-		double capaciteTG = this.capaciteDeVente*ClientFinal.POURCENTAGE_MAX_EN_TG;
+		
+		double capaciteTG = 0.1 * this.quantiteEnVenteTotal();
+		Map<Chocolat, Integer> nombreMarquesParType = new HashMap<>();
+	    for (ChocolatDeMarque cm : chocolats) {
+	        Chocolat typeChoco = cm.getChocolat();
+	        nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
+    }
+	    
 		if (choco.getMarque()== "Chocoflow") {
 			return 0.6 * capaciteTG;
 		}
@@ -88,10 +104,10 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		else {
 			if(choco.getChocolat().isEquitable()) {
 				if(choco.getChocolat().getGamme()==Gamme.MQ) {
-					return 0.1 * capaciteTG;
+					return 0.1 * capaciteTG/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1);
 				}
 				if(choco.getChocolat().getGamme()==Gamme.HQ) {
-					return 0.15 * capaciteTG;
+					return 0.3 * capaciteTG / nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1);
 				}
 			}
 		}
@@ -103,16 +119,17 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		int pos= (chocolats.indexOf(choco));
 		if (pos>=0) {
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
+			totalStockChoco.retirer(this, quantite, cryptogramme);
 			}
 	}
 
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
 		journalVente.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
+	
 	public void next() {
 		super.next();
-		this.journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		journalVente.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
+		journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
 			for (int i=0; i<this.chocolats.size(); i++) {
 			journalVente.ajouter("Le prix moyen du chocolat \""+chocolats.get(i).getNom()+"\" a l'etape precedente etait de "+Filiere.LA_FILIERE.prixMoyen(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-1));
