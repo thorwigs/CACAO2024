@@ -115,6 +115,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		
 //		return quantiteEnVente(choco,crypto)/10.0;
 
+		
 	}
 	
 	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
