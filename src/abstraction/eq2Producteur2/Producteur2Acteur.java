@@ -71,13 +71,12 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected abstract void next_stocks();
 	
 	public void next() {
-		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
-		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 		this.DebiteCoutParStep();
 		this.allNext();	
+		this.journal.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
+		this.journal.ajouter("cout de stockage " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
+		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

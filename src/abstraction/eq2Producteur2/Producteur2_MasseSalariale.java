@@ -60,7 +60,6 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	
 	public double getEmployes() {
 		double nb_employes = this.getNb_employes() + this.getNb_employes_enfants() + this.getNb_employes_equitable();
-		System.out.println("nb employes "+ nb_employes);
 		return nb_employes;
 	}
 	
