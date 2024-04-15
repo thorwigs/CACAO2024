@@ -10,20 +10,16 @@ import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
-	private static final double SEUIL = 2000000; 
-	//seuil max de la production stockee (voir ce qu'on fait du reste: vente, poubelle, produit moins, ...)
-	//déterminer ce qu'on fait en fonction de comment on est proche du seuil max
+	//seuil max de la production stockee
+	private static final double SEUIL = 2000000;
 	
-	//private final int PRIX_STOCK_TONNE = 0; récupérable via la filière
-	
+	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
 	private static final double DELAI_MQ_BQ = 8;
 	private static final double DELAI_BQ_JETE = 12;
 		
 	private List<Producteur2_Lot> lst_stock_total;
 	protected Journal journalStocks;
-	
-	//FILIERE.getEtape() pour avoir le numéro d'étape
 	
 	public Producteur2_Stocks() {
 		super();
@@ -62,7 +58,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//Faite par Quentin
 	//Met à jour la liste des stocks en ajoutant un lot produit
-	
 	public void ajout_stock(Feve type_feve, double quantite) {
 		
 		// Si on dépasse le seuil de stockage
@@ -92,6 +87,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 	
+	//Faite par Quentin
+	//Initialiser les stocks à l'étape 0 de la filière
 	public void init_stock(Feve type_feve, double quantite) {
 		List<Producteur2_Lot> stocks =  new ArrayList<Producteur2_Lot>();
 		if(quantite != 0 && type_feve == Feve.F_BQ) {
@@ -117,7 +114,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//Faite par Noémie
 	//Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
-	
 	public void lot_to_hashmap() {
 		List<Producteur2_Lot> l = this.getLst_Stock_total();
 		double feve_bq = 0;
@@ -225,7 +221,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		return quantite_prise;
 	}
 	
-	// Faite par Noemie 
+	//Faite par Noemie 
+	//Permet de gérer le surplus de stock après avoir dépassé le seuil défini
 	public void trop_de_stock(Feve type_feve, double quantite) {
 		double stock_init = this.getStockTotal(cryptogramme);
 		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
