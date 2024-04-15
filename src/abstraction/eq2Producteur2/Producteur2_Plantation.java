@@ -139,6 +139,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return this.production_MQ() * rend_pest_MQ; //feve MQ=98%*get_prod_pest et MQ_E=2%*get_prod_pest
 	}
 	public double get_prod_pest_BQ() {
+		//System.out.println(this.production_BQ());
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
