@@ -52,16 +52,19 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
+			System.out.println(contrat.getMontantRestantARegler()+'$');
+			System.out.println(contrat.getQuantiteRestantALivrer());
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
-				contrat_en_cours.remove(contrat);
 			} else {
 				stock_Choco.put((ChocolatDeMarque)contrat.getProduit(),contrat.getQuantiteALivrerAuStep() );
 				totalStockChoco.ajouter(this, contrat.getQuantiteALivrerAuStep(), cryptogramme);
 			}
 			
 		}
-		
+		for(ExemplaireContratCadre contrat : contrat_term) {
+			contrat_en_cours.remove(contrat);
+		}
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
