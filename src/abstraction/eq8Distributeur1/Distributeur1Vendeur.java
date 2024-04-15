@@ -66,7 +66,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		return jour;
 	}
 
-	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
+/*	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		if (crypto!=this.cryptogramme) {
 			journalVente.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
@@ -78,19 +78,41 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 				return Math.min(capaciteDeVente, this.getQuantiteEnStock(choco,crypto));
 			}
 		}
-	}
+	}   */
 	
-	public double quantiteEnVenteTotal() {
-		double x = 0.0;
-		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			x = x + this.quantiteEnVente(choc, cryptogramme);
+	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
+		if (crypto!=this.cryptogramme
+			|| !chocolats.contains(choco)) {
+			journalVente.ajouter("Quelqu'un essaye de me pirater !");
+			return 0.0;
+		} else {
+			if (choco.getMarque()== "Chocoflow") {
+				return Math.min(capaciteDeVente*0.20, this.getQuantiteEnStock(choco,crypto));
+			}
+			if (choco.toString().contains("C_BQ")) {
+				return Math.min(capaciteDeVente*0.32, this.getQuantiteEnStock(choco,crypto));
+			}
+			if (choco.toString().contains("C_MQ")) {
+				return Math.min(capaciteDeVente*0.12, this.getQuantiteEnStock(choco,crypto));
+			}
+			if (choco.toString().contains("C_MQ_E")) {
+				return Math.min(capaciteDeVente*0.12, this.getQuantiteEnStock(choco,crypto));
+			}
+			if (choco.toString().contains("C_HQ")) {
+				return Math.min(capaciteDeVente*0.12, this.getQuantiteEnStock(choco,crypto));
+			}
+			if (choco.toString().contains("C_HQ_E")) {
+				return Math.min(capaciteDeVente*0.08, this.getQuantiteEnStock(choco,crypto));
+			}
+			if (choco.toString().contains("C_HQ_BE")) {
+				return Math.min(capaciteDeVente*0.04, this.getQuantiteEnStock(choco,crypto));
+			}
 		}
-		return x;
+		return 0.0;
 	}
 
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
-		
-		double capaciteTG = 0.1 * this.quantiteEnVenteTotal();
+		double capaciteTG = 0.1 * this.capaciteDeVente;
 		Map<Chocolat, Integer> nombreMarquesParType = new HashMap<>();
 	    for (ChocolatDeMarque cm : chocolats) {
 	        Chocolat typeChoco = cm.getChocolat();
