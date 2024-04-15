@@ -2,6 +2,7 @@ package abstraction.eq2Producteur2;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 // Toutes les variables de poids de cacao sont en TONNES 
@@ -22,11 +23,14 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_HQ = 0.80;
 	protected double rend_no_pest_HQ = 0.72;
 	
+	protected Journal journalPlantation;
+	
 	public Producteur2_Plantation() {
 		//initialisation EFFICACE
 		this.nb_hectares_actuel=5000000.0;
 		this.nb_hectares_max=5000000.0*10;
 		this.prix_plantation_hectare=500.0;
+		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	} 
 
 	public double getNb_hectares_max() {
@@ -87,6 +91,12 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void initialiser() {
 		super.initialiser();
+	}
+	
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalPlantation);
+		return jx;
 	}
 		
 	public void planter(double nb_hectares) {
