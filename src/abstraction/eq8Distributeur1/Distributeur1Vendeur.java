@@ -84,6 +84,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		if (choco.getMarque()== "Chocoflow") {
 			return 0.6 * capaciteTG;
 		}
+		
 		else {
 			if(choco.getChocolat().isEquitable()) {
 				if(choco.getChocolat().getGamme()==Gamme.MQ) {
