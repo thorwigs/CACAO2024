@@ -10,6 +10,7 @@ import java.util.Map;
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
@@ -18,7 +19,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur1Acteur implements IActeur {
+public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
 	
 	protected int cryptogramme;
 	protected Journal journal;
@@ -28,12 +29,14 @@ public class Distributeur1Acteur implements IActeur {
 	protected Variable totalStockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
+	protected List<ChocolatDeMarque> chocoProduits;
 	
 	
 	public Distributeur1Acteur() {
 		this.journal= new Journal(this.getNom()+" journal", this);
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		this.totalStockChoco = new VariablePrivee("Eq8DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
 	}
 	
 	public void initialiser() {
@@ -158,16 +161,7 @@ public class Distributeur1Acteur implements IActeur {
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;
 	}
-	
-//	public List<ChocolatDeMarque> getChocolatsProduits() {
-//		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
-//		Chocolat ch = Chocolat.C_HQ_E;
-//		int pourcentage =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ch.getGamme()).getValeur());
-//		this.chocolats.add(new ChocolatDeMarque(ch,"Chocoflow",pourcentage));
-//		return chocolats;
-//	}
-
-	
+		
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) {
 			if (stock_Choco.containsKey(p)) {
@@ -178,6 +172,25 @@ public class Distributeur1Acteur implements IActeur {
 		} else {
 			return 0;
 		}
+	}
+	
+	public List<String> getMarquesChocolat() {
+		LinkedList<String> choc = new LinkedList<String>();
+		choc.add("Chocoflow");
+		return choc;
+	}
+
+	public List<ChocolatDeMarque> getChocolatsProduits() {	
+		if (chocoProduits.size()==0) {
+			Chocolat C_MQ_E = Chocolat.C_MQ_E;
+			int pourcentageCacao1 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_MQ_E.getGamme()).getValeur());
+			chocoProduits.add(new ChocolatDeMarque(C_MQ_E, "Chocoflow", pourcentageCacao1));
+			
+			Chocolat C_HQ_E = Chocolat.C_HQ_E;
+			int pourcentageCacao2 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_HQ_E.getGamme()).getValeur());
+			chocoProduits.add(new ChocolatDeMarque(C_HQ_E, "Chocoflow", pourcentageCacao2));
+		} 
+		return chocoProduits;
 	}
 		
 }

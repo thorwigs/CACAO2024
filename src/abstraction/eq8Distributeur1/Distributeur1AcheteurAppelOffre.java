@@ -46,7 +46,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				journalAO.ajouter("   Je lance un appel d'offre de "+x+" T de "+choc);
 				if (ov!=null) {
 					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
-					stock_Choco.put(choc, x);
+					stock_Choco.put(choc,this.getQuantiteEnStock(choc,cryptogramme)+ x);
 					totalStockChoco.ajouter(this, x, cryptogramme);
 				}
 			
