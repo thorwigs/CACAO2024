@@ -117,6 +117,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		int pos= (chocolats.indexOf(choco));
 		if (pos>=0) {
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
+			totalStockChoco.retirer(this, quantite, cryptogramme);
 			}
 	}
 
