@@ -60,6 +60,12 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.lst_stock_total.remove(l);
 	}
 	
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalStocks);
+		return jx;
+	}
+	
 	//Faite par Quentin
 	//Met à jour la liste des stocks en ajoutant un lot produit
 	

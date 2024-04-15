@@ -1,4 +1,6 @@
 package abstraction.eq2Producteur2;
+import java.util.List;
+
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 
@@ -49,6 +51,11 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	}
 	public void setNb_employes_enfants(int nb_employes_enfants) {
 		this.nb_employes_enfants = nb_employes_enfants;
+	}
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalRH);
+		return jx;
 	}
 	
 	public double getSalaire(String categorie) {
