@@ -165,16 +165,16 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100)) {
 			} 
 			if ( contrat.getProduit().toString().contains("C_MQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100))  {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100))  {
 				}
 			if (contrat.getProduit().toString().contains("C_MQ_E")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100)) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100)) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*20)/(x.getNbEcheances()*100*100)) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100)) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_E")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100)) {
 				} 
 			if (contrat.getProduit().toString().contains("C_HQ_BE")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
