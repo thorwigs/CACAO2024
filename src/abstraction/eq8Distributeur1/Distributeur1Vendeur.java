@@ -79,9 +79,17 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 		}
 	}
+	
+	public double quantiteEnVenteTotal() {
+		double x = 0.0;
+		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			x = x + this.quantiteEnVente(choc, cryptogramme);
+		}
+		return x;
+	}
 
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
-		double capaciteTG = 0.1 * this.quantiteEnVente(choco, crypto);
+		double capaciteTG = 0.1 * this.quantiteEnVenteTotal();
 		Map<Chocolat, Integer> nombreMarquesParType = new HashMap<>();
 	    for (ChocolatDeMarque cm : chocolats) {
 	        Chocolat typeChoco = cm.getChocolat();
@@ -115,10 +123,10 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
 		journalVente.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
+	
 	public void next() {
 		super.next();
-		this.journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		journalVente.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
+		journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
 			for (int i=0; i<this.chocolats.size(); i++) {
 			journalVente.ajouter("Le prix moyen du chocolat \""+chocolats.get(i).getNom()+"\" a l'etape precedente etait de "+Filiere.LA_FILIERE.prixMoyen(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-1));
