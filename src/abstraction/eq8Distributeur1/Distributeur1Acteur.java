@@ -27,6 +27,7 @@ public class Distributeur1Acteur implements IActeur {
 	protected List<ChocolatDeMarque> chocolats;
 	protected Variable totalStockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
+	protected HashMap<Chocolat,Integer> nombreMarquesParType;
 	
 	
 	public Distributeur1Acteur() {
@@ -38,12 +39,12 @@ public class Distributeur1Acteur implements IActeur {
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16;
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
+		this.nombreMarquesParType=new HashMap<Chocolat,Integer>();
 		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK =====");
-		 Map<Chocolat, Integer> nombreMarquesParType = new HashMap<>();
-		    for (ChocolatDeMarque cm : chocolats) {
-		        Chocolat typeChoco = cm.getChocolat();
-		        nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
+		for (ChocolatDeMarque cm : chocolats) {
+		    Chocolat typeChoco = cm.getChocolat();
+		    nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
 	    }
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
