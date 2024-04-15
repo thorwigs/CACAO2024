@@ -170,7 +170,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		else {
 			this.journalPlantation.ajouter("Nouveau hectares achetes : " + nb_nouveaux_hectares);
 		}
-		
+		this.journalPlantation.ajouter(" ");
+		this.journalPlantation.ajouter("a ce tour on a produit :");
+		this.journalPlantation.ajouter(" .      " + production_BQ() + " tonnes de fèves de basse qualité");
+		this.journalPlantation.ajouter(" .      " + production_MQ() + " tonnes de fèves de moyenne qualité");
+		this.journalPlantation.ajouter(" .      " + production_HQ() + " tonnes de fèves de haute qualité");
 	}
 	
 	
