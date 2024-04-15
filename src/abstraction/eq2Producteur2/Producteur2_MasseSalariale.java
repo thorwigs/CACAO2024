@@ -59,7 +59,8 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	}
 	
 	public double getEmployes() {
-		return this.getNb_employes() + this.getNb_employes_enfants() + this.getNb_employes_equitable();
+		double nb_employes = this.getNb_employes() + this.getNb_employes_enfants() + this.getNb_employes_equitable();
+		return nb_employes;
 	}
 	
 	public double getSalaire(String categorie) {
@@ -124,7 +125,8 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	}
 	
 	public double getPourcentage_enfants(){
-		return (this.getNb_employes_enfants()/this.getNb_employes()*100);
+		double pourcentage = (this.getNb_employes_enfants()/this.getEmployes())*100;
+		return pourcentage;
 	}
 	
 	/* Fonction qui permet d'implémenter notre stratégie. 

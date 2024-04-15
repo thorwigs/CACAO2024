@@ -11,7 +11,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double nb_hectares_max;
 	protected double nb_hectares_actuel;
 	protected double prix_plantation_hectare;
-	protected double nb_nouveau_hectares; // hectares nouvellement plantés sur 2 semaines
+	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
 
 	protected int qualite;
 	protected double pourcentage_HQ = 0.02;
@@ -82,11 +82,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public double getNb_nouveau_hectares() {
-		return nb_nouveau_hectares;
+		return nb_nouveaux_hectares;
 	}
 
 	public void setNb_nouveau_hectares(int nb_nouveau_hectares) {
-		this.nb_nouveau_hectares = nb_nouveau_hectares;
+		this.nb_nouveaux_hectares = nb_nouveau_hectares;
 	}
 	
 	public void initialiser() {
@@ -115,7 +115,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
-		long v =((long) getNb_hectares_actuel())/52; // 52 = 0.5 (tonnes) / 26 (tours de jeu en un an)
+		long v =((long) getNb_hectares_actuel())/48; // 48 = 0.5 (tonnes) / 24 (tours de jeu en un an)
 		return v;
 	}
 	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
@@ -160,6 +160,25 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		setNb_nouveau_hectares(0);
 		return res;
 	}	
+	
+	public void ajout_plantation_journal() {
+		this.journalPlantation.ajouter(" ");
+		this.journalPlantation.ajouter("------------ ETAPE " + Filiere.LA_FILIERE.getEtape() + " ---------------");
+		this.journalPlantation.ajouter("Cout de la plantation : " + cout_plantation());
+		if (nb_nouveaux_hectares == 0) {
+			this.journalPlantation.ajouter("Pas de nouveaux hectares achetés ");
+		}
+		else {
+			this.journalPlantation.ajouter("Nouveau hectares achetes : " + nb_nouveaux_hectares);
+		}
+		this.journalPlantation.ajouter(" ");
+		this.journalPlantation.ajouter("a ce tour on a produit :");
+		this.journalPlantation.ajouter(" .      " + production_BQ() + " tonnes de fèves de basse qualité");
+		this.journalPlantation.ajouter(" .      " + production_MQ() + " tonnes de fèves de moyenne qualité");
+		this.journalPlantation.ajouter(" .      " + production_HQ() + " tonnes de fèves de haute qualité");
+	}
+	
+	
 
 	/* Cette fonction sert à implémenter notre stratégie
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
@@ -168,6 +187,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void next_plantation() {
 		// On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
+		ajout_plantation_journal();
 		
 		// On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {

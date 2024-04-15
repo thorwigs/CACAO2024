@@ -71,14 +71,12 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected abstract void next_stocks();
 	
 	public void next() {
-		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
-		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 		this.DebiteCoutParStep();
 		this.allNext();	
-		this.getIndicateurs();
+		this.journal.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
+		this.journal.ajouter("cout de stockage " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
+		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -93,7 +91,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f: Feve.values() ) {
-			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, stock.get(f), prodParStep.get(f)*24, prodParStep.get(f)*6);
+			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
 			res.add(v);
 		}
 		return res;
