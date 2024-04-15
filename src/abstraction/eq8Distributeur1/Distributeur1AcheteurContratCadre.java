@@ -191,6 +191,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			}
 			double e = this.stock_Choco.get(contrat.getProduit()); 
 		    x = new Echeancier (a,b,50);	
+//		    x = new Echeancier (a,b,c-d-e);
 		}
 		return x;
 	}

@@ -105,11 +105,13 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 					return 0.1 * capaciteTG/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1);
 				}
 				if(choco.getChocolat().getGamme()==Gamme.HQ) {
-					return 0.3 * capaciteTG / nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1);
+					return 0.3 * capaciteTG / nombreMarquesParType.getOrDefault(Chocolat.C_HQ_E, 1);
 				}
 			}
 		}
 		return 0;
+		
+//		return quantiteEnVente(choco,crypto)/10.0;
 
 	}
 	
