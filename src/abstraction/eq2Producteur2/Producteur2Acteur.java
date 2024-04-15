@@ -78,7 +78,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 		this.DebiteCoutParStep();
 		this.allNext();	
-		this.getIndicateurs();
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -93,9 +92,8 @@ public abstract class Producteur2Acteur implements IActeur {
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f: Feve.values() ) {
-			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, stock.get(f), prodParStep.get(f)*24, prodParStep.get(f)*6);
+			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
 			res.add(v);
-			System.out.println(v.getNom()+ v.getValeur());
 		}
 		return res;
 	}
