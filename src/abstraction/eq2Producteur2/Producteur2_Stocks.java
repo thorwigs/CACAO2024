@@ -10,20 +10,16 @@ import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
-	private static final double SEUIL = 2000000; 
-	//seuil max de la production stockee (voir ce qu'on fait du reste: vente, poubelle, produit moins, ...)
-	//déterminer ce qu'on fait en fonction de comment on est proche du seuil max
+	//seuil max de la production stockee
+	private static final double SEUIL = 2000000;
 	
-	//private final int PRIX_STOCK_TONNE = 0; récupérable via la filière
-	
+	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
 	private static final double DELAI_MQ_BQ = 8;
 	private static final double DELAI_BQ_JETE = 12;
 		
 	private List<Producteur2_Lot> lst_stock_total;
 	protected Journal journalStocks;
-	
-	//FILIERE.getEtape() pour avoir le numéro d'étape
 	
 	public Producteur2_Stocks() {
 		super();
@@ -68,10 +64,9 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//Faite par Quentin
 	//Met à jour la liste des stocks en ajoutant un lot produit
-	
 	public void ajout_stock(Feve type_feve, double quantite) {
 		
-		// Si on dépasse le seuil de stockage
+		//Si on dépasse le seuil de stockage
 		if (this.getStockTotal(this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
 			trop_de_stock(type_feve, quantite);
 		}
@@ -98,6 +93,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 	
+	//Faite par Quentin
+	//Initialiser les stocks à l'étape 0 de la filière
 	public void init_stock(Feve type_feve, double quantite) {
 		List<Producteur2_Lot> stocks =  new ArrayList<Producteur2_Lot>();
 		if(quantite != 0 && type_feve == Feve.F_BQ) {
@@ -123,7 +120,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//Faite par Noémie
 	//Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
-	
 	public void lot_to_hashmap() {
 		List<Producteur2_Lot> l = this.getLst_Stock_total();
 		double feve_bq = 0;
@@ -201,7 +197,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		return lst_lot_feve;
 	}
 	
-	//Faite par Noémie
+	//Faite par Quentin
 	//Calcule le coût total de stockage
 	public double cout_total_stock() {
 		double cout_moyen = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
@@ -231,7 +227,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		return quantite_prise;
 	}
 	
-	// Faite par Noemie 
+	//Faite par Noemie 
+	//Permet de gérer le surplus de stock après avoir dépassé le seuil défini
 	public void trop_de_stock(Feve type_feve, double quantite) {
 		double stock_init = this.getStockTotal(cryptogramme);
 		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
@@ -268,6 +265,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité totale de fèves en stock est de "+this.getStockTotal(this.cryptogramme)+"T");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
 	}
 	
