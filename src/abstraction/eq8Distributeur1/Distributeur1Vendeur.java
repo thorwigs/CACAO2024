@@ -74,7 +74,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		} 
 		else {
 			if (choco.getMarque()== "Chocoflow") {
-				return Math.min(capaciteDeVente*0.20, this.getQuantiteEnStock(choco,crypto));
+				return Math.min((capaciteDeVente*0.20)/chocoProduits.size(), this.getQuantiteEnStock(choco,crypto));
 			}
 			if (choco.toString().contains("C_BQ")) {
 				double x = (capaciteDeVente*0.32)/this.nombreMarquesParType.get(choco.getChocolat());
@@ -116,7 +116,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 /*		double capaciteTG = 0.1 * this.quantiteEnVenteTotal();
 		
 		if (choco.getMarque()== "Chocoflow") {
-			return Math.min(capaciteTG*0.60, this.getQuantiteEnStock(choco,crypto));
+			return Math.min((capaciteTG*0.60)/chocoProduits.size(), this.getQuantiteEnStock(choco,crypto));
 		}
 		
 		else {
@@ -161,25 +161,20 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	public void next() {
 		super.next();
 		journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-//		if (Filiere.LA_FILIERE.getEtape()>=1) {
-//			for (int i=0; i<this.chocolats.size(); i++) {
-//			journalVente.ajouter("Le prix moyen du chocolat \""+chocolats.get(i).getNom()+"\" a l'etape precedente etait de "+Filiere.LA_FILIERE.prixMoyen(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-1));
-//			journalVente.ajouter("Les ventes de chocolat \""+chocolats.get(i)+" il y a un an etaient de "+Filiere.LA_FILIERE.getVentes(chocolats.get(i), Filiere.LA_FILIERE.getEtape()-24));
-//			}
-//		}
 		journalVente.ajouter("QuantitéEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
 		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
 		System.out.println("quantiteEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
 		System.out.println("quantiteEnVenteTotal : "+this.quantiteEnVenteTotal()*0.1);
 		System.out.println("capaciteDeVente : "+this.capaciteDeVente*0.1);
 		for (ChocolatDeMarque choc : chocolats) {
+			System.out.println(choc);
 			System.out.println("Stock de "+choc.getNom()+" : "+stock_Choco.get(choc));
 			System.out.println("Quantite en vente de "+choc.getNom()+" : "+this.quantiteEnVente(choc, cryptogramme));
 			System.out.println("Quantite en vente TG de "+choc.getNom()+" : "+this.quantiteEnVenteTG(choc, cryptogramme));
 		}
-		System.out.println(chocoProduits.size());
 		System.out.println("");
 		journalVente.ajouter("=================================");
+		
 
 	}
 

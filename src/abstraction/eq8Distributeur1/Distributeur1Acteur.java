@@ -166,31 +166,28 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		if (this.cryptogramme==cryptogramme) {
 			if (stock_Choco.containsKey(p)) {
 				return stock_Choco.get(p);
-			} else{
-				return 0;
-			}
-		} else {
-			return 0;
+			} 
 		}
+		return 0.0;
+	}
+	
+	public List<ChocolatDeMarque> getChocolatsProduits() {	
+		if (this.chocoProduits.size()==0) {
+			Chocolat C_MQ_E = Chocolat.C_MQ_E;
+			int pourcentageCacao1 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_MQ_E.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_MQ_E, "Chocoflow", pourcentageCacao1));
+			
+			Chocolat C_HQ_E = Chocolat.C_HQ_E;
+			int pourcentageCacao2 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_HQ_E.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_HQ_E, "Chocoflow", pourcentageCacao2));
+		} 
+		return this.chocoProduits;
 	}
 	
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> choc = new LinkedList<String>();
 		choc.add("Chocoflow");
 		return choc;
-	}
-
-	public List<ChocolatDeMarque> getChocolatsProduits() {	
-		if (chocoProduits.size()==0) {
-			Chocolat C_MQ_E = Chocolat.C_MQ_E;
-			int pourcentageCacao1 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_MQ_E.getGamme()).getValeur());
-			chocoProduits.add(new ChocolatDeMarque(C_MQ_E, "Chocoflow", pourcentageCacao1));
-			
-			Chocolat C_HQ_E = Chocolat.C_HQ_E;
-			int pourcentageCacao2 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_HQ_E.getGamme()).getValeur());
-			chocoProduits.add(new ChocolatDeMarque(C_HQ_E, "Chocoflow", pourcentageCacao2));
-		} 
-		return chocoProduits;
 	}
 		
 }
