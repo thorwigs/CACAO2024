@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVendeurBourse {
+public class Producteur1VendeurBourse extends Producteur1Production implements  IVendeurBourse {
 	public double  prixSeuilHQ ;
 	public double  prixSeuilBQ ;
 	public double  prixSeuilMQ ;
