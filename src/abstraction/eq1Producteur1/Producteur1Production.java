@@ -12,20 +12,39 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1Production extends Producteur1Plantation{
 	protected double prix_hq_F;
 	protected Journal journalProduction;
+	protected HashMap<String, Integer> ageStock;
+
 	//protected HashMap<Feve, Variable> stockag;
 	
 	public Producteur1Production() {
 		super();
 		this.journalProduction = new Journal(this.getNom()+"   journal Production",this);
+		this.ageStock = new HashMap<String, Integer>();
 		this.prodParStep = this.ProdParStep();
 		this.stock = this.IniStock();
-
+		for (Feve feve : this.stock.keySet()) {
+			String s = feve.toString()+"/" +this.getQuantiteEnStock(feve, cryptogramme);
+			this.ageStock.put(s, 0);
+			this.journalProduction.ajouter(s+ " a l'age suivant"+ this.ageStock.get(s));
+		}
+		
 	}
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme && this.stock.containsKey(p)) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			return this.stock.get(p).getValeur(cryptogramme); // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+		}
+	}
+	public void updateAge() {
+		for (String s : this.ageStock.keySet()) {
+			this.ageStock.put(s, this.ageStock.get(s)+1);
+			this.journalProduction.ajouter(s+ " a l'age suivant"+ this.ageStock.get(s));
+		}
+		for (Feve feve : this.stock.keySet()) {
+			String s = feve.toString()+"/" +this.getQuantiteEnStock(feve, cryptogramme);
+			this.ageStock.put(s, 0);
+			this.journalProduction.ajouter(s+ " a l'age suivant"+ this.ageStock.get(s));
 		}
 	}
 	public void feveToEqui() {
@@ -51,6 +70,16 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 		
 	}
+	public void degradStock() {
+		for (String s : this.ageStock.keySet()) {
+			
+				
+			}
+	
+	
+		
+		
+	}
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = super.getIndicateurs();
 		res.addAll(this.stock.values());
@@ -59,7 +88,12 @@ public class Producteur1Production extends Producteur1Plantation{
 
 	public void next() {
 		super.next();
-		
+		this.updateAge();
+		this.degradStock();
+		this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_BQ)+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_MQ)+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_HQ)+ "en stock pour la gamme HQ en  :"+ Filiere.LA_FILIERE.getEtape());
+
 		double totalStock = 0;
 		for (Feve f : Feve.values()) {
 			this.stock.get(f).ajouter(this,this.getProd().get(f) );
