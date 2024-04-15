@@ -198,6 +198,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract double cout_humain_par_step();
 	public abstract double cout_plantation();
 	
+	//
 	public double getCoutTotalParStep() {
 		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
 		return somme;

@@ -66,7 +66,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	//Met à jour la liste des stocks en ajoutant un lot produit
 	public void ajout_stock(Feve type_feve, double quantite) {
 		
-		// Si on dépasse le seuil de stockage
+		//Si on dépasse le seuil de stockage
 		if (this.getStockTotal(this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
 			trop_de_stock(type_feve, quantite);
 		}
@@ -197,7 +197,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		return lst_lot_feve;
 	}
 	
-	//Faite par Noémie
+	//Faite par Quentin
 	//Calcule le coût total de stockage
 	public double cout_total_stock() {
 		double cout_moyen = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
@@ -257,18 +257,20 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	//Faite par Quentin
 	//Ajoute les nouvelles informations sur le stock au journal du stock
 	public void ajout_stock_journal() {
-		this.journalStocks.ajouter("La quantité de fèves_HQ en stock est de "+this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme)+"kg");
-		this.journalStocks.ajouter("La quantité de fèves_HQ_BE en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_BE, this.cryptogramme)+"kg");
-		this.journalStocks.ajouter("La quantité de fèves_MQ en stock est de "+this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme)+"kg");
-		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"kg");
-		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"kg");
-		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter("La quantité de fèves_HQ en stock est de "+this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_BE en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_BE, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_MQ en stock est de "+this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"T");
+		this.journalStocks.ajouter("La quantité totale de fèves en stock est de "+this.getStockTotal(this.cryptogramme)+"T");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
 	}
 	
 	public void next_stocks() {
 		this.lot_to_hashmap();
 		this.changement_qualite();
+		this.ajout_stock_journal();
 	}
 }
 
