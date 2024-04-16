@@ -15,7 +15,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implements IVendeurContratCadre {
+public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse implements IVendeurContratCadre {
 
 	private static int PRIX_DEFAUT = 4500;
 	
@@ -41,8 +41,8 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		//System.out.println("stock "+stock);
-		//System.out.println("feves en stock"+stock.keySet());
+		//System.out.println("\n stock "+stock);
+		//System.out.println("feves en stock \n"+stock.keySet());
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
@@ -60,10 +60,11 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
 					}
 				} else {
-					journalCC.ajouter("   pas d'acheteur");
+					journalCC.ajouter("pas d'acheteur");
 				}
 			}
 		}
+		
 		// On archive les contrats termines
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0) {
@@ -199,8 +200,9 @@ public class Producteur2VendeurCCadre extends Producteur2VendeurBourse implement
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double stockActuel = stock.get(produit);
 		double aLivre = Math.min(quantite, stockActuel);
+		this.stock_a_vendre((Feve) produit, quantite);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stock.put((Feve) produit,stock.get((Feve) produit)-aLivre);
+		//this.ajout_stock((Feve) produit, stock.get((Feve) produit)-aLivre);
 		return aLivre;
 	} 
 }

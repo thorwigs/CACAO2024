@@ -1,94 +1,107 @@
 package abstraction.eq6Transformateur3;
 
+import java.awt.Color;
 import java.util.LinkedList;
+import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.ExempleTransformateurContratCadre;
+import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre implements IVendeurContratCadre{
 
-	public boolean vend(IProduit produit) {
-		/**
-		 * Methode appelee par le superviseur afin de savoir si l'acheteur
-		 * est pret a faire un contrat cadre sur le produit indique.
-		 * @param produit
-		 * @return Retourne false si le vendeur ne souhaite pas etablir de contrat 
-		 * a cette etape pour ce type de produit (retourne true si il est pret a
-		 * negocier un contrat cadre pour ce type de produit).
-		 */
-		return true;
+	public Transformateur3VendeurCCadre() {
+		super();
+	}
+	
+	
+	public void next() {
+		super.next();
+		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
+		for (Chocolat c : stockChoco.keySet()) { 
+			if (stockChoco.get(c)-restantDu(c)>2000) { 
+				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
+				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
+				if (acheteurs.size()>0) {
+					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+					journalCC6.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
+					if (contrat==null) {
+						journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
+					} else {
+						this.contratsEnCours.add(contrat);
+						journalCC6.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+					}
+				} else {
+					journalCC6.ajouter("   pas d'acheteur");
+				}
+			}
+		}
+		//On archive les contrats termines
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getQuantiteRestantALivrer()==0.0) {
+				this.contratsTermines.add(c);
+			}
+		}
+		for (ExemplaireContratCadre c : this.contratsTermines) {
+			this.contratsEnCours.remove(c);
+		}
+		this.journalCC6.ajouter("=== Partie réception Fèves ====================");
 	}
 
-	@Override
+	public double restantDu(Chocolat c) {
+		double res=0;
+		for (ExemplaireContratCadre p : this.contratsEnCours) {
+			if (p.getProduit().equals(c)) {
+				res+=p.getQuantiteRestantALivrer();
+			}
+		}
+		return res;
+	}
+
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		return jx;
+	}
+
+	public boolean vend(IProduit produit) {
+		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>2000;
+	}
+
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		/**
-		 * Methode appelee par le SuperviseurVentesContratCadre lors de la phase de negociation
-		 * sur l'echeancier afin de connaitre la contreproposition du vendeur. Le vendeur
-		 * peut connaitre les precedentes propositions d'echeanciers via un appel a la methode
-		 * getEcheanciers() sur le contrat. Un appel a getEcheancier() sur le contrat retourne 
-		 * le dernier echeancier que l'acheteur a propose.
-		 * @param contrat
-		 * @return Retourne null si le vendeur souhaite mettre fin aux negociations en renoncant a
-		 * ce contrat. Retourne l'echeancier courant du contrat (contrat.getEcheancier()) si il est
-		 * d'accord avec cet echeancier. Sinon, retourne un autre echeancier qui est une contreproposition.
-		 */
 		return contrat.getEcheancier();
 	}
 
-	@Override
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		/**
-		 * Methode appele par le SuperviseurVentesContratCadre apres une negociation reussie
-		 * sur l'echeancier afin de connaitre le prix a la tonne que le vendeur propose.
-		 * @param contrat
-		 * @return La proposition initale du prix a la tonne.
-		 */
-		return 0;
+		
+		return contrat.getPrix(); 
+		
 	}
 
-	@Override
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		/**
-		 * Methode appelee par le SuperviseurVentesContratCadre apres une contreproposition
-		 * de prix different de la part de l'acheteur, afin de connaitre la contreproposition
-		 * de prix du vendeur.
-		 * @param contrat
-		 * @return Retourne un nombre inferieur ou egal a 0.0 si le vendeur souhaite mettre fin
-		 * aux negociation en renoncant a ce contrat. Retourne le prix actuel a la tonne du 
-		 * contrat (contrat.getPrix()) si le vendeur est d'accord avec ce prix.
-		 * Sinon, retourne une contreproposition de prix.
-		 */
-		 return 1;
+		return contrat.getPrix();
 	}
 
-	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		/**
-		 * Methode appelee par le SuperviseurVentesContratCadre afin de notifier le
-		 * vendeur de la reussite des negociations sur le contrat precise en parametre
-		 * qui a ete initie par l'acheteur.
-		 * Le superviseur veillera a l'application de ce contrat (des appels a livrer(...) 
-		 * seront effectues lorsque le vendeur devra livrer afin d'honorer le contrat, et
-		 * des transferts d'argent auront lieur lorsque l'acheteur paiera les echeances prevues)..
-		 * @param contrat
-		 */
+		this.contratsEnCours.add(contrat);
 	}
 
-	@Override
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-		/**
-		 * Methode appelee par le SuperviseurVentesContratCadre lorsque le vendeur doit livrer 
-		 * quantite tonnes de produit afin d'honorer le contrat precise en parametre. 
-		 * @param produit
-		 * @param quantite
-		 * @param contrat
-		 * @return Retourne la quantite livree. Une penalite est prevue si cette quantite
-		 *  est inferieure a celle precisee en parametre
-		 */
+		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
+		stockChoco.put((Chocolat)produit, stockChoco.get((Chocolat)produit)-quantite);
+		totalStocksChoco.retirer(this, quantite, cryptogramme);
 		return quantite;
 	}
-
 }
+
