@@ -158,7 +158,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
-		double total = production_BQ() + production_MQ() + production_HQ();
+		/*double total = production_BQ() + production_MQ() + production_HQ();
+		System.out.println(total);*/
 		ajout_stock(Feve.F_BQ, production_BQ());
 		ajout_stock(Feve.F_MQ, production_MQ());
 		ajout_stock(Feve.F_HQ_E, production_HQ());

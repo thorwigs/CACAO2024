@@ -11,7 +11,7 @@ import abstraction.eqXRomu.produits.Feve;
 public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//seuil max de la production stockee
-	private static final double SEUIL = 2000000;
+	private static final double SEUIL = 400000;
 	
 	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
@@ -20,6 +20,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 	private List<Producteur2_Lot> lst_stock_total;
 	protected Journal journalStocks;
+	
+	protected abstract void trop_d_employes();
 	
 	public Producteur2_Stocks() {
 		super();
@@ -230,6 +232,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	//Faite par Noemie 
 	//Permet de gérer le surplus de stock après avoir dépassé le seuil défini
 	public void trop_de_stock(Feve type_feve, double quantite) {
+		this.trop_d_employes();
 		double stock_init = this.getStockTotal(cryptogramme);
 		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
 		double quantite_retiree = 0;
@@ -252,8 +255,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 			this.ajout_stock(type_feve, quantite);
 		}
 	}
-	
-	
+	 
+
 	//Faite par Quentin
 	//Ajoute les nouvelles informations sur le stock au journal du stock
 	public void ajout_stock_journal() {
@@ -272,6 +275,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	//Faite par Quentin
 	
 	public void next() {
+		System.out.println("\n quantite stock : " + this.getStockTotal(cryptogramme));
 		super.next();
 		this.lot_to_hashmap();
 		this.changement_qualite();
