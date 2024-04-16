@@ -48,13 +48,57 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		
 		this.journalCC6.ajouter(Color.BLUE, Color.white,"=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		this.journalCC6.ajouter("=== Partie Achat fèves ====================");
-		/*HashMap<Feve, Integer> Decision = super.Decision();
+		HashMap<Feve, Integer> Decision = super.Decision();
 		for(Feve f : Decision.keySet()) {
 			if(Decision.get(f)>0) {
-				this.journalCC6.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+				this.journalCC6.ajouter("   "+f+" suffisamment de vente pour passer un CC");
+				double parStep = Decision.get(f);
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
+				for(IVendeurContratCadre v : vendeurs) {
+					if (v instanceof Transformateur3Acteur || 
+							v instanceof Transformateur1Acteur ||
+							v instanceof Transformateur2Acteur ||
+							v instanceof Distributeur1Acteur ||
+							v instanceof Distributeur2Acteur
+							){
+						vendeurs.remove(v);
+						break;
+					}
+				}
+
+				if (vendeurs.size()>0) {
+					IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+					journalCC6.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+					ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+					if (contrat==null) {
+						journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
+					} 
+					else {
+						this.contratsEnCours.add(contrat);
+						journalCC6.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+
+								" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()
+								+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+					}
+				} else {
+					journalCC6.ajouter("   pas de vendeur");
+				}
 			}
+			// On archive les contrats termines
+			for (ExemplaireContratCadre c : this.contratsEnCours) {
+				if (c.getQuantiteRestantALivrer()==0.0 && c.getMontantRestantARegler()<=0.0) {
+					this.contratsTermines.add(c);
+				}
+			}
+			for (ExemplaireContratCadre c : this.contratsTermines) {
+				journalCC6.ajouter("Archivage du contrat "+c);
+				this.contratsEnCours.remove(c);
+			}
+			this.journalCC6.ajouter("Nombre de contrats en cours : "+this.contratsEnCours.size());
+			this.journalCC6.ajouter("Nombre de contrats termines : "+this.contratsTermines.size());
 		}
-		*/
+	}
+		/*
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if (stockFeves.get(f)+restantDu(f)<20000) { /////////COND A MODIF////////
 						this.journalCC6.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
@@ -101,8 +145,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			this.contratsEnCours.remove(c);
 		}
 		this.journalCC6.ajouter("Nombre de contrats en cours : "+this.contratsEnCours.size());
-		this.journalCC6.ajouter("Nombre de contrats termines : "+this.contratsTermines.size());		
-	}
+		this.journalCC6.ajouter("Nombre de contrats termines : "+this.contratsTermines.size());	*/	
 
 	public double restantDu(Feve f) {
 		double res=0;
