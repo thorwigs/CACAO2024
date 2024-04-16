@@ -26,6 +26,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		super();
 		this.journalAO= new Journal (this.getNom() +"Journal AO", this);
 	}
+	
 	public void initialiser() {
 		super.initialiser();
 		this.supAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
@@ -34,29 +35,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			this.prixRetenus.put(cm, new LinkedList<Double>());
 		}
 	}
-	
-	
-	public void next() {
-		super.next();
-		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			if (this.achete(choc)) {
-				double x = 1000 ;
-				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, choc, x);
-				journalAO.ajouter("   Je lance un appel d'offre de "+x+" T de "+choc);
-				if (ov!=null) {
-					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
-					stock_Choco.put(choc, x);
-					totalStockChoco.ajouter(this, x, cryptogramme);
-				}
-			
-			}
-			
-		}
-		this.journalAO.ajouter("=================================");
-	}
-	
-	
+		
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme);
 		int moins_cher_total=0;
@@ -108,10 +87,9 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 					}
 				}
 
-
 				return (produit.getType().equals("ChocolatDeMarque"));
-		//				&& this.stock_Choco.containsKey(produit)
-	//					&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
+//						&& this.stock_Choco.containsKey(produit)
+//						&& 0 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a 
 //						&& this.prevision(produit, 24) - this.stock_Choco.get(produit) - a <= 1000); 
 
 			}
@@ -126,5 +104,23 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		d = d * ((Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
 		return d ; 
 	}	
+	
+	public void next() {
+		super.next();
+		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			if (this.achete(choc)) {
+				double x = 1000 ;
+				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, choc, x);
+				journalAO.ajouter("   Je lance un appel d'offre de "+x+" T de "+choc);
+				if (ov!=null) {
+					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
+					stock_Choco.put(choc,this.getQuantiteEnStock(choc,cryptogramme)+ x);
+					totalStockChoco.ajouter(this, x, cryptogramme);
+				}
+			}
+		}
+		this.journalAO.ajouter("=================================");
+	}
 
 }
