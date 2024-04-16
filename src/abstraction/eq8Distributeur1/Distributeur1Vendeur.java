@@ -31,22 +31,22 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 
 	public void setPrix(ChocolatDeMarque choco) {
 		if (choco.getChocolat()==Chocolat.C_BQ) {
-			ListPrix.put(choco, (double) 10000);
+			ListPrix.put(choco, (double) 3000);
 		}
 		if (choco.getChocolat()==Chocolat.C_MQ) {
-			ListPrix.put(choco, (double) 20000);
+			ListPrix.put(choco, (double) 6000);
 		}
 		if (choco.getChocolat()==Chocolat.C_MQ_E) {
-			ListPrix.put(choco, (double) 25000);
+			ListPrix.put(choco, (double) 10000);
 		}
 		if (choco.getChocolat()==Chocolat.C_HQ) {
-			ListPrix.put(choco, (double) 60000);
+			ListPrix.put(choco, (double) 15000);
 		}
 		if (choco.getChocolat()==Chocolat.C_HQ_E) {
-			ListPrix.put(choco, (double) 80000);
+			ListPrix.put(choco, (double) 22000);
 		}
 		if (choco.getChocolat()==Chocolat.C_HQ_BE) {
-			ListPrix.put(choco, (double) 100000);
+			ListPrix.put(choco, (double) 30000);
 		}
 	}
 	
