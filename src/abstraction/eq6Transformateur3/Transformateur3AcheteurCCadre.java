@@ -33,8 +33,8 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 
 	public Transformateur3AcheteurCCadre() {
 		super();
-		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
-		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
+		this.contratsEnCours= new LinkedList<ExemplaireContratCadre>();
+		this.contratsTermines= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC6 = new Journal(this.getNom()+" journal CC6", this);
 	}
 
