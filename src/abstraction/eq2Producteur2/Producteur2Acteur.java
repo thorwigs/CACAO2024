@@ -65,14 +65,10 @@ public abstract class Producteur2Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
-	
-	protected abstract void next_RH();
-	protected abstract void next_plantation();
-	protected abstract void next_stocks();
+
 	
 	public void next() {
 		this.DebiteCoutParStep();
-		this.allNext();	
 		this.journal.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
 		this.journal.ajouter("cout de stockage " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
@@ -186,14 +182,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
 		return somme;
 	}
-	
-	
-	public void allNext() {
-		this.next_plantation();
-		this.next_RH();
-		this.next_stocks();
-	}
-	
+		
 	public void DebiteCoutParStep() {
 		retireArgent(this.cout_total_stock(), "coût des stocks");	
 		retireArgent(this.cout_humain_par_step(), "coût humain");	

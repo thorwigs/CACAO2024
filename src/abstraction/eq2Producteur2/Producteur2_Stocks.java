@@ -271,7 +271,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//Faite par Quentin
 	
-	public void next_stocks() {
+	public void next() {
+		super.next();
 		this.lot_to_hashmap();
 		this.changement_qualite();
 		this.ajout_stock_journal();

@@ -184,7 +184,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
 	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
 	 */
-	public void next_plantation() {
+	public void next() {
+		super.next();
 		// On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
 		ajout_plantation_journal();

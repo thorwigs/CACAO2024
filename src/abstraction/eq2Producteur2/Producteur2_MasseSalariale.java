@@ -129,13 +129,18 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		return pourcentage;
 	}
 	
+	public double getPourcentage_equitable(){
+		double pourcentage = (this.getNb_employes_equitable()/this.getEmployes())*100;
+		return pourcentage;
+	}
+	
 	/* Fonction qui permet d'implémenter notre stratégie. 
 	Si notre solde est supérieur à ce que nous coûte 10 tours de simulation
 	en ressources humaines on peut embaucher de nouveaux employés adultes dont une part en équitable.
 	On suppose qu'en faisant une telle action on diminue le travail infantile de 3%.
 	*/
 	
-	public void next_RH() {
+	public void strategie()  {
 		double solde = this.getSolde();
 		if (solde > 10*cout_humain_par_step()){
 			int nb_enf = getNb_employes_enfants();
@@ -149,13 +154,18 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 			this.licencie(nb_employes_modif,"enfant");
 			this.embauche(modif_equitable, "adulte équitable");
 			this.embauche(nb_employes_modif - modif_equitable, "adulte");
-			
-			this.journalRH.ajouter("\n-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
-			this.journalRH.ajouter("nombre d'employes équitable :" + this.getNb_employes_equitable());
-			this.journalRH.ajouter("nombre d'employes adultes : "+ this.getNb_employes());
-			this.journalRH.ajouter("nombre d'employes enfants " + this.getNb_employes_enfants());
-			this.journalRH.ajouter("pourcentage d'enfants " + this.getPourcentage_enfants());
 		}
+	}
+	
+	public void next() {
+		super.next();
+		this.strategie();
+		this.journalRH.ajouter("\n-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
+		this.journalRH.ajouter("nombre d'employes équitable :" + this.getNb_employes_equitable());
+		this.journalRH.ajouter("nombre d'employes adultes : "+ this.getNb_employes());
+		this.journalRH.ajouter("nombre d'employes enfants " + this.getNb_employes_enfants());
+		this.journalRH.ajouter("pourcentage d'enfants " + this.getPourcentage_enfants());
+		this.journalRH.ajouter("pourcentage d'employés équitable " + this.getPourcentage_equitable());
 	}
 	
 
