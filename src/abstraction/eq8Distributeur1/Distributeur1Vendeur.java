@@ -165,7 +165,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
 		System.out.println("quantiteEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
 		System.out.println("quantiteEnVenteTotal : "+this.quantiteEnVenteTotal()*0.1);
-		System.out.println("capaciteDeVente : "+this.capaciteDeVente*0.1);
+		System.out.println("capaciteDeVente : "+this.capaciteDeVente*0.1) ;
 		for (ChocolatDeMarque choc : chocolats) {
 			System.out.println(choc);
 			System.out.println("Stock de "+choc.getNom()+" : "+stock_Choco.get(choc));
