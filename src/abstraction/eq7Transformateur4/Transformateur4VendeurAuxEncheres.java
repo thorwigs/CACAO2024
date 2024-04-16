@@ -22,7 +22,7 @@ public class Transformateur4VendeurAuxEncheres extends Transformateur4VendeurCon
 
 	public Transformateur4VendeurAuxEncheres() {
 		super();
-		this.journalEncheres = new Journal(this.getNom()+" journal Encheres", this);
+		this.journalEncheres = new Journal(this.getNom()+" journal Encheres vente", this);
 	}
 
 	public void initialiser() {

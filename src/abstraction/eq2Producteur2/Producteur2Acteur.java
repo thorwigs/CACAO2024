@@ -14,33 +14,52 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur2Acteur implements IActeur {
+public abstract class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 
 	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
-	protected int nb_employes;
-	protected int nb_employes_equitable;
-	protected int nb_employes_enfants;
 
+	public abstract double get_prod_pest_BQ();
+	public abstract double get_prod_pest_MQ();
+	public abstract double get_prod_pest_HQ();
+	
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
+		this.prodParStep= new HashMap<Feve, Double>();
+		
+		this.init_stock(Feve.F_BQ, 103846153.8);
+		this.init_stock(Feve.F_MQ, 62115384.62);
+		this.init_stock(Feve.F_HQ_E, 3076923.076);
+		this.lot_to_hashmap();
+		
+		prodParStep.put(Feve.F_HQ_BE, 0.0);
+		prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
+		prodParStep.put(Feve.F_HQ, 0.0);
+		prodParStep.put(Feve.F_MQ_E, 0.0);
+		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
+		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
 	}
 	
-
+	public abstract void init_stock(Feve type_feve, double quantite);
+	public abstract void lot_to_hashmap();
+	
 	public void initialiser() {
-		stock = new HashMap <Feve, Double>();
-		stock.put(Feve.F_HQ_BE, 5.0);
-		stock.put(Feve.F_BQ, 40.0);
-		stock.put(Feve.F_MQ, 30.0);
+		
+		/*stock.put(Feve.F_HQ_BE, 0.0);
+		stock.put(Feve.F_BQ, 0.0);
+		stock.put(Feve.F_MQ, 0.0);
 		stock.put(Feve.F_HQ,0.0);
 		stock.put(Feve.F_HQ_E, 0.0);
 		stock.put(Feve.F_MQ_E, 0.0);
+		stock.put(Feve.F_MQ_E, 0.0);*/
 		
+		//initialisation prodparstep pour faire marcher get indicateur || à modifier		
 	}
+
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ2";
@@ -54,16 +73,25 @@ public class Producteur2Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
+	
+	protected abstract void next_RH();
+	protected abstract void next_plantation();
+	protected abstract void next_stocks();
+	
 	public void next() {
 		this.journal.ajouter("étape = " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix producteur = " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("stock" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
+		/*this.journal.ajouter("La quantité de fèves_HQ en stock est de "+stock.get(Feve.F_HQ)+"T");
 		this.journal.ajouter("La quantité de fèves_HQ_BE en stock est de "+stock.get(Feve.F_HQ_BE)+"T");
 		this.journal.ajouter("La quantité de fèves_MQ en stock est de "+stock.get(Feve.F_MQ)+"T");
 		this.journal.ajouter("La quantité de fèves_MQ_E en stock est de "+stock.get(Feve.F_MQ_E)+"T");
 		this.journal.ajouter("La quantité de fèves_HQ_E en stock est de "+stock.get(Feve.F_HQ_E)+"T");
-		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");
+		this.journal.ajouter("La quantité de fèves_BQ en stock est de "+stock.get(Feve.F_BQ)+"T");*/
+		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
+		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
+		this.DebiteCoutParStep();
+		this.allNext();
 		
 	}
 
@@ -78,6 +106,10 @@ public class Producteur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		for (Feve f: Feve.values() ) {
+			Variable v= new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, stock.get(f), prodParStep.get(f)*24, prodParStep.get(f)*6);
+			res.add(v);
+		}
 		return res;
 	}
 
@@ -135,16 +167,19 @@ public class Producteur2Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+	//Faite par Quentin
+	//Retourne la quantité stockée pour un type de produit (un type de fève)
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee_prod = this.stock.get(p);
 			return quantite_stockee_prod;
-			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
 	
+	//Faite par Quentin
+	//Retourne la quantité totale de fèves stockée
 	public double getStockTotal(int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee = 0;
@@ -152,10 +187,39 @@ public class Producteur2Acteur implements IActeur {
 				quantite_stockee += this.stock.get(f);
 			}
 			return quantite_stockee;
-			//return 0; // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+	
+	// Fait par Noémie
+	public abstract double cout_total_stock();
+	public abstract double cout_humain_par_step();
+	public abstract double cout_plantation();
+	
+	public double getCoutTotalParStep() {
+		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
+		return somme;
+	}
+	
+	
+	public void allNext() {
+		this.next_plantation();
+		this.next_RH();
+		this.next_stocks();
+	}
+	
+	public void DebiteCoutParStep() {
+		retireArgent(this.cout_total_stock(), "coût des stocks");	
+		retireArgent(this.cout_humain_par_step(), "coût humain");	
+		retireArgent(this.cout_plantation(), "coût de la plantation");	
+	}
+	
+	public void retireArgent(double montant, String raison) {
+		if (montant>0) {
+			Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, raison, montant);
+		}
+			
 	}
 }
 
