@@ -21,7 +21,6 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
-		// TODO Auto-generated method stub
 
 	}
 
