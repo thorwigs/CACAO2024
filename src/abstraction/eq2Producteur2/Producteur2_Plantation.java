@@ -100,35 +100,50 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 		
 	public void planter(double nb_hectares) {
-		if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
-			this.journal.ajouter("on ne peut pas acheter plus de terrain.");
-			return;
+		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
+		
+		// Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
+		if (nb_hectares_possible < this.getNb_hectares_actuel()) {
+			this.embauche((int)(this.getNb_hectares_actuel() - nb_hectares_possible),"adulte");
 		}
-		else { 
-	 		setNb_hectares_actuel(getNb_hectares_actuel() + nb_hectares);
-			// On embauche le même nombre de personnes que d'hectares car 1 hectare = 1 employé
-			// 90% des personnes embauchées sont embauchées en tant qu'employé non-équitable
-			int nb_employes = (int)(nb_hectares*0.9);
-			this.embauche((int) nb_employes, "adulte");
-			this.embauche((int) nb_hectares - nb_employes, "adulte équitable");
+		
+		// Si on a assez de personnel mais pas assez de terrain
+		else {
+			if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
+				this.journal.ajouter("on ne peut pas acheter plus de terrain.");
+				return;
+			}
+			else { 
+		 		setNb_hectares_actuel(getNb_hectares_actuel() + nb_hectares);
+				// On embauche le même nombre de personnes que d'hectares car 1 hectare = 1 employé
+				// 90% des personnes embauchées sont embauchées en tant qu'employé non-équitable
+				int nb_employes = (int)(nb_hectares*0.9);
+				this.embauche((int) nb_employes, "adulte");
+				this.embauche((int) nb_hectares - nb_employes, "adulte équitable");
+			}
 		}
 	}
 	
-	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
-		long v =((long) getNb_hectares_actuel())/48; // 48 = 0.5 (tonnes) / 24 (tours de jeu en un an)
-		return v;
+	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en tonnes
+		
+	// nb_hectares possible représente le nombre d'hectares dont peuvent s'occuper les employés 
+		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
+		long nb_hectares_production = Math.min(nb_hectares_possible, (long) this.getNb_hectares_actuel());
+		long quantite_feve = nb_hectares_production/48; // 48 = 0.5 (tonnes) / 24 (tours de jeu en un an)
+		return quantite_feve;
 	}
-	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
+	
+	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en tonnes
 		return production_cacao()* getPourcentage_HQ();
 	}
-	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en kg
+	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en tonnes
 		return production_cacao() * getPourcentage_BQ();
 	}
-	public double production_MQ() { // retourne la production de cacao de moyenne qualité sur 2 semaines en kg
+	public double production_MQ() { // retourne la production de cacao de moyenne qualité sur 2 semaines en tonnes
 		return production_cacao() * getPourcentage_MQ();
 	}
 	
-	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en kilos
+	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en tonnes
 	public double get_prod_no_pest_HQ() { 
 		return this.production_HQ() * rend_no_pest_HQ; //feve HQ_BE
 	}
