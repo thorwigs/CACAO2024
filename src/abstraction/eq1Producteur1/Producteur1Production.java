@@ -1,5 +1,6 @@
 package abstraction.eq1Producteur1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,10 +72,66 @@ public class Producteur1Production extends Producteur1Plantation{
 		
 	}
 	public void degradStock() {
+		List<String> keysToremove = new ArrayList<>(); 
 		for (String s : this.ageStock.keySet()) {
+			String[] mate = s.split("/");
+			int age = this.ageStock.get(s);
+			double stoc = Double.valueOf(mate[1]);
+			HashMap<Feve, Double> what = new HashMap<Feve, Double>();
+			Feve fe = null;
+			for (Feve f : Feve.values()) {
+				if (f.toString().equals(mate[0])) {
+					what.put(f, stoc);
+					fe = f;
+				}
+			}
+			
+			if (fe.equals(Feve.F_HQ)) {
+				if (age > 4) {
+					this.stock.get(fe).retirer(this, stoc);
+					fe = Feve.F_MQ;
+					Variable v =  new Variable(this.getNom()+"Stock"+fe.toString().substring(2), "<html>Stock de feves "+fe+"</html>",this, 0.0, this.prodParStep.get(fe)*24+stoc, this.prodParStep.get(fe)*6+stoc);
+					this.stock.put(fe, v);
+					this.journalProduction.ajouter("Le stock:"+ stoc +"a ete degrade de HQ a MQ");
+					keysToremove.add(s);
+				}
+			}
+			if (fe.equals(Feve.F_HQ_E) || fe.equals(Feve.F_HQ_BE) && this.getQuantiteEnStock(fe, cryptogramme) >= stoc) {
+				if (age >4) {
+					this.stock.get(fe).retirer(this, stoc);
+					fe = Feve.F_MQ_E;
+					Variable v =  new Variable(this.getNom()+"Stock"+fe.toString().substring(2), "<html>Stock de feves "+fe+"</html>",this, 0.0, this.prodParStep.get(fe)*24+stoc, this.prodParStep.get(fe)*6+stoc);
+					this.stock.put(fe, v);
+					this.journalProduction.ajouter("Le stock:"+ stoc +"a ete degrade de HQE a MQE");
+					keysToremove.add(s);
+				}
+			}
+			if (fe.equals(Feve.F_MQ) || fe.equals(Feve.F_MQ_E) && this.getQuantiteEnStock(fe, cryptogramme) >= stoc) {
+				if (age > 8) {
+					this.stock.get(fe).retirer(this, stoc);
+					fe = Feve.F_BQ;
+					Variable v =  new Variable(this.getNom()+"Stock"+fe.toString().substring(2), "<html>Stock de feves "+fe+"</html>",this, 0.0, this.prodParStep.get(fe)*24+stoc, this.prodParStep.get(fe)*6+stoc);
+					this.stock.put(fe, v);
+					this.journalProduction.ajouter("Le stock:"+ stoc +"a ete degrade de MQ a BQ");
+					keysToremove.add(s);
+				}
+			}
+			if (fe.equals(Feve.F_BQ) && this.getQuantiteEnStock(fe, cryptogramme) >= stoc ) {
+				if ( age > 12) {
+					this.stock.get(fe).retirer(this, stoc);
+					this.journalProduction.ajouter("Le stock:"+ stoc+"doit etre jetee");
+					keysToremove.add(s);
+				}
+			}
+			this.ageStock.put(s, age);
+			
+			
 			
 				
 			}
+		for (String s : keysToremove) {
+			this.ageStock.remove(s);
+		}
 	
 	
 		
@@ -89,10 +146,10 @@ public class Producteur1Production extends Producteur1Plantation{
 	public void next() {
 		super.next();
 		this.updateAge();
-		this.degradStock();
-		this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_BQ)+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
-		this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_MQ)+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
-		this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_HQ)+ "en stock pour la gamme HQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		//this.degradStock();
+		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_BQ)+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_MQ)+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_HQ)+ "en stock pour la gamme HQ en  :"+ Filiere.LA_FILIERE.getEtape());
 
 		double totalStock = 0;
 		for (Feve f : Feve.values()) {
