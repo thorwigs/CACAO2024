@@ -31,7 +31,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 
 	public void setPrix(ChocolatDeMarque choco) {
 		if (choco.getChocolat()==Chocolat.C_BQ) {
-			ListPrix.put(choco, (double) 3000);
+			ListPrix.put(choco, (double) 2900);
 		}
 		if (choco.getChocolat()==Chocolat.C_MQ) {
 			ListPrix.put(choco, (double) 6000);
