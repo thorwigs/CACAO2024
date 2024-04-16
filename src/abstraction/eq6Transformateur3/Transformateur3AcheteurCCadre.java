@@ -63,7 +63,6 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 							v instanceof Distributeur2Acteur
 							){
 						vendeurs.remove(v);
-						break;
 					}
 				}
 
@@ -228,6 +227,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 				return Math.min(prixSansDecouvert, cours*(1.1-(Filiere.random.nextDouble()/3.0)));
 			}
 		}
+		
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
@@ -236,9 +236,11 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero()+ "(avec équipe" + contrat.getVendeur().getNom()+")");
-		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
-		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
+		if(contrat.getAcheteur().getNom().equals("EQ6")) {
+			journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero()+ "(avec équipe" + contrat.getVendeur().getNom()+")");
+			stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+			totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
+		}
 	}
 
 }
