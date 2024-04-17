@@ -117,7 +117,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		for (Feve f: Feve.values() ) {
 			res.add(this.stock_variable.get(f));
 		}
-		System.out.println(" res " + res.get(1).getValeur());
 		return res;
 	}
 
