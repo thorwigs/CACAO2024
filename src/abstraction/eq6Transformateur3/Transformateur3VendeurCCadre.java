@@ -28,7 +28,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		super.next();
 		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
 		for (Chocolat c : stockChoco.keySet()) { 
-			if (stockChoco.get(c)-restantDu(c)>2000) { 
+			if (stockChoco.get(c)-restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
@@ -84,17 +84,28 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		
-		return contrat.getPrix(); 
-		
+		double moyenne  = 0; 
+		int p = 0;
+		double prix = 0;
+		for (ExemplaireContratCadre contratCC : contratsEnCours) {
+			if (((Feve) contrat.getProduit()).equals((Feve) contratCC.getProduit())) {
+				moyenne += contratCC.getPrix();
+				p += 1;
+			
+			}
+		}
+		moyenne = moyenne/p;
+		prix = moyenne + 0.5 * 1200 + 8;
+		return 1.05 * prix;
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		return 0.95*contrat.getPrix();
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur()==this) {
+			journalCC6.ajouter(Color.ORANGE, Color.WHITE,"Nouveau contrat initié par un producteur");
 			journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 			this.contratsEnCours.add(contrat);
 		}
