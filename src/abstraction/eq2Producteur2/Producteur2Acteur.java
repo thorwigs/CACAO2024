@@ -32,6 +32,12 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.stock = new HashMap<Feve, Double>();
 		//this.
 		this.prodParStep= new HashMap<Feve, Double>();
+		this.stock_variable = new HashMap<Feve, Variable>();
+		for (Feve f : Feve.values()) {
+			Variable v =  new Variable(this.getNom()+" stock_variable "+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, 0, 0);
+			this.stock_variable.put(f, v);
+		}
+		
 		
 		this.init_stock(Feve.F_BQ, 103846153.8);
 		this.init_stock(Feve.F_MQ, 62115384.62);
@@ -50,8 +56,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract void lot_to_hashmap();
 	
 	public void initialiser() {
-		
-		this.stock_variable = new HashMap<Feve, Variable>();
+	
 		for (Feve f : Feve.values()) {
 			Variable v =  new Variable(this.getNom()+" stock_variable "+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
 			this.stock_variable.put(f, v);
@@ -66,6 +71,11 @@ public abstract class Producteur2Acteur implements IActeur {
 	}
 	public void setStock_variable(HashMap<Feve, Variable> stock_variable) {
 		this.stock_variable = stock_variable;
+	}
+	public void setStock_variable(Feve f, double n ) {
+		Variable v = this.stock_variable.get(f);
+		v.setValeur(this, n);
+		this.stock_variable.put(f, v);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -85,6 +95,10 @@ public abstract class Producteur2Acteur implements IActeur {
 	public void next() {
 		this.DebiteCoutParStep();
 		
+		for (Feve f : Feve.values()) {
+			this.setStock_variable(f, this.stock.get(f));
+		}
+		
 		this.journal.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
 		this.journal.ajouter("cout de stockage " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
@@ -103,10 +117,9 @@ public abstract class Producteur2Acteur implements IActeur {
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f: Feve.values() ) {
-			System.out.println(" stock " + prodParStep.get(f));
-			Variable v = new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
-			res.add(v);
+			res.add(this.stock_variable.get(f));
 		}
+		System.out.println(" res " + res.get(1).getValeur());
 		return res;
 	}
 
