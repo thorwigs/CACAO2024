@@ -20,7 +20,7 @@ public class Producteur1Production extends Producteur1Plantation{
 	protected ArrayList<Double> Stock_BQ;
 
 	//protected HashMap<Feve, Variable> stockag;
-	
+
 	public Producteur1Production() {
 		super();
 		this.journalProduction = new Journal(this.getNom()+"   journal Production",this);
@@ -29,33 +29,26 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.Stock_MQ = new ArrayList<Double>();
 		this.Stock_BQ = new ArrayList<Double>();
 		this.prodParStep = this.ProdParStep();
+		this.Stocck = this.InitiStock();
+		
 		this.stock = this.IniStock();
 		for (Feve feve : this.stock.keySet()) {
 			String s = feve.toString()+"/" +this.getQuantiteEnStock(feve, cryptogramme);
 			this.ageStock.put(s, 0);
 			//this.journalProduction.ajouter(s+ " a l'age suivant"+ this.ageStock.get(s));
 		}
-		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
 		
+		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
+
 	}
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme && this.stock.containsKey(p)) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
+		if (this.cryptogramme==cryptogramme && this.Stocck.containsKey(p)) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			return this.stock.get(p).getValeur(cryptogramme); // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
-	public void updateAge() {
-		for (String s : this.ageStock.keySet()) {
-			this.ageStock.put(s, this.ageStock.get(s)+1);
-			//this.journalProduction.ajouter(s+ " a l'age suivant"+ this.ageStock.get(s));
-		}
-		for (Feve feve : this.stock.keySet()) {
-			String s = feve.toString()+"/" +this.getQuantiteEnStock(feve, cryptogramme);
-			this.ageStock.put(s, 0);
-			//this.journalProduction.ajouter(s+ " a l'age suivant"+ this.ageStock.get(s));
-		}
-	}
+	
 	public void feveToEqui() {
 		for (Ouvrier ouvrier : this.liste_Ouvrier) {
 			if (ouvrier.estEnfant) {
@@ -73,130 +66,72 @@ public class Producteur1Production extends Producteur1Plantation{
 			this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
 		}
 		else {	boolean bio = true;
-			if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
-				this.prodParStep.put(Feve.F_HQ_BE, null);
-			}
+		if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
+			this.prodParStep.put(Feve.F_HQ_BE, null);
 		}
-		
+		}
+
 	}
-	
+
 	public void Stockage_HQ() {
-		boolean check = true;
-		if (this.Stock_HQ.size() > 4) {
-			for (int i = 0; i<this.Stock_HQ.size()-1 ;i++) {
-				 if (this.Stock_HQ.get(i) <= this.Stock_HQ.get(i+1)) {
-		                check = false;
-		                break; // Exit the loop if any decrease in stock is found
-		            }
-				
-			
-		}
-		if (check) {
-				this.journalProduction.ajouter("We added shit on it is annoyoing3 ");
-				double pro = this.prodParStep.get(Feve.F_MQ);
-				this.stock.get(Feve.F_HQ).retirer(this, this.Stock_HQ.get(0));
-				this.ProdParStep().put(Feve.F_MQ, pro + this.Stock_HQ.get(0));
-				this.journalProduction.ajouter("We added shit on it is annoyoing");
-				this.Stock_HQ.remove(0);
-				
-			}
-		}
-		
-	}
-	public void Stockage_MQ() {
-		boolean check = true;
-			if (this.Stock_MQ.size() == 8) {
-			for (int i = 0; i<7 ;i++) {
-				 if (this.Stock_MQ.get(i + 1) <= this.Stock_MQ.get(i)) {
-		                check = false;
-		                break; // Exit the loop if any decrease in stock is found
-		            }
-				
+
+		if (this.Stock_HQ.size() >= 4) {
+			boolean check = true;
+			for (int i  =this.Stock_HQ.size()-4; i<this.Stock_HQ.size()-1 ;i++) {
+				if (this.Stock_HQ.get(i+1) <= this.Stock_HQ.get(i)) {
+					System.out.println("Diminution");
+					check = false;
+					break; // Exit the loop if any decrease in stock is found
+				}
+
+
 			}
 			if (check) {
 				
-				 double stockIncrease = this.Stock_HQ.get(this.Stock_HQ.size() - 1) - this.Stock_HQ.get(0);
-		            
-		            this.stock.get(Feve.F_HQ).retirer(this, this.Stock_HQ.get(0));
-		            
-		            this.prodParStep.put(Feve.F_MQ, this.prodParStep.get(Feve.F_MQ) + stockIncrease);
-		            this.journalProduction.ajouter("Stock HQ degraded to MsQ. Increased by: " + stockIncrease);
-		            
-		            this.Stock_HQ.remove(0);				
+				System.out.println("Augmentation");
+				double hq = this.Stocck.get(Feve.F_HQ);
+				double pro = this.Stocck.get(Feve.F_MQ);
+				this.stock.get(Feve.F_HQ).retirer(this, this.Stock_HQ.get(this.Stock_HQ.size()-4));
+				this.stock.get(Feve.F_MQ).setValeur(this, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
+				this.Stocck.put(Feve.F_HQ, hq - this.Stock_HQ.get(this.Stock_HQ.size()-4));
+				this.Stocck.put(Feve.F_MQ, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
+				this.journalProduction.ajouter("We added stocks on it is annoyoing");
+				this.Stock_HQ.remove(this.Stock_HQ.size()-4);
+
 			}
 		}
+
 	}
-	
-	public void degradStock() {
-		List<String> keysToremove = new ArrayList<>(); 
-		for (String s : this.ageStock.keySet()) {
-			String[] mate = s.split("/");
-			int age = this.ageStock.get(s);
-			double stoc = Double.valueOf(mate[1]);
-			HashMap<Feve, Double> what = new HashMap<Feve, Double>();
-			Feve fe = null;
-			for (Feve f : Feve.values()) {
-				if (f.toString().equals(mate[0])) {
-					what.put(f, stoc);
-					fe = f;
+	public void Stockage_MQ() {
+		
+		if (this.Stock_MQ.size() >= 8) {
+			boolean check = true;
+			int j = this.Stock_MQ.size()-8;
+			for (int i = j; i<j+7 ;i++) {
+				if (this.Stock_MQ.get(i) <= this.Stock_MQ.get(i)) {
+					check = false;
+					break; // Exit the loop if any decrease in stock is found
 				}
+
 			}
-			
-			if (fe.equals(Feve.F_HQ)) {
-				if (age > 4) {
-					this.stock.get(fe).retirer(this, stoc);
-					fe = Feve.F_MQ;
-					this.stock.get(fe).setValeur(this, stoc);
-					/*)
-					//Variable v =  new Variable(this.getNom()+"Stock"+fe.toString().substring(2), "<html>Stock de feves "+fe+"</html>",this, 0.0, this.prodParStep.get(fe)*24+stoc, this.prodParStep.get(fe)*6+stoc);
-					//this.stock.put(fe, v);
-					 * */
-					 
-					this.journalProduction.ajouter("Le stock:"+ stoc +"a ete degrade de HQ a MQ");
-					keysToremove.add(s);
-				}
-			}
-			if (fe.equals(Feve.F_HQ_E) || fe.equals(Feve.F_HQ_BE) && this.getQuantiteEnStock(fe, cryptogramme) >= stoc) {
-				if (age >4) {
-					this.stock.get(fe).retirer(this, stoc);
-					fe = Feve.F_MQ_E;
-					Variable v =  new Variable(this.getNom()+"Stock"+fe.toString().substring(2), "<html>Stock de feves "+fe+"</html>",this, 0.0, this.prodParStep.get(fe)*24+stoc, this.prodParStep.get(fe)*6+stoc);
-					this.stock.put(fe, v);
-					this.journalProduction.ajouter("Le stock:"+ stoc +"a ete degrade de HQE a MQE");
-					keysToremove.add(s);
-				}
-			}
-			if (fe.equals(Feve.F_MQ) || fe.equals(Feve.F_MQ_E) && this.getQuantiteEnStock(fe, cryptogramme) >= stoc) {
-				if (age > 8) {
-					this.stock.get(fe).retirer(this, stoc);
-					fe = Feve.F_BQ;
-					Variable v =  new Variable(this.getNom()+"Stock"+fe.toString().substring(2), "<html>Stock de feves "+fe+"</html>",this, 0.0, this.prodParStep.get(fe)*24+stoc, this.prodParStep.get(fe)*6+stoc);
-					this.stock.put(fe, v);
-					this.journalProduction.ajouter("Le stock:"+ stoc +"a ete degrade de MQ a BQ");
-					keysToremove.add(s);
-				}
-			}
-			if (fe.equals(Feve.F_BQ) && this.getQuantiteEnStock(fe, cryptogramme) >= stoc ) {
-				if ( age > 12) {
-					this.stock.get(fe).retirer(this, stoc);
-					this.journalProduction.ajouter("Le stock:"+ stoc+"doit etre jetee");
-					keysToremove.add(s);
-				}
-			}
-			this.ageStock.put(s, age);
-			
-			
-			
+			if (check) {
+
+				double mq = this.Stocck.get(Feve.F_MQ);
+				double pro = this.Stocck.get(Feve.F_BQ);
+
+				this.stock.get(Feve.F_MQ).retirer(this, this.Stock_HQ.get(j));
+				this.Stocck.put(Feve.F_MQ, mq - this.Stock_MQ.get(j));
+				this.Stocck.put(Feve.F_BQ, pro + this.Stock_MQ.get(j));
+
 				
+
+
+				this.Stock_HQ.remove(j);				
 			}
-		for (String s : keysToremove) {
-			this.ageStock.remove(s);
 		}
-	
-	
-		
-		
 	}
+
+	
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = super.getIndicateurs();
 		res.addAll(this.stock.values());
@@ -205,7 +140,7 @@ public class Producteur1Production extends Producteur1Plantation{
 
 	public void next() {
 		super.next();
-		this.updateAge();
+		//this.updateAge();
 		//this.degradStock();
 		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_BQ)+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
 		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_MQ)+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
@@ -221,16 +156,18 @@ public class Producteur1Production extends Producteur1Plantation{
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme,"Cout Prod",this.CoutsProd());
 		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
 		this.Stockage_HQ();
+		this.Stock_MQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
+		this.Stockage_MQ();
 
 	}
 	public List<Journal> getJournaux() {
 		List<Journal> res = super.getJournaux();
 		res.add(journalProduction);
 		return res;
-	
+
 	}
-	
-	
+
+
 
 
 }

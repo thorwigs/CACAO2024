@@ -16,6 +16,7 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 	protected HashMap<Feve, Double> production;
 	protected HashMap<Feve, Double> prodAnnee;
 	protected HashMap<Feve, Variable> stock;
+	protected HashMap<Feve, Double> Stocck;
 	public void next() {
 		super.next();
 	}
@@ -112,9 +113,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 
 	public HashMap<Feve, Double> prodAnnuel() {
 		this.prodAnnee = new HashMap<Feve, Double>();
-		this.prodAnnee.put(Feve.F_BQ,0.7*650*this.nombreHec);
-		this.prodAnnee.put(Feve.F_MQ, 650*0.28*this.nombreHec);
-		this.prodAnnee.put(Feve.F_HQ, 650*0.02*this.nombreHec);
+		this.prodAnnee.put(Feve.F_BQ,0.7*0.650*this.nombreHec);
+		this.prodAnnee.put(Feve.F_MQ, 0.650*0.28*this.nombreHec);
+		this.prodAnnee.put(Feve.F_HQ, 0.650*0.02*this.nombreHec);
 		this.prodAnnee.put(Feve.F_HQ_E, 0.0);
 		this.prodAnnee.put(Feve.F_HQ_BE, 0.0);
 		this.prodAnnee.put(Feve.F_MQ_E, 0.0);
@@ -153,8 +154,8 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 		this.prodAnnee = this.prodAnnuel();
 		this.production = new HashMap<Feve, Double>();
 		if (pesticides) {
-			this.production.put(Feve.F_BQ,0.9*this.prodAnnee.get(Feve.F_BQ)/25.5);
-			this.production.put(Feve.F_MQ, 0.85*this.prodAnnee.get(Feve.F_MQ)/25.5);
+			this.production.put(Feve.F_BQ,0.9*this.prodAnnee.get(Feve.F_BQ)/24);
+			this.production.put(Feve.F_MQ, 0.85*this.prodAnnee.get(Feve.F_MQ)/24);
 			this.production.put(Feve.F_HQ, 0.8*this.prodAnnee.get(Feve.F_HQ)/25.5);
 			this.production.put(Feve.F_HQ_E, 0.0);
 			this.production.put(Feve.F_HQ_BE, 0.0);
@@ -182,6 +183,14 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 			this.stock.put(f, v);
 		}
 		return stock;
+	}
+	public HashMap<Feve, Double> InitiStock(){
+		this.Stocck = new HashMap<Feve, Double>();
+		HashMap<Feve, Double> pro = this.ProdParStep();
+		for (Feve f : Feve.values()) {
+			this.Stocck.put(f, pro.get(f)*6);
+		}
+		return this.Stocck;
 	}
 
 }
