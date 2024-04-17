@@ -126,19 +126,22 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 
 	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque") || contrat.getProduit()==null) {
 			return 0.;
 		}
 		ChocolatDeMarque choco = (ChocolatDeMarque) contrat.getProduit();
-		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)*0.9 - this.getCoutStockage()*contrat.getQuantiteTotale();
-		if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(supCC, cryptogramme, contrat.getPrix())) {
+		if (!Filiere.LA_FILIERE.getChocolatsProduits().contains(choco)) { //tous les chocos sont censé être défini et stockés initialement, bizarre bizarre
+			return 0.;
+		}
+		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.9 - this.getCoutStockage()*contrat.getQuantiteTotale();
+		if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(this, cryptogramme, contrat.getPrix())) {
 			if (contrat.getPrix() <= prix_limite) {
 				return contrat.getPrix();
 			} else {
 				return prix_limite;
 			}
 		} else {
-			return Filiere.LA_FILIERE.getBanque().getSolde(supCC, cryptogramme)*0.9-this.getCoutStockage()*contrat.getQuantiteTotale();
+			return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)*0.9-this.getCoutStockage()*contrat.getQuantiteTotale();
 		}
 		
 	}
