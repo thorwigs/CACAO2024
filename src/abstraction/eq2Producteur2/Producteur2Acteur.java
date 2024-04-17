@@ -89,8 +89,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
-
 	
 	public void next() {
 		this.DebiteCoutParStep();
