@@ -98,6 +98,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		if (this.EmbaucheLicenciement(TonnesTransformees)<0) {
 			cout_licenciement = this.EmbaucheLicenciement(TonnesTransformees) * coutLicenciement1Salarie ;
 		}
+		this.JournalMasseSalariale.ajouter("La masse salariale est de"+cout_salaire);
 		return  cout_salaire + cout_licenciement;
 	}
 	
