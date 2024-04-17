@@ -52,6 +52,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 				double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
+				journal_CC.ajouter(vendeurs.toString());
 				boolean est_contratPasse = false;
 				for (IVendeurContratCadre vendeur : vendeurs ) {
 					journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
@@ -135,11 +136,11 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		}
 		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.9 - this.getCoutStockage()*contrat.getQuantiteTotale();
 		if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(this, cryptogramme, contrat.getPrix())) {
-			if (contrat.getPrix() <= prix_limite) {
+			/*if (contrat.getPrix() <= prix_limite) {*/
 				return contrat.getPrix();
-			} else {
+			/*} else {
 				return prix_limite;
-			}
+			}*/
 		} else {
 			return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)*0.9-this.getCoutStockage()*contrat.getQuantiteTotale();
 		}

@@ -27,6 +27,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	
 	public void initialiser() {
 		this.coutStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
+		System.out.println(coutStockage);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -49,7 +50,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	
 	public void next() {
 		this.getJournaux().get(0).ajouter("Step "+Filiere.LA_FILIERE.getEtape());
-		this.getJournaux().get(0).ajouter("Coût de stockage : "+ this.getCoutStockage());
+		this.getJournaux().get(0).ajouter("Coût de stockage pour une tonne : "+ this.getCoutStockage());
 		
 	}
 
