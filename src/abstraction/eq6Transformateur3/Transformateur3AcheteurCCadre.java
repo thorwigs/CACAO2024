@@ -180,7 +180,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			return null;
 		}
 
-		if (stockFeves.get((Feve)(contrat.getProduit()))+restantDu((Feve)(contrat.getProduit()))+contrat.getEcheancier().getQuantiteTotale()<150000) { /////////COND A MODIF////////
+		/*if (stockFeves.get((Feve)(contrat.getProduit()))+restantDu((Feve)(contrat.getProduit()))+contrat.getEcheancier().getQuantiteTotale()<150000) { /////////COND A MODIF////////
 			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) { 
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
@@ -194,7 +194,15 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			} else {
 				double quantite = 1200 + Filiere.random.nextDouble()*(marge-1200); // un nombre aleatoire entre 1200 et la marge
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
+			
 			}
+		}*/
+		if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<12
+				|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>6) {
+			return contrat.getEcheancier();
+		}
+		else{
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 9, contrat.getEcheancier().getQuantiteTotale()/12 );
 		}
 	}
 
@@ -227,6 +235,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 				return Math.min(prixSansDecouvert, cours*(1.1-(Filiere.random.nextDouble()/3.0)));
 			}
 		}
+		
 		
 	}
 
