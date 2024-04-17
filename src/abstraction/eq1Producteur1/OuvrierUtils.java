@@ -3,8 +3,6 @@ package abstraction.eq1Producteur1;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
 
 
 
@@ -12,11 +10,9 @@ public class OuvrierUtils extends Ouvrier {
 	
 	////c'est une classe qui contient des fonctions utiles à opérer sur une liste de type Ouvrier//
 
-	private static IActeur Producteur1Acteur;
 
 //////////////youssef ben abdeljelil////////////////////////
 public static double getSalaireTotal(ArrayList<Ouvrier> listeOuvrier) {
-		
 		double s =0;
 		for (Ouvrier ouvrier : listeOuvrier) {
 			s=s+ouvrier.getSalaire();
@@ -74,6 +70,7 @@ public static double getSalaireTotal(ArrayList<Ouvrier> listeOuvrier) {
 	}
 	
 	public static ArrayList<Ouvrier> addOuvrier(ArrayList<Ouvrier> listeOuvriers, int nombre_à_ajouter, double anciennete, double salaire, double rendement, boolean isEquitable, boolean isForme, boolean isEnfant) {
+		
 	    // Création d'une nouvelle liste qui est une copie de la liste originale
 	    ArrayList<Ouvrier> nouvelleListe = new ArrayList<>(listeOuvriers);
 

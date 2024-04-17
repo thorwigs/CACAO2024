@@ -30,8 +30,14 @@ public class Ouvrier extends Producteur1Acteur {
 		this.anciennete=anciennete;
 		this.salaire=salaire;
 		this.isForme = isForme;
-		this.isEquitable=isEquitable;
 		this.estEnfant=estEnfant;
+		if (estEnfant) {
+			this.isEquitable=false;
+			
+		}
+		else {
+			this.isEquitable=isEquitable;
+		}
 	}
 	public double getAnciennete() {
 		return anciennete;
@@ -46,10 +52,14 @@ public class Ouvrier extends Producteur1Acteur {
 		this.rendement = rendement;
 	}
 	public double getSalaire() {
-		return salaire;
+			return salaire;
+		
+		
 	}
 	public void setSalaire(double salaire) {
-		this.salaire = salaire;
+		this.salaire=salaire;
+		
+		
 	}
 	public boolean getIsEquitable() {
 		return this.isEquitable;
