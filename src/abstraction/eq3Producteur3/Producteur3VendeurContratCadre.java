@@ -67,22 +67,34 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		 */
 	
 	 public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-	        Feve typeDeFeve = (Feve) contrat.getProduit();
-	        double quantiteDemandee = contrat.getEcheancier().getQuantiteTotale();
-	        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(typeDeFeve);
-	     
-	        if (quantiteDisponible >= quantiteDemandee) {
-	            // Si la quantité disponible est suffisante pour répondre à la demande :) accepter l'échéancier 
-	            contratsEnCours.add(contrat); // Ajouter le contrat à la liste des contrats en cours
-	            return contrat.getEcheancier();
-	        } else if (quantiteDisponible > 0) {
-	            // Si une partie de la demande peut être satisfaite, proposer un nouvel échéancier avec cette quantité disponible
-	            return new Echeancier(contrat.getEcheancier().getStepDebut(), contrat.getEcheancier().getNbEcheances(), quantiteDisponible);
-	        } else {
-	            // Si aucune quantité n'est disponible :( ne pas accepter le contrat
-	            return null;
-	        }
-	    }
+		    Feve f = (Feve) contrat.getProduit();
+		    Echeancier echeancierPropose = contrat.getEcheancier();
+		    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
+		    double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
+
+		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
+		        double quantiteDemandee = echeancierPropose.getQuantite(step);
+		        if (quantiteDemandee < SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+	                return null;
+		        }
+
+		        if ( quantiteDisponible >= quantiteDemandee) {
+		            // Si la quantité produite est suffisante pour l'échéance, ajouter cette quantité à l'échéancier
+		            nouvelEcheancier.ajouter(quantiteDemandee);
+		             // Ajouter le contrat à la liste des contrats en cours
+
+		        } else {  	
+		            if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+		                nouvelEcheancier.ajouter(quantiteDisponible);
+		                
+		            } else {
+		                nouvelEcheancier = null; //// Si aucune quantité n'est disponible :( ne pas accepter le contrat
+		                break; // Sortir de la boucle car on ne peut pas honorer le contrat
+		            }
+		        }
+		    }
+		    return nouvelEcheancier;
+		}
 	
 	
 	/**
