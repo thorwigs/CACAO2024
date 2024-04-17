@@ -94,7 +94,15 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		this.contratsEnCours.add(contrat);
+		if(contrat.getAcheteur()==this) {
+			journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
+			this.contratsEnCours.add(contrat);
+		}
+		else {
+			System.out.println(">>>>>>>>>>>>>>>> nouveau contrat"+contrat);
+			this.journalCC6.ajouter("Nouveau contrat de ventes " + contrat.getNumero());
+			this.contratsEnCours.add(contrat);
+		}
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
