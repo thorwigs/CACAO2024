@@ -30,7 +30,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	private List<ContratCadre> contratsTermines;
 	private HashMap<IActeur, Integer> cryptos;
     private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
-    private HashMap<Feve, HashMap<Integer, Double>> livraisonsFeves;
     
 	public static final int MAX_MEME_VENDEUR_PAR_STEP = 15; 
 	// Au cours d'un meme step un acheteur peut negocier au plus MAX_MEME_VENDEUR_PAR_STEP
@@ -44,10 +43,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		this.journal = new Journal("Journal "+this.getNom(), this);
 		this.contratsEnCours= new ArrayList<ContratCadre>();
 		this.contratsTermines= new ArrayList<ContratCadre>();
-		this.livraisonsFeves = new HashMap<Feve, HashMap<Integer, Double>> ();
-		for (Feve f : Feve.values()) {
-			this.livraisonsFeves.put(f,  new HashMap<Integer, Double>());
-		}
 	}
 	public String getNom() {
 		return "Sup."+(this.numero>1?this.numero+"":"")+"CCadre";
@@ -336,11 +331,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 				if (lotLivre>0.0) {
 					if (cc.getProduit().getType().equals("Feve")) {
 						fevesLivrees+=lotLivre;
-						double dejaLivre = 0;
-						if (this.livraisonsFeves.get(cc.getProduit()).keySet().contains(Filiere.LA_FILIERE.getEtape())) {
-							dejaLivre = this.livraisonsFeves.get(cc.getProduit()).get(Filiere.LA_FILIERE.getEtape());
-						}
-						this.livraisonsFeves.get(cc.getProduit()).put(Filiere.LA_FILIERE.getEtape(), dejaLivre+lotLivre);
 					} else {
 						chocoLivre+=lotLivre;
 					}
@@ -455,35 +445,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 						for (ContratCadre cc : this.contratsTermines) {						
 							aEcrire.println( contratToCSV(cc) );
 						}
-						aEcrire.close();
-					}
-					catch (IOException e) {
-						throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
-					}
-					try {
-						PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CC_livraisonsFeves.csv")));
-						Feve[] tfeve = Feve.values();
-						String entete="";
-						for (int i=0; i<tfeve.length-1; i++) {
-							entete=entete+tfeve[i]+";";
-						}
-						entete=entete+tfeve[tfeve.length-1];
-						aEcrire.println(entete);//"NUM;VENDEUR;ACHETEUR;PRODUIT;PRIX;TG;QUANTITE;STEPDEBUT;STEPFIN");
-						for (int step=0; step<Filiere.LA_FILIERE.getEtape(); step++) {
-							String ligne="";
-							for (int i=0; i<tfeve.length-1; i++) {
-								ligne=ligne+this.livraisonsFeves.get(tfeve[i]).get(step)+";";
-							}
-							ligne=ligne+this.livraisonsFeves.get(tfeve[tfeve.length-1]).get(step);
-							aEcrire.println( ligne );
-						}
-//						for (ContratCadre cc : this.contratsEnCours) {						
-//							aEcrire.println( contratToCSV(cc) );
-////							System.out.println(s);
-//						}
-//						for (ContratCadre cc : this.contratsTermines) {						
-//							aEcrire.println( contratToCSV(cc) );
-//						}
 						aEcrire.close();
 					}
 					catch (IOException e) {
