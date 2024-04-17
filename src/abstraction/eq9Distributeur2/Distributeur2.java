@@ -8,6 +8,8 @@ public class Distributeur2 extends Distributeur2MarqueDistributeur  {
 	public Distributeur2() {
 		super();
 	}
+	
+	
 	public void next() {
 		super.next();
 		frais = this.totalStocksChocoMarque.getValeur(cryptogramme)*this.getCoutStockage();

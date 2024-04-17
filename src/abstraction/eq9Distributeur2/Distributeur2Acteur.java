@@ -27,6 +27,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	
 	public void initialiser() {
 		this.coutStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
+		System.out.println(coutStockage);
 	}
 
 	public String getNom() {// NE PAS MODIFIER

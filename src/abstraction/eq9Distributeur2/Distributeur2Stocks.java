@@ -29,8 +29,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	}
 	
 	public void initialiser() {
-		
-
+		super.initialiser();
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 		chocosProduits= Filiere.LA_FILIERE.getChocolatsProduits();		
 
