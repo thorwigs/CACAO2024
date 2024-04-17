@@ -84,13 +84,23 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		
-		return contrat.getPrix(); 
-		
+		double moyenne  = 0; 
+		int p = 0;
+		double prix = 0;
+		for (ExemplaireContratCadre contratCC : contratsEnCours) {
+			if (((Feve) contrat.getProduit()).equals((Feve) contratCC.getProduit())) {
+				moyenne += contratCC.getPrix();
+				p += 1;
+			
+			}
+		}
+		moyenne = moyenne/p;
+		prix = moyenne + 0.5 * 1200 + 8;
+		return 1.05 * prix;
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		return 0.95*contrat.getPrix();
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
