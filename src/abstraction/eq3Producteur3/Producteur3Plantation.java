@@ -49,10 +49,10 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		for (Feve f : prodfeve.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
 			double delta = ventefeve.get(f).getValeur() - prodfeve.get(f).getValeur(); // difference entre vente et production de f
-			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit
+			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit (en tonnes)
 				supp += 10; 
 			}
-			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f
+			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f (en ha)
 		}
 		return surfaces;
 	}
