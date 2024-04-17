@@ -131,10 +131,10 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	}
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
+		journalCC.ajouter("Nouveau contrat acheteur accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
-
+	
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Réception de : "+quantiteEnTonnes+", tonnes de : "+p+" provenant du contrat : "+contrat.getNumero());

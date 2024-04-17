@@ -2,9 +2,11 @@ package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 
 /** 
  * Cette classe a pour objectif de :
@@ -18,6 +20,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	protected double salaire;//salaire par step
 	protected double coutLicenciement1Salarie;
 	protected double capaciteTransformation;// tonnes transformées par 1 salarié par step
+	protected Journal JournalMasseSalariale;
+	protected double coutAdjuvants;//cout des adjuvants pour 1 tonne de chocolat
+	protected double coutMachines;//cout des machines pour 1 tonne de chocolat
 	
 	
 	public Transformateur2MasseSalariale() {
@@ -29,21 +34,45 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		salaire = 2000;
 		coutLicenciement1Salarie = 4*salaire;
 		capaciteTransformation = 3.7;
+		coutAdjuvants = 1200;
+		coutMachines = 8;
+		
+		this.JournalMasseSalariale.ajouter(""); // ajouter les infos 
 	}
 	
-	
-	////// A FINIR /////////////////////////////////////////
+
 	public double TonnesTransformees(Feve f, Chocolat c) {
-		// modif des stocks
-		return 2;
+		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries/0.27); //Quantite maximale a transformer
+		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
+		this.stockChoco.put(c, this.stockChoco.get(c)+tonnesTransformees); //Modifie le stock de tablettes
+		this.stockFeves.put(f, this.stockFeves.get(f)-tonnesTransformees); //Modifie le stock de feves
+		return tonnesTransformees; 
 	}
-	///////////////////////////////////////////////////////
+	
+	public double TotauxTonnesTransformees() {
+		double totaux = 0;
+		for (Feve f : Feve.values()) {
+			Chocolat c = this.lesChocolats.get(0); // à modif
+			totaux += TonnesTransformees(f,c);
+		}
+		this.JournalMasseSalariale.ajouter("On a Transformé au total "+totaux+" tonnes de chocolat");
+		return totaux;
+	}
 	
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
-		// 8 = coût machines pour une tonne par step
-		// 1200 = coût adjuvants pour une tonne par step
-		return tonnes*8 + tonnes*(1-cm.getPourcentageCacao())*1200 ;
+		return tonnes*coutMachines + tonnes*(1-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
+	public double CoutTransformationTotal() {
+		double coutTotal = 0;
+		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			double t = 100; // à modif
+			coutTotal += CoutTransformation(cm,t);	
+		}
+		this.JournalMasseSalariale.ajouter("Le cout total de la transformation est de"+coutTotal);
+		return coutTotal;
+	}
+	
+	
 	
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
@@ -59,7 +88,6 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 			return licenciement;
 		}
 	}
-	
 	public double CoutMasseSalariale(double TonnesTransformees) {
 		double cout_salaire = NbSalaries * salaire;
 		double cout_licenciement = 0;
@@ -71,20 +99,19 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	
 	
 	
-	////// A FINIR //////////////////////////////////////////
+
 	public void next() {
 		super.next();
-		
 		// Paiement des coût de la masse salariale
-		double TonnesTransformees = 2;
-		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", CoutMasseSalariale(TonnesTransformees));
+		double TotauxTransformees = TotauxTonnesTransformees();
+		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", CoutMasseSalariale(TotauxTransformees));
 		
-		// Paiement des coût de transformation pour chaque chocolat de marque
-		/*for (ChocolatDeMarque cm : ) {
-			double tonnes = 1;
-			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût transformation de"+tonnes+"tonnes de"+cm.getMarque(), CoutMasseSalariale(TonnesTransformees));
-		}*/
-	}
-	////////////////////////////////////////////////////////
+		// Paiement des coût de transformation
+		double TotalCout = CoutTransformationTotal();
+		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , TotalCout);
+		}
 
 }
+
+
+
