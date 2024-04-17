@@ -7,7 +7,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 
-// Toutes les variables de poids de cacao sont en TONNES 
+//Toutes les variables de poids de cacao sont en TONNES 
 
 
 //Fait par Anthony 
@@ -19,9 +19,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
 
 	protected int qualite;
-	protected double pourcentage_HQ = 0.02;
-	protected double pourcentage_MQ = 0.38;
-	protected double pourcentage_BQ = 0.6;
+	protected double pourcentage_HQ;
+	protected double pourcentage_MQ;
+	protected double pourcentage_BQ;
 	
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
@@ -97,6 +97,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void initialiser() {
 		super.initialiser();
+		this.setPourcentage_HQ(0.02);
+		this.setPourcentage_MQ(0.38);
+		this.setPourcentage_BQ(0.60);
 	}
 	
 	//Fait par Noémie
@@ -110,12 +113,12 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void planter(double nb_hectares) {
 		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
 		
-		// Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
+		//Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
 		if (nb_hectares_possible < this.getNb_hectares_actuel()) {
 			this.embauche((int)(this.getNb_hectares_actuel() - nb_hectares_possible),"adulte");
 		}
 		
-		// Si on a assez de personnel mais pas assez de terrain
+		//Si on a assez de personnel mais pas assez de terrain
 		else {
 			if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
 				this.journal.ajouter("on ne peut pas acheter plus de terrain.");
@@ -162,7 +165,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return this.production_MQ() * rend_pest_MQ; //feve MQ=98%*get_prod_pest et MQ_E=2%*get_prod_pest
 	}
 	public double get_prod_pest_BQ() {
-		//System.out.println(this.production_BQ());
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
@@ -208,18 +210,20 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	
-
 	/* Cette fonction sert à implémenter notre stratégie
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
 	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
 	 */
+	
 	public void next() {
 		super.next();
-		// On place dans le stock tout ce qu'on produit en un tour
+		modifie_prodParStep();
+		//On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
 		ajout_plantation_journal();
 		perte_plantation(); //perte quotidienne d'arbres
-		// On décide si on achète de nouveaux hectares
+		
+		//On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
 				planter(nb_hectares_max - nb_hectares_actuel);
