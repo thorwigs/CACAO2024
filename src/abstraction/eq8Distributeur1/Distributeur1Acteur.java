@@ -196,6 +196,5 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		return choc;
 	}  
 	
-	
 		
 }
