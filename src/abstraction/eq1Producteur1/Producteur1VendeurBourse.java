@@ -79,6 +79,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		
 		double retire = Math.min(this.stock.get(f).getValeur(), quantiteEnT);
 		this.stock.get(f).retirer(this, retire, cryptogramme);
+		
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f).getValeur((Integer)cryptogramme));
 		super.notificationOperationBancaire(retire*coursEnEuroParT);
 		super.getSolde();
