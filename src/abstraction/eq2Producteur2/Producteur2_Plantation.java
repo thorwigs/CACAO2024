@@ -9,6 +9,9 @@ import abstraction.eqXRomu.produits.Feve;
 
 // Toutes les variables de poids de cacao sont en TONNES 
 
+
+//Fait par Anthony 
+
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double nb_hectares_max;
 	protected double nb_hectares_actuel;
@@ -96,12 +99,14 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		super.initialiser();
 	}
 	
+	//Fait par Noémie
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalPlantation);
 		return jx;
 	}
-		
+	
+	//Fait par Anthony
 	public void planter(double nb_hectares) {
 		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
 		
