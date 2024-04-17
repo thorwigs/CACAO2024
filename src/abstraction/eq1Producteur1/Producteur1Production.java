@@ -11,6 +11,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Production extends Producteur1Plantation{
+
 	protected double prix_hq_F;
 	protected Journal journalProduction;
 	protected HashMap<String, Integer> ageStock;
@@ -226,9 +227,10 @@ public class Producteur1Production extends Producteur1Plantation{
 		List<Journal> res = super.getJournaux();
 		res.add(journalProduction);
 		return res;
-		
+	
 	}
 	
 	
+
 
 }
