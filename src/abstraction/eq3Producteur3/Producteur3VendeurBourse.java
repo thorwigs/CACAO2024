@@ -37,19 +37,21 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 			//on verifie que l'on puisse fournir la quantite demande
 			//il faut modifier les stocks suite a la vente
 			this.setQuantiteEnStock(f, stock_inst-quantiteEnT);
-			this.journal.ajouter("Bourse: Vente de "+quantiteEnT+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*quantiteEnT+" E");
+			this.journal_bourse.ajouter("Bourse: Vente de "+quantiteEnT+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*quantiteEnT+" E");
+			ventefevebourse.put(f, quantiteEnT);
 			//on envoie ce que l'on a promis
 			return quantiteEnT;
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock
 			this.setQuantiteEnStock(f, 0);
-			this.journal.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
+			this.journal_bourse.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
+			ventefevebourse.put(f, stock_inst);
 			return stock_inst;
 		}
 	}
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
-		this.journal.ajouter("Le producteur 3 a ete blacklist de la bourse pour "+dureeEnStep);
+		this.journal_bourse.ajouter("Le producteur 3 a ete blacklist de la bourse pour "+dureeEnStep);
 	}
 }

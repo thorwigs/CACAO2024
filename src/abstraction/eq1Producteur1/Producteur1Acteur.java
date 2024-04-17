@@ -50,6 +50,8 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_enfants;
 
 
+	
+
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
@@ -58,17 +60,24 @@ public class Producteur1Acteur implements IActeur {
 	public void amelioration() {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
-		float croissement =0 ;
+		float croissement =0 ;	
 		int enfants = liste_Ouvrier.getNombreEnfants();
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
-		if ((annee != 0)& (annee % 5 == 0) && croissant & (liste_Ouvrier.getNombreEnfants()>=10)  ) {
-			this.liste_Ouvrier.removeEmploye(10, false, false, true);//remove 10 enfants
+		
+		if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
+			
+			
+			this.liste_Ouvrier.removeEmploye(Math.min(10, enfants), false, false, true);//remove 10 enfants
+
+			
+			
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal = nouveauSalaire;
 				
 				}
+			
 			if (this.labourEnfant < 2 ) { 
 				double nouveauSalaireE = this.labourEnfant*1.05;
 				this.labourEnfant= nouveauSalaireE;
@@ -77,8 +86,9 @@ public class Producteur1Acteur implements IActeur {
 			
 			
 		}
-		
 	}
+		
+	
 	
 	
 	public HashMap<Feve, Double> getProd(){

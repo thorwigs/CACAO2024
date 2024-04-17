@@ -63,7 +63,15 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		//à faire : choisir et verifier le produit qu'on vend (verif stock)
 		//à faire : choisir le prix de vente en fonciton du prix du marché 
 		//			(prix moyen par rapport aux autres marques mais aussi au BQ et au MQ
-		return new OffreVente(offre, this, offre.getProduit(), 1000); //Prix Arbitraire = 1000
+		
+		// On verifie d'abord que l'offre est un chocolat de marque
+		IProduit p = offre.getProduit();
+		if (!(p instanceof ChocolatDeMarque)) {
+			return null;
+		}
+		
+		ChocolatDeMarque cm = (ChocolatDeMarque)p;
+		return new OffreVente(offre, this, cm, 1000); //Prix Arbitraire = 1000
 	}
 	
 	
