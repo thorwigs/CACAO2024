@@ -20,15 +20,20 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	/////////////////
 	// Constructor //
 	/////////////////
+	/**
+	 * Erwann
+	 */
 	public Transformateur2VendeurAppelDOffre() {
 		super();
 		this.journalAO = new Journal(this.getNom()+" journal A.O.", this);
 	}
 	
-	
 	/////////////////////////////////////////////
-	// Initialise et remplie le dico {c:prix} //
+	// Initialise et remplie le dico {c:prix}  //
 	/////////////////////////////////////////////
+	/**
+	 * Erwann
+	 */
 	public void initialiser() {
 		super.initialiser();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
@@ -59,6 +64,9 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	//////////////////////////////////////////////////////////////
 	// Proposition de vente (avec prix, qtté et type de produit //
 	//////////////////////////////////////////////////////////////
+	/**
+	 * Erwann
+	 */
 	public OffreVente proposerVente(AppelDOffre offre) {
 		//à faire : choisir et verifier le produit qu'on vend (verif stock)
 		//à faire : choisir le prix de vente en fonciton du prix du marché 
@@ -109,7 +117,9 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			}
 		}		
 	}
-	
+	/**
+	 * Erwann
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalAO);
