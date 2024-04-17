@@ -33,8 +33,6 @@ public abstract class Producteur3Acteur implements IActeur {
     protected HashMap<Feve, Variable> ventefeve;
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
-    //@youssef
-    private double salaireOuvrier = 2.6; 
     private HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
     private HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
@@ -311,21 +309,31 @@ public abstract class Producteur3Acteur implements IActeur {
 	  * @author mammouYoussef
 	  */	
 	 
-	  protected double coutMaindoeuvre() {
-		   //Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
-		  
-		  
-	        HashMap<Feve, Double> ouvriers = maindoeuvre();
-	        double coutMaindoeuvre = 0;
-	        
-	        // Pour chaque type de fève, calculer le coût de la main-d'œuvre en fonction du nombre d'ouvriers avec le même salaire fixé
-	        for (Feve f : ouvriers.keySet()) {
-	            double nbOuvriers = ouvriers.get(f); 
-	            coutMaindoeuvre += nbOuvriers * salaireOuvrier;  // 2.6 = Salaire par jour par ouvrier, le prix minimal (pour le pérou) décidé avec les autres producteurs
-	        }
-	        
-	        return  coutMaindoeuvre;
-	    }
+	 protected double coutMaindoeuvre() {
+		    // Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
+
+		    HashMap<Feve, Double> ouvriers = maindoeuvre();
+		    double coutMaindoeuvre = 0;
+
+		    // Pour chaque type de fève, calculer le coût de la main-d'œuvre en fonction du nombre d'ouvriers
+		    // et ajuster le salaire selon que la fève est équitable ou non
+		    for (Feve f : ouvriers.keySet()) {
+		        double nbOuvriers = ouvriers.get(f);
+		        double salaireOuvrier; 
+
+		        // Déterminer le salaire en fonction du type de fève
+		        if (f.isEquitable()) {
+		            salaireOuvrier = 3.9; // Salaire pour l'equitable (bio ou non)
+		        } else {
+		            salaireOuvrier = 2.6; // Salaire standard pour les non équitable 
+		        }
+
+		        // Calculer le coût total pour tous les types de fève
+		        coutMaindoeuvre += nbOuvriers * salaireOuvrier;
+		    }
+
+		    return coutMaindoeuvre;
+		}
 	
 	 
 	 protected double calculerCouts() {
