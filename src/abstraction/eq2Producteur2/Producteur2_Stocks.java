@@ -2,6 +2,7 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.List;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 
