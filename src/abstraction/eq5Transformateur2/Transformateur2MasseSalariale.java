@@ -39,8 +39,10 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	
 	////// A FINIR /////////////////////////////////////////
 	public double TonnesTransformees(Feve f, Chocolat c) {
-		// modif des stocks
-		return 2;
+		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries/0.27); //Quantite maximale a transformer
+		
+		
+		return tMaxTransformees*0.9; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 	}
 	
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
