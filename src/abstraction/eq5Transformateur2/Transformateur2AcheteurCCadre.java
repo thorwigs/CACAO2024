@@ -140,38 +140,33 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 			return contrat.getEcheancier(); //on ne négocie pas 
 		}		
 		if (contrat.getEcheancier().getNbEcheances()<52) { //durée trop courte 
-				if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>35000) { //quantité trop grande 
-					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,35000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-35000)) ; //on ramène la durée et la quantité aux bornes fixées
-				}
-				else if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)<20000) { //quantité trop faible
-					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,20000-0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-20000)) ; //on ramène la durée et la quantité aux bornes fixées
-				}
-				else { //quantité convenable
-					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,contrat.getEcheancier().getQuantiteTotale()) ; //on ne change que la durée 
-				}
+			if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>35000) { //quantité trop grande 
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,35000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-35000)) ; //on ramène la durée et la quantité aux bornes fixées
+			} 
+			else if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)<20000) { //quantité trop faible
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,20000-0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-20000)) ; //on ramène la durée et la quantité aux bornes fixées
+			} 
+			if (contrat.getEcheancier().getNbEcheances()>130) { //durée trop longue 
+			if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>35000) { //quantité trop grande 
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,130,35000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-35000)) ; //on ramène la durée et la quantité aux bornes fixées
 			}
-		if (contrat.getEcheancier().getNbEcheances()>130) { //durée trop longue 
-				if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>35000) { //quantité trop grande 
-					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,130,35000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-35000)) ; //on ramène la durée et la quantité aux bornes fixées
-				}
-				else if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)<20000) { //quantité trop faible
-					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,130,20000-0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-20000)) ; //on ramène la durée et la quantité aux bornes fixées
-				}
-				else { //quantité convenable
-					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,130,contrat.getEcheancier().getQuantiteTotale()) ; //on ne change que la durée 
-				}
+			else if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)<20000) { //quantité trop faible
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,130,20000-0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-20000)) ; //on ramène la durée et la quantité aux bornes fixées
 			}
-		
-		//Durée convenable
+		}
+			
+			//Durée convenable
 			if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>35000) { //quantité trop grande 
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),35000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-35000)) ; //on ramène la quantité à la borne fixée et on garde la durée 
 			}
 			else if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)<20000) { //quantité trop faible
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),20000-0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-20000)) ; //on ramène la quantité à la borne fixée et on garde la durée
 			}
-		return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),contrat.getEcheancier().getQuantiteTotale()) ; //on garde tout tel quel
-		
+		}
+		return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape())) ; //on garde tout tel quel
 	}
+			
+		
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
