@@ -168,7 +168,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
-		double total = production_BQ() + production_MQ() + production_HQ();
 		ajout_stock(Feve.F_BQ, this.get_prod_pest_BQ());
 		ajout_stock(Feve.F_MQ, this.get_prod_pest_MQ());
 		ajout_stock(Feve.F_HQ_E, this.get_prod_pest_HQ());
@@ -218,8 +217,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void next() {
 		super.next();
-		System.out.println(" nb_hectares " + this.getNb_hectares_actuel());
-		System.out.println(" nombre employes " + this.getNb_Employes_total());
 		modifie_prodParStep();
 		//On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();

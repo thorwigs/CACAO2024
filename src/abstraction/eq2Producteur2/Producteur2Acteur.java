@@ -84,7 +84,7 @@ public abstract class Producteur2Acteur implements IActeur {
 			
 		//this.getIndicateurs();
 		this.journal.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
-		this.journal.ajouter("cout de stockage " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		this.journal.ajouter("cout de stockage moyen de la filiere " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
 		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 		
