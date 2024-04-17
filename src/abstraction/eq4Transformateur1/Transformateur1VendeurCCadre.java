@@ -33,7 +33,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalCC = new Journal(this.getNom()+" journal CC vendeur", this);
 	}
 	
 	@Override

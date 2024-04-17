@@ -28,7 +28,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalCC = new Journal(this.getNom()+" journal CC acheteur", this);
 	}
 
 	/**
@@ -39,6 +39,14 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	
 	}
+	
+	// Renvoie les journaux
+		public List<Journal> getJournaux() {
+			List<Journal> res=super.getJournaux();
+			res.add(journalCC);
+			return res;
+		}
+	
 	public void next() {
 	    super.next();
 	    this.journalCC.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + " ====================");
