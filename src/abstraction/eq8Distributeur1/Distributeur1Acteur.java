@@ -30,6 +30,8 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
 	protected List<ChocolatDeMarque> chocoProduits;
+	protected List<ChocolatDeMarque> chocoBan;
+
 	
 	
 	public Distributeur1Acteur() {
@@ -37,6 +39,8 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		this.totalStockChoco = new VariablePrivee("Eq8DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
+		this.chocoBan = new LinkedList<ChocolatDeMarque>();
+
 	}
 	
 	public void initialiser() {
@@ -72,6 +76,10 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 			this.stock_Choco.put(cm, stock);
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,cm+"->"+this.stock_Choco.get(cm));
 			this.totalStockChoco.ajouter(this, stock, cryptogramme);
+			
+			if (stock == 0) {
+				this.chocoBan.add(cm);
+			}
 		}
 	}
 
@@ -187,5 +195,7 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		choc.add("Chocoflow");
 		return choc;
 	}  
+	
+	
 		
 }
