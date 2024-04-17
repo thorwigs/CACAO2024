@@ -31,8 +31,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("ChocolatDeMarque") 
-				&& stockChocoMarque.get(produit)>25000; 
+				&& stockChocoMarque.containsKey(produit)
+				&& stockChocoMarque.get(produit)>25000 ; 
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
+		
+		//j'ai modifié un truc : on vérifie que produit est bien un de nos chocolat de marque
 	}
 
 	//Négociations
