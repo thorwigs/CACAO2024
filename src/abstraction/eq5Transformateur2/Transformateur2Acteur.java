@@ -132,7 +132,11 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage);
-
+		//Regarder quantite a chaque step (a virer dans la version finale)
+		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_BQ, cryptogramme)+" t de feves BQ");
+		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Chocolat.C_BQ, cryptogramme)+" t de chocolat BQ");
+		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+" t de feves MQ");
+		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Chocolat.C_MQ, cryptogramme)+" t de chocolat MQ");
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
