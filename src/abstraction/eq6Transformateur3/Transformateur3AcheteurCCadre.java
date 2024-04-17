@@ -65,20 +65,34 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 						vendeurs.remove(v);
 					}
 				}
-
 				if (vendeurs.size()>0) {
-					IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-					journalCC6.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-					ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
-					if (contrat==null) {
-						journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
-					} 
-					else {
-						this.contratsEnCours.add(contrat);
-						journalCC6.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+
-								" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()
-								+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+					for(IVendeurContratCadre vendeur : vendeurs) {
+						journalCC6.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+						if (contrat==null) {
+							journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
+						} 
+						else {
+							journalCC6.ajouter("liste des contrats en cours");
+							for(ExemplaireContratCadre c : this.contratsEnCours) {
+								journalCC6.ajouter("Contrat numéro : " + c.getNumero());
+							}
+							
+							journalCC6.ajouter("liste des contrats terminés");
+							for(ExemplaireContratCadre c : this.contratsTermines) {
+								journalCC6.ajouter("Contrat numéro : " + c.getNumero());
+							}
+							
+							this.contratsEnCours.add(contrat);
+							journalCC6.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+
+									" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()
+									+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+							break;
+						}
+					
 					}
+				
+					
 				} else {
 					journalCC6.ajouter("   pas de vendeur");
 				}
@@ -231,12 +245,15 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+		System.out.println(">>>>>> "+"Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 		journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur().getNom().equals("EQ6")) {
+			
+			journalCC6.ajouter("Contrat numéro : " + contrat.getNumero()+ "à la reception");
 			journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero()+ "(avec équipe" + contrat.getVendeur().getNom()+")");
 			stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 			totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
