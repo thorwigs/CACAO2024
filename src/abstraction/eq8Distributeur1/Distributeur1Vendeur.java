@@ -129,7 +129,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		else {
 			if(choco.getChocolat().isEquitable()) {
 				if(choco.getChocolat().getGamme()==Gamme.MQ) {
-					double x =  (0.1 * capaciteTG)/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1)-1;
+					double x =  (0.1 * capaciteTG)/ (nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1)-1);
 					return Math.min(this.getQuantiteEnStock(choco,crypto), x);
 				}
 				if(choco.getChocolat().getGamme()==Gamme.HQ) {
@@ -151,7 +151,6 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	}
 	
 	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
-//System.out.println(" >>>>>> vente de "+quantite+" de "+choco);
 		int pos= (chocolats.indexOf(choco));
 		if (pos>=0) {
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
