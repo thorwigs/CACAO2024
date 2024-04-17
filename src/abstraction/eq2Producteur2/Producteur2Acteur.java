@@ -18,7 +18,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 
-	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite 
+	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
 	protected HashMap <Feve, Variable> stock_variable;
