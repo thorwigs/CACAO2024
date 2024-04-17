@@ -40,7 +40,14 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		coutAdjuvants = 1200;
 		coutMachines = 8;
 		
-		this.JournalMasseSalariale.ajouter(""); // ajouter les infos 
+		this.JournalMasseSalariale.ajouter("____Initialement____");
+		this.JournalMasseSalariale.ajouter("Nombre de salarié :"+NbSalaries);
+		this.JournalMasseSalariale.ajouter("coût d'un salarié par step :"+salaire);
+		this.JournalMasseSalariale.ajouter("coût de licenciement d'un salarié :"+coutLicenciement1Salarie);
+		this.JournalMasseSalariale.ajouter("coût entretien/achat des machines par step :"+coutMachines);
+		this.JournalMasseSalariale.ajouter("coût 1 tonne d'Adjuvants :"+coutAdjuvants);
+		this.JournalMasseSalariale.ajouter("1 salarié peut transformé "+capaciteTransformation+" tonnes de fèves en chocolat par step");
+		this.JournalMasseSalariale.ajouter("____________________");
 	}
 	
 
