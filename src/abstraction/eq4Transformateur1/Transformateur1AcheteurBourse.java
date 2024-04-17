@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur1AcheteurBourse extends Transformateur1Acteur implements IAcheteurBourse {
@@ -32,7 +34,8 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	 * ici 20000 correspond au stock total de fèves voulues - à changer en fonction dans la simulation
 	 */
 	public double demande(Feve f, double cours) {
-		double stockCible=20000;
+		double stockCible= Math.max(2*this.demandeCC, 20000);
+		this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de fève");
 		double demandeMin=10;
 		double stockCibleHQ = 0.3 * stockCible;
 	    double stockCibleMQ = 0.7 * stockCible;
@@ -67,5 +70,5 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	public void notificationBlackList(int dureeEnStep) {
 		journalAchatBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" ## BLACKLIST ## pendant "+dureeEnStep+" etapes");
 	}
-
+	
 }

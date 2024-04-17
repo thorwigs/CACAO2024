@@ -45,11 +45,11 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 
 	
 	// Renvoie les journaux
-		public List<Journal> getJournaux() {
-			List<Journal> res=super.getJournaux();
-			res.add(journalCC);
-			return res;
-		}
+	public List<Journal> getJournaux() {
+		List<Journal> res=super.getJournaux();
+		res.add(journalCC);
+		return res;
+	}
 
 	@Override
 	public void next() {
@@ -85,6 +85,12 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
 		}
+		
+		this.demandeCC = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			this.demandeCC += c.getQuantiteALivrerAuStep();
+		}
+		this.journalCC.ajouter("La demande des contrats cadres est de "+this.demandeCC+"T");
 		this.journalCC.ajouter("=================================");
 	}
 	

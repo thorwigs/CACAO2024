@@ -37,6 +37,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
+	
+	protected int demandeCC;
 
 	
 	public Transformateur1Acteur() {
@@ -81,6 +83,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
+		
+		this.demandeCC = 0;
 
 	}
 
