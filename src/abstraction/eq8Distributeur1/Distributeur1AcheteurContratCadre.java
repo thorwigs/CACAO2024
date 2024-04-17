@@ -210,16 +210,16 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		
 		
-		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+		for (ChocolatDeMarque choc : chocolats) {
 			System.out.println(""+choc+ " a besoin d'être achté : " + this.achete(choc));
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 				System.out.println("Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
+				System.out.println(vendeurs.size());
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
-				System.out.println(vendeurs.size());
 				IVendeurContratCadre vendeur = null;
 				
 				
