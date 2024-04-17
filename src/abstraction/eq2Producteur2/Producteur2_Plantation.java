@@ -4,6 +4,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 
 // Toutes les variables de poids de cacao sont en TONNES 
@@ -32,7 +33,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.nb_hectares_max=5000000.0*10;
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
-	} 
+	}
 
 
 	public double getNb_hectares_max() {
@@ -160,17 +161,16 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
-		/*double total = production_BQ() + production_MQ() + production_HQ();
-		System.out.println(total);*/
-		ajout_stock(Feve.F_BQ, production_BQ());
-		ajout_stock(Feve.F_MQ, production_MQ());
-		ajout_stock(Feve.F_HQ_E, production_HQ());
-	}
+		double total = production_BQ() + production_MQ() + production_HQ();
+		ajout_stock(Feve.F_BQ, this.get_prod_pest_BQ());
+		ajout_stock(Feve.F_MQ, this.get_prod_pest_MQ());
+		ajout_stock(Feve.F_HQ_E, this.get_prod_pest_HQ());
+	}	
 	
 	public void modifie_prodParStep() {
-	    this.prodParStep.put(Feve.F_HQ, production_HQ());
-	    this.prodParStep.put(Feve.F_MQ, production_MQ());
-	    this.prodParStep.put(Feve.F_BQ, production_BQ());
+	    this.prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
+	    this.prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
+	    this.prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
 	}
 	
 	public double cout_plantation() {
