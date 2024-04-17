@@ -105,22 +105,47 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
-		} else if (contrat.getEcheancier().getNbEcheances()<78 && contrat.getEcheancier().getQuantiteTotale()>35000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,35000) ; // Durée trop courte et trop de quantité
-		
-		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()>35000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,35000) ; // Durée trop longue et trop de quantité
-		
-		} else if (contrat.getEcheancier().getNbEcheances()<78 && contrat.getEcheancier().getQuantiteTotale()<20000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Durée trop longue et trop peu de quantité
-		
-		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()<20000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Durée trop longue et trop peu de quantité
 		}
-		else {
-			return contrat.getEcheancier();
+		else if (contrat.getEcheancier().getNbEcheances()<78) { //durée trop courte 
+			if (contrat.getEcheancier().getQuantiteTotale()>35000) { //quantité trop grande 
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,35000) ; //on ramène la durée et la quantité aux bornes fixées
+			}
+			else if (contrat.getEcheancier().getQuantiteTotale()<20000) { //quantité trop faible
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,20000) ; //on ramène la durée et la quantité aux bornes fixées
+			}
+			else { //quantité convenable
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,contrat.getEcheancier().getQuantiteTotale()) ; //on ne change que la durée 
+			}
+		}
+		else if (contrat.getEcheancier().getNbEcheances()>260) { //durée trop longue 
+			if (contrat.getEcheancier().getQuantiteTotale()>35000) { //quantité trop grande 
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,35000) ; //on ramène la durée et la quantité aux bornes fixées
+			}
+			else if (contrat.getEcheancier().getQuantiteTotale()<20000) { //quantité trop faible
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; //on ramène la durée et la quantité aux bornes fixées
+			}
+			else { //quantité convenable
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,contrat.getEcheancier().getQuantiteTotale()) ; //on ne change que la durée 
+			}
+		}
+		else if (contrat.getEcheancier().getNbEcheances()<260 && contrat.getEcheancier().getNbEcheances()>78) { //bonne durée 
+			if (contrat.getEcheancier().getQuantiteTotale()>35000) { //quantité trop grande 
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),35000) ; //on ramène la quantité à la borne fixée et on garde la durée 
+			}
+			else if (contrat.getEcheancier().getQuantiteTotale()<20000) { //quantité trop faible
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),20000) ; //on ramène la quantité à la borne fixée et on garde la durée
+			}
+			else { //quantité convenable
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),contrat.getEcheancier().getQuantiteTotale()) ; //on garde tout tel quel
+			}
+		}
+		else { //contrat non exploitable 
+			return  null;
 		}
 	}
+		
+				
+	
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		if (contrat.getEcheancier().getQuantiteTotale()*5<contrat.getPrix()) {
