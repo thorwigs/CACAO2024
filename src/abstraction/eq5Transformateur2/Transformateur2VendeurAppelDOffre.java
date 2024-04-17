@@ -32,9 +32,9 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	public void initialiser() {
 		super.initialiser();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
-		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
+		for (ChocolatDeMarque cm : this.chocosProduits) {
 			this.prixAO.put(cm, new LinkedList<Double>());
-		}		
+		}
 	}
 	
 	
@@ -63,7 +63,15 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		//à faire : choisir et verifier le produit qu'on vend (verif stock)
 		//à faire : choisir le prix de vente en fonciton du prix du marché 
 		//			(prix moyen par rapport aux autres marques mais aussi au BQ et au MQ
-		return new OffreVente(offre, this, offre.getProduit(), 1000); //Prix Arbitraire = 1000
+		
+		// On verifie d'abord que l'offre est un chocolat de marque
+		IProduit p = offre.getProduit();
+		if (!(p instanceof ChocolatDeMarque)) {
+			return null;
+		}
+		
+		ChocolatDeMarque cm = (ChocolatDeMarque)p;
+		return new OffreVente(offre, this, cm, 1000); //Prix Arbitraire = 1000
 	}
 	
 	
@@ -74,15 +82,18 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		super.next();
 		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 	}
+	
 	public void notifierVenteAO(OffreVente propositionRetenue) {
 		if(propositionRetenue.getProduit() instanceof ChocolatDeMarque) {
-			ChocolatDeMarque cm = (ChocolatDeMarque)(propositionRetenue.getProduit());
-			double px = propositionRetenue.getPrixT();
-			double quantite = propositionRetenue.getQuantiteT();
-			prixAO.get(cm).add(px); // on fait comme si on avait accepte avec 5% d'augmentation afin que lors des prochains echanges on accepte des prix un peu plus eleves
-			journalAO.ajouter("   Vente par AO de "+quantite+" T de "+cm+" au prix de  "+px);
-			if (prixAO.get(cm).size()>10) {
-				prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
+			ChocolatDeMarque cm =(ChocolatDeMarque)(propositionRetenue.getProduit());
+			if (prixAO.get(cm)!=null) {
+				double px = propositionRetenue.getPrixT();
+				double quantite = propositionRetenue.getQuantiteT();
+				prixAO.get(cm).add(px); // on fait comme si on avait accepte avec 5% d'augmentation afin que lors des prochains echanges on accepte des prix un peu plus eleves
+				journalAO.ajouter("   Vente par AO de "+quantite+" T de "+cm+" au prix de  "+px);
+				if (prixAO.get(cm).size()>10) {
+					prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
+				}
 			}
 		}
 	}
@@ -90,12 +101,15 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		ChocolatDeMarque cm = (ChocolatDeMarque)(propositionRefusee.getProduit());
 		double px = propositionRefusee.getPrixT();
 		double quantite = propositionRefusee.getQuantiteT();
-		prixAO.get(cm).add(px*0.92); // on fait comme si on avait accepte avec 8% de baisse afin que lors des prochains echanges on fasse une meilleure offre
-		journalAO.ajouter("   Echec de vente par AO de "+quantite+" T de "+cm+" au prix de  "+px);
-		if (prixAO.get(cm).size()>10) {
-			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
+		if (prixAO.get(cm)!=null) {
+			prixAO.get(cm).add(px*0.92); // on fait comme si on avait accepte avec 8% de baisse afin que lors des prochains echanges on fasse une meilleure offre
+			journalAO.ajouter("   Echec de vente par AO de "+quantite+" T de "+cm+" au prix de  "+px);
+			if (prixAO.get(cm).size()>10) {
+				prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
+			}
 		}		
 	}
+	
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalAO);
