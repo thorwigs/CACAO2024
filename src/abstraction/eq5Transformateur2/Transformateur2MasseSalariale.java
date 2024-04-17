@@ -45,7 +45,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	
 
 	public double TonnesTransformees(Feve f) {
-		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries/0.27); //Quantite maximale a transformer
+		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries*this.capaciteTransformation); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
 		this.stockChoco.put(c, this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees); //Modifie le stock de tablettes
@@ -98,6 +98,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		if (this.EmbaucheLicenciement(TonnesTransformees)<0) {
 			cout_licenciement = this.EmbaucheLicenciement(TonnesTransformees) * coutLicenciement1Salarie ;
 		}
+		this.JournalMasseSalariale.ajouter("La masse salariale est de"+cout_salaire);
 		return  cout_salaire + cout_licenciement;
 	}
 	
