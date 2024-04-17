@@ -131,8 +131,6 @@ package abstraction.eqXRomu.acteurs;
 		public Filiere getFiliere(String nom) {
 			return Filiere.LA_FILIERE;
 		}
-		
-		
 
 		public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 			if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
