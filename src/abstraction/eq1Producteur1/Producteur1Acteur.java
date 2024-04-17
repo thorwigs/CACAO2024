@@ -50,6 +50,8 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_enfants;
 
 
+	
+
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
