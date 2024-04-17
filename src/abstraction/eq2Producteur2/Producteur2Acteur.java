@@ -42,6 +42,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_MQ_E, 0.0);
 		prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
 		prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
+		
 	}
 	
 	public abstract void init_stock(Feve type_feve, double quantite);
