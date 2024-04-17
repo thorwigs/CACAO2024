@@ -41,7 +41,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		this.JournalMasseSalariale.ajouter(""); // ajouter les infos 
 	}
 	
-
+	/////////////////////////////////////
+	// Nombres de tonnes Transformées  //
+	/////////////////////////////////////
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries/0.27); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
@@ -50,7 +52,6 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		this.stockFeves.put(f, this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees); //Modifie le stock de feves
 		return tonnesTransformees; 
 	}
-	
 	public double TotauxTonnesTransformees() {
 		double totaux = 0;
 		for (Feve f : Feve.values()) {
@@ -60,6 +61,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		return totaux;
 	}
 	
+	/////////////////////////////////////
+	//        Coûts de Transfo         //
+	/////////////////////////////////////
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
 		return tonnes*coutMachines + tonnes*(1-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
@@ -74,7 +78,19 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	}
 	
 	
-	
+	/////////////////////////////////////
+	//     Embauche/Licenciement       //
+	/////////////////////////////////////
+	/* Stratégie Embauche/Licenciement :
+	 * - Pas de Licenciement pour l'instant
+	 * - On embauche seulement si le nombre de tonnes a transformées dépasse la capacité de transfo actuelle
+	 * - On caclul ensuite le total
+	 * 
+	 *  Pour la V2 :
+	 * - créer stratégie de licenciement
+	 * - rajouter intérimaire
+	 * - prendre en compte l'historique
+	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
 		
@@ -99,8 +115,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	}
 	
 	
-	
-
+	//////////////////////////////////////////////////////
+	//   Next : permet de payer les coûts à la banque   //
+	//////////////////////////////////////////////////////
 	public void next() {
 		super.next();
 		// Paiement des coût de la masse salariale
