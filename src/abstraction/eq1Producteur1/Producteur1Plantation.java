@@ -86,7 +86,7 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 	}
 
 	@Override
-	public void recruitWorkers(HashMap<Feve, Double> demand) {
+	public void recruitWorkers(HashMap<Feve, Double> demand) { //??????
 		// TODO Auto-generated method stub
 		for (Feve feve : demand.keySet()) {
 			double requiredRendement = demand.get(feve);
@@ -154,18 +154,21 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 		this.prodAnnee = this.prodAnnuel();
 		this.production = new HashMap<Feve, Double>();
 		if (pesticides) {
+
 			this.production.put(Feve.F_BQ,0.9*this.prodAnnee.get(Feve.F_BQ)/24);
 			this.production.put(Feve.F_MQ, 0.85*this.prodAnnee.get(Feve.F_MQ)/24);
-			this.production.put(Feve.F_HQ, 0.8*this.prodAnnee.get(Feve.F_HQ)/25.5);
+			
+			this.production.put(Feve.F_HQ, 0.8*this.prodAnnee.get(Feve.F_HQ)/24);
+
 			this.production.put(Feve.F_HQ_E, 0.0);
 			this.production.put(Feve.F_HQ_BE, 0.0);
 			this.production.put(Feve.F_MQ_E, 0.0);
 		}
 		
 		else {
-			this.production.put(Feve.F_BQ,0.82*this.prodAnnee.get(Feve.F_BQ)/25.5);
-			this.production.put(Feve.F_MQ, 0.77*this.prodAnnee.get(Feve.F_MQ)/25.5);
-			this.production.put(Feve.F_HQ, 0.72*this.prodAnnee.get(Feve.F_HQ)/25.5);
+			this.production.put(Feve.F_BQ,0.82*this.prodAnnee.get(Feve.F_BQ)/24);
+			this.production.put(Feve.F_MQ, 0.77*this.prodAnnee.get(Feve.F_MQ)/24);
+			this.production.put(Feve.F_HQ, 0.72*this.prodAnnee.get(Feve.F_HQ)/24);
 			this.production.put(Feve.F_HQ_E, 0.0);
 			this.production.put(Feve.F_HQ_BE, 0.0);
 			this.production.put(Feve.F_MQ_E, 0.0);
