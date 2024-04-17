@@ -58,19 +58,24 @@ public class Producteur1Acteur implements IActeur {
 	public void amelioration() {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
-		float croissement =0 ;
+	
 		int enfants = OuvrierUtils.getNombreEnfants(liste_Ouvrier);
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
-		if ((annee != 0)& (annee % 5 == 0) && croissant & (OuvrierUtils.getNombreEnfants(liste_Ouvrier)>=10)  ) {
-			ResultatSuppression resultat =OuvrierUtils.removeEmploye(this.liste_Ouvrier, 10, false, false, true);//remove 10 enfants
+		if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
+			
+			
+			ResultatSuppression resultat =OuvrierUtils.removeEmploye(this.liste_Ouvrier, Math.min(10, enfants), false, false, true);//remove au plus 10 enfants 
 			ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
-			this.liste_Ouvrier=listeMiseAJour;			
+			this.liste_Ouvrier=listeMiseAJour;
+			
+			
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal = nouveauSalaire;
 				
 				}
+			
 			if (this.labourEnfant < 2 ) { 
 				double nouveauSalaireE = this.labourEnfant*1.05;
 				this.labourEnfant= nouveauSalaireE;
