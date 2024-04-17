@@ -7,7 +7,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 
-// Toutes les variables de poids de cacao sont en TONNES 
+//Toutes les variables de poids de cacao sont en TONNES 
 
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double nb_hectares_max;
@@ -207,11 +207,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void next() {
 		super.next();
 		modifie_prodParStep();
-		// On place dans le stock tout ce qu'on produit en un tour
+		//On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
 		ajout_plantation_journal();
 		
-		// On décide si on achète de nouveaux hectares
+		//On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
 				planter(nb_hectares_max - nb_hectares_actuel);

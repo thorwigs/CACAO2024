@@ -100,15 +100,18 @@ public abstract class Producteur2Acteur implements IActeur {
 	}
 
 	// Renvoie les indicateurs
-	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
-		for (Feve f: Feve.values() ) {
-			System.out.println(" stock " + prodParStep.get(f));
-			Variable v = new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
-			res.add(v);
+	/*public List<Variable> getIndicateurs() {
+		List<Variable> res = new Arraylist<Variable>();
+		for (Feve f : this.stock_variable.keySet()) {
+			Variable v = this.stock_variable.get(f);
+			v.setValeur(this, prodParStep.get(f)*6, this.cryptogramme);
+			res.put(v);
+			//System.out.println(" stock " + prodParStep.get(f));
+			//Variable v = new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
+			//res.add(v);
 		}
-		return res;
-	}
+		return this.stock_variable;
+	}*/
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
