@@ -62,12 +62,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return contrat.getQuantiteTotale()*5500;
-	}
+	}//à modifier selon variation du nb d'employer
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return 0;
-	}//s'inspirer de AcheteurCC
+		return contrat.getPrix();
+	}//à modifier selon notre prix minimal accepté
 
 	//Après finalisation contrat 
 	
@@ -115,7 +114,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		
 	//Next
 		
-	public void next() { //à modifier
+	public void next() { 
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Chocolat choco : stockChoco.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
