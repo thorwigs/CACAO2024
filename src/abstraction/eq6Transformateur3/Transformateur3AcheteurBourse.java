@@ -7,8 +7,8 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 
 	@Override
 	public double demande(Feve f, double cours) {
-		if (this.stockFeves.get(f)<20000) {
-			return Math.max(20000-this.stockFeves.get(f),  10); // on n'achete jamais moins de 10T
+		if (this.stockFeves.get(f)<30000) {
+			return this.stockFeves.get(f); 
 		}
 		return 0;
 	}
