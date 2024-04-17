@@ -22,10 +22,11 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.capaciteStockage = Integer.MAX_VALUE;
-		this.coutStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
+		
 	}
 	
 	public void initialiser() {
+		this.coutStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
