@@ -31,6 +31,8 @@ public abstract class Producteur3Acteur implements IActeur {
     protected HashMap<Feve, Variable> prodfeve;
     //creation d'un tableau de variables qui donne les ventes pour chaque type de feve @alexis
     protected HashMap<Feve, Variable> ventefeve;
+    //creation d'un tableau de variables qui donne les stocks pour chaque type de feve @alexis
+    protected HashMap<Feve, Variable> stockfeve;
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
     //@youssef
@@ -48,11 +50,12 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.journal_contrat_cadre = new Journal(this.getNom()+" journal contrat cadre",this);
 		this.prodfeve = new HashMap<Feve,Variable>();
 		this.ventefeve = new HashMap<Feve,Variable>();
+		this.stockfeve = new HashMap<Feve,Variable>();
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
-			this.prodfeve.put(f,  new Variable("Eq3Prod "+f, this, 1.1));
 			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
+			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 0.1));
 			this.ventefevebourse.put(f, 0.2);
 			this.ventefevecadre.put(f, 0.8);
 		}
@@ -167,6 +170,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
 			this.ventefeve.get(f).setValeur(this, ventefevecadre.get(f)+ventefevebourse.get(f));
+			this.stockfeve.get(f).setValeur(this, this.getQuantiteEnStock(f, cryptogramme)) ;
 		}
 	}
 
@@ -182,7 +186,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : Feve.values()) {
-			res.add(prodfeve.get(f));
+			res.add(stockfeve.get(f));
 			res.add(ventefeve.get(f));
 		}
 		return res;
