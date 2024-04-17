@@ -54,6 +54,9 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	@Override
 	public void next() {
 		super.next();
+		// Choix de l'acheteur
+		// Tête de gondole
+		// Gestion du prix
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque f : stockChocoMarque.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stockChocoMarque.get(f) - restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
@@ -61,6 +64,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 				double parStep = Math.max(100, (stockChocoMarque.get(f)-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
+				
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
@@ -176,7 +180,8 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		if (prixCC==0.0) {
 			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
-		double res = Math.max(prixCC*1.25, (double)PRIX_DEFAUT);
+		double prixBaseBourse =  bourse.getCours(((ChocolatDeMarque) contrat.getProduit()).getChocolat().equals(Chocolat.C_HQ_BE)? Feve.F_HQ_E : Feve.F_MQ).getValeur()*1.5;
+		double res = Math.max(Math.max(prixCC*1.25, (double)PRIX_DEFAUT), prixBaseBourse);
 		journalCC.ajouter("      propositionPrix retourne "+res);
 		return res;
 	}
