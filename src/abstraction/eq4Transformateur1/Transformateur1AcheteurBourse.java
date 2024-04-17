@@ -11,22 +11,22 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur1AcheteurBourse extends Transformateur1Acteur implements IAcheteurBourse {
-	
+
 
 	protected Journal journalAchatBourse;
-	
+
 	public Transformateur1AcheteurBourse() {
 		super();
 
 		this.journalAchatBourse = new Journal(this.getNom()+" journalAchatBourse", this);
 	}
-	
+
 	public List<Journal> getJournaux() {
 		List<Journal> res=super.getJournaux();
 		res.add(journalAchatBourse);
 		return res;
 	}
-	
+
 	/**
 	 * Retourne la quantite en tonnes de feves de type f desiree par l'acheteur 
 	 * sachant que le cours actuel de la feve f est cours
@@ -60,7 +60,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 		// TODO Auto-generated method stub
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
-		
+	
 		this.journalAchatBourse.ajouter("- achat de "+quantiteEnT+"T de fèves "+f);
 
 
