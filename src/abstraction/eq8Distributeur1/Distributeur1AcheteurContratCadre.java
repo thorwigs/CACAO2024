@@ -96,9 +96,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 			}
 		}
-		return (produit.getType().equals("ChocolatDeMarque"));
-//				&& this.stock_Choco.containsKey(produit)
-//				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer  
+		return (produit.getType().equals("ChocolatDeMarque")
+				&& this.stock_Choco.containsKey(produit)
+				&& !this.chocoBan.contains(produit)
+				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer  
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -111,24 +112,26 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72
 			&& this.achete(contrat.getProduit()) 
 			&&	contrat.getQuantiteTotale()>= 30 ) {
+			
 			if (contrat.getProduit().toString().contains("C_BQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100)) {
 			} 
-			if ( contrat.getProduit().toString().contains("C_MQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100))  {
-				}
 			if (contrat.getProduit().toString().contains("C_MQ_E")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100)) {
 				}
-			if (contrat.getProduit().toString().contains("C_HQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100)) {
+			if ( contrat.getProduit().toString().contains("C_MQ")
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100))  {
+				}
+			if (contrat.getProduit().toString().contains("C_HQ_BE")
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_E")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100)) {
+				}
+			if (contrat.getProduit().toString().contains("C_HQ")
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100)) {
 				} 
-			if (contrat.getProduit().toString().contains("C_HQ_BE")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100)) {
-				}	
+			
 		} else {
 			int a = Filiere.LA_FILIERE.getEtape()+1;
 			int b = 24 ; 
@@ -140,8 +143,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				}
 			}
 			double e = this.stock_Choco.get(contrat.getProduit()); 
-		    x = new Echeancier (a,b,50);	
-//		    x = new Echeancier (a,b,c-d-e);
+//		    x = new Echeancier (a,b,50);	
+		    x = new Echeancier (a,b,c-d-e+100);
 		}
 		return x;
 	}
@@ -151,13 +154,13 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			return 0.0;
 		}
 		
-//		if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())<=this.prix(((ChocolatDeMarque)contrat.getProduit()))){
-//			&& contrat.getPrix()<=Math.pow(contrat.getQuantiteTotale(),1/3)){ //peut être rajouter un coef
-//				return contrat.getPrix();
-//		}
-		if (contrat.getPrix()>0) {
-			return contrat.getPrix();
+		if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())>=this.prix((ChocolatDeMarque)contrat.getProduit())
+			&& contrat.getPrix()<=Math.pow(contrat.getQuantiteTotale(),1/3)){ //peut être rajouter un coef
+				return contrat.getPrix();
 		}
+//		if (contrat.getPrix()>0) {
+//			return contrat.getPrix();
+//		}
 		else {
 			return Math.pow(contrat.getQuantiteTotale(),1/3)*(1-1/Math.pow(2, contrat.getListePrix().size()))  ;
 		}
@@ -175,7 +178,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 	
 	public double prix_a_perte(IProduit p, Double prix) {
-		return prix + (1350*(stock_Choco.get(p)*this.prix(((ChocolatDeMarque)p)))) + 120 / 10375;
+		return this.prix((ChocolatDeMarque)p) - (120 + 0.05*prix + (1350*this.quantiteEnVente((ChocolatDeMarque)p, cryptogramme)*this.prix((ChocolatDeMarque)p))/ 10375 );
 	}
 	
 	public double prevision (IProduit p,int b) {
@@ -191,6 +194,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
@@ -207,8 +211,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		
 		
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			System.out.println(""+choc+ " a besoin d'être achté : " + this.achete(choc));
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
+				System.out.println("Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
@@ -219,8 +225,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				} else if (vendeurs.size()>1) {
 					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size())); // a améliorer dans la V2
 				}
+				System.out.println("il existe des vendeurs : "+vendeur!=null);
 				if (vendeur!=null) {
 					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
+					System.out.println("Demande au superviseur de debuter les negociations pour un contrat cadre de \"+choc+\" avec le vendeur \"+vendeur");
 					int a = Filiere.LA_FILIERE.getEtape()+1;
 					int b = 24 ; 
 					double c = this.prevision(choc, b) ;	
@@ -231,8 +239,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 						}
 					}
 					double e = this.stock_Choco.get(choc); 
-				    Echeancier x = new Echeancier (a,b,50);
+				    Echeancier x = new Echeancier (a,b,c-d-e+100);
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
+					System.out.println("-->aboutit au contrat "+cc);
 					this.journalCC.ajouter("-->aboutit au contrat "+cc);
 				}	
 			}
