@@ -219,13 +219,15 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
+				System.out.println(vendeurs.size());
 				IVendeurContratCadre vendeur = null;
+				
 				if (vendeurs.size()==1) {
 					vendeur=vendeurs.get(0);
 				} else if (vendeurs.size()>1) {
 					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size())); // a améliorer dans la V2
 				}
-				System.out.println("il existe des vendeurs : "+vendeur!=null);
+//				System.out.println(vendeur!=null);
 				if (vendeur!=null) {
 					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
 					System.out.println("Demande au superviseur de debuter les negociations pour un contrat cadre de \"+choc+\" avec le vendeur \"+vendeur");
