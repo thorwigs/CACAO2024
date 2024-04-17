@@ -41,6 +41,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected double coutouvrier ; //la valeur a payé chaque step pour 1 employé
 	protected int nbemployeCDI ; //le nombre d'employé qu'on possède, pour l'instant on bosse qu'avec des CDI et ce nombre est fixe
 	protected double tauxproductionemploye ; //le taux qui permet de savoir ce qu'on peut produire avec nos employés
+	protected HashMap<ChocolatDeMarque, Double> coutproduction_tonne_marque_step ; //représente le cout de prod pour 1 tonne de choco_marque pour 1 step, sera réinitialiser à chaque fois dans transformation
+	protected HashMap<Chocolat, Double> coutproduction_tonne_step ; //idem pour les chocos qui n'ont pas de marque
 
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -51,9 +53,10 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.chocolatCocOasis = new LinkedList<ChocolatDeMarque>();
 		this.coutadjuvant = 1200;
 		this.coutmachine = 8.0;
-		this.coutouvrier = 1000.0;
-		this.nbemployeCDI = 100;
+		this.nbemployeCDI = 500;
 		this.tauxproductionemploye = 3.75;
+		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
+		this.coutproduction_tonne_step = new HashMap<Chocolat,Double>();
 		
 	}
 	
