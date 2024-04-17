@@ -22,6 +22,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
 	protected HashMap <Feve, Variable> stock_variable;
+	protected HashMap <Feve, Variable> prod_step;
 
 	public abstract double get_prod_pest_BQ();
 	public abstract double get_prod_pest_MQ();
@@ -32,6 +33,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.stock = new HashMap<Feve, Double>();
 		this.prodParStep= new HashMap<Feve, Double>();
 		this.stock_variable= new HashMap<Feve, Variable>();
+		this.prod_step = new HashMap<Feve, Variable>();
 		
 		this.init_stock(Feve.F_BQ, 103846153.8);
 		this.init_stock(Feve.F_MQ, 62115384.62);
@@ -46,7 +48,8 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_BQ, 0.0);
 		
 		for (Feve f : Feve.values()) {
-			this.stock_variable.put(f,  new Variable("EQ2Stock"+f, this, 0));
+			this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
+			this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
 		}
 	}
 	
@@ -88,6 +91,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		for (Feve f : Feve.values()) {
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
 		}
 	}
 
@@ -104,6 +108,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f: Feve.values()) {
 			res.add(this.stock_variable.get(f));
+			res.add(this.prod_step.get(f));
 		}
 		return res;
 	}
@@ -187,7 +192,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 	
-	// Fait par Noémie
+	// Faite par Noémie
 	public abstract double cout_total_stock();
 	public abstract double cout_humain_par_step();
 	public abstract double cout_plantation();

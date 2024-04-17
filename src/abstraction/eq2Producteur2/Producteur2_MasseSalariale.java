@@ -4,7 +4,7 @@ import java.util.List;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 
-// Classe faite par Noémie
+// Classe faite par Noémie 
 
 public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private int nb_employes ;

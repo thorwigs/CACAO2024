@@ -9,6 +9,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
+// Classe faite par Quentin
+
 public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	//seuil max de la production stockee
