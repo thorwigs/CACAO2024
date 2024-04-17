@@ -11,8 +11,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Production extends Producteur1Plantation{
-<<<<<<< HEAD
-=======
+
 	protected double prix_hq_F;
 	protected Journal journalProduction;
 	protected HashMap<String, Integer> ageStock;
@@ -170,6 +169,6 @@ public class Producteur1Production extends Producteur1Plantation{
 	}
 	
 	
->>>>>>> branch 'main' of https://github.com/Haythem7/CACAO2024.git
+
 
 }
