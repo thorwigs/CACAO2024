@@ -40,18 +40,26 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		coutAdjuvants = 1200;
 		coutMachines = 8;
 		
-		this.JournalMasseSalariale.ajouter(""); // ajouter les infos 
+		this.JournalMasseSalariale.ajouter("____Initialement____");
+		this.JournalMasseSalariale.ajouter("Nombre de salarié :"+NbSalaries);
+		this.JournalMasseSalariale.ajouter("coût d'un salarié par step :"+salaire);
+		this.JournalMasseSalariale.ajouter("coût de licenciement d'un salarié :"+coutLicenciement1Salarie);
+		this.JournalMasseSalariale.ajouter("coût entretien/achat des machines par step :"+coutMachines);
+		this.JournalMasseSalariale.ajouter("coût 1 tonne d'Adjuvants :"+coutAdjuvants);
+		this.JournalMasseSalariale.ajouter("1 salarié peut transformé "+capaciteTransformation+" tonnes de fèves en chocolat par step");
+		this.JournalMasseSalariale.ajouter("____________________");
 	}
 	
 
-	public double TonnesTransformees(Feve f) {
+	public double TonnesTransformees(Feve f) {//victor
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries*this.capaciteTransformation); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
-		this.stockChoco.put(c, this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees); //Modifie le stock de tablettes
+		//ChocolatDeMarque cm = new ChocolatDeMarque(c,"CacaoFusion",40);//Pourcentage de cacao a modifier
+		//this.stockChocoMarque.put(cm, this.getQuantiteEnStock(cm,cryptogramme)+tonnesTransformees); //Modifie le stock de chocolat de marque
 		this.stockFeves.put(f, this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees); //Modifie le stock de feves
 		return tonnesTransformees; 
-	}
+	} 
 	
 	public double TotauxTonnesTransformees() {
 		double totaux = 0;

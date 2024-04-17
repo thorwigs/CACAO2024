@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
@@ -18,7 +20,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
+public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabricantChocolatDeMarque {
 	
 	protected Journal journal;
 	protected int cryptogramme;
@@ -32,7 +34,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
-	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // dictionnaire (Type chocolat , % cacao )
+	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // dictionnaire de dictionnaire [feve : [Type chocolat : % cacao ]]
 	protected List<ChocolatDeMarque> chocolatsFusion;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
@@ -67,10 +69,12 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		this.lesChocolats = new LinkedList<Chocolat>();
-		this.journal.ajouter("Les Chocolats sont :");
+		this.journal.ajouter("Nos Chocolats sont :");
 		for (Chocolat c : Chocolat.values()) {
-			this.lesChocolats.add(c);
-			this.journal.ajouter("   - "+c);
+			if (c.getGamme()!=Gamme.HQ) {
+				this.lesChocolats.add(c);
+				this.journal.ajouter("   - "+c);
+			}
 		}
 		this.stockChoco=new HashMap<Chocolat,Double>();
 		for (Chocolat c : this.lesChocolats) {
@@ -81,12 +85,12 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.journal.ajouter("Les Chocolats de marque sont :");
 		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			if (Filiere.LA_FILIERE.getMarquesDistributeur().contains(cm.getMarque()) || cm.getMarque().equals("CacaoFusion")){
+			if ((Filiere.LA_FILIERE.getMarquesDistributeur().contains(cm.getMarque()) & cm.getGamme()!=Gamme.HQ )  || cm.getMarque().equals("CacaoFusion")){
 				this.chocosProduits.add(cm);
 				this.journal.ajouter("   - "+cm);
 			}
 		}
-		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Double>();
 		for (ChocolatDeMarque cm : this.chocosProduits) {
 			this.stockChocoMarque.put(cm, STOCKINITIAL);
 			this.totalStocksChocoMarque.ajouter(this, STOCKINITIAL, this.cryptogramme);
@@ -131,14 +135,32 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 		this.journal.ajouter("Quantité en stock de chocolat de marque : " +stockChocoMarque);
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
+		
+		// Paiment coûts de stockage
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage);
+
+		
+		// Transformation de tous les chocolats en chocolats de marque`avec une répartition équitable entre les marques
+		for (Chocolat c : lesChocolats) {
+			for (ChocolatDeMarque cm : chocosProduits) {
+				if(c.getGamme() == cm.getGamme()) {
+					double nbr_de_marque = chocosProduits.size();
+					double stock_initial = stockChocoMarque.get(cm);
+					stockChocoMarque.put(cm,stock_initial + stockChoco.get(c)/nbr_de_marque);
+				}
+			}
+			stockChoco.put(c,0.0);
+		}
 		//Regarder quantite a chaque step (a virer dans la version finale)
 		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_BQ, cryptogramme)+" t de feves BQ");
 		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Chocolat.C_BQ, cryptogramme)+" t de chocolat BQ");
 		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+" t de feves MQ");
 		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Chocolat.C_MQ, cryptogramme)+" t de chocolat MQ");
+
 	}
 
+	
+	
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(165, 235, 195); 
 	}
@@ -240,7 +262,24 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 	////////////////////////////////////////////////////////
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();
-		//marques.add("CacaoFusion");
+		marques.add("CacaoFusion");
 		return marques;
+	}
+
+	public List<ChocolatDeMarque> getChocolatsProduits() {
+		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
+		if (this.chocosProduits == null) {
+			this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+			for (Chocolat c : Chocolat.values()) {
+				if (c.getGamme()!= Gamme.HQ) {
+					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
+					this.chocosProduits.add(new ChocolatDeMarque(c, "CacaoFusion", pourcentageCacao));
+					for (String marque : marquesDistributeurs) {
+						this.chocosProduits.add(new ChocolatDeMarque(c, marque, pourcentageCacao));
+					}
+				}	
+			}
+		}
+		return chocosProduits;
 	}
 }
