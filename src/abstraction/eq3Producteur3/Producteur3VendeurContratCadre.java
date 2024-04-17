@@ -81,7 +81,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		        if ( quantiteDisponible >= quantiteDemandee) {
 		            // Si la quantité produite est suffisante pour l'échéance, ajouter cette quantité à l'échéancier
 		            nouvelEcheancier.ajouter(quantiteDemandee);
-		             // Ajouter le contrat à la liste des contrats en cours
+		            contratsEnCours.add(contrat); // Ajouter le contrat à la liste des contrats en cours
 
 		        } else {  	
 		            if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
