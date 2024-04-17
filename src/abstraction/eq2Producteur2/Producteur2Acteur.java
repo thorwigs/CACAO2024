@@ -30,14 +30,8 @@ public abstract class Producteur2Acteur implements IActeur {
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
-		//this.
 		this.prodParStep= new HashMap<Feve, Double>();
-		this.stock_variable = new HashMap<Feve, Variable>();
-		for (Feve f : Feve.values()) {
-			Variable v =  new Variable(this.getNom()+" stock_variable "+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, 0, 0);
-			this.stock_variable.put(f, v);
-		}
-		
+		this.stock_variable= new HashMap<Feve, Variable>();
 		
 		this.init_stock(Feve.F_BQ, 103846153.8);
 		this.init_stock(Feve.F_MQ, 62115384.62);
@@ -50,17 +44,17 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_MQ_E, 0.0);
 		prodParStep.put(Feve.F_MQ, 0.0);
 		prodParStep.put(Feve.F_BQ, 0.0);
+		
+		for (Feve f : Feve.values()) {
+			this.stock_variable.put(f,  new Variable("Stock "+f, this, 0.0));
+		}
 	}
 	
 	public abstract void init_stock(Feve type_feve, double quantite);
 	public abstract void lot_to_hashmap();
 	
 	public void initialiser() {
-	
-		for (Feve f : Feve.values()) {
-			Variable v =  new Variable(this.getNom()+" stock_variable "+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6);
-			this.stock_variable.put(f, v);
-		}
+		
 		
 		//initialisation prodparstep pour faire marcher get indicateur || à modifier		
 	}
@@ -71,11 +65,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	}
 	public void setStock_variable(HashMap<Feve, Variable> stock_variable) {
 		this.stock_variable = stock_variable;
-	}
-	public void setStock_variable(Feve f, double n ) {
-		Variable v = this.stock_variable.get(f);
-		v.setValeur(this, n);
-		this.stock_variable.put(f, v);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -92,15 +81,16 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	public void next() {
 		this.DebiteCoutParStep();
-		
-		for (Feve f : Feve.values()) {
-			this.setStock_variable(f, this.stock.get(f));
-		}
-		
+			
+		//this.getIndicateurs();
 		this.journal.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
 		this.journal.ajouter("cout de stockage " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
 		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
+		
+		for (Feve f : Feve.values()) {
+			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -114,7 +104,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
-		for (Feve f: Feve.values() ) {
+		for (Feve f: Feve.values()) {
 			res.add(this.stock_variable.get(f));
 		}
 		return res;
