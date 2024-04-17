@@ -167,7 +167,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	
 	public int getNombreEmploye() {
 		return this.nombreEmploye;
-	}
+	} 
 	
 	public void setNombreEmploye() {
 		double valeur_tot=0;
