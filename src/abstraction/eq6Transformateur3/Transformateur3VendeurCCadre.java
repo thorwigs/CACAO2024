@@ -38,10 +38,10 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 					journalCC6.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
 					if (contrat==null) {
-						journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
+						journalCC6.ajouter(Color.RED, Color.BLACK,"   echec des negociations");
 					} else {
 						this.contratsEnCours.add(contrat);
-						journalCC6.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+						journalCC6.ajouter(Color.GREEN, Color.BLACK, "   contrat signe");
 					}
 				} else {
 					journalCC6.ajouter("   pas d'acheteur");
