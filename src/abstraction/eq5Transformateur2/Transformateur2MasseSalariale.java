@@ -1,5 +1,7 @@
 package abstraction.eq5Transformateur2;
 
+import java.util.List;
+
 import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -109,6 +111,14 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , TotalCout);
 		}
 
+	/////////////////////////////////////
+	//   Ajout du journal aux autres   //
+	/////////////////////////////////////
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(JournalMasseSalariale);
+		return jx;
+	}
 }
 
 
