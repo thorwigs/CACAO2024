@@ -200,9 +200,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			}
 			
 		}
+		
 		for(ExemplaireContratCadre contrat : contrat_term) {
 			contrat_en_cours.remove(contrat);
 		}
+		
+		
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			if (this.achete(choc)) {
 				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
