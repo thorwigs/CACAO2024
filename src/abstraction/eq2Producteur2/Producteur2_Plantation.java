@@ -15,9 +15,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
 
 	protected int qualite;
-	protected double pourcentage_HQ = 0.02;
-	protected double pourcentage_MQ = 0.38;
-	protected double pourcentage_BQ = 0.6;
+	protected double pourcentage_HQ;
+	protected double pourcentage_MQ;
+	protected double pourcentage_BQ;
 	
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
@@ -93,6 +93,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void initialiser() {
 		super.initialiser();
+		this.setPourcentage_HQ(0.02);
+		this.setPourcentage_MQ(0.38);
+		this.setPourcentage_BQ(0.60);
 	}
 	
 	public List<Journal> getJournaux() {
@@ -156,7 +159,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		return this.production_MQ() * rend_pest_MQ; //feve MQ=98%*get_prod_pest et MQ_E=2%*get_prod_pest
 	}
 	public double get_prod_pest_BQ() {
-		//System.out.println(this.production_BQ());
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
@@ -197,11 +199,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	
-
 	/* Cette fonction sert à implémenter notre stratégie
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
 	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
 	 */
+	
 	public void next() {
 		super.next();
 		modifie_prodParStep();
