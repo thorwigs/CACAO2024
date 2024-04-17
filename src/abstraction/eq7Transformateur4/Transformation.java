@@ -44,8 +44,8 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					if (contrat.getProduit().equals(c)) {
 						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
 					}
-				chocoalivrer.put(c, alivrer);
 				}
+				chocoalivrer.put(c, alivrer);
 			} else {
 				//il s'agit du deuxième choco de marque
 				double alivrer = 0.0;
@@ -53,8 +53,8 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					if (contrat.getProduit().equals(c)) {
 						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
 					}
-				chocoalivrer.put(c, alivrer);
 				}
+				chocoalivrer.put(c, alivrer);
 			}
 		}
 		
