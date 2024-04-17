@@ -51,8 +51,8 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
-			this.prodfeve.put(f,  new Variable("Prod "+f, this, 1.1));
-			this.ventefeve.put(f,  new Variable("Vente "+f, this, 1.0));
+			this.prodfeve.put(f,  new Variable("Eq3Prod "+f, this, 1.1));
+			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
 			this.ventefevebourse.put(f, 0.2);
 			this.ventefevecadre.put(f, 0.8);
 		}
@@ -183,6 +183,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : Feve.values()) {
 			res.add(prodfeve.get(f));
+			res.add(ventefeve.get(f));
 		}
 		return res;
 	}
