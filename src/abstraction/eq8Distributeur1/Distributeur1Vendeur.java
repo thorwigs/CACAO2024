@@ -169,17 +169,17 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		super.next();
 		journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		journalVente.ajouter("QuantitéEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
-		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
-		System.out.println("quantiteEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
-		System.out.println("quantiteEnVenteTotal/10 : "+this.quantiteEnVenteTotal()*0.1);
-		System.out.println("capaciteDeVente/10 : "+this.capaciteDeVente*0.1);
-		for (ChocolatDeMarque choc : chocolats) {
-			System.out.println(choc);
-			System.out.println("Stock de "+choc.getNom()+" : "+stock_Choco.get(choc));
-			System.out.println("Quantite en vente de "+choc.getNom()+" : "+this.quantiteEnVente(choc, cryptogramme));
-			System.out.println("Quantite en vente TG de "+choc.getNom()+" : "+this.quantiteEnVenteTG(choc, cryptogramme));
-		}
-		System.out.println(""); 
+//		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
+//		System.out.println("quantiteEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
+//		System.out.println("quantiteEnVenteTotal/10 : "+this.quantiteEnVenteTotal()*0.1);
+//		System.out.println("capaciteDeVente/10 : "+this.capaciteDeVente*0.1);
+//		for (ChocolatDeMarque choc : chocolats) {
+//			System.out.println(choc);
+//			System.out.println("Stock de "+choc.getNom()+" : "+stock_Choco.get(choc));
+//			System.out.println("Quantite en vente de "+choc.getNom()+" : "+this.quantiteEnVente(choc, cryptogramme));
+//			System.out.println("Quantite en vente TG de "+choc.getNom()+" : "+this.quantiteEnVenteTG(choc, cryptogramme));
+//		}
+//		System.out.println(""); 
 		journalVente.ajouter("=================================");
 		
 
