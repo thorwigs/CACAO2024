@@ -46,7 +46,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_BQ, 0.0);
 		
 		for (Feve f : Feve.values()) {
-			this.stock_variable.put(f,  new Variable("Stock "+f, this, 0.0));
+			this.stock_variable.put(f,  new Variable("EQ2Stock"+f, this, 0));
 		}
 	}
 	
