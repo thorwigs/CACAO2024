@@ -1,6 +1,7 @@
 package abstraction.eq6Transformateur3;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,18 +17,25 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eq4Transformateur1.*;
+import abstraction.eq5Transformateur2.*;
+import abstraction.eq7Transformateur4.*;
+import abstraction.eq8Distributeur1.*;
+import abstraction.eq9Distributeur2.*;
 
-public class Transformateur3AcheteurCCadre extends Transformateur3Acteur implements IAcheteurContratCadre {
-	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
-	protected Journal journalCC;
+
+public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAcheteurContratCadre {
+	protected SuperviseurVentesContratCadre supCC;
+	protected List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsTermines;
+
+	protected Journal journalCC6;
 
 	public Transformateur3AcheteurCCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalCC6 = new Journal(this.getNom()+" journal CC6", this);
 	}
 
 	public void initialiser() {
@@ -37,31 +45,48 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 
 	public void next() {
 		super.next();
-		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		
+		this.journalCC6.ajouter(Color.BLUE, Color.white,"=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC6.ajouter("=== Partie Achat fèves ====================");
+		/*HashMap<Feve, Integer> Decision = super.Decision();
+		for(Feve f : Decision.keySet()) {
+			if(Decision.get(f)>0) {
+				this.journalCC6.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+			}
+		}
+		*/
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (stockFeves.get(f)+restantDu(f)<20000) { 
-						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
+					if (stockFeves.get(f)+restantDu(f)<20000) { /////////COND A MODIF////////
+						this.journalCC6.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); /////////COND A MODIF////////
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						for(IVendeurContratCadre v : vendeurs) {
-							if (v instanceof Transformateur3Acteur){
+							if (v instanceof Transformateur3Acteur || 
+									v instanceof Transformateur1Acteur ||
+									v instanceof Transformateur2Acteur ||
+									v instanceof Distributeur1Acteur ||
+									v instanceof Distributeur2Acteur
+									){
 								vendeurs.remove(v);
 								break;
 							}
 						}
 						if (vendeurs.size()>0) {
 							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+							journalCC6.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
-								journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
+								journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
+							} 
+							else {
 								this.contratsEnCours.add(contrat);
-								journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								journalCC6.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+
+										" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()
+										+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 							}
 						} else {
-							journalCC.ajouter("   pas de vendeur");
+							journalCC6.ajouter("   pas de vendeur");
 						}
 					}
 				}
@@ -72,10 +97,11 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 			}
 		}
 		for (ExemplaireContratCadre c : this.contratsTermines) {
-			journalCC.ajouter("Archivage du contrat "+c);
+			journalCC6.ajouter("Archivage du contrat "+c);
 			this.contratsEnCours.remove(c);
 		}
-		this.journalCC.ajouter("=================================");
+		this.journalCC6.ajouter("Nombre de contrats en cours : "+this.contratsEnCours.size());
+		this.journalCC6.ajouter("Nombre de contrats termines : "+this.contratsTermines.size());		
 	}
 
 	public double restantDu(Feve f) {
@@ -98,23 +124,23 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
-		jx.add(journalCC);
+		jx.add(journalCC6);
 		return jx;
 	}
 
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("Feve") 
-				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000;
+				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000; /////////COND A MODIF////////
 	}
 
-	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
+	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) { /////////FCTION A SIMPLIFIER////////
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return null;
 		}
 
-		if (stockFeves.get((Feve)(contrat.getProduit()))+restantDu((Feve)(contrat.getProduit()))+contrat.getEcheancier().getQuantiteTotale()<150000) {
+		if (stockFeves.get((Feve)(contrat.getProduit()))+restantDu((Feve)(contrat.getProduit()))+contrat.getEcheancier().getQuantiteTotale()<150000) { /////////COND A MODIF////////
 			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
-					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
+					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) { 
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
 			} else { // les volumes sont corrects, la duree et le debut aussi
 				return contrat.getEcheancier();
@@ -130,7 +156,7 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 		}
 	}
 
-	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
+	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) { /////////FCTION A SIMPLIFIER////////
 		// Il faudrait normalement tenir compte du volume du contrat (plus le volume est important 
 		// plus les prix seront bas) et de l'urgence (si on n'en n'a pas en stock et pas de CC alors 
 		// il devient plus urgent d'en disposer et donc on acceptera davantage un prix eleve)
@@ -162,12 +188,12 @@ public class Transformateur3AcheteurCCadre extends Transformateur3Acteur impleme
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);
+		journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
+		journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero()+ "(avec équipe" + contrat.getVendeur().getNom()+")");
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}

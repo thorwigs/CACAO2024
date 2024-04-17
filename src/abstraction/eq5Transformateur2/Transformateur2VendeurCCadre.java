@@ -9,28 +9,37 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	
+	public Transformateur2VendeurCCadre () {
+		super();
+	}
+	
 	public void next() {
 		super.next();
 	}
-
+	
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && this.getQuantiteEnStock(produit, cryptogramme)>0;
+		return (produit.getType().equals("Chocolat") && this.getQuantiteEnStock(produit, cryptogramme)>0)
+				|| (produit.getType().equals("Feve") && this.getQuantiteEnStock(produit, cryptogramme)>10000); //Valeur à changer
 	}
 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getEcheancier();
-	}
-
+		if (contrat.getEcheancier().getQuantiteTotale()< totalStocksChoco.getValeur()){
+			return contrat.getEcheancier(); //peut être changé
+		}else {
+			return null;
+		}
+		}
+	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return contrat.getPrix();
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		return contrat.getPrix()+contrat.getPrix()*0.1;
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);		
+		super.notificationNouveauContratCadre(contrat);
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
