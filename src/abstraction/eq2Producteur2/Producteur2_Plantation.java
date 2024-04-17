@@ -30,7 +30,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public Producteur2_Plantation() {
 
 		this.nb_hectares_actuel=5000000.0;
-		this.nb_hectares_max=5000000.0*10;
+		this.nb_hectares_max=5000000.0;
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	}
