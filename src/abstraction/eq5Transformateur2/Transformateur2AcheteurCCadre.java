@@ -112,7 +112,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,35000) ; // Durée trop longue et trop de quantité
 		
 		} else if (contrat.getEcheancier().getNbEcheances()<78 && contrat.getEcheancier().getQuantiteTotale()<20000) {
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Durée trop longue et trop peu de quantité
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Durée trop courte et trop peu de quantité
 		
 		} else if (contrat.getEcheancier().getNbEcheances()>260 && contrat.getEcheancier().getQuantiteTotale()<20000) {
 			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,20000) ; // Durée trop longue et trop peu de quantité
