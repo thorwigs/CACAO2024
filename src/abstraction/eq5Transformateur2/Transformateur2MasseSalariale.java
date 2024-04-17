@@ -93,20 +93,13 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
-		
+
 		if (TonnesTransformees >= CapaciteTransfoTotale) {
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/capaciteTransformation);
 			NbSalaries += embauche;
 			return embauche;
 			
 		}
-		/*
-		 * else {
-		 * int licenciement = (int) ((TonnesTransformees - CapaciteTransfoTotale)/capaciteTransformation);
-			NbSalaries += licenciement;
-			return licenciement;
-			}
-		 */
 		return 0;
 	}
 	public double CoutMasseSalariale(double TonnesTransformees) {
