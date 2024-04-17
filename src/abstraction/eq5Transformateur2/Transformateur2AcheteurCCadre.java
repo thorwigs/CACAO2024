@@ -137,8 +137,8 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
 		}
-				
-		if (contrat.getEcheancier().getNbEcheances()<78) { //durée trop courte 
+		else {
+			if (contrat.getEcheancier().getNbEcheances()<78) { //durée trop courte 
 				if (contrat.getEcheancier().getQuantiteTotale()>35000) { //quantité trop grande 
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,35000) ; //on ramène la durée et la quantité aux bornes fixées
 				}
@@ -149,7 +149,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,78,contrat.getEcheancier().getQuantiteTotale()) ; //on ne change que la durée 
 				}
 			}
-		if (contrat.getEcheancier().getNbEcheances()>260) { //durée trop longue 
+			else if (contrat.getEcheancier().getNbEcheances()>260) { //durée trop longue 
 				if (contrat.getEcheancier().getQuantiteTotale()>35000) { //quantité trop grande 
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,35000) ; //on ramène la durée et la quantité aux bornes fixées
 				}
@@ -160,17 +160,23 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,260,contrat.getEcheancier().getQuantiteTotale()) ; //on ne change que la durée 
 				}
 			}
-		
-		//Durée convenable
+			else { //durée convenable 
 			if (contrat.getEcheancier().getQuantiteTotale()>35000) { //quantité trop grande 
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),35000) ; //on ramène la quantité à la borne fixée et on garde la durée 
 			}
 			else if (contrat.getEcheancier().getQuantiteTotale()<20000) { //quantité trop faible
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),20000) ; //on ramène la quantité à la borne fixée et on garde la durée
 			}
-		return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),contrat.getEcheancier().getQuantiteTotale()) ; //on garde tout tel quel
+			else {
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),contrat.getEcheancier().getQuantiteTotale()) ; //on garde tout tel quel
+			}
 		
+		
+			}
+		}
 	}
+			
+		
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
