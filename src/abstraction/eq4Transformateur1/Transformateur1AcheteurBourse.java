@@ -31,9 +31,18 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	 * ici 20000 correspond au stock total de fèves voulues - à changer en fonction dans la simulation
 	 */
 	public double demande(Feve f, double cours) {
-		if (this.stockFeves.get(f)<20000) {
-			return Math.max(20000-this.stockFeves.get(f),  10); 
-		}
+		double stockCible=20000;
+		double demandeMin=10;
+		double stockCibleHQ = 0.3 * stockCible;
+	    double stockCibleMQ = 0.7 * stockCible;
+	    if (f == Feve.F_HQ_BE) {
+	        if (this.stockFeves.get(f) < stockCibleHQ) {
+	            return Math.max(stockCibleHQ - this.stockFeves.get(f), demandeMin);}}
+	    else if (f == Feve.F_MQ) {
+	        if (this.stockFeves.get(f) < stockCibleMQ) {
+	            return Math.max(stockCibleMQ - this.stockFeves.get(f), demandeMin);
+	        }
+	    }
 		return 0;
 	}
 
@@ -44,7 +53,6 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
 		
-
 		this.journalAchatBourse.ajouter("- achat de "+quantiteEnT+"T de fèves "+f);
 
 

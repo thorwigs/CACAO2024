@@ -22,7 +22,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	protected Journal journal;
 	protected Journal journal_bourse;
 	protected Journal journal_contrat_cadre;
-	private HashMap<IProduit,Integer> stocks;
+	protected HashMap<IProduit,Integer> stocks;
 	//passable en parametre/indicateurs
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
@@ -51,10 +51,10 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
-			this.prodfeve.put(f,  new Variable("Prod "+f, this, 0.0));
-			this.ventefeve.put(f,  new Variable("Vente "+f, this, 0.0));
-			this.ventefevebourse.put(f, 0.0);
-			this.ventefevecadre.put(f, 0.0);
+			this.prodfeve.put(f,  new Variable("Prod "+f, this, 1.1));
+			this.ventefeve.put(f,  new Variable("Vente "+f, this, 1.0));
+			this.ventefevebourse.put(f, 0.2);
+			this.ventefevecadre.put(f, 0.8);
 		}
 	}
 	
@@ -93,44 +93,43 @@ public abstract class Producteur3Acteur implements IActeur {
 		//On set les variables coutGammeStep
 		this.coutGammeStep = new HashMap<Feve,HashMap<Integer,Double>>();
 		HashMap<Integer,Double> bq0 = new HashMap<Integer,Double>();
-		bq0.put(0, 1000.0);
+		bq0.put(0, 7.58);
 		this.coutGammeStep.put(Feve.F_BQ, bq0);
 		HashMap<Integer,Double> mq0 = new HashMap<Integer,Double>();
-		mq0.put(0, 1000.0);
+		mq0.put(0, 1.26);
 		this.coutGammeStep.put(Feve.F_MQ, mq0);
 		HashMap<Integer,Double> mqE0 = new HashMap<Integer,Double>();
-		mqE0.put(0, 1000.0);
+		mqE0.put(0, 0.316);
 		this.coutGammeStep.put(Feve.F_MQ_E, mqE0);
 		HashMap<Integer,Double> hq0 = new HashMap<Integer,Double>();
-		hq0.put(0, 1000.0);
+		hq0.put(0, 0.5685);
 		this.coutGammeStep.put(Feve.F_HQ, hq0);
 		HashMap<Integer,Double> hqE0 = new HashMap<Integer,Double>();
-		hqE0.put(0, 1000.0);
+		hqE0.put(0, 0.19);
 		this.coutGammeStep.put(Feve.F_HQ_E, hqE0);
 		HashMap<Integer,Double> hqBE0 = new HashMap<Integer,Double>();
-		hqBE0.put(0, 1000.0);
+		hqBE0.put(0, 0.19);
 		this.coutGammeStep.put(Feve.F_HQ_BE, hqBE0);
 		//On set les variables stockGammeStep
 		this.stockGammeStep = new HashMap<Feve,HashMap<Integer,Double>>();
 		HashMap<Integer,Double> bq00 = new HashMap<Integer,Double>();
-		bq00.put(0, 1000.0);
+		bq00.put(0, 7.58);
 		this.stockGammeStep.put(Feve.F_BQ, bq00);
 		HashMap<Integer,Double> mq00 = new HashMap<Integer,Double>();
-		mq00.put(0, 1000.0);
+		mq00.put(0, 1.26);
 		this.stockGammeStep.put(Feve.F_MQ, mq00);
 		HashMap<Integer,Double> mqE00 = new HashMap<Integer,Double>();
-		mqE00.put(0, 1000.0);
+		mqE00.put(0, 0.316);
 		this.stockGammeStep.put(Feve.F_MQ_E, mqE00);
 		HashMap<Integer,Double> hq00 = new HashMap<Integer,Double>();
-		hq00.put(0, 1000.0);
+		hq00.put(0, 0.5685);
 		this.stockGammeStep.put(Feve.F_HQ, hq00);
 		HashMap<Integer,Double> hqE00 = new HashMap<Integer,Double>();
-		hqE00.put(0, 1000.0);
+		hqE00.put(0, 0.19);
 		this.stockGammeStep.put(Feve.F_HQ_E, hqE00);
 		HashMap<Integer,Double> hqBE00 = new HashMap<Integer,Double>();
-		hqBE00.put(0, 1000.0);
+		hqBE00.put(0, 0.19);
 		this.stockGammeStep.put(Feve.F_HQ_BE, hqBE00);		
-		
 	}
 	
 
@@ -149,6 +148,10 @@ public abstract class Producteur3Acteur implements IActeur {
 	protected abstract HashMap<Feve,Double> newQuantite();
 	
 	public void next() {
+		//On gere nos intrants de production
+		gestionStock();
+		//On met a jour les variables GammeStep
+		majGammeStep();
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		/**
 		 * Implémentation des journaux spécifiques à la bourse et aux contrats cadres
@@ -160,10 +163,6 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		//On paie les couts lies a la production et au stockage
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
-		//On gere nos intrants de production
-		gestionStock();
-		//On met a jour les variables GammeStep
-		majGammeStep();
 		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
@@ -351,15 +350,34 @@ public abstract class Producteur3Acteur implements IActeur {
 	  *Cette fonction met a jour les variables associees
 	  */
 	 protected void majGammeStep() {
-		 //on ajoute la production du step (il faudra prendre en compte les ventes)
 		 for (Feve f : stockGammeStep.keySet()) {
+			//on ajoute la production du step
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
-		 }
-		 //on ajoute les couts du step (attention aux ventes)
-		 for (Feve f : coutGammeStep.keySet()) {
-			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f));
-			for (Integer step : coutGammeStep.get(f).keySet()) {
-				coutGammeStep.get(f).put(step, coutGammeStep.get(f).get(step)+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*stockGammeStep.get(f).get(step));			}
+		 //on ajoute les couts du step
+			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6);
+		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts
+			LinkedList<Integer> steps = new LinkedList<Integer>();
+			steps.addAll(stockGammeStep.get(f).keySet());
+			Collections.sort(steps);
+			double venteF = ventefeve.get(f).getValeur();
+			for (Integer step : steps) {
+				double stockStep = stockGammeStep.get(f).get(step);
+				//on met a jour les stocks en destockant les plus vieilles feves
+				//on fait de meme avec les couts proportionnellement 
+				if (stockStep > venteF) {
+					stockGammeStep.get(f).put(step, stockStep-venteF);
+					coutGammeStep.get(f).put(step, (stockStep-venteF)/stockStep*coutGammeStep.get(f).get(step));
+				} else {
+					venteF -= stockStep;
+					stockGammeStep.get(f).remove(step);
+					coutGammeStep.get(f).remove(step);
+				}
+			}
+			for (Integer step : steps) {
+				//On ajoute les frais de stockage si on a des stocks a ce step
+				if (coutGammeStep.get(f).containsKey(step)) {
+					coutGammeStep.get(f).put(step, coutGammeStep.get(f).get(step)+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*stockGammeStep.get(f).get(step));			}
+				}	
 		 }
 	 }
 	 
@@ -370,15 +388,18 @@ public abstract class Producteur3Acteur implements IActeur {
 	  */
 	 protected double coutRevient(Feve f,double quantiteDem) {
 		 double accu = 0.0;
+		 //On veut destocker step par step
 		 LinkedList<Integer> steps = new LinkedList<Integer>();
 		 steps.addAll(stockGammeStep.get(f).keySet());
 		 Collections.sort(steps);
 		 for (Integer step : steps) {
 			 double stockStep = stockGammeStep.get(f).get(step);
+			 //On ajoute les couts de revient en proportion de la quantite demandee
 			 if (stockStep > quantiteDem) {
 				 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
 			 } else {
 				 accu += coutGammeStep.get(f).get(step);
+				 quantiteDem -= stockStep;
 			 }
 		 }
 		 return accu;

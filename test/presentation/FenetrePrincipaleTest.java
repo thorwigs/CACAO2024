@@ -18,7 +18,9 @@ public class FenetrePrincipaleTest {
 	@Test
 	public void test() {
 		Filiere.LA_FILIERE = null;
-		long seed = LocalDate.now(ZoneId.of("Europe/Paris")).toEpochDay();
+		int seed = 0;
+		if (System.getProperty("seed") != null) 
+			seed = Integer.parseInt(System.getProperty("seed"));
 		String[] args= { ""+seed };
 		FenetrePrincipale fp = new FenetrePrincipale(args);
 		
