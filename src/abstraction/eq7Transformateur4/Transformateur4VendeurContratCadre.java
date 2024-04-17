@@ -88,8 +88,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	}//s'inspirer de AcheteurCC
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalVCC.ajouter("Nouveau contrat :"+contrat);
-		this.contratsEnCours.add(contrat);
+		if (contrat.getVendeur().equals(this)) {
+			journalVCC.ajouter("Nouveau contrat :"+contrat);
+			this.contratsEnCours.add(contrat);
+		}
+		else {
+			super.notificationNouveauContratCadre(contrat);
+		}
 	}
 	
 	//Honorer le contrat
