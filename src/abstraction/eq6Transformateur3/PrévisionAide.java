@@ -56,11 +56,11 @@ public class PrévisionAide extends Transformateur3Acteur{
 			for(Feve f :stockFeves.keySet()){
 				HashMap<Feve,Double> steps_avantdernier = historiquesStockFeves.get(historiquesStockFeves.size()-2);
 				HashMap<Feve,Double> steps_dernier = historiquesStockFeves.get(historiquesStockFeves.size()-1);
-				double value = (steps_dernier.get(f)-stockFeves.get(f))/stockFeves.get(f);
+				double value = (steps_dernier.get(f)-stockFeves.get(f));
 				if (value <=0) {
 					value = 0;
 				}
-				Decision.put(f, (int) (stockFeves.get(f)*value));
+				Decision.put(f, (int) (value));
 			}
 		}
 		return Decision;
