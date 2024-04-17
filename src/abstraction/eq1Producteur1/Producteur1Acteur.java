@@ -199,7 +199,7 @@ public class Producteur1Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
-		//res.addAll(this.stock.values());
+		
 		return res;
 	}
 
@@ -258,32 +258,26 @@ public class Producteur1Acteur implements IActeur {
 	}
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme && this.stock.containsKey(p)) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return this.stock.get(p).getValeur(cryptogramme); // A modifier
-		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		}
+		return 0;
 	}
 
 	// Haythem
 	protected double CoutsProd() {
-		double CoutProdBQ=0;
-		double CoutProdMQ=0;
-		double CoutProdHQ=0;
+		double Couts= 0 ;
 		HashMap<Feve, Double> QuantiteDeProd =prodParStep;
 		for (Feve f : QuantiteDeProd.keySet()) {
 	        double quantite = QuantiteDeProd.get(f); 
 
 	        // Calcul du coût de production pour la gamme de qualité concernée
 	        if (f.getGamme() == Gamme.BQ) {
-	            CoutProdBQ += quantite * coutUnitaireProductionBQ;
+	            Couts += quantite * coutUnitaireProductionBQ;
 	        } else if (f.getGamme() == Gamme.MQ) {
-	            CoutProdMQ += quantite * coutUnitaireProductionMQ;
+	            Couts += quantite * coutUnitaireProductionMQ;
 	        } else if (f.getGamme() == Gamme.HQ) {
-	            CoutProdHQ += quantite * coutUnitaireProductionHQ;
+	            Couts += quantite * coutUnitaireProductionHQ;
 	        }
 	    }
-	    return CoutProdBQ + CoutProdMQ + CoutProdHQ;
+	    return Couts;
 	    
 	}
 	
