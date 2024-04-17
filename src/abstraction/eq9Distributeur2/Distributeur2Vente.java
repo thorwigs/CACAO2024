@@ -13,7 +13,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		// TODO Auto-generated method stub
 		if( Filiere.LA_FILIERE.getEtape() < 1) {
 		return 20000;}
-		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.95;
+		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1);
 	}
 
 	@Override
