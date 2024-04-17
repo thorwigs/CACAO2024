@@ -1,6 +1,7 @@
 package abstraction.eq2Producteur2;
 
 import java.awt.Color;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+
+//faite par Maxime
 
 public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse implements IVendeurContratCadre {
 
@@ -41,8 +44,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		//System.out.println("\n stock "+stock);
-		//System.out.println("feves en stock \n"+stock.keySet());
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
@@ -202,7 +203,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		double aLivre = Math.min(quantite, stockActuel);
 		this.stock_a_vendre((Feve) produit, quantite);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		//this.ajout_stock((Feve) produit, stock.get((Feve) produit)-aLivre);
 		return aLivre;
 	} 
 }
