@@ -97,7 +97,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		if (TonnesTransformees >= CapaciteTransfoTotale) {
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/capaciteTransformation);
 			NbSalaries += embauche;
-			return 0;
+			return embauche;
 			
 		}
 		/*
@@ -115,7 +115,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		if (this.EmbaucheLicenciement(TonnesTransformees)<0) {
 			cout_licenciement = this.EmbaucheLicenciement(TonnesTransformees) * coutLicenciement1Salarie ;
 		}
-		return  cout_salaire - cout_licenciement;
+		return  cout_salaire + cout_licenciement;
 	}
 	
 	
