@@ -216,7 +216,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			return contrat.getEcheancier();
 		}
 		else{
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 9, contrat.getEcheancier().getQuantiteTotale()/12 );
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12 , contrat.getEcheancier().getQuantiteTotale()/12 );
 		}
 	}
 
@@ -225,7 +225,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		// plus les prix seront bas) et de l'urgence (si on n'en n'a pas en stock et pas de CC alors 
 		// il devient plus urgent d'en disposer et donc on acceptera davantage un prix eleve)
 		// mais dans cet acteur trivial on ne se base que sur le prix et via des tirages aleatoires.
-		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		/*BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)-restantAPayer();
 		double prixSansDecouvert = solde / contrat.getQuantiteTotale();
 		if (prixSansDecouvert<bourse.getCours(Feve.F_BQ).getValeur()) {
@@ -248,9 +248,34 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			} else {
 				return Math.min(prixSansDecouvert, cours*(1.1-(Filiere.random.nextDouble()/3.0)));
 			}
+		}*/
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)-restantAPayer();
+		double prixSansDecouvert = solde / contrat.getQuantiteTotale();
+		if (prixSansDecouvert<bourse.getCours(Feve.F_BQ).getValeur()) {
+			return 0.0; // nous ne sommes pas en mesure de fournir un prix raisonnable
 		}
-		
-		
+		if (((Feve)contrat.getProduit()).isEquitable()) {
+			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
+			double alea = Filiere.random.nextInt((int)max);
+			if (contrat.getPrix()<Math.min(alea, 0.9 * prixSansDecouvert)) {
+				return contrat.getPrix();
+				}
+			else {
+				return Math.min(0.9*prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*1.25);
+			}
+			
+		}
+		else {
+			double cours = bourse.getCours((Feve)contrat.getProduit()).getValeur();
+			if (contrat.getPrix()<cours) {
+				return Math.min(0.9*prixSansDecouvert, contrat.getPrix());
+			}
+			else {
+				return Math.min(0.9* prixSansDecouvert, 1.04*cours);
+			}
+		}
+	
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
