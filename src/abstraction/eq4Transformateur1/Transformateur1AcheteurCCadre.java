@@ -38,8 +38,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 
 	@Override
 	public boolean achete(IProduit produit) {
-		// TODO Auto-generated method stub
-		return false;
+		return produit.getType().equals("F_HQ_BE") || produit.getType().equals("F_MQ") ;  // + condition stock ?
 	}
 
 	@Override
