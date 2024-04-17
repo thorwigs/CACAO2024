@@ -44,8 +44,9 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					if (contrat.getProduit().equals(c)) {
 						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
 					}
-				chocoalivrer.put(c, alivrer);
 				}
+				chocoalivrer.put(c, alivrer);
+				this.coutproduction_tonne_marque_step.put(c, 0.0);//pas oublier l'initialisation de cette Hashmap
 			} else {
 				//il s'agit du deuxième choco de marque
 				double alivrer = 0.0;
@@ -53,8 +54,9 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					if (contrat.getProduit().equals(c)) {
 						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
 					}
-				chocoalivrer.put(c, alivrer);
 				}
+				chocoalivrer.put(c, alivrer);
+				this.coutproduction_tonne_marque_step.put(c, 0.0);//idem pas oublier l'initialisation
 			}
 		}
 		
@@ -97,7 +99,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					this.lescouts.add(payermachine);
 					this.lescouts.add(payeradjuvant);
 					this.lesqtproduite.add(qtechocoproduit);
-					this.coutproduction_tonne_marque_step.put(c, (payermachine+payeradjuvant)/qtechocoproduit);
+					this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
 					//on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 					//on va tenir compte des cout fixe après à la fin des boucle for
 				}//else : on a assez de ce choco de marque, on en produit pas
@@ -137,7 +139,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					this.lescouts.add(payermachine);
 					this.lescouts.add(payeradjuvant);
 					this.lesqtproduite.add(qtechocoproduit);
-					this.coutproduction_tonne_marque_step.put(c, (payermachine+payeradjuvant)/qtechocoproduit);
+					this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
 					//idem on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 					//on va tenir compte des cout fixe après à la fin des boucle for
 				}//else : on a assez de ce choco de marque, on en produit pas
@@ -153,7 +155,10 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			qtetotaleproduite = qtetotaleproduite + k;
 		}
 		double a_payer = 1000*this.nbemployeCDI + 658; //cout des employes et cout fixe des machines par step 
-		double cout_fixe_par_tonne = a_payer/qtetotaleproduite; //cout fixe d'1 tonne indépendamment de la qualité de la tonne
+		double cout_fixe_par_tonne = 0.0; //cout fixe d'1 tonne indépendamment de la qualité de la tonne
+		if (qtetotaleproduite != 0) {
+			cout_fixe_par_tonne = a_payer/qtetotaleproduite;
+		}
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			if (c.getChocolat().isBio() && c.getChocolat().isEquitable()) {
 				this.coutproduction_tonne_marque_step.replace(c, this.coutproduction_tonne_marque_step.get(c) + cout_fixe_par_tonne);

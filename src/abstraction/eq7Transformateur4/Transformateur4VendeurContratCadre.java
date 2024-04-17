@@ -29,10 +29,20 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		this.journalVCC = new Journal(this.getNom()+" journal CC vente", this);
 	}
 	
+	//////////////je me permet de rajouter ça sinon on initialise pas supCC
+	public void initialiser() {
+		super.initialiser();
+		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+	}
+	//////////////
+	
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("ChocolatDeMarque") 
-				&& stockChocoMarque.get(produit)>25000; 
+				&& stockChocoMarque.containsKey(produit)
+				&& stockChocoMarque.get(produit)>25000 ; 
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
+		
+		//j'ai modifié un truc : on vérifie que produit est bien un de nos chocolat de marque
 	}
 
 	//Négociations
