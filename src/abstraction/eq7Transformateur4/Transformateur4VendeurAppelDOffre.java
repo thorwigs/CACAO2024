@@ -7,7 +7,9 @@ import java.util.List;
 import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
+import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
+import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -19,19 +21,21 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
 	
-	
+
 	public Transformateur4VendeurAppelDOffre() {
 		super();
 		this.journalAO = new Journal(this.getNom()+" journal A.O.", this);
 	}
 
 	public void initialiser() {
+		
 		super.initialiser();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			this.prixAO.put(cm, new LinkedList<Double>());
 		}		
 	}
+	
 	public double prixMoyen(ChocolatDeMarque cm) {
 		List<Double> prix=prixAO.get(cm);
 		if (prix.size()>0) {
@@ -59,7 +63,6 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 			return null;
 		}
 		ChocolatDeMarque cm = (ChocolatDeMarque)p;
-	
 		if (!(stockChocoMarque.keySet().contains(cm))) {
 			return null;
 		}
@@ -67,13 +70,13 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 			double px = bourse.getCours(Feve.F_MQ).getMax()*1;
 			if (cm.getChocolat().getGamme()==Gamme.HQ) {
-				px = bourse.getCours(Feve.F_HQ).getMax()*1;
-			} else if (cm.getChocolat().getGamme()==Gamme.MQ) {
+				px = bourse.getCours(Feve.F_MQ).getMax()*1;
+			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
 				px = bourse.getCours(Feve.F_BQ).getMax()*1;
 			}
 			return new OffreVente(offre, this, cm, px);
 		} else {
-			return new OffreVente(offre, this, cm, prixMoyen(cm)*1);
+			return new OffreVente(offre, this, cm, prixMoyen(cm)*0.95);
 		}
 	}
 
@@ -86,6 +89,8 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
+		
+		
 	}
 
 
@@ -98,6 +103,11 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
+	}
+
+	public void next() {
+		super.next();
+		
 	}
 
 }
