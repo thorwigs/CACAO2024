@@ -30,9 +30,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 
 	protected List<Feve> lesFeves;
 	private List<ChocolatDeMarque>chocosProduits;
-	protected HashMap<Feve, Double> stockFeves;
-	protected HashMap<Chocolat, Double> stockChoco;
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected HashMap<Feve, Variable> stockFeves;
+	protected HashMap<Chocolat, Variable> stockChoco;
+	protected HashMap<ChocolatDeMarque, Variable> stockChocoMarque;
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
 	protected List<ChocolatDeMarque> chocolatsVillors;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
@@ -48,10 +48,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("EqXTStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
-	}
-	
-	public void initialiser() {
-		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+		
+		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Variable>();
 
 		this.lesFeves = new LinkedList<Feve>();
 		this.journal.ajouter("Les Feves sont :");
@@ -60,17 +58,21 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 			this.journal.ajouter("   - "+f);
 		}
 		
-		this.stockFeves=new HashMap<Feve,Double>();
+		this.stockFeves=new HashMap<Feve,Variable>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 0.0);
+			this.stockFeves.put(f, new Variable("EQ4_stock_feve_"+f, this));
 			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
 		}
 		
-		this.stockChoco=new HashMap<Chocolat,Double>();
+		this.stockChoco=new HashMap<Chocolat,Variable>();
 		for (Chocolat c : Chocolat.values()) {
-			this.stockChoco.put(c, 0.0);
+			this.stockChoco.put(c, new Variable("EQ4_stock_choco_"+c, this));
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 		}
+	}
+	
+	public void initialiser() {
+		
 		
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
@@ -118,9 +120,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		//transformation des feves en chocolat
 		for (Feve f : this.pourcentageTransfo.keySet()) {
 			for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
-				int transfo = this.stockFeves.get(f).intValue();//V1 capacite de tranformation illimitee ... (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
+				int transfo = (int) this.stockFeves.get(f).getValeur();//V1 capacite de tranformation illimitee ... (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
 				if (transfo>0) {
-					this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
+					this.stockFeves.get(f).setValeur(this, this.stockFeves.get(f).getValeur()-transfo);
 					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+Journal.entierSur6(transfo)+" T de "+f+" en :"+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
 
@@ -129,7 +131,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					double newChoco = tropDeChoco ? 0.0 : ((transfo/2.0)*this.pourcentageTransfo.get(f).get(c)); // la moitie en chocolat tant qu'on n'en n'a pas trop
 					double newChocoMarque = ((transfo)*this.pourcentageTransfo.get(f).get(c))-newChoco;
 					if (newChoco>0.0) {
-						this.stockChoco.put(c, this.stockChoco.get(c)+newChoco);
+						this.stockChoco.get(c).setValeur(this, this.stockChoco.get(c).getValeur()+newChoco);
 						this.totalStocksChoco.ajouter(this, newChoco, cryptogramme);
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChoco,3,2)+" T de "+c);
 					}
@@ -140,8 +142,11 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					} else {
 						cm= new ChocolatDeMarque(c, "LeaderKakao", pourcentageCacao);
 					}
-					double scm = this.stockChocoMarque.keySet().contains(cm) ?this.stockChocoMarque.get(cm) : 0.0;
-					this.stockChocoMarque.put(cm, scm+newChocoMarque);
+					if (this.stockChocoMarque.keySet().contains(cm)) {
+						this.stockChocoMarque.get(cm).setValeur(this, this.stockChocoMarque.get(cm).getValeur()+newChocoMarque);
+					} else {
+						this.stockChocoMarque.put(cm, new Variable(cm.getNom(), this));
+					}
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChocoMarque,3,2)+" T de "+cm);
 					this.totalStocksChocoMarque.ajouter(this,newChocoMarque, this.cryptogramme);
 					
@@ -182,6 +187,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		res.add(this.stockFeves.get(Feve.F_HQ));
+		res.add(this.stockFeves.get(Feve.F_MQ));
+		res.addAll(this.stockChoco.values());
+		res.addAll(this.stockChocoMarque.values());
 		return res;
 	}
 
@@ -242,11 +251,11 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			if (p instanceof Feve) {
-                return stockFeves.getOrDefault((Feve) p, 0.0);
+                return Math.max(stockFeves.get((Feve) p).getValeur(), 0.0);
             } else if (p instanceof Chocolat) {
-                return stockChoco.getOrDefault((Chocolat) p, 0.0);
+                return Math.max(stockChoco.get((Chocolat) p).getValeur(), 0.0);
             } else if (p instanceof ChocolatDeMarque) {
-                return stockChocoMarque.getOrDefault((ChocolatDeMarque) p, 0.0);
+                return Math.max(stockChocoMarque.get((ChocolatDeMarque) p).getValeur(), 0.0);
             }
         }
         return 0.0;
