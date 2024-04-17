@@ -83,7 +83,6 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		            nouvelEcheancier.ajouter(quantiteDisponible);
 		        }
 		    }
-
 		    if (nouvelEcheancier.getQuantiteTotale()>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
 		        return nouvelEcheancier;
 		    } else {
