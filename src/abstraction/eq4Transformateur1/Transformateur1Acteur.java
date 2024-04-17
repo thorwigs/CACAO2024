@@ -278,4 +278,4 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		return marques;
 	}
 }
-
+//
