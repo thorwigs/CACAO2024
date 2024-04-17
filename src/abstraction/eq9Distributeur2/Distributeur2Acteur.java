@@ -50,7 +50,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	
 	public void next() {
 		this.getJournaux().get(0).ajouter("Step "+Filiere.LA_FILIERE.getEtape());
-		this.getJournaux().get(0).ajouter("Coût de stockage : "+ this.getCoutStockage());
+		this.getJournaux().get(0).ajouter("Coût de stockage pour une tonne : "+ this.getCoutStockage());
 		
 	}
 
