@@ -154,15 +154,15 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		if (contrat.getProduit().getType().equals("F_MQ") || contrat.getProduit().getType().equals("F_MQ")) { // pour les fèves pour lesquelles on connaît le prix en bourse 
-			if (contrat.getEcheancier().getQuantiteTotale()*bourse.getCours((Feve)contrat.getProduit()).getValeur()<contrat.getPrix()) { //prix supérieur à l'indice boursier 
-				return contrat.getEcheancier().getQuantiteTotale()*bourse.getCours((Feve)contrat.getProduit()).getValeur(); //re-négociation à la valeur boursière 
+			if (contrat.getEcheancier().getQuantiteTotale()*bourse.getCours((Feve)contrat.getProduit()).getValeur()*(1-(0.1/this.Etapenego))<contrat.getPrix()) { // si prix proposé par vendeur supérieur à prix voulu (varie à chaque tour de négo)
+				return contrat.getEcheancier().getQuantiteTotale()*bourse.getCours((Feve)contrat.getProduit()).getValeur()*(1-(0.1/this.Etapenego)); //re-négociation à la valeur voulue (varie à chaque tour de négo)
 			}
 			else {
 				return contrat.getPrix();
 			}
 		}
-		else { //pas d'info sur la bourse 
-			return 0.0;
+		else { //pas d'info sur la bourse pour équitable donc on renégocie par rapport au prix proposé par le vendeur sur le même modèle mathématique
+			return contrat.getPrix()*(1-(0.1/this.Etapenego));
 			}
 	}
 	
