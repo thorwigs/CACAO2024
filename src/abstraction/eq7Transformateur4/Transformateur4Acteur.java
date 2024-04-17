@@ -34,7 +34,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected List<ChocolatDeMarque> chocolatCocOasis;//liste de tout les chocolats que nous produisons
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
-	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
+	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque
+	
+	protected double coutadjuvant ; //la valeur du cout des adjuvant pour une tonne
+	protected double coutmachine ; //la valeur du cout des machines pour produire une tonne de chocolat, quelque soit le chocolat
+	protected double coutouvrier ; //la valeur a payé chaque step pour 1 employé
+	protected int nbemployeCDI ; //le nombre d'employé qu'on possède, pour l'instant on bosse qu'avec des CDI et ce nombre est fixe
+	protected double tauxproductionemploye ; //le taux qui permet de savoir ce qu'on peut produire avec nos employés
 
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -43,6 +49,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.chocolatCocOasis = new LinkedList<ChocolatDeMarque>();
+		this.coutadjuvant = 1200;
+		this.coutmachine = 8.0;
+		this.coutouvrier = 1000.0;
+		this.nbemployeCDI = 100;
+		this.tauxproductionemploye = 3.75;
+		
 	}
 	
 	public void initialiser() {
@@ -93,15 +105,18 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
-		
+					
+					
 		this.journal.ajouter("Stock initial chocolat de marque : ");
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 		
+		
+	
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 30000.0); //le premier element de stockchocomarque coorespond a mirage
+			this.stockChocoMarque.put(c, 30000.0); //le premier element de stockchocomarque correspond a mirage
 			this.totalStocksChocoMarque.ajouter(this, 30000, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
@@ -140,15 +155,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//on paye notre coût de stockage:
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
-
-
 		this.journal.ajouter("" + this.getMarquesChocolat());
 		this.journal.ajouter("" + this.getChocolatsProduits());
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journal.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
 		
-		this.getJournaux();
 
 	}
 
@@ -244,6 +256,5 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		LinkedList<String> marques = new LinkedList<String>();
 		marques.add("Mirage");
 		return marques;
-		
 	}
 }
