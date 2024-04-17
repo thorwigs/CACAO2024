@@ -71,30 +71,34 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		    Echeancier echeancierPropose = contrat.getEcheancier();
 		    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
 		    double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
+		    boolean peutSatisfaireToutLeContrat = true;
 
 		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
 		        double quantiteDemandee = echeancierPropose.getQuantite(step);
 		        if (quantiteDemandee < SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-	                return null;
+		            return null; // Quantité demandée inférieure à la quantité minimale acceptable
 		        }
 
-		        if ( quantiteDisponible >= quantiteDemandee) {
-		            // Si la quantité produite est suffisante pour l'échéance, ajouter cette quantité à l'échéancier
+		        if (quantiteDisponible >= quantiteDemandee) {
 		            nouvelEcheancier.ajouter(quantiteDemandee);
-		            contratsEnCours.add(contrat); // Ajouter le contrat à la liste des contrats en cours
-
-		        } else {  	
-		            if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-		                nouvelEcheancier.ajouter(quantiteDisponible);
-		                
-		            } else {
-		                nouvelEcheancier = null; //// Si aucune quantité n'est disponible :( ne pas accepter le contrat
-		                break; // Sortir de la boucle car on ne peut pas honorer le contrat
-		            }
+		            quantiteDisponible -= quantiteDemandee; // Réduire la quantité disponible après avoir assigné à cet échéancier
+		        } else if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+		            nouvelEcheancier.ajouter(quantiteDisponible);
+		            quantiteDisponible = 0; // Utiliser toute la quantité disponible restante!
+		        } else {
+		            peutSatisfaireToutLeContrat = false;
+		            break; // Sortir de la boucle car on ne peut pas honorer le contrat ;(
 		        }
 		    }
-		    return nouvelEcheancier;
+
+		    if (peutSatisfaireToutLeContrat) {
+		        contratsEnCours.add(contrat); // Ajouter le contrat à la liste des contrats en cours :) seulement si on peut satisfaire tout l'échéancier
+		        return nouvelEcheancier;
+		    } else {
+		        return null; // Retourner null si on ne peut pas satisfaire toutes les demandes :(
+		    }
 		}
+
 	
 	
 	/**
