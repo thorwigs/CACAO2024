@@ -87,7 +87,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 			return embauche;
 			
 		}
-		else { //A completer avec les licenciements
+		else { //A modifier pour les licenciements
 			this.JournalMasseSalariale.ajouter("On embauche personne");
 			return 0;
 		}
