@@ -105,12 +105,12 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void planter(double nb_hectares) {
 		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
 		
-		// Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
+		//Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
 		if (nb_hectares_possible < this.getNb_hectares_actuel()) {
 			this.embauche((int)(this.getNb_hectares_actuel() - nb_hectares_possible),"adulte");
 		}
 		
-		// Si on a assez de personnel mais pas assez de terrain
+		//Si on a assez de personnel mais pas assez de terrain
 		else {
 			if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
 				this.journal.ajouter("on ne peut pas acheter plus de terrain.");

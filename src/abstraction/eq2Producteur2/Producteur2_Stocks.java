@@ -274,7 +274,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	}
 	
 	//Faite par Quentin
-	
 	public void next() {
 		System.out.println("\n quantite stock : " + this.getStockTotal(cryptogramme));
 		super.next();

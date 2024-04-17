@@ -127,6 +127,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		return enfants + adultes_eq + adultes;
 	}
 	
+	//méthode 
 	public void trop_d_employes() {
 		double pourcentage_enf = this.getPourcentage_enfants();
 		int a_licencier = (int) (this.getNb_Employes_total()*0.05);
