@@ -21,6 +21,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	private int Etapenego; //ajout d'un compteur de tours de négociation 
 	
 	/////////////////
 	// Constructor //
@@ -38,6 +39,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+		this.Etapenego = 0;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +47,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	public void next() {
 		super.next();
+		this.Etapenego ++;  
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if (this.stockFeves.get(f)<1200) { // Modifier quantité minimale avant achat
@@ -58,15 +61,19 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
 								journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								this.Etapenego=0;
 							} else {
 								this.contratsEnCours.add(contrat);
+								this.Etapenego=0;
 								journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 							}
 						} else {
 							journalCC.ajouter("   pas de vendeur");
+							this.Etapenego=0;
 					}
 					} else {
 						journalCC.ajouter(f+" suffisament de stock pour ne pas passer de contrat cadre");
+						this.Etapenego=0;
 					}
 				}	
 		// On archive les contrats termines
@@ -143,15 +150,19 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 			return  null;
 		}
 	}
-		
-				
-	
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		if (contrat.getEcheancier().getQuantiteTotale()*5<contrat.getPrix()) {
-			return contrat.getEcheancier().getQuantiteTotale()*5; // Prix trop élevé
-		} else {
-			return contrat.getPrix();
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		if (contrat.getProduit().getType().equals("F_MQ") || contrat.getProduit().getType().equals("F_MQ")) { // pour les fèves pour lesquelles on connaît le prix en bourse 
+			if (contrat.getEcheancier().getQuantiteTotale()*bourse.getCours((Feve)contrat.getProduit()).getValeur()<contrat.getPrix()) { //prix supérieur à l'indice boursier 
+				return contrat.getEcheancier().getQuantiteTotale()*bourse.getCours((Feve)contrat.getProduit()).getValeur(); //re-négociation à la valeur boursière 
+			}
+			else {
+				return contrat.getPrix();
+			}
+		}
+		else { //pas d'info sur la bourse 
+			return 0.0;
 			}
 	}
 	
