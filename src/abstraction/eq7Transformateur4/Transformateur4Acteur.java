@@ -108,6 +108,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 					
 					
 		this.journal.ajouter("Stock initial chocolat de marque : ");
+		
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 		

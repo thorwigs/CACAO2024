@@ -59,7 +59,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 		//refaire des boucles for pour les chocos qui n'ont pas de marques
 		
 		//là on paye
-		double a_payer = 1000*this.nbemployeCDI + 658; //cout des employes et cout fixe des machines sur l'annee
+		double a_payer = 1000*this.nbemployeCDI + 658; //cout des employes et cout fixe des machines par step
 		for (double i : lescouts) {
 			a_payer = a_payer + i;
 		}
