@@ -164,6 +164,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
 	
+	
 	public void next() {
 		super.next();
 		journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
