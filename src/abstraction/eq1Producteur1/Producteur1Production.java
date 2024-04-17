@@ -55,9 +55,13 @@ public class Producteur1Production extends Producteur1Plantation{
 				this.journalProduction.ajouter("On ne peut pas faire de l'equitable car on employe des enfants");
 			}
 			if (ouvrier.isEquitable) {
-				this.prodParStep.put(Feve.F_MQ_E, null);
-				this.prodParStep.put(Feve.F_HQ_E, null);
-				this.journalProduction.ajouter("On a transforme X% of MQ to MQ_E and Y% of HQ to HQ_E");
+				double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
+				double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
+				this.Stocck.put(Feve.F_MQ_E, 0.5*m);
+				this.Stocck.put(Feve.F_HQ, 0.5*h);
+				this.stock.get(Feve.F_MQ_E).setValeur(this, 0.5*m);
+				this.stock.get(Feve.F_HQ_E).setValeur(this, 0.5*h);
+				this.journalProduction.ajouter("On a transforme 50% of MQ to MQ_E and 50% of HQ to HQ_E");
 			}
 		}
 	}
@@ -79,7 +83,7 @@ public class Producteur1Production extends Producteur1Plantation{
 			boolean check = true;
 			for (int i  =this.Stock_HQ.size()-4; i<this.Stock_HQ.size()-1 ;i++) {
 				if (this.Stock_HQ.get(i+1) <= this.Stock_HQ.get(i)) {
-					System.out.println("Diminution");
+					
 					check = false;
 					break; // Exit the loop if any decrease in stock is found
 				}
@@ -88,14 +92,14 @@ public class Producteur1Production extends Producteur1Plantation{
 			}
 			if (check) {
 				
-				System.out.println("Augmentation");
+				
 				double hq = this.Stocck.get(Feve.F_HQ);
 				double pro = this.Stocck.get(Feve.F_MQ);
 				this.stock.get(Feve.F_HQ).retirer(this, this.Stock_HQ.get(this.Stock_HQ.size()-4));
 				this.stock.get(Feve.F_MQ).setValeur(this, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
 				this.Stocck.put(Feve.F_HQ, hq - this.Stock_HQ.get(this.Stock_HQ.size()-4));
 				this.Stocck.put(Feve.F_MQ, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
-				this.journalProduction.ajouter("We added stocks on it is annoyoing");
+				this.journalProduction.ajouter("On a eu une degradation de stock de HQ vers MQ de la quantite suivante:"+this.Stock_HQ.get(this.Stock_HQ.size()-4) );
 				this.Stock_HQ.remove(this.Stock_HQ.size()-4);
 
 			}
@@ -120,8 +124,10 @@ public class Producteur1Production extends Producteur1Plantation{
 				double pro = this.Stocck.get(Feve.F_BQ);
 
 				this.stock.get(Feve.F_MQ).retirer(this, this.Stock_HQ.get(j));
+				this.stock.get(Feve.F_BQ).setValeur(this, pro + this.Stock_HQ.get(j));
 				this.Stocck.put(Feve.F_MQ, mq - this.Stock_MQ.get(j));
 				this.Stocck.put(Feve.F_BQ, pro + this.Stock_MQ.get(j));
+				this.journalProduction.ajouter("On a eu une degradation de stock de MQ vers BQ de la quantite suivante:"+this.Stock_MQ.get(this.Stock_MQ.size()-8) );
 
 				
 
@@ -129,6 +135,27 @@ public class Producteur1Production extends Producteur1Plantation{
 				this.Stock_HQ.remove(j);				
 			}
 		}
+	}
+	public void Stockage_BQ() {
+	    if (this.Stock_MQ.size() >= 12) {
+	        boolean check = true;
+	        int j = this.Stock_MQ.size() - 12;
+	        for (int i = j; i < j + 11; i++) {
+	            if (this.Stock_BQ.get(i) <= this.Stock_BQ.get(i + 1)) {
+	                check = false;
+	                break; // Exit the loop if any decrease in stock is found
+	            }
+	        }
+	        if (check) {
+	            
+	            double bq = this.stock.get(Feve.F_BQ).getValeur();
+	            double bqToRemove = this.Stock_BQ.get(j);
+	            this.stock.get(Feve.F_BQ).retirer(this, bqToRemove);
+	            this.Stocck.put(Feve.F_BQ, bq - this.Stock_BQ.get(j));
+	            this.journalProduction.ajouter("On a eu une degradation de stock de BQ de la quantite suivante:"+this.Stock_BQ.get(this.Stock_BQ.size()-12) );
+	            this.Stock_BQ.remove(j);
+	        }
+	    }
 	}
 
 	
@@ -140,6 +167,8 @@ public class Producteur1Production extends Producteur1Plantation{
 
 	public void next() {
 		super.next();
+		this.feveToEqui();
+		this.feveToBio();
 		//this.updateAge();
 		//this.degradStock();
 		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_BQ)+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
@@ -158,6 +187,8 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.Stockage_HQ();
 		this.Stock_MQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
 		this.Stockage_MQ();
+		this.Stock_BQ.add(this.getQuantiteEnStock(Feve.F_BQ, cryptogramme));
+		this.Stockage_BQ();
 
 	}
 	public List<Journal> getJournaux() {
