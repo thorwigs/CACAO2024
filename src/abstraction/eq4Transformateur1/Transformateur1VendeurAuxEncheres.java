@@ -77,7 +77,7 @@ public class Transformateur1VendeurAuxEncheres extends Transformateur1AcheteurCC
 		double prix = propositions.get(0).getPrixTonne();
 		double prixMoyen = prixMoyen((ChocolatDeMarque)(propositions.get(0).getMiseAuxEncheres().getProduit()));
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		double cours = bourse.getCours(Feve.F_MQ_E).getValeur();
+		double cours = bourse.getCours(Feve.F_MQ).getValeur();
 		if (prixMoyen==0) {
 			if (prix>=cours*2.5) {
 				return propositions.get(0);
