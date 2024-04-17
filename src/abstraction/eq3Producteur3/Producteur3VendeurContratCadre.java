@@ -26,14 +26,13 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	public void next() {
         super.next();
-        SetContratsEnCours();
     }
 	
 	/**
 	 * @author mammouYoussef
 	 */
 	//Nettoyer la liste des contrats en cours, en éliminant ceux dont les obligations de livraison ont été entièrement satisfaites
-	public void SetContratsEnCours() {
+	public void setContratsEnCours() {
 	    LinkedList<ExemplaireContratCadre> contratsAConserver = new LinkedList<>();
 	    for (ExemplaireContratCadre contrat : contratsEnCours) {
 	        if (contrat.getQuantiteRestantALivrer() > 0) {
@@ -56,14 +55,17 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
 	            if (contrat.getProduit().equals(f)) {
-	                quantiteDisponible -= contrat.getQuantiteRestantALivrer();
+	                quantiteDisponible -= contrat.getQuantiteALivrerAuStep();
 	            }
+	        }
+	        if (quantiteDisponible < 0) {
+	        	quantiteDisponible = 0;
 	        }
 	        return quantiteDisponible;
 	    }
 	 
 	 /**
-		 * @author mammouYoussef
+		 * @author mammouYoussef (et modification Arthur)
 		 */
 	
 	 public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
@@ -74,27 +76,20 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
 		        double quantiteDemandee = echeancierPropose.getQuantite(step);
-		        if (quantiteDemandee < SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-	                return null;
-		        }
 
-		        if ( quantiteDisponible >= quantiteDemandee) {
-		            // Si la quantité produite est suffisante pour l'échéance, ajouter cette quantité à l'échéancier
+		        if (quantiteDisponible >= quantiteDemandee) {
 		            nouvelEcheancier.ajouter(quantiteDemandee);
-		            contratsEnCours.add(contrat); // Ajouter le contrat à la liste des contrats en cours
-
-		        } else {  	
-		            if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-		                nouvelEcheancier.ajouter(quantiteDisponible);
-		                
-		            } else {
-		                nouvelEcheancier = null; //// Si aucune quantité n'est disponible :( ne pas accepter le contrat
-		                break; // Sortir de la boucle car on ne peut pas honorer le contrat
-		            }
+		        } else {
+		            nouvelEcheancier.ajouter(quantiteDisponible);
 		        }
 		    }
-		    return nouvelEcheancier;
+		    if (nouvelEcheancier.getQuantiteTotale()>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+		        return nouvelEcheancier;
+		    } else {
+		        return null; // Retourner null si on ne peut pas satisfaire toutes les demandes :(
+		    }
 		}
+
 	
 	
 	/**
@@ -145,6 +140,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");	
+		this.contratsEnCours.add(contrat);
+		this.setContratsEnCours();
 	}
 
 	/**
