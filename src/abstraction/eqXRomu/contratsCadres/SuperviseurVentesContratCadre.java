@@ -29,9 +29,9 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	private List<ContratCadre> contratsEnCours;
 	private List<ContratCadre> contratsTermines;
 	private HashMap<IActeur, Integer> cryptos;
-    private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
-    private HashMap<Feve, HashMap<Integer, Double>> livraisonsFeves;
-    
+	private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
+	private HashMap<Feve, HashMap<Integer, Double>> livraisonsFeves;
+
 	public static final int MAX_MEME_VENDEUR_PAR_STEP = 15; 
 	// Au cours d'un meme step un acheteur peut negocier au plus MAX_MEME_VENDEUR_PAR_STEP
 	// fois avec le meme vendeur. Si l'acheteur demande a negocier avec le vendeur v alors qu'il a 
@@ -199,7 +199,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		}		
 		return negociations(acheteur, vendeur, produit, echeancier, cryptogramme, tg, contrat,vendeur);
 	}
-	
+
 	private ExemplaireContratCadre negociations(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, Object produit, Echeancier echeancier, int cryptogramme, boolean tg, ContratCadre contrat, IActeur initiateur) {
 		int maxNego = 5 + (int)(Filiere.random.nextDouble()*11); // Le nombre maximum de contrepropositions est compris dans [5, 15]
 
@@ -304,7 +304,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		double chocoLivre=0;  // au cours de cette etape
 		double fevesALivrer=0;// au cours de cette etape
 		double fevesLivrees=0;// au cours de cette etape
-		
+
 		for (ContratCadre cc : this.contratsEnCours) {
 			if (!engageALivrer.keySet().contains(cc.getVendeur())) {
 				engageALivrer.put(cc.getVendeur(), new HashMap<IProduit,Double>());
@@ -320,7 +320,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 			}
 			engageALivrer.get(cc.getVendeur()).put(cc.getProduit(),resteALivr+cc.getQuantiteRestantALivrer());
 			engageAPayer.put(cc.getAcheteur(),engageAPayer.get(cc.getAcheteur())+cc.getMontantRestantARegler());
-			
+
 			this.journal.ajouter("- contrat :"+cc.oneLineHtml());
 			double aLivrer = cc.getQuantiteALivrerAuStep();
 			if (aLivrer>0.0) {
@@ -379,7 +379,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 			cc.penaliteLivraison();
 			cc.penalitePaiement();
 		}
-		
+
 		this.journal.ajouter("==== TOTAL LIVRAISONS ====");
 		this.journal.ajouter(fevesLivrees+" T de feves sur "+fevesALivrer+" a livrer");
 		this.journal.ajouter(chocoLivre+" T de choco sur "+chocoALivrer+" a livrer");
@@ -434,66 +434,93 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		recapitulerContratsEnCours();
 		gererLesEcheancesDesContratsEnCours();
 		archiverContrats();
+		eliminerFraudeurs();
 		contratsToCSV();
 	}
 
+	public void eliminerFraudeurs() {
+		List<IActeur> banqueroutes = new LinkedList<IActeur>();
+		List<IActeur> acteurs = Filiere.LA_FILIERE.getActeursSolvables();
+		for (IActeur a : acteurs) {
+			if (a instanceof IVendeurContratCadre) {
+				IVendeurContratCadre v = (IVendeurContratCadre)a;
+				List<ChocolatDeMarque> l = Filiere.LA_FILIERE.getChocolatsProduits();
+				for (ChocolatDeMarque cm : l) {
+					if (!banqueroutes.contains(v)) {
+						if (v.vend(cm)) {
+							String marque = cm.getMarque();
+							if (!Filiere.LA_FILIERE.getMarquesDistributeur().contains(marque)) {
+								if (!Filiere.LA_FILIERE.getProprietaireMarque(marque).equals(v)) {
+									System.err.println("l'equipe "+v+" vend du "+cm+" : l'entreprise est dissoute");
+									banqueroutes.add(v);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for (IActeur v : banqueroutes) {
+			Filiere.LA_FILIERE.getBanque().faireFaillite(v, this, cryptos.get(this));
+		}
+	}
 	public String contratToCSV(ContratCadre cc) {
 		return cc.getNumero()+";"+cc.getVendeur()+";"+cc.getAcheteur()+";"+cc.getProduit()+";"+cc.getPrix()+";"+cc.getTeteGondole()+";"+cc.getQuantiteTotale()+";"+cc.getEcheancier().getStepDebut()+";"+cc.getEcheancier().getStepFin()+";";
 	}
 	public void contratsToCSV() {
-	//	Variable aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph");
+		//	Variable aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph");
 		if (this.aff.getValeur()!=0.0) {
 
 
-					try {
-						PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CC.csv")));
-						aEcrire.println("NUM;VENDEUR;ACHETEUR;PRODUIT;PRIX;TG;QUANTITE;STEPDEBUT;STEPFIN");
-						for (ContratCadre cc : this.contratsEnCours) {						
-							aEcrire.println( contratToCSV(cc) );
-//							System.out.println(s);
-						}
-						for (ContratCadre cc : this.contratsTermines) {						
-							aEcrire.println( contratToCSV(cc) );
-						}
-						aEcrire.close();
+			try {
+				PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CC.csv")));
+				aEcrire.println("NUM;VENDEUR;ACHETEUR;PRODUIT;PRIX;TG;QUANTITE;STEPDEBUT;STEPFIN");
+				for (ContratCadre cc : this.contratsEnCours) {						
+					aEcrire.println( contratToCSV(cc) );
+					//							System.out.println(s);
+				}
+				for (ContratCadre cc : this.contratsTermines) {						
+					aEcrire.println( contratToCSV(cc) );
+				}
+				aEcrire.close();
+			}
+			catch (IOException e) {
+				throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
+			}
+			try {
+				PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CC_livraisonsFeves.csv")));
+				Feve[] tfeve = Feve.values();
+				String entete="";
+				for (int i=0; i<tfeve.length-1; i++) {
+					entete=entete+tfeve[i]+";";
+				}
+				entete=entete+tfeve[tfeve.length-1];
+				aEcrire.println(entete);//"NUM;VENDEUR;ACHETEUR;PRODUIT;PRIX;TG;QUANTITE;STEPDEBUT;STEPFIN");
+				for (int step=0; step<Filiere.LA_FILIERE.getEtape(); step++) {
+					String ligne="";
+					for (int i=0; i<tfeve.length-1; i++) {
+						ligne=ligne+this.livraisonsFeves.get(tfeve[i]).get(step)+";";
 					}
-					catch (IOException e) {
-						throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
-					}
-					try {
-						PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CC_livraisonsFeves.csv")));
-						Feve[] tfeve = Feve.values();
-						String entete="";
-						for (int i=0; i<tfeve.length-1; i++) {
-							entete=entete+tfeve[i]+";";
-						}
-						entete=entete+tfeve[tfeve.length-1];
-						aEcrire.println(entete);//"NUM;VENDEUR;ACHETEUR;PRODUIT;PRIX;TG;QUANTITE;STEPDEBUT;STEPFIN");
-						for (int step=0; step<Filiere.LA_FILIERE.getEtape(); step++) {
-							String ligne="";
-							for (int i=0; i<tfeve.length-1; i++) {
-								ligne=ligne+this.livraisonsFeves.get(tfeve[i]).get(step)+";";
-							}
-							ligne=ligne+this.livraisonsFeves.get(tfeve[tfeve.length-1]).get(step);
-							aEcrire.println( ligne );
-						}
-//						for (ContratCadre cc : this.contratsEnCours) {						
-//							aEcrire.println( contratToCSV(cc) );
-////							System.out.println(s);
-//						}
-//						for (ContratCadre cc : this.contratsTermines) {						
-//							aEcrire.println( contratToCSV(cc) );
-//						}
-						aEcrire.close();
-					}
-					catch (IOException e) {
-						throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
-					}
-				
+					ligne=ligne+this.livraisonsFeves.get(tfeve[tfeve.length-1]).get(step);
+					aEcrire.println( ligne );
+				}
+				//						for (ContratCadre cc : this.contratsEnCours) {						
+				//							aEcrire.println( contratToCSV(cc) );
+				////							System.out.println(s);
+				//						}
+				//						for (ContratCadre cc : this.contratsTermines) {						
+				//							aEcrire.println( contratToCSV(cc) );
+				//						}
+				aEcrire.close();
+			}
+			catch (IOException e) {
+				throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
+			}
+
 		}	
 
 	}
-	
+
 	public String getDescription() {
 		return this.getNom();
 	}
@@ -538,7 +565,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 			this.cryptos= cryptos;
 		}
 	}
-	
+
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0;
 	}
