@@ -67,7 +67,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	//        Coûts de Transfo         //
 	/////////////////////////////////////
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
-		return tonnes*coutMachines + tonnes*(1-cm.getPourcentageCacao())*coutAdjuvants ;
+		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
 	public double CoutTransformationTotal() {
 		double coutTotal = 0;
