@@ -57,7 +57,7 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 	}
 	public void feveToEqui() {
-		for (Ouvrier ouvrier : this.liste_Ouvrier) {
+		for (Ouvrier ouvrier : this.liste_Ouvrier.getListeOuvrier()) {
 			if (ouvrier.estEnfant) {
 				this.journalProduction.ajouter("On ne peut pas faire de l'equitable car on employe des enfants");
 			}

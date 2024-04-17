@@ -7,6 +7,8 @@ import java.util.Iterator;
 /*
  *///////////////////////////////////////YOUSSEF BEN ABDELJELIL//////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////*/
+
+//on va faire une classe Ouvrier qui décrit chaque ouvrier par anciennete,type,rendement,salaire,équitable,formation
 public class Ouvrier extends Producteur1Acteur {
 	public double anciennete;
 	public double rendement;
@@ -38,6 +40,7 @@ public class Ouvrier extends Producteur1Acteur {
 		else {
 			this.isEquitable=isEquitable;
 		}
+		//Un efnant ne peut pas produire de l'équitable
 	}
 	public double getAnciennete() {
 		return anciennete;

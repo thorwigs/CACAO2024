@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eq1Producteur1.OuvrierUtils.ResultatSuppression;
+import abstraction.eq1Producteur1.masseSalariale;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -26,7 +26,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
 	
-	protected ArrayList<Ouvrier> liste_Ouvrier;
+	protected masseSalariale liste_Ouvrier;
 	protected int cryptogramme;
 	protected Journal journal;
 	//new stuff I added : Abdo
@@ -59,13 +59,11 @@ public class Producteur1Acteur implements IActeur {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
 		float croissement =0 ;
-		int enfants = OuvrierUtils.getNombreEnfants(liste_Ouvrier);
+		int enfants = liste_Ouvrier.getNombreEnfants();
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
-		if ((annee != 0)& (annee % 5 == 0) && croissant & (OuvrierUtils.getNombreEnfants(liste_Ouvrier)>=10)  ) {
-			ResultatSuppression resultat =OuvrierUtils.removeEmploye(this.liste_Ouvrier, 10, false, false, true);//remove 10 enfants
-			ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
-			this.liste_Ouvrier=listeMiseAJour;			
+		if ((annee != 0)& (annee % 5 == 0) && croissant & (liste_Ouvrier.getNombreEnfants()>=10)  ) {
+			this.liste_Ouvrier.removeEmploye(10, false, false, true);//remove 10 enfants
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal = nouveauSalaire;
@@ -95,26 +93,17 @@ public class Producteur1Acteur implements IActeur {
 		int nb_enfants = 150;
 		int nb_equitables = 30;
 		int nb_employees_non_equitable = 100;
-		this.liste_Ouvrier=new ArrayList<Ouvrier>();
-
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_enfants,0,labourEnfant,1,false,false,true);
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_equitables,0,labourEquitable,1,true,false,false);
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_employees_non_equitable,0,labourNormal,1,false,false,false);
+		this.liste_Ouvrier=new masseSalariale();
+		this.liste_Ouvrier.addOuvrier(nb_enfants,labourEnfant,false,false,true);
+		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,false,false,true);
+		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,true);
 		/*
 		this.stockIni = new HashMap<Feve, Double>();
 		for (Feve feve : Feve.values()) {
 			this.stockIni.put(feve, 20000.0); //le nombre reste a changer
 		}
 */
-
-		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_enfants,0,labourEnfant,1,false,false,true);
-		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_equitables,0,labourEquitable,1,true,false,false);
-		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_employees_non_equitable,0,labourNormal,1,false,false,false);
-
-	
 		
-
-
 		this.soldeInitiale = this.getSolde();
 		this.soldeParStep.add(this.soldeInitiale);
 		this.croissanceParStep = new ArrayList<Double>();
@@ -146,24 +135,21 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-
-		OuvrierUtils.UpdateAnciennete(liste_Ouvrier);//mettre a jour l'anciennete
 		
 
-	
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 
-		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ OuvrierUtils.GetNombreOuvrierNonEquitable(this.liste_Ouvrier));
+		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ liste_Ouvrier.GetNombreOuvrierNonEquitable());
 
-		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ OuvrierUtils.GetNombreOuvrierNonEquitable(this.liste_Ouvrier));
+		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ liste_Ouvrier.GetNombreOuvrierNonEquitable());
 
-		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ OuvrierUtils.GetNombreOuvrierEquitable(this.liste_Ouvrier));
-		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ OuvrierUtils.getNombreEnfants(this.liste_Ouvrier));
+		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ liste_Ouvrier.GetNombreOuvrierEquitable());
+		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ liste_Ouvrier.getNombreEnfants());
 		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = OuvrierUtils.getSalaireTotal(liste_Ouvrier);
+		double Labor = liste_Ouvrier.getSalaireTotal();
 		
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
 		
