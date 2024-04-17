@@ -1,6 +1,7 @@
 package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
+import abstraction.eq1Producteur1.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,11 +51,14 @@ public class Producteur1Production extends Producteur1Plantation{
 	}
 	
 	public void feveToEqui() {
-		for (Ouvrier ouvrier : this.liste_Ouvrier) {
-			if (ouvrier.estEnfant) {
+		int nb = OuvrierUtils.GetNombreOuvrierEquitable(liste_Ouvrier);
+		int nbe = OuvrierUtils.getNombreEnfants(liste_Ouvrier);
+		int nbt = OuvrierUtils.GetNombreOuvrierEquitable(liste_Ouvrier)+ OuvrierUtils.GetNombreOuvrierNonEquitable(liste_Ouvrier)+OuvrierUtils.getNombreOuvrierFormés(liste_Ouvrier);
+		
+			if (nbe !=0) {
 				this.journalProduction.ajouter("On ne peut pas faire de l'equitable car on employe des enfants");
 			}
-			if (ouvrier.isEquitable) {
+			if (nb/nbt > 0.30) {
 				double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
 				double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
 				this.Stocck.put(Feve.F_MQ_E, 0.5*m);
@@ -64,7 +68,7 @@ public class Producteur1Production extends Producteur1Plantation{
 				this.journalProduction.ajouter("On a transforme 50% of MQ to MQ_E and 50% of HQ to HQ_E");
 			}
 		}
-	}
+	
 	public void feveToBio() {
 		if (this.pesticides) {
 			this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
@@ -161,7 +165,7 @@ public class Producteur1Production extends Producteur1Plantation{
 	
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = super.getIndicateurs();
-		res.addAll(this.stock.values());
+		res.addAll(this.stock.values());		
 		return res;
 	}
 
