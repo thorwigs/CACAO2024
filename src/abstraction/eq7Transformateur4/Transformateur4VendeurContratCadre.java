@@ -30,7 +30,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("Chocolat") 
-				&& stockChoco.get(produit)>450000; 
+				&& stockChoco.get(produit)>25000; 
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
 	}
 
@@ -50,11 +50,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				return contrat.getEcheancier();
 			}
 		} else {
-			double marge = - 450000 + stockChoco.get((Chocolat)(contrat.getProduit())) + restantALivrer((Chocolat)(contrat.getProduit()));
-			if (marge<1200) {
+			double marge = - 25000 + stockChoco.get((Chocolat)(contrat.getProduit())) + restantALivrer((Chocolat)(contrat.getProduit()));
+			if (marge<100) {
 				return null;
 			} else {
-				double quantite = 1200 + Filiere.random.nextDouble()*(marge-1200); // un nombre aleatoire entre 1200 et la marge
+				double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 			}
 		}
