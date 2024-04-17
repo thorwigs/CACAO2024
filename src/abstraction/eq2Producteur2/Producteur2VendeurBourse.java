@@ -54,4 +54,8 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 		jx.add(journalBourse);
 		return jx;
 	}
+	public void next() {
+		journalBourse.ajouter("------------ ETAPE " + Filiere.LA_FILIERE.getEtape() + " ---------------");
+		super.next();
+	}
 }

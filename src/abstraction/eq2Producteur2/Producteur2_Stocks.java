@@ -256,8 +256,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 			this.ajout_stock(type_feve, quantite);
 		}
 	}
-	 
-
+	
 	//Faite par Quentin
 	//Ajoute les nouvelles informations sur le stock au journal du stock
 	public void ajout_stock_journal() {
@@ -269,13 +268,13 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.journalStocks.ajouter("La quantité de fèves_MQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_MQ_E, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("La quantité de fèves_HQ_E en stock est de "+this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme)+"kg");
 		this.journalStocks.ajouter("La quantité de fèves_BQ en stock est de "+this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme)+"kg");
+		this.journalStocks.ajouter(" ");
 		this.journalStocks.ajouter("La quantité totale de fèves en stock est de "+this.getStockTotal(this.cryptogramme)+"T");
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
 	}
 	
 	//Faite par Quentin
 	public void next() {
-		System.out.println("\n quantite stock : " + this.getStockTotal(cryptogramme));
 		super.next();
 		this.lot_to_hashmap();
 		this.changement_qualite();
