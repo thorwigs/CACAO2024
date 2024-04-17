@@ -364,9 +364,9 @@ public abstract class Producteur3Acteur implements IActeur {
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
 		 //on ajoute les couts du step
 			 if (f.isEquitable()) {
-				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9*14);
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9);
 			 } else {
-				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6*14);
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6);
 			 }
 		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts
 			LinkedList<Integer> steps = new LinkedList<Integer>();
@@ -396,25 +396,32 @@ public abstract class Producteur3Acteur implements IActeur {
 	 
 	 /**
 	  * @author Arthur
-	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee
+	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee par tonnes
 	  * On vend en priorite les vieilles feves
 	  */
 	 protected double coutRevient(Feve f,double quantiteDem) {
-		 double accu = 0.0;
-		 //On veut destocker step par step
-		 LinkedList<Integer> steps = new LinkedList<Integer>();
-		 steps.addAll(stockGammeStep.get(f).keySet());
-		 Collections.sort(steps);
-		 for (Integer step : steps) {
-			 double stockStep = stockGammeStep.get(f).get(step);
-			 //On ajoute les couts de revient en proportion de la quantite demandee
-			 if (stockStep > quantiteDem) {
-				 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
-			 } else {
-				 accu += coutGammeStep.get(f).get(step);
-				 quantiteDem -= stockStep;
+		 if (quantiteDem <= 0) {
+			 return 0.0;
+		 } else {
+			 double accu = 0.0;
+			 //On veut destocker step par step
+			 LinkedList<Integer> steps = new LinkedList<Integer>();
+			 steps.addAll(stockGammeStep.get(f).keySet());
+			 Collections.sort(steps);
+			 for (Integer step : steps) {
+				 double stockStep = stockGammeStep.get(f).get(step);
+				 //On ajoute les couts de revient en proportion de la quantite demandee
+				 if (stockStep > quantiteDem) {
+					 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
+				 } else {
+					 accu += coutGammeStep.get(f).get(step);
+					 quantiteDem -= stockStep;
+				 }
 			 }
+			 this.journal_bourse.ajouter("acc"+accu);
+			 this.journal_bourse.ajouter("q"+quantiteDem);
+			 this.journal_bourse.ajouter("accQ"+accu/quantiteDem);
+			 return accu/quantiteDem;
 		 }
-		 return accu;
 	 }
 }
