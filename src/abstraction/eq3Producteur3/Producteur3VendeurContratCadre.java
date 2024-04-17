@@ -1,19 +1,26 @@
 package abstraction.eq3Producteur3;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
+import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse implements IVendeurContratCadre {
+	//@youssef
 	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
+	private SuperviseurVentesContratCadre superviseur;
 	@Override
 	public boolean vend(IProduit produit) {
 		//On accepte les contrats cadres sur le HQ et MQ
@@ -26,7 +33,38 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	public void next() {
         super.next();
+        proposerContrats();
     }
+	
+	/**
+	 * @author mammouYoussef
+	 */
+	
+	public void proposerContrats() {
+	
+	    // Créer une liste de fèves de qualité BQ et HQ uniquement
+	    List<Feve> feves = new ArrayList<Feve>();
+	    for (Feve feve : Feve.values()) {
+	        if (feve.getGamme() == Gamme.BQ || feve.getGamme() == Gamme.HQ) {
+	            feves.add(feve);
+	        }
+	    }
+	    for (Feve f : feves) { 
+	        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
+	        if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+	            List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
+	            for (IAcheteurContratCadre acheteur : acheteurs) {
+                    Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape(), 10, quantiteDisponible / 10); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
+                    ContratCadre contrat = new ContratCadre(acheteur, this, f, echeancier, this.cryptogramme, false); // Crée le contrat sans prix
+                    double prix = propositionPrix(new ExemplaireContratCadre(contrat)); // détermine le prix
+                    contrat.ajouterPrix(prix); // Ajoute le prix au contrat
+                    ExemplaireContratCadre exemplaire = new ExemplaireContratCadre(contrat);
+                    superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
+                }
+            }
+	    }
+	}
+	
 	
 	/**
 	 * @author mammouYoussef
@@ -89,7 +127,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		        return null; // Retourner null si on ne peut pas satisfaire toutes les demandes :(
 		    }
 		}
-
+	 
 	
 	
 	/**

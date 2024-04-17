@@ -11,6 +11,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 /**
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
  * de qualité XQ
+ * Calcul des valeurs initials par @galem
  */
 	private double surfaceHQ = 22.74*1000;
 	private double surfaceHQBE = 8.42*1000;
@@ -48,7 +49,8 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
 		for (Feve f : prodfeve.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
-			double delta = ventefeve.get(f).getValeur() - prodfeve.get(f).getValeur(); // difference entre vente et production de f
+			double delta = ventefeve.get(f).getValeur() - prodfeve.get(f).getValeur();// difference entre vente et production de f
+			// this.journal.ajouter(f.toString() + "ventes " + ventefeve.get(f).getValeur()+", "+"production " + prodfeve.get(f).getValeur());
 			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit (en tonnes)
 				supp += 10; 
 			}
