@@ -27,6 +27,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	
 	public Transformateur2MasseSalariale() {
 		super();
+		this.JournalMasseSalariale=new Journal(this.getNom()+" journal Masse Salariale", this);
 	}
 	public void initialiser() {
 		super.initialiser();
@@ -104,7 +105,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		super.next();
 		// Paiement des coût de la masse salariale
 		double TotauxTransformees = TotauxTonnesTransformees();
-		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", CoutMasseSalariale(TotauxTransformees));
+		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", this.CoutMasseSalariale(TotauxTransformees));
 		
 		// Paiement des coût de transformation
 		double TotalCout = CoutTransformationTotal();
