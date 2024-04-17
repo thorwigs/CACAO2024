@@ -20,7 +20,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
 		
-		return this.getStockChocoMarque(choco,crypto)*0.9;
+		return this.getQuantiteEnStock(choco,crypto)*0.9;
 		
 	}
 
@@ -44,7 +44,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-	if (this.getStockChocoMarque(choco, crypto)==0.0) {
+	if (this.getQuantiteEnStock(choco, crypto)==0.0) {
 		journal.ajouter("plus de chocolat"+choco+"");
 	}
 		

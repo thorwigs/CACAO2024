@@ -17,14 +17,16 @@ public abstract class Distributeur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	private int capaciteStockage;
-	
+	protected double coutStockage;
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.capaciteStockage = Integer.MAX_VALUE;
+		
 	}
 	
 	public void initialiser() {
+		this.coutStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -38,18 +40,17 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public int getCapaciteStockage() {
 		return this.capaciteStockage;
 	}
-
+	public double getCoutStockage() {
+		return this.coutStockage;
+	}
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-	public abstract double getStockChocoMarque(ChocolatDeMarque cm, int crypto);
 	
 	public void next() {
 		this.getJournaux().get(0).ajouter("Step "+Filiere.LA_FILIERE.getEtape());
-		this.getJournaux().get(0).ajouter("Coût de stockage : "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
-		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
-		this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getStockChocoMarque(cm,this.cryptogramme));}
-	    
+		this.getJournaux().get(0).ajouter("Coût de stockage : "+ this.getCoutStockage());
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -121,11 +122,4 @@ public abstract class Distributeur2Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		}
-	}
 }

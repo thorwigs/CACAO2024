@@ -1,6 +1,7 @@
 package abstraction.eq9Distributeur2;
 
 import java.awt.Color;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,11 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.filiere.Banque;
+
+
+////////////// plafonner le cout d'achat pck la on fait faillite ! ///////////////////////
+
 
 public abstract class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
 	private SuperviseurVentesContratCadre supCC;
@@ -123,7 +129,18 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
 			return 0.;
 		}
-		return contrat.getPrix();
+		ChocolatDeMarque choco = (ChocolatDeMarque) contrat.getProduit();
+		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)*0.9 - this.getCoutStockage()*contrat.getQuantiteTotale();
+		if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(supCC, cryptogramme, contrat.getPrix())) {
+			if (contrat.getPrix() <= prix_limite) {
+				return contrat.getPrix();
+			} else {
+				return prix_limite;
+			}
+		} else {
+			return Filiere.LA_FILIERE.getBanque().getSolde(supCC, cryptogramme)*0.9-this.getCoutStockage()*contrat.getQuantiteTotale();
+		}
+		
 	}
 	
 	@Override
