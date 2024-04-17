@@ -97,7 +97,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		if (TonnesTransformees >= CapaciteTransfoTotale) {
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/capaciteTransformation);
 			NbSalaries += embauche;
-			return embauche;
+			return 0;
 			
 		}
 		/*
@@ -126,12 +126,16 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		super.next();
 		// Paiement des coût de la masse salariale
 		double TotauxTransformees = this.TotauxTonnesTransformees();
-		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", this.CoutMasseSalariale(TotauxTransformees));
+		if (this.CoutMasseSalariale(TotauxTransformees)>=0) {
+			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", this.CoutMasseSalariale(TotauxTransformees));
+		}
 		
 		// Paiement des coût de transformation
 		double TotalCout = this.CoutTransformationTotal();
-		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , TotalCout);
+		if (TotalCout>=0) {
+			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , TotalCout);
 		}
+	}
 
 }
 
