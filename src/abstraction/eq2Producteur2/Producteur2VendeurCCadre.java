@@ -15,6 +15,8 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
+// Faite par Maxime
+
 public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse implements IVendeurContratCadre {
 
 	private static int PRIX_DEFAUT = 4500;

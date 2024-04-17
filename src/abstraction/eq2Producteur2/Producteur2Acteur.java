@@ -92,7 +92,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		for (Feve f : Feve.values()) {
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
-			
 		}
 	}
 
@@ -193,7 +192,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 	
-	// Fait par Noémie
+	// Faite par Noémie
 	public abstract double cout_total_stock();
 	public abstract double cout_humain_par_step();
 	public abstract double cout_plantation();

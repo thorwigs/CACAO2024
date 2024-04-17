@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.Feve;
 //Toutes les variables de poids de cacao sont en TONNES 
 
 
-//Fait par Anthony 
+// Classe faite par Anthony 
 
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double nb_hectares_max;
@@ -102,7 +102,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.setPourcentage_BQ(0.60);
 	}
 	
-	//Fait par Noémie
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalPlantation);
@@ -135,6 +134,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		}
 	}
 	
+	// Fait par Anthony
 	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en tonnes
 		
 	// nb_hectares possible représente le nombre d'hectares dont peuvent s'occuper les employés 
@@ -167,6 +167,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public double get_prod_pest_BQ() {
 		return this.production_BQ() * rend_pest_BQ; //feve BQ
 	}
+	
 	public void nouveau_stock() { // ajoute la production sur 2 semaines aux stocks
 		ajout_stock(Feve.F_BQ, this.get_prod_pest_BQ());
 		ajout_stock(Feve.F_MQ, this.get_prod_pest_MQ());
@@ -233,4 +234,3 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		}
 	}
 } 
-// 1hectare = 500kg / an cacao
