@@ -17,12 +17,12 @@ public abstract class Distributeur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	private int capaciteStockage;
-	protected double coutDeStockage;
+	protected double coutStockage;
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.capaciteStockage = Integer.MAX_VALUE;
-		this.coutDeStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
+		this.coutStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
 	}
 	
 	public void initialiser() {
@@ -39,8 +39,8 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public int getCapaciteStockage() {
 		return this.capaciteStockage;
 	}
-	public double getCoutDeStockage() {
-		return this.getCoutDeStockage();
+	public double getCoutStockage() {
+		return this.coutStockage;
 	}
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
@@ -49,7 +49,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	
 	public void next() {
 		this.getJournaux().get(0).ajouter("Step "+Filiere.LA_FILIERE.getEtape());
-		this.getJournaux().get(0).ajouter("Coût de stockage : "+ this.getCoutDeStockage());
+		this.getJournaux().get(0).ajouter("Coût de stockage : "+ this.getCoutStockage());
 		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
 		this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getStockChocoMarque(cm,this.cryptogramme));}
 	    
