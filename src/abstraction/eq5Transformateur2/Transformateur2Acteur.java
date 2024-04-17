@@ -65,10 +65,13 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, STOCKINITIAL);
-			this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
-			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+			if (f.getGamme()!=Gamme.HQ) {
+				this.stockFeves.put(f, STOCKINITIAL);
+				this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
+				this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+			}
 		}
+		
 		this.lesChocolats = new LinkedList<Chocolat>();
 		this.journal.ajouter("Nos Chocolats sont :");
 		for (Chocolat c : Chocolat.values()) {

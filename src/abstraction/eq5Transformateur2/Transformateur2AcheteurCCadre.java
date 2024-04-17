@@ -136,7 +136,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
 		}
-		if (Filiere.random.nextDouble()<0.10) { //10% de chance 
+		if (Filiere.random.nextDouble()<0.05) { //5% de chance 
 			return contrat.getEcheancier(); //on ne négocie pas 
 		}		
 		if (contrat.getEcheancier().getNbEcheances()<52) { //durée trop courte 
@@ -170,7 +170,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		if (Filiere.random.nextDouble()<0.10) { //10% de chance 
+		if (Filiere.random.nextDouble()<0.05) { //5% de chance 
 			return contrat.getPrix(); //on ne négocie pas 
 		}
 		else { //dans 80% des cas on négocie 
