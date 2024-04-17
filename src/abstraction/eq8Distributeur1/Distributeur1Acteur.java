@@ -86,13 +86,11 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
 	public void next() {
 		this.journal.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		this.journal.ajouter("Stock == " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		this.journal.ajouter("=================================");
-
-		}
+	}
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(209, 179, 221); 
@@ -188,6 +186,6 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		LinkedList<String> choc = new LinkedList<String>();
 		choc.add("Chocoflow");
 		return choc;
-	}
+	}  
 		
 }
