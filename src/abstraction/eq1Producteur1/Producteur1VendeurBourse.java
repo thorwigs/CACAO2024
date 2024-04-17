@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVendeurBourse {
+public class Producteur1VendeurBourse extends Producteur1Production implements  IVendeurBourse {
 	public double  prixSeuilHQ ;
 	public double  prixSeuilBQ ;
 	public double  prixSeuilMQ ;
@@ -79,6 +79,7 @@ public class Producteur1VendeurBourse extends Producteur1Acteur implements  IVen
 		
 		double retire = Math.min(this.stock.get(f).getValeur(), quantiteEnT);
 		this.stock.get(f).retirer(this, retire, cryptogramme);
+		
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f).getValeur((Integer)cryptogramme));
 		super.notificationOperationBancaire(retire*coursEnEuroParT);
 		super.getSolde();
