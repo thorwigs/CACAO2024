@@ -25,7 +25,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_no_pest_HQ = 0.72;
 	
 	protected Journal journalPlantation;
-	
+		
 	public Producteur2_Plantation() {
 
 		this.nb_hectares_actuel=5000000.0;
@@ -177,7 +177,13 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		double res = getNb_nouveau_hectares() * getPrix_plantation_hectare();
 		setNb_nouveau_hectares(0);
 		return res;
-	}	
+	}
+	
+	public void perte_plantation() { //plantation que l'on perd à chaque next
+		double pourcentage_perte = 0.1;
+		double perte_un_next = pourcentage_perte * getNb_hectares_actuel();
+		setNb_hectares_actuel(getNb_hectares_actuel() - perte_un_next);
+	}
 	
 	public void ajout_plantation_journal() {
 		this.journalPlantation.ajouter(" ");
@@ -207,7 +213,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		// On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
 		ajout_plantation_journal();
-		
+		perte_plantation(); //perte quotidienne d'arbres
 		// On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
@@ -219,4 +225,3 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 } 
 // 1hectare = 500kg / an cacao
-// implémenter la qualité
