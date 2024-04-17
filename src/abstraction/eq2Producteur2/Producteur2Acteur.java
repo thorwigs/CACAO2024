@@ -14,6 +14,10 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
+/** Classe principale de l'acteur
+ * @author Quentin, Noémie, Maxime
+ */
+
 public abstract class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
@@ -28,6 +32,9 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract double get_prod_pest_MQ();
 	public abstract double get_prod_pest_HQ();
 	
+	/** Constructeur de classe
+	 * @author Quentin, Noémie
+	 */
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.stock = new HashMap<Feve, Double>();
@@ -53,19 +60,26 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 	
+	/** Définition de méthodes abstraites
+	 * @author Noémie
+	 */
 	public abstract void init_stock(Feve type_feve, double quantite);
 	public abstract void lot_to_hashmap();
 	
 	public void initialiser() {
 		
-		
-		//initialisation prodparstep pour faire marcher get indicateur || à modifier		
 	}
 	
-
+	/** Getter
+	 * @author Noémie
+	 */
 	public HashMap<Feve, Variable> getStock_variable() {
 		return stock_variable;
 	}
+	
+	/** Setter
+	 * @author Noémie
+	 */
 	public void setStock_variable(HashMap<Feve, Variable> stock_variable) {
 		this.stock_variable = stock_variable;
 	}
@@ -82,6 +96,9 @@ public abstract class Producteur2Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 	
+	/** Next
+	 * @author Noémie, Maxime
+	 */
 	public void next() {
 		this.DebiteCoutParStep();
 		this.journal.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
@@ -95,15 +112,20 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 
-	public Color getColor() {// NE PAS MODIFIER
+	public Color getColor() { //NE PAS MODIFIER
 		return new Color(244, 198, 156); 
 	}
 
+	/** Renvoie la description de l'acteur
+	 * @author Maxime
+	 */
 	public String getDescription() {
 		return "Nous sommes CacaoLand, producteur au sein de la filière du cacao. Notre objectif est de produire du cacao de haute qualité de manière équitable avec également du cacao de basse et moyenne qualité en quantité.";
 	}
 
-	// Renvoie les indicateurs
+	/** Renvoie les indicateurs
+	 * @author Noémie
+	 */
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f: Feve.values()) {
@@ -119,7 +141,9 @@ public abstract class Producteur2Acteur implements IActeur {
 		return res;
 	}
 
-	// Renvoie les journaux
+	/**  Renvoie les journaux
+	 * @author Maxime
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
@@ -167,8 +191,9 @@ public abstract class Producteur2Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
-	//Faite par Quentin
-	//Retourne la quantité stockée pour un type de produit (un type de fève)
+	/** Retourne la quantité stockée pour un type de produit (un type de fève)
+	 * @author Quentin
+	 */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee_prod = this.stock.get(p);
@@ -178,8 +203,10 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 	
-	//Faite par Quentin
-	//Retourne la quantité totale de fèves stockée
+	/** Retourne la quantité totale de fèves stockée
+	 * @param cryptogramme
+	 * @author Quentin
+	 */
 	public double getStockTotal(int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee = 0;
@@ -192,28 +219,39 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 	
-	// Faite par Noémie
+	/** Définition de méthodes abstraites
+	 * @author Noémie
+	 */
 	public abstract double cout_total_stock();
 	public abstract double cout_humain_par_step();
 	public abstract double cout_plantation();
 	
-	//
+	/** Calcule le coût total à chaque étape
+	 * @author Noémie
+	 */
 	public double getCoutTotalParStep() {
 		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
 		return somme;
 	}
-		
+	
+	/** Débite de notre compte l'argent utilisé à chaque étape 
+	 * @author Noémie
+	 */
 	public void DebiteCoutParStep() {
 		retireArgent(this.cout_total_stock(), "coût des stocks");	
 		retireArgent(this.cout_humain_par_step(), "coût humain");	
 		retireArgent(this.cout_plantation(), "coût de la plantation");	
 	}
-	
+
+	/** Permet de retirer de l'argent de la banque
+	 * @param montant
+	 * @param raison
+	 * @author Noémie
+	 */
 	public void retireArgent(double montant, String raison) {
 		if (montant>0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, raison, montant);
-		}
-			
+		}		
 	}
 }
 
