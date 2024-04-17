@@ -40,13 +40,13 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 		double stockCibleHQ = 0.3 * stockCible;
 	    double stockCibleMQ = 0.7 * stockCible;
 	    if (f == Feve.F_HQ_BE) {
-	        if (this.stockFeves.get(f) < stockCibleHQ) {
-	        	double demandeHQ = Math.max(stockCibleHQ - this.stockFeves.get(f), demandeMin);
+	        if (this.stockFeves.get(f).getValeur() < stockCibleHQ) {
+	        	double demandeHQ = Math.max(stockCibleHQ - this.stockFeves.get(f).getValeur(), demandeMin);
 	    		this.journalAchatBourse.ajouter("- La demande en HQ_BE est de "+demandeHQ+"T de fève");
 	            return demandeHQ;}}
 	    else if (f == Feve.F_MQ) {
-	        if (this.stockFeves.get(f) < stockCibleMQ) {
-	        	double demandeMQ = Math.max(stockCibleMQ - this.stockFeves.get(f), demandeMin);
+	        if (this.stockFeves.get(f).getValeur() < stockCibleMQ) {
+	        	double demandeMQ = Math.max(stockCibleMQ - this.stockFeves.get(f).getValeur(), demandeMin);
 	    		this.journalAchatBourse.ajouter("- La demande en MQ_E est de "+demandeMQ+"T de fève");
 	            return demandeMQ;
 	        }
@@ -58,7 +58,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 
 		// TODO Auto-generated method stub
-		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
+		this.stockFeves.get(f).setValeur(this, this.stockFeves.get(f).getValeur()+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
 	
 		this.journalAchatBourse.ajouter("- achat de "+quantiteEnT+"T de fèves "+f);

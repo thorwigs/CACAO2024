@@ -53,7 +53,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    for (Feve f : stockFeves.keySet()) {
 	        if (achete(f)) {
 	            this.journalCC.ajouter("   " + f + " suffisamment peu en stock/contrat pour passer un CC");
-	            double parStep = Math.max(100, (21200 - stockFeves.get(f) - restantDu(f)) / 12); // au moins 100
+	            double parStep = Math.max(100, (21200 - stockFeves.get(f).getValeur() - restantDu(f)) / 12); // au moins 100
 	            Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
 	            List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 	            if (!vendeurs.isEmpty()) {
@@ -99,16 +99,19 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			res+=c.getMontantRestantARegler();
 		}
-		return res;}
+		return res;
+		}
+	
+	
 	@Override
 	public boolean achete(IProduit produit) {
 		if (produit instanceof Feve) {
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	        		return stockFeves.get(feve) + restantDu(feve) < 500;}
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
 	        	if (feve.getGamme() == Gamme.MQ && feve.isBio()) {
-	        		return stockFeves.get(feve) + restantDu(feve) < 1000;}
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
 	        	}
 	        	
 	        	}
@@ -127,32 +130,33 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    if (!feve.getType().equals("Feve")) {
 	        return null;
 	    }
-
+	    
+	    
 	    // Utilisation de la logique de la méthode achete pour déterminer si on achète la fève
 	    if (achete(feve)) {
 	        if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	            if (stockFeves.getOrDefault(feve, 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 500) {
+	            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 500) {
 	                // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
 	                return contrat.getEcheancier();
 	            } else {
-	                double marge = 500 - stockFeves.getOrDefault(feve, 0.0) - restantDu(feve); // getordefault : retourne 0 si stock feves est null 
-	                if (marge < 1200) {
+	                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+	                if (marge < 100) {
 	                    return null;
 	                } else {
-	                    double quantite = 1200 + Filiere.random.nextDouble() * (marge - 1200); // un nombre aléatoire entre 1200 et la marge
+	                    double quantite = 100 + Filiere.random.nextDouble() * (marge - 100); // un nombre aléatoire entre 100 et la marge
 	                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
 	                }
 	            }
-	        } else if (feve.getGamme() == Gamme.MQ && feve.isBio() && feve.isEquitable()) {
-	            if (stockFeves.getOrDefault(feve, 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 1000) {
+	        } else if (feve.getGamme() == Gamme.MQ) {
+	            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 1000) {
 	                // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
 	                return contrat.getEcheancier();
 	            } else {
-	                double marge = 1000 - stockFeves.getOrDefault(feve, 0.0) - restantDu(feve);
-	                if (marge < 1200) {
+	                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+	                if (marge < 100) {
 	                    return null;
 	                } else {
-	                    double quantite = 1200 + Filiere.random.nextDouble() * (marge - 1200); // un nombre aléatoire entre 1200 et la marge
+	                    double quantite = 100 + Filiere.random.nextDouble() * (marge - 100); // un nombre aléatoire entre 100 et la marge
 	                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
 	                }
 	            }
@@ -211,7 +215,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
-		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+		stockFeves.get((Feve)p).setValeur(this, stockFeves.get((Feve)p).getValeur()+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
 }

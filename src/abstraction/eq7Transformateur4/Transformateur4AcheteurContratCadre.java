@@ -36,7 +36,6 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	}
 	
 	public boolean achete(IProduit produit) {
-		
 		return produit.getType().equals("Feve") 
 				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000; 
 		//à modifier selon nécessité de chaque type de fève
