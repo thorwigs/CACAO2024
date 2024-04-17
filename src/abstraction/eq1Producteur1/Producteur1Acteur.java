@@ -62,6 +62,9 @@ public class Producteur1Acteur implements IActeur {
 		this.prodParStep.put(Feve.F_HQ_BE,Part*0.0 );
 	
 		
+		
+		
+	
 		//Still not sure about this need to be looked into a bit more
 		this.stock = new HashMap<Feve, Variable>();
 		for (Feve f : Feve.values()) {
