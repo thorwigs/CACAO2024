@@ -17,11 +17,12 @@ public abstract class Distributeur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	private int capaciteStockage;
-	
+	protected double coutDeStockage;
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.capaciteStockage = Integer.MAX_VALUE;
+		this.coutDeStockage = (Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
 	}
 	
 	public void initialiser() {
@@ -38,7 +39,9 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public int getCapaciteStockage() {
 		return this.capaciteStockage;
 	}
-
+	public double getCoutDeStockage() {
+		return this.getCoutDeStockage();
+	}
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
@@ -46,7 +49,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	
 	public void next() {
 		this.getJournaux().get(0).ajouter("Step "+Filiere.LA_FILIERE.getEtape());
-		this.getJournaux().get(0).ajouter("Coût de stockage : "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16);
+		this.getJournaux().get(0).ajouter("Coût de stockage : "+ this.getCoutDeStockage());
 		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
 		this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getStockChocoMarque(cm,this.cryptogramme));}
 	    
