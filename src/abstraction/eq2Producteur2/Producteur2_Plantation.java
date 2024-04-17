@@ -1,4 +1,5 @@
-package abstraction.eq2Producteur2;
+ package abstraction.eq2Producteur2;
+
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -27,12 +28,13 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected Journal journalPlantation;
 	
 	public Producteur2_Plantation() {
-		//initialisation EFFICACE
+
 		this.nb_hectares_actuel=5000000.0;
 		this.nb_hectares_max=5000000.0*10;
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	}
+
 
 	public double getNb_hectares_max() {
 		return this.nb_hectares_max;
@@ -101,35 +103,50 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 		
 	public void planter(double nb_hectares) {
-		if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
-			this.journal.ajouter("on ne peut pas acheter plus de terrain.");
-			return;
+		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
+		
+		// Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
+		if (nb_hectares_possible < this.getNb_hectares_actuel()) {
+			this.embauche((int)(this.getNb_hectares_actuel() - nb_hectares_possible),"adulte");
 		}
-		else { 
-	 		setNb_hectares_actuel(getNb_hectares_actuel() + nb_hectares);
-			// On embauche le même nombre de personnes que d'hectares car 1 hectare = 1 employé
-			// 90% des personnes embauchées sont embauchées en tant qu'employé non-équitable
-			int nb_employes = (int)(nb_hectares*0.9);
-			this.embauche((int) nb_employes, "adulte");
-			this.embauche((int) nb_hectares - nb_employes, "adulte équitable");
+		
+		// Si on a assez de personnel mais pas assez de terrain
+		else {
+			if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
+				this.journal.ajouter("on ne peut pas acheter plus de terrain.");
+				return;
+			}
+			else { 
+		 		setNb_hectares_actuel(getNb_hectares_actuel() + nb_hectares);
+				// On embauche le même nombre de personnes que d'hectares car 1 hectare = 1 employé
+				// 90% des personnes embauchées sont embauchées en tant qu'employé non-équitable
+				int nb_employes = (int)(nb_hectares*0.9);
+				this.embauche((int) nb_employes, "adulte");
+				this.embauche((int) nb_hectares - nb_employes, "adulte équitable");
+			}
 		}
 	}
 	
-	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en kg
-		long v =((long) getNb_hectares_actuel())/48; // 48 = 0.5 (tonnes) / 24 (tours de jeu en un an)
-		return v;
+	public long production_cacao() { // retourne la production actuelle de cacao sur 2 semaines en tonnes
+		
+	// nb_hectares possible représente le nombre d'hectares dont peuvent s'occuper les employés 
+		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
+		long nb_hectares_production = Math.min(nb_hectares_possible, (long) this.getNb_hectares_actuel());
+		long quantite_feve = nb_hectares_production/48; // 48 = 0.5 (tonnes) / 24 (tours de jeu en un an)
+		return quantite_feve;
 	}
-	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en kg
+	
+	public double production_HQ() { // retourne la production de cacao de haute qualité sur 2 semaines en tonnes
 		return production_cacao()* getPourcentage_HQ();
 	}
-	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en kg
+	public double production_BQ() { // retourne la production de cacao de basse qualité sur 2 semaines en tonnes
 		return production_cacao() * getPourcentage_BQ();
 	}
-	public double production_MQ() { // retourne la production de cacao de moyenne qualité sur 2 semaines en kg
+	public double production_MQ() { // retourne la production de cacao de moyenne qualité sur 2 semaines en tonnes
 		return production_cacao() * getPourcentage_MQ();
 	}
 	
-	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en kilos
+	// Retourne la production de cacao BQ, MQ et HQ après calculs des rendements en tonnes
 	public double get_prod_no_pest_HQ() { 
 		return this.production_HQ() * rend_no_pest_HQ; //feve HQ_BE
 	}
@@ -148,7 +165,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		ajout_stock(Feve.F_BQ, this.get_prod_pest_BQ());
 		ajout_stock(Feve.F_MQ, this.get_prod_pest_MQ());
 		ajout_stock(Feve.F_HQ_E, this.get_prod_pest_HQ());
-	}
+	}	
 	
 	public void modifie_prodParStep() {
 	    this.prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
@@ -185,7 +202,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
 	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
 	 */
-	public void next_plantation() {
+	public void next() {
+		super.next();
 		// On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
 		ajout_plantation_journal();
@@ -201,6 +219,4 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 } 
 // 1hectare = 500kg / an cacao
-// implémenter la qualité 
-
-// B219
+// implémenter la qualité
