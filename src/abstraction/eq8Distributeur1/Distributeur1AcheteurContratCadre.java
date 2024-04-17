@@ -222,6 +222,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				System.out.println(vendeurs.size());
 				IVendeurContratCadre vendeur = null;
 				
+				
 				if (vendeurs.size()==1) {
 					vendeur=vendeurs.get(0);
 				} else if (vendeurs.size()>1) {
