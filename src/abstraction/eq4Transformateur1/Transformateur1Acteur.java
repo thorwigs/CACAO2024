@@ -136,7 +136,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 					ChocolatDeMarque cm;
 					if(f.getGamme()==Gamme.MQ) {
-						cm= new ChocolatDeMarque(c, "marque2", pourcentageCacao);
+						cm= new ChocolatDeMarque(c, "CacaoMagic", pourcentageCacao);
 					} else {
 						cm= new ChocolatDeMarque(c, "LeaderKakao", pourcentageCacao);
 					}
