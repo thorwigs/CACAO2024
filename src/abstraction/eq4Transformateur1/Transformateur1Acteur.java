@@ -261,7 +261,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		if (this.chocosProduits.size()==0) {
 			Chocolat cmc = Chocolat.C_MQ_E;
 			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
-			this.chocosProduits.add(new ChocolatDeMarque(cmc, "marque2", pourcentageCacao));
+			this.chocosProduits.add(new ChocolatDeMarque(cmc, "CacaoMagic", pourcentageCacao));
 			
 			Chocolat chc = Chocolat.C_HQ_BE;
 			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+chc.getGamme()).getValeur());
