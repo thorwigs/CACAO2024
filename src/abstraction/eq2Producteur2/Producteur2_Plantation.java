@@ -7,7 +7,10 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 
-// Toutes les variables de poids de cacao sont en TONNES 
+//Toutes les variables de poids de cacao sont en TONNES 
+
+
+//Fait par Anthony 
 
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	protected double nb_hectares_max;
@@ -26,11 +29,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_no_pest_HQ = 0.72;
 	
 	protected Journal journalPlantation;
-	
+		
 	public Producteur2_Plantation() {
 
 		this.nb_hectares_actuel=5000000.0;
-		this.nb_hectares_max=5000000.0*10;
+		this.nb_hectares_max=5000000.0;
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	}
@@ -99,21 +102,23 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.setPourcentage_BQ(0.60);
 	}
 	
+	//Fait par Noémie
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalPlantation);
 		return jx;
 	}
-		
+	
+	//Fait par Anthony
 	public void planter(double nb_hectares) {
 		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
 		
-		// Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
+		//Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
 		if (nb_hectares_possible < this.getNb_hectares_actuel()) {
 			this.embauche((int)(this.getNb_hectares_actuel() - nb_hectares_possible),"adulte");
 		}
 		
-		// Si on a assez de personnel mais pas assez de terrain
+		//Si on a assez de personnel mais pas assez de terrain
 		else {
 			if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
 				this.journal.ajouter("on ne peut pas acheter plus de terrain.");
@@ -179,7 +184,13 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		double res = getNb_nouveau_hectares() * getPrix_plantation_hectare();
 		setNb_nouveau_hectares(0);
 		return res;
-	}	
+	}
+	
+	public void perte_plantation() { //plantation que l'on perd à chaque next
+		double pourcentage_perte = 0.1;
+		double perte_un_next = pourcentage_perte * getNb_hectares_actuel();
+		setNb_hectares_actuel(getNb_hectares_actuel() - perte_un_next);
+	}
 	
 	public void ajout_plantation_journal() {
 		this.journalPlantation.ajouter(" ");
@@ -207,11 +218,12 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void next() {
 		super.next();
 		modifie_prodParStep();
-		// On place dans le stock tout ce qu'on produit en un tour
+		//On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
 		ajout_plantation_journal();
+		perte_plantation(); //perte quotidienne d'arbres
 		
-		// On décide si on achète de nouveaux hectares
+		//On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
 				planter(nb_hectares_max - nb_hectares_actuel);
@@ -222,4 +234,3 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 } 
 // 1hectare = 500kg / an cacao
-// implémenter la qualité

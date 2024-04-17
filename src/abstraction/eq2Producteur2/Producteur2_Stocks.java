@@ -274,7 +274,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	}
 	
 	//Faite par Quentin
-	
 	public void next() {
 		super.next();
 		this.lot_to_hashmap();
