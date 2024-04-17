@@ -32,7 +32,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
-	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
+	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // dictionnaire (Type chocolat , % cacao )
 	protected List<ChocolatDeMarque> chocolatsFusion;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
@@ -92,6 +92,22 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat {
 			this.totalStocksChocoMarque.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+cm+" au stock total de Chocolat de marque // stock total : "+this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		}
+		
+		// Remplissage de pourcentageTransfo avec 0.1% de plus de cacao que le seuil minimal
+		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
+		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
+		double conversion = 0.1 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
+		this.pourcentageTransfo.get(Feve.F_HQ_BE).put(Chocolat.C_HQ_BE, conversion);// la masse de chocolat obtenue est plus importante que la masse de feve vue l'ajout d'autres ingredients
+		
+		this.pourcentageTransfo.put(Feve.F_MQ_E, new HashMap<Chocolat, Double>());
+		conversion = 0.1 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
+		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
+		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
+		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
+		
+		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
+		conversion = 0.1 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
+		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
