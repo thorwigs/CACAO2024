@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur1AcheteurBourse extends Transformateur1Acteur implements IAcheteurBourse {
@@ -31,16 +34,21 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	 * ici 20000 correspond au stock total de fèves voulues - à changer en fonction dans la simulation
 	 */
 	public double demande(Feve f, double cours) {
-		double stockCible=20000;
-		double demandeMin=10;
+		double stockCible= Math.max(2*this.demandeCC, 20000);
+		this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de fève");
+		double demandeMin=100;
 		double stockCibleHQ = 0.3 * stockCible;
 	    double stockCibleMQ = 0.7 * stockCible;
 	    if (f == Feve.F_HQ_BE) {
 	        if (this.stockFeves.get(f) < stockCibleHQ) {
-	            return Math.max(stockCibleHQ - this.stockFeves.get(f), demandeMin);}}
+	        	double demandeHQ = Math.max(stockCibleHQ - this.stockFeves.get(f), demandeMin);
+	    		this.journalAchatBourse.ajouter("- La demande en HQ_BE est de "+demandeHQ+"T de fève");
+	            return demandeHQ;}}
 	    else if (f == Feve.F_MQ) {
 	        if (this.stockFeves.get(f) < stockCibleMQ) {
-	            return Math.max(stockCibleMQ - this.stockFeves.get(f), demandeMin);
+	        	double demandeMQ = Math.max(stockCibleMQ - this.stockFeves.get(f), demandeMin);
+	    		this.journalAchatBourse.ajouter("- La demande en MQ_E est de "+demandeMQ+"T de fève");
+	            return demandeMQ;
 	        }
 	    }
 		return 0;
@@ -57,10 +65,14 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 
 
 	}
+	public void next() {
+		super.next();
+		this.journalAchatBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+	}
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
-		
+		journalAchatBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" ## BLACKLIST ## pendant "+dureeEnStep+" etapes");
 	}
-
+	
 }

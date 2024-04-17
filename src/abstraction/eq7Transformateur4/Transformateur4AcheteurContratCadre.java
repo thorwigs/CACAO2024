@@ -17,16 +17,17 @@ import java.awt.Color;
 import java.awt.Color;
 
 public class Transformateur4AcheteurContratCadre extends Transformateur4AcheteurBourse implements IAcheteurContratCadre{
+	
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
-	protected Journal journalCC;
+	protected Journal journalACC;
 
 	public Transformateur4AcheteurContratCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalACC = new Journal(this.getNom()+" journal CC achat", this);
 	}
 	
 	public void initialiser() {
@@ -103,12 +104,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	//Après finalisation contrat 
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);
-		this.contratsEnCours.add(contrat);
+		journalACC.ajouter("Nouveau contrat :"+contrat);
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
+		journalACC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);		
 	}
@@ -137,25 +137,25 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	
 	public void next() { 	//à modifier selon nb de fèves qu'on veut
 		super.next();
-		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalACC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if (stockFeves.get(f)+restantDu(f)<30000) { 
-						this.journalCC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
+						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
 							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalCC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+							journalACC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
-								journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								journalACC.ajouter(Color.RED, Color.white,"   echec des negociations");
 							} else {
 								this.contratsEnCours.add(contrat);
-								journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								journalACC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
 							}
 						} else {
-							journalCC.ajouter("   pas de vendeur");
+							journalACC.ajouter("   pas de vendeur");
 						}
 					}
 				}
@@ -166,15 +166,15 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 			}
 		}
 		for (ExemplaireContratCadre c : this.contratsTermines) {
-			journalCC.ajouter("Archivage du contrat "+c);
+			journalACC.ajouter("Archivage du contrat "+c);
 			this.contratsEnCours.remove(c);
 		}
-		this.journalCC.ajouter("=================================");
+		this.journalACC.ajouter("=================================");
 	}
 	
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
-		jx.add(journalCC);
+		jx.add(journalACC);
 		return jx;
 	}
 }

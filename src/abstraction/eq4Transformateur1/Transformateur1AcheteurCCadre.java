@@ -104,9 +104,10 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        	}
 	        	
 	        	}
-	     return false;
-	            }
-	
+	    return false;}
+	            
+		
+
 
 	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {   
@@ -195,7 +196,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat :"+contrat);
+		journalCC.ajouter("contrat accepté : "+"#"+contrat.getNumero()+" | acheteur : "+contrat.getAcheteur()+" | vendeur : "+contrat.getVendeur()+" | produit : "+contrat.getProduit()+" | quaantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
 

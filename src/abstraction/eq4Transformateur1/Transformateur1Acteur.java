@@ -17,6 +17,7 @@ import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
@@ -37,6 +38,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
+	
+	protected int demandeCC;
 
 	
 	public Transformateur1Acteur() {
@@ -81,6 +84,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
+		
+		this.demandeCC = 0;
 
 	}
 
@@ -129,7 +134,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChoco,3,2)+" T de "+c);
 					}
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
-					ChocolatDeMarque cm= new ChocolatDeMarque(c, "LeaderKakao", pourcentageCacao);
+					ChocolatDeMarque cm;
+					if(f.getGamme()==Gamme.MQ) {
+						cm= new ChocolatDeMarque(c, "marque2", pourcentageCacao);
+					} else {
+						cm= new ChocolatDeMarque(c, "LeaderKakao", pourcentageCacao);
+					}
 					double scm = this.stockChocoMarque.keySet().contains(cm) ?this.stockChocoMarque.get(cm) : 0.0;
 					this.stockChocoMarque.put(cm, scm+newChocoMarque);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChocoMarque,3,2)+" T de "+cm);
@@ -251,7 +261,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		if (this.chocosProduits.size()==0) {
 			Chocolat cmc = Chocolat.C_MQ_E;
 			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
-			this.chocosProduits.add(new ChocolatDeMarque(cmc, "LeaderKakao", pourcentageCacao));
+			this.chocosProduits.add(new ChocolatDeMarque(cmc, "marque2", pourcentageCacao));
 			
 			Chocolat chc = Chocolat.C_HQ_BE;
 			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+chc.getGamme()).getValeur());
@@ -264,6 +274,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();
 		marques.add("LeaderKakao");
+		marques.add("marque2");
 		return marques;
 	}
 }
