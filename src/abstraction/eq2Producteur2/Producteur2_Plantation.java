@@ -191,6 +191,29 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 			}
 		}
 	}
+	/** Met à jour les pourcentages de BQ, MQ et HQ en fonction des catégories d'employés
+	 * @author Noémie
+	 */
+	public void maj_pourcentage() {
+		
+		double ratio_equitable = this.getNb_employes_equitable()/this.getNb_Employes_total();
+		// On choisit la catégorie de fève qu'on produit le plus entre MQ et BQ baisser son pourcentage
+		if (getPourcentage_MQ() < getPourcentage_BQ() ) {
+			double diff = getPourcentage_HQ() - ratio_equitable;
+			if (getPourcentage_BQ()-diff > 0) {
+				this.setPourcentage_BQ(getPourcentage_BQ()-diff);
+				this.setPourcentage_HQ(ratio_equitable);
+			}
+		}
+		else {
+			double diff = getPourcentage_HQ() - ratio_equitable;
+			if (getPourcentage_MQ()-diff > 0) {
+				this.setPourcentage_MQ(getPourcentage_MQ()-diff);
+				this.setPourcentage_HQ(ratio_equitable);
+			}
+		}
+	}
+	
 	
 	/** retourne la production actuelle de cacao sur 2 semaines en tonnes
 	 * @author Anthony
@@ -324,7 +347,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.nouveau_stock();
 		ajout_plantation_journal();
 		perte_plantation(); //Perte quotidienne d'arbres
-		
+		maj_pourcentage();
+
 		//On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {

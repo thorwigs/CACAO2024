@@ -67,7 +67,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract void lot_to_hashmap();
 	
 	public void initialiser() {
-		
+		// les initialisations sont faites dans le constructeur
 	}
 	
 	/** Getter
@@ -96,7 +96,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 	
-	/** Next
+	/** Next et journal principal
 	 * @author Noémie, Maxime
 	 */
 	public void next() {
@@ -226,7 +226,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract double cout_humain_par_step();
 	public abstract double cout_plantation();
 	
-	/** Calcule le coût total à chaque étape
+	/** Calcule le montant total à payer à chaque étape
 	 * @author Noémie
 	 */
 	public double getCoutTotalParStep() {
@@ -244,7 +244,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	}
 
 	/** Permet de retirer de l'argent de la banque
-	 * @param montant
+	 * @param montant 
 	 * @param raison
 	 * @author Noémie
 	 */

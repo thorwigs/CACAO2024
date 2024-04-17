@@ -15,6 +15,10 @@ import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
+	
+	/** Définition des variables
+	 * @author Quentin
+	 */	
 	//seuil max de la production stockee
 	private static final double SEUIL = 400000;
 	
