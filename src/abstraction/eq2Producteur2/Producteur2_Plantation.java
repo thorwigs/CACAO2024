@@ -1,4 +1,5 @@
-package abstraction.eq2Producteur2;
+ package abstraction.eq2Producteur2;
+
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -26,12 +27,13 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected Journal journalPlantation;
 	
 	public Producteur2_Plantation() {
-		//initialisation EFFICACE
+
 		this.nb_hectares_actuel=5000000.0;
 		this.nb_hectares_max=5000000.0*10;
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	} 
+
 
 	public double getNb_hectares_max() {
 		return this.nb_hectares_max;
@@ -218,6 +220,4 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 } 
 // 1hectare = 500kg / an cacao
-// implémenter la qualité 
-
-// B219
+// implémenter la qualité
