@@ -153,6 +153,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	en ressources humaines on peut embaucher de nouveaux employés adultes dont une part en équitable.
 	On suppose qu'en faisant une telle action on diminue le travail infantile de 3%.
 	*/
+
 	
 	public void strategie()  {
 		double solde = this.getSolde();
