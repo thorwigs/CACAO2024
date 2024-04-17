@@ -187,9 +187,10 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	
 	public void perte_plantation() { //plantation que l'on perd à chaque next
-		double pourcentage_perte = 0.1;
+		double pourcentage_perte = 0.00104;
 		double perte_un_next = pourcentage_perte * getNb_hectares_actuel();
 		setNb_hectares_actuel(getNb_hectares_actuel() - perte_un_next);
+		this.planter(perte_un_next);
 	}
 	
 	public void ajout_plantation_journal() {
@@ -217,6 +218,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void next() {
 		super.next();
+		System.out.println(" nb_hectares " + this.getNb_hectares_actuel());
+		System.out.println(" nombre employes " + this.getNb_Employes_total());
 		modifie_prodParStep();
 		//On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();
