@@ -149,7 +149,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	
 	public void next() {
 		//On gere nos intrants de production
-		gestionStock();
+		gestionStock(); 
 		//On met a jour les variables GammeStep
 		majGammeStep();
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
