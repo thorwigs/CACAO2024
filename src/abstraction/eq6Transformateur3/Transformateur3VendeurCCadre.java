@@ -28,7 +28,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		super.next();
 		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
 		for (Chocolat c : stockChoco.keySet()) { 
-			if (stockChoco.get(c)-restantDu(c)>2000) { 
+			if (stockChoco.get(c)-restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
@@ -95,6 +95,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur()==this) {
+			journalCC6.ajouter(Color.ORANGE, Color.WHITE,"Nouveau contrat initié par un producteur");
 			journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 			this.contratsEnCours.add(contrat);
 		}

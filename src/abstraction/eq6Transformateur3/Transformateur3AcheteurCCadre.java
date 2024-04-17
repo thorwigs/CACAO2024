@@ -258,7 +258,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		if (((Feve)contrat.getProduit()).isEquitable()) {
 			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
 			double alea = Filiere.random.nextInt((int)max);
-			if (contrat.getPrix()<Math.min(alea, 0.9 * prixSansDecouvert)) {
+			if (contrat.getPrix()<Math.min(alea, 0.8 * prixSansDecouvert)) {
 				return contrat.getPrix();
 				}
 			else {
@@ -269,10 +269,10 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		else {
 			double cours = bourse.getCours((Feve)contrat.getProduit()).getValeur();
 			if (contrat.getPrix()<cours) {
-				return Math.min(0.9*prixSansDecouvert, contrat.getPrix());
+				return Math.min(0.8*prixSansDecouvert, contrat.getPrix());
 			}
 			else {
-				return Math.min(0.9* prixSansDecouvert, 1.04*cours);
+				return Math.min(0.8* prixSansDecouvert, 1.04*cours);
 			}
 		}
 	
