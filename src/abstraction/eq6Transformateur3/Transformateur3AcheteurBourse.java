@@ -10,6 +10,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 		if (this.stockFeves.get(f)<30000) {
 			return this.stockFeves.get(f); 
 		}
+		
 		return 0;
 	}
 
