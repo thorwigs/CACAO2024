@@ -99,26 +99,26 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 						double x = (capaciteDeVente*0.32)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
-					if (choco.toString().contains("C_MQ")) {
-						double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
-					}
 					if (choco.toString().contains("C_MQ_E")) {
 						double x = (capaciteDeVente*0.12)/this.nombreMarquesParType.get(choco.getChocolat());
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
-					if (choco.toString().contains("C_HQ")) {
+					if (choco.toString().contains("C_MQ")) {
 						double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
-					}
-					if (choco.toString().contains("C_HQ_E")) {
-						double x = (capaciteDeVente*0.08)/this.nombreMarquesParType.get(choco.getChocolat());
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
 					if (choco.toString().contains("C_HQ_BE")) {
 						double x = (capaciteDeVente*0.04)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
-					}		
+					}	
+					if (choco.toString().contains("C_HQ_E")) {
+						double x = (capaciteDeVente*0.08)/this.nombreMarquesParType.get(choco.getChocolat());
+						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+					}	
+					if (choco.toString().contains("C_HQ")) {
+						double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
+						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+					}
 				}
 				return 0.0;
 			}

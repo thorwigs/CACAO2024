@@ -87,24 +87,24 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 				double x = (capaciteDeVente*0.32)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 				return Math.min(x , this.getQuantiteEnStock(choco,crypto));
 			}
+			if (choco.toString().contains("C_MQ_E")) {
+				double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
+				return Math.min(x , this.getQuantiteEnStock(choco,crypto));
+			}
 			if (choco.toString().contains("C_MQ")) {
 				double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 				return Math.min(x , this.getQuantiteEnStock(choco,crypto));	
 			}
-			if (choco.toString().contains("C_MQ_E")) {
-				double x = (capaciteDeVente*0.12)/this.nombreMarquesParType.get(choco.getChocolat());
+			if (choco.toString().contains("C_HQ_BE")) {
+				double x = (capaciteDeVente*0.04)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
+				return Math.min(x , this.getQuantiteEnStock(choco,crypto));
+			}
+			if (choco.toString().contains("C_HQ_E")) {
+				double x = (capaciteDeVente*0.08)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 				return Math.min(x , this.getQuantiteEnStock(choco,crypto));
 			}
 			if (choco.toString().contains("C_HQ")) {
 				double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-				return Math.min(x , this.getQuantiteEnStock(choco,crypto));
-			}
-			if (choco.toString().contains("C_HQ_E")) {
-				double x = (capaciteDeVente*0.08)/this.nombreMarquesParType.get(choco.getChocolat());
-				return Math.min(x , this.getQuantiteEnStock(choco,crypto));
-			}
-			if (choco.toString().contains("C_HQ_BE")) {
-				double x = (capaciteDeVente*0.04)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 				return Math.min(x , this.getQuantiteEnStock(choco,crypto));
 			}
 		}
