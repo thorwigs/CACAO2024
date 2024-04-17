@@ -35,8 +35,8 @@ public abstract class Producteur3Acteur implements IActeur {
     protected HashMap<Feve, Variable> stockfeve;
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
-    private HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
-    private HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
+    protected HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
+    protected HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
@@ -169,9 +169,9 @@ public abstract class Producteur3Acteur implements IActeur {
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
 			this.ventefeve.get(f).setValeur(this, ventefevecadre.get(f)+ventefevebourse.get(f));
-			System.out.println(" stock feve " + stockfeve.get(f).getValeur());
 			this.stockfeve.get(f).setValeur(this, this.getQuantiteEnStock(f, cryptogramme)) ;
 		}
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -368,7 +368,11 @@ public abstract class Producteur3Acteur implements IActeur {
 			//on ajoute la production du step
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
 		 //on ajoute les couts du step
-			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6);
+			 if (f.isEquitable()) {
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9*14);
+			 } else {
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6*14);
+			 }
 		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts
 			LinkedList<Integer> steps = new LinkedList<Integer>();
 			steps.addAll(stockGammeStep.get(f).keySet());

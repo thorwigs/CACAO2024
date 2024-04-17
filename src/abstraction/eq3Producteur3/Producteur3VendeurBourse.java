@@ -16,7 +16,6 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		
 		//vendre par bourse ce qui n'est pas vendue par contrat cadre
 		//vendre toute la production BQ en bourse
-		
 		if (f.getGamme() != Gamme.BQ) {
 			//pas de vente en bourse MQ et HQ pour le moment
 			return 0;
