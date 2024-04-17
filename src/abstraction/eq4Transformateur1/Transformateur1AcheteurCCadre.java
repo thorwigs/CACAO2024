@@ -135,7 +135,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	                // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
 	                return contrat.getEcheancier();
 	            } else {
-	                double marge = 500 - stockFeves.getOrDefault(feve, 0.0) - restantDu(feve);
+	                double marge = 500 - stockFeves.getOrDefault(feve, 0.0) - restantDu(feve); // getordefault : retourne 0 si stock feves est null 
 	                if (marge < 1200) {
 	                    return null;
 	                } else {
