@@ -29,7 +29,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	
 	public Transformateur2MasseSalariale() {
 		super();
-		this.JournalMasseSalariale=new Journal(this.getNom()+" journal Masse Salariale", this);
+		this.JournalMasseSalariale=new Journal(this.getNom()+" journal MS", this);
 	}
 	public void initialiser() {
 		super.initialiser();
@@ -83,10 +83,14 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		if (TonnesTransformees >= CapaciteTransfoTotale) {
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/capaciteTransformation);
 			NbSalaries += embauche;
+			this.JournalMasseSalariale.ajouter("On embauche"+embauche+"personnes");
 			return embauche;
 			
 		}
-		return 0;
+		else { //A completer avec les licenciements
+			this.JournalMasseSalariale.ajouter("On embauche personne");
+			return 0;
+		}
 	}
 	public double CoutMasseSalariale(double TonnesTransformees) {
 		double cout_salaire = NbSalaries * salaire;
@@ -104,7 +108,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		super.next();
 		// Paiement des coût de la masse salariale
 		double TotauxTransformees = this.TotauxTonnesTransformees();
-		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", this.CoutMasseSalariale(TotauxTransformees));
+		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût MS", this.CoutMasseSalariale(TotauxTransformees));
 		
 		// Paiement des coût de transformation
 		double TotalCout = this.CoutTransformationTotal();
