@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -154,6 +156,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		gestionStock(); 
 		//On met a jour les variables GammeStep
 		majGammeStep();
+		peremption();
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		/**
 		 * Implémentation des journaux spécifiques à la bourse et aux contrats cadres
@@ -423,10 +426,79 @@ public abstract class Producteur3Acteur implements IActeur {
 					 quantiteDem -= stockStep;
 				 }
 			 }
-			 this.journal_bourse.ajouter("acc"+accu);
-			 this.journal_bourse.ajouter("q"+quantiteDem);
-			 this.journal_bourse.ajouter("accQ"+accu/quantiteDem);
 			 return accu/quantiteDem;
 		 }
+	 }
+	 
+	 /**
+	  * @author Arthur
+	  * A executer apres majGammeStep
+	  * Degrade la qualite des feves selon la duree
+	  */
+	 protected void peremption() {
+		//apres 2 mois, HQ_BE devient MQ_E (garde le label equitable)
+		 Set<Integer> stepsHQBE = new HashSet<Integer>();
+		 stepsHQBE.addAll(stockGammeStep.get(Feve.F_HQ_BE).keySet());
+		for (Integer step : stepsHQBE) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 4) {
+				stockGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_HQ_BE).get(step)+((stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_HQ_BE).remove(step);
+				coutGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_HQ_BE).get(step)+((coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_HQ_BE).remove(step);
+			}
+		}
+		//apres 2 mois, HQ_E devient MQ_E (garde le label equitable)
+		 Set<Integer> stepsHQE = new HashSet<Integer>();
+		 stepsHQE.addAll(stockGammeStep.get(Feve.F_HQ_E).keySet());
+		for (Integer step : stepsHQE) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 4) {
+				stockGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_HQ_E).get(step)+((stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_HQ_E).remove(step);
+				coutGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_HQ_E).get(step)+((coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_HQ_E).remove(step);			
+			}
+		} 
+		//apres 2 mois, HQ devient MQ
+		 Set<Integer> stepsHQ = new HashSet<Integer>();
+		 stepsHQ.addAll(stockGammeStep.get(Feve.F_HQ).keySet());
+		for (Integer step : stepsHQ) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 4) {
+				stockGammeStep.get(Feve.F_MQ).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_HQ).get(step)+((stockGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_HQ).remove(step);
+				coutGammeStep.get(Feve.F_MQ).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_HQ).get(step)+((coutGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_HQ).remove(step);			
+			}
+		} 
+		//apres 4 mois, MQ devient BQ 
+		 Set<Integer> stepsMQ = new HashSet<Integer>();
+		 stepsMQ.addAll(stockGammeStep.get(Feve.F_MQ).keySet());
+		for (Integer step : stepsMQ) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 8) {
+				stockGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_MQ).get(step)+((stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_MQ).remove(step);
+				coutGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_MQ).get(step)+((coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_MQ).remove(step);			
+			}
+		} 
+		//apres 4 mois, MQ_E devient BQ (et perd son label)
+		 Set<Integer> stepsMQE = new HashSet<Integer>();
+		 stepsMQE.addAll(stockGammeStep.get(Feve.F_MQ_E).keySet());
+		for (Integer step : stepsMQE) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 8) {
+				stockGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_MQ_E).get(step)+((stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_MQ_E).remove(step);
+				coutGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_MQ_E).get(step)+((coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_MQ_E).remove(step);				
+			}
+		}
+		//apres 6 mois, BQ perime
+		 Set<Integer> stepsBQ = new HashSet<Integer>();
+		 stepsBQ.addAll(stockGammeStep.get(Feve.F_BQ).keySet());
+		for (Integer step : stepsBQ) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 8) {
+				stockGammeStep.get(Feve.F_BQ).remove(step);
+				coutGammeStep.get(Feve.F_BQ).remove(step);
+			}
+		} 		
 	 }
 }

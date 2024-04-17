@@ -14,9 +14,6 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		//vendre par bourse ce qui n'est pas vendue par contrat cadre (a faire)
 		//vend toute la production BQ en bourse
 		//verifie si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
-		this.journal_bourse.ajouter("Q"+getQuantiteEnStock(f,cryptogramme));
-		this.journal_bourse.ajouter("cout"+coutRevient(f,getQuantiteEnStock(f,cryptogramme)));
-		this.journal_bourse.ajouter("cours"+cours);
 		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
 			//mettre la quantite de stock BQ (mettre plus et ajuster selon la demande)
 			//plus on demande, plus on vend (attention a l'offre et a la demande)

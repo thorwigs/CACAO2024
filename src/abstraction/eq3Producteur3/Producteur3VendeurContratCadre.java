@@ -31,6 +31,11 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		}
 	}
 	
+	public void initialiser() {
+		super.initialiser();
+		superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup."+(SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE>1?SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE+"":"")+"CCadre");
+	}
+	
 	public void next() {
         super.next();
         proposerContrats();
@@ -50,17 +55,13 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	        }
 	    }
 	    for (Feve f : feves) { 
-	        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
-	        if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-	            List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
-	            for (IAcheteurContratCadre acheteur : acheteurs) {
+	        List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
+	        for (IAcheteurContratCadre acheteur : acheteurs) {
+		        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
+		        if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
                     Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape(), 10, quantiteDisponible / 10); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
-                    ContratCadre contrat = new ContratCadre(acheteur, this, f, echeancier, this.cryptogramme, false); // Crée le contrat sans prix
-                    double prix = propositionPrix(new ExemplaireContratCadre(contrat)); // détermine le prix
-                    contrat.ajouterPrix(prix); // Ajoute le prix au contrat
-                    ExemplaireContratCadre exemplaire = new ExemplaireContratCadre(contrat);
                     superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
-                }
+	            }
             }
 	    }
 	}
