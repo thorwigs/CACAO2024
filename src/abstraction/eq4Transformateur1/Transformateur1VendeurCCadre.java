@@ -33,7 +33,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalCC = new Journal(this.getNom()+" journal CC vendeur", this);
 	}
 	
 	@Override
@@ -45,22 +45,26 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 
 	
 	// Renvoie les journaux
-		public List<Journal> getJournaux() {
-			List<Journal> res=super.getJournaux();
-			res.add(journalCC);
-			return res;
-		}
+	public List<Journal> getJournaux() {
+		List<Journal> res=super.getJournaux();
+		res.add(journalCC);
+		return res;
+	}
 
 	@Override
 	public void next() {
 		super.next();
+		// Choix de l'acheteur
+		// Tête de gondole
+		// Gestion du prix
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque f : stockChocoMarque.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-			if (stockChocoMarque.get(f) - restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
+			if (stockChocoMarque.get(f).getValeur() - restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stockChocoMarque.get(f)-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				double parStep = Math.max(100, (stockChocoMarque.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
+				
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
@@ -85,6 +89,12 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
 		}
+		
+		this.demandeCC = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			this.demandeCC += c.getQuantiteALivrerAuStep();
+		}
+		this.journalCC.ajouter("La demande des contrats cadres est de "+this.demandeCC+"T");
 		this.journalCC.ajouter("=================================");
 	}
 	
@@ -101,7 +111,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 
 	@Override
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("ChocolatDeMarque") && stockChocoMarque.get((ChocolatDeMarque)produit) != null && stockChocoMarque.get((ChocolatDeMarque)produit)-restantDu((ChocolatDeMarque)produit)>1200;
+		return produit.getType().equals("ChocolatDeMarque") && stockChocoMarque.get((ChocolatDeMarque)produit) != null && stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)>1200;
 	}
 
 
@@ -115,22 +125,22 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 				&& ec.getQuantiteTotale()>=1200  // au moins 100 tonnes par step pendant 6 mois
 				&& ec.getStepFin()-ec.getStepDebut()>=11   // duree totale d'au moins 12 etapes
 				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8 // ca doit demarrer dans moins de 4 mois
-				&& ec.getQuantiteTotale()<stockChocoMarque.get((ChocolatDeMarque)produit)-restantDu((ChocolatDeMarque)produit);
+				&& ec.getQuantiteTotale()<stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit);
 				if (!acceptable) {
-					if (!produit.getType().equals("ChocolatDeMarque") || stockChocoMarque.get((ChocolatDeMarque)produit)-restantDu((ChocolatDeMarque)produit)<1200) {
+					if (!produit.getType().equals("ChocolatDeMarque") || stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)<1200) {
 						if (!produit.getType().equals("ChocolatDeMarque")) {
 							journalCC.ajouter("      ce n'est pas une feve : je retourne null");
 						} else {
-							journalCC.ajouter("      je n'ai que "+(stockChocoMarque.get((ChocolatDeMarque)produit)-restantDu((ChocolatDeMarque)produit))+" de disponible (moins de 1200) : je retourne null");
+							journalCC.ajouter("      je n'ai que "+(stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit))+" de disponible (moins de 1200) : je retourne null");
 						}
 						return null;
 					}
-					if (ec.getQuantiteTotale()<=stockChocoMarque.get((ChocolatDeMarque)produit)-restantDu((ChocolatDeMarque)produit)) {
+					if (ec.getQuantiteTotale()<=stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)) {
 						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 					} else {
-						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit)-restantDu((ChocolatDeMarque)produit)/12))));
-						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit)-restantDu((ChocolatDeMarque)produit)/12)));
+						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)/12))));
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)/12)));
 					}
 				}
 				journalCC.ajouter("      j'accepte l'echeancier");
@@ -170,7 +180,8 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		if (prixCC==0.0) {
 			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
-		double res = Math.max(prixCC*1.25, (double)PRIX_DEFAUT);
+		double prixBaseBourse =  bourse.getCours(((ChocolatDeMarque) contrat.getProduit()).getChocolat().equals(Chocolat.C_HQ_BE)? Feve.F_HQ : Feve.F_MQ).getValeur()*1.5;
+		double res = Math.max(Math.max(prixCC*1.25, (double)PRIX_DEFAUT), prixBaseBourse);
 		journalCC.ajouter("      propositionPrix retourne "+res);
 		return res;
 	}
@@ -210,10 +221,10 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 
 	@Override
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-		double stockActuel = stockChocoMarque.get(produit);
+		double stockActuel = stockChocoMarque.get(produit).getValeur();
 		double aLivre = Math.min(quantite, stockActuel);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stockChocoMarque.put((ChocolatDeMarque)produit, stockActuel-aLivre);
+		stockChocoMarque.get((ChocolatDeMarque)produit).setValeur(this, stockActuel-aLivre);
 		return aLivre;
 	}
 	
