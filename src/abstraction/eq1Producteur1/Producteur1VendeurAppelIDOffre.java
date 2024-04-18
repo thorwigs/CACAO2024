@@ -46,7 +46,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	protected ArrayList<IAcheteurAO> black_list_Acheteur_AO=new ArrayList<IAcheteurAO>();//black list pour les acheteurs
 	protected HashMap <IAcheteurAO,Double> score_to_black_list; //dictionnaire pour chaque transfo et son scoredans la liste noire
 	
-	public static int score_seuil_blacklist=10;//score a partir duquel un achteur est ajouté au blacklist
+	public static int score_seuil_blacklist=1000;//score a partir duquel un achteur est ajouté au blacklist
 	private Journal journalAO;
 	private SuperviseurVentesAO supAO;
 	
@@ -181,7 +181,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 			
 
-			 return new OffreVente(offre, this, offre.getProduit(),this.prix_defaut_feve.get(feve_AO));
+			 return new OffreVente(offre, this, offre.getProduit(),1000.0);
 		 }
 		 
 			
