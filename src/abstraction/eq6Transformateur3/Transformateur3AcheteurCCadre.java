@@ -43,7 +43,8 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
+	 * 
 	 */
 	public void next() {
 		super.next();
@@ -114,7 +115,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	}
 			
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public double restantDu(Feve f) {
 		double res=0;
@@ -126,7 +127,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		return res;
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public double restantAPayer() {
 		double res=0;
@@ -136,7 +137,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		return res;
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
@@ -144,14 +145,14 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		return jx;
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("Feve") 
 				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000;
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) { /////////FCTION A SIMPLIFIER////////
 		if (!contrat.getProduit().getType().equals("Feve")) {
@@ -167,7 +168,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		}
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) { /////////FCTION A SIMPLIFIER////////
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
@@ -199,7 +200,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		System.out.println(">>>>>> "+"Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
@@ -207,7 +208,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.contratsEnCours.add(contrat);
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur().getNom().equals("EQ6")) {

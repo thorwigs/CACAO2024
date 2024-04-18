@@ -25,7 +25,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	
 	
 	/**
-	 * Thomas 
+	 * @author Thomas 
 	 */
 	public void next() {
 		super.next();
@@ -64,7 +64,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		this.journalCC6.ajouter("=== Partie réception Fèves ====================");
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public double restantDu(Chocolat c) {
 		double res=0;
@@ -76,7 +76,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		return res;
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
@@ -84,20 +84,20 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>200;
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		return contrat.getEcheancier();
 	}
 
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double moyenne  = 0; 
@@ -115,14 +115,14 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		return 1.05 * prix;
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		return 0.95*contrat.getPrix();
 	}
 
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur()==this) {
@@ -137,7 +137,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		}
 	}
 	/**
-	 * Thomas
+	 * @author Thomas
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
