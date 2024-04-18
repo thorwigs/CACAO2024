@@ -37,11 +37,19 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	//////////////
 	
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("ChocolatDeMarque") 
-				&& (stockChocoMarque.containsKey(produit))
-				&& stockChocoMarque.get(produit)>25000 ; 
-		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
+		for (ChocolatDeMarque c : this.chocolatCocOasis) {
+			if ((produit.getType().equals("ChocolatDeMarque")) && (c == (ChocolatDeMarque)produit) && (stockChocoMarque.get(produit)>25000) ) {
+				return true;
+			}
+		}
+		for (ChocolatDeMarque c : this.chocolatDistributeur) {
+			if ((produit.getType().equals("ChocolatDeMarque")) &&(c == (ChocolatDeMarque)produit) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 25000 )) {
+				return true;
+			}
+		}
+		return false ; 
 		
+		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
 		//j'ai modifié un truc : on vérifie que produit est bien un de nos chocolat de marque
 	}
 
@@ -194,11 +202,14 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) && (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
-						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);	
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						if (acheteurs.size()>0) {
 							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+							
 							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							
+		
 							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
 							if (contrat==null) {
 								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
@@ -207,7 +218,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
 							}
 						} else {
-							journalVCC.ajouter("   pas d'acheteur");
+							journalVCC.ajouter("  pas d'acheteur");
 						}
 					} else {
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
@@ -225,14 +236,12 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						double parStep = Math.max(100, (-20000 + stockChoco.get(choco.getChocolat()) - restantALivrer(choco))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
+						
 						if (acheteurs.size()>0) {
 							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 							
-							
-							
 							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
-							
 							
 							if (contrat==null) {
 								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
@@ -240,13 +249,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 								this.contratsEnCours.add(contrat);
 								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
 							}
+							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");		
 						} else {
 							journalVCC.ajouter("   pas d'acheteur");
 						}
 					} else {
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
-					}
-					
+					}	
 				}
 				
 				
