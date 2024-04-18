@@ -1,5 +1,5 @@
 package abstraction.eq7Transformateur4;
-//romu
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.chocolatCocOasis = new LinkedList<ChocolatDeMarque>();
 		this.coutadjuvant = 1200;
 		this.coutmachine = 8.0;
-		this.nbemployeCDI = 4000;
+		this.nbemployeCDI = 5340;
 		this.tauxproductionemploye = 3.75;
 		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
 		this.coutproduction_tonne_step = new HashMap<Chocolat,Double>();
