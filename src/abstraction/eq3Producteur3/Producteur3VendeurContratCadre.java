@@ -24,8 +24,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	/**
 	 * @author Arthur
-	 * @param IProduit produit
-	 * @return boolean
+	 * @param IProduit produit (produit potentiellment que l'on veut vendre ou non)
+	 * @return boolean (reponse si on vend ou pas)
 	 * La fonction renvoie si oui ou non, on veut vendre du produit proposer en CC (oui si feve HQ et MQ)
 	 */
 	public boolean vend(IProduit produit) {
@@ -102,8 +102,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author mammouYoussef (et modification Arthur)
-	 * @param Feve f
-	 * @return double quantiteDisponible
+	 * @param Feve f (feve a laquelle on s'interesse)
+	 * @return double quantiteDisponible (quantite qu'on l'on peut disposer pour les CC pas encore négociés)
 	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
 	 */
 	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
@@ -128,8 +128,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 
 	 /**
 	  * @author mammouYoussef (et modification Arthur)
-	  * @param ExemplaireContratCadre contrat
-	  * @return Echeancier nouvelEcheancier
+	  * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
+	  * @return Echeancier nouvelEcheancier (écheancier proposé en retour)
 	  * Propose un echeancier dans le but de satisfaire au mieux celui proposé par le vendeur tout en prenant en compte nos capacités à fournir ce qui est demandé
 	  */
 	 public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
@@ -161,8 +161,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	/**
 	 * @author mammouYoussef
-	 * @param ExemplaireContratCadre contrat
-	 * @return double prixBase
+	 * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
+	 * @return double prixBase (prix proposé a la tonne)
 	 * Propose un prix de base du cacao en fonction de la feve du contrat
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
@@ -188,8 +188,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author mammouYoussef
-	 * @param ExemplaireContratCadre contrat
-	 * @return double prix
+	 * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
+	 * @return double prix (contre proposition du prix)
 	 * On propose un nouveau prix (potentiellement le meme) suite a la contre-proposition faite par l'acheteur
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
@@ -211,7 +211,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author Arthur
-	 * @param ExemplaireContratCadre contrat
+	 * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
 	 * Prend en compte le nouveau contrat conclu 
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
@@ -223,8 +223,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author Arthur
-	 * @param Iproduit produit, double quantite, ExemplaireContratCadre contrat
-	 * @return double quantiteLivrer
+	 * @param Iproduit produit, double quantite, ExemplaireContratCadre contrat (données de la négociation)
+	 * @return double (quantié que l'on va effectivement livrer)
 	 * Renvoie la quantite livrée 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {

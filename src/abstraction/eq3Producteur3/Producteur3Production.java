@@ -7,13 +7,19 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Production extends Producteur3Plantation { 
-	// prix production/ha.step
+	//@Gabin
+	// prix production/ha/step
 	protected double T_ha_BQ = 28.125/1000 ;	//avec pesticide
 	protected double T_ha_MQ = 26.5625/1000 ;
 	protected double T_ha_HQ = 25.0/1000 ;
 	protected double T_ha_HQ_BE = 22.5/1000 ;   //sans pesticide (bio équitable)
-	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>();;
+	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>(); //variable qui sert a prendre en compte le temps de séchage
 	
+	/**
+	 * @author Gabin
+	 * @param HashMap<Feve,Double> d0, d1 (production pour les différents types de fèves au temps 0 et 1
+	 * Initialise la variable prodTemps qui sert a prendre en compte le temps de séchage
+	 */
 	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
 		prodTemps.put(0, d0);
 		prodTemps.put(1, d1);
@@ -21,12 +27,11 @@ public class Producteur3Production extends Producteur3Plantation {
 	
 	
 	/**
-	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao (et types bio/équitable). 
-	 * Prend en compte les surfaces de plantation et le prix.
 	 * @author Gabin
+	 * @return HashMap<Feve,Double> (tableau des récoltes selon les fèves)
+	 * Renvoie un dictionnaire avec la quantité récoltée pour chaque type de cacao (et types bio/équitable). Il faut encore faire sécher les fèves après
+	 * Prend en compte les surfaces de plantation et le prix.
 	 */
-	
-	//renvoie la quantité produite au step actuel
 	protected HashMap<Feve,Double> newQuantite() {
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		HashMap<Feve,Double> plant = plantation();
@@ -62,7 +67,11 @@ public class Producteur3Production extends Producteur3Plantation {
 		
 		
 	}	
-	//stockage dans le temps de 2 dictionnaires @Gabin
+	/**
+	 * @author Gabin
+	 * @return HashMap<Integer,HashMap<Feve,Double>> prodTemps (quantités produites par fèves sur ce step et le précédent)
+	 * Permet de prendre en compte le temps de séchage (1 step) en le stockant dans un dictionnaire et en le faisant glisser a chaque step
+	 */
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps() {
 		prodTemps.put(0, prodTemps.get(1));
 		prodTemps.put(1, newQuantite());
@@ -70,8 +79,11 @@ public class Producteur3Production extends Producteur3Plantation {
 		
 	}
 	
-	//renvoie la quantité de fèves après séchage, soit 1 step avant (2 semaines plus tard)
-	// la quantité dispo pour la vente. @Gabin
+	/**
+	 * @author Gabin
+	 * @return HashMap<Feve,Double> quantite (quantités produites par fèves)
+	 * Permet de savoir la production que l'on peut effectivement vendre (après le temps de séchage)
+	 */
 	protected HashMap<Feve,Double> quantite(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		quantite=prodTemps().get(0);
