@@ -36,7 +36,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	}
 
 	public void notificationBlackList(int dureeEnStep) {
-		// TODO Auto-generated method stub
+		this.journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+"blacklisté pendant"+dureeEnStep+"etapes");
 	}
 	
 	

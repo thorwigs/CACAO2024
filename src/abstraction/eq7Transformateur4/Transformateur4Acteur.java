@@ -1,5 +1,5 @@
 package abstraction.eq7Transformateur4;
-//romu
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,12 +26,15 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	private Journal journal;
 	private double coutStockageTransfo; //pour simplifier, on aura juste a appeler cette variable pour nos coût de stockage
 	protected List<Feve> lesFeves; //la liste de toutes les fèves qui existent
-	private List<ChocolatDeMarque>chocosProduits; //liste de tout les chocolat qu'on peut produire, mais qu'on ne va pas forcement produire
 	protected HashMap<Feve, Double> stockFeves; //un truc qui contiendra tout nos stocks pour chaque fèves
 	protected HashMap<Chocolat, Double> stockChoco; //idem pour les chocolats, donc on aura 2 chocos (un BQ/MH et un HQ)
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; //idem pour les chocolat de marques, donc on aura un seul choco, le HQ de stockChoco une fois qu'on lui aura apposé la marque Mirage
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
-	protected List<ChocolatDeMarque> chocolatCocOasis;//liste de tout les chocolats que nous produisons
+	
+	private List<ChocolatDeMarque>chocosProduits; //liste de tout les chocolat qu'on peut produire, mais qu'on ne va pas forcement produire
+	protected List<ChocolatDeMarque> chocolatCocOasis;//liste de tout les chocolats que nous produisons sous notre nom
+	protected List<ChocolatDeMarque> chocolatDistributeur; //liste de tout les chocolats sous les noms distributeurs
+	
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque
@@ -41,19 +44,25 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected double coutouvrier ; //la valeur a payé chaque step pour 1 employé
 	protected int nbemployeCDI ; //le nombre d'employé qu'on possède, pour l'instant on bosse qu'avec des CDI et ce nombre est fixe
 	protected double tauxproductionemploye ; //le taux qui permet de savoir ce qu'on peut produire avec nos employés
+	protected HashMap<ChocolatDeMarque, Double> coutproduction_tonne_marque_step ; //représente le cout de prod pour 1 tonne de choco_marque pour 1 step, sera réinitialiser à chaque fois dans transformation
+	protected HashMap<Chocolat, Double> coutproduction_tonne_step ; //idem pour les chocos qui n'ont pas de marque
 
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
+		
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.chocolatCocOasis = new LinkedList<ChocolatDeMarque>();
+		this.chocolatDistributeur = new LinkedList<ChocolatDeMarque>();
+		
 		this.coutadjuvant = 1200;
 		this.coutmachine = 8.0;
-		this.coutouvrier = 1000.0;
-		this.nbemployeCDI = 100;
+		this.nbemployeCDI = 5340;
 		this.tauxproductionemploye = 3.75;
+		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
+		this.coutproduction_tonne_step = new HashMap<Chocolat,Double>();
 		
 	}
 	
@@ -70,9 +79,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 20000.0);
-			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			this.stockFeves.put(f, 2000000.0);
+			this.totalStocksFeves.ajouter(this, 2000000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 2000000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		
 		//////////a changer, pour l'instant on met dans nos stocks 20000 de chaque types de chocolat au départ
@@ -108,16 +117,23 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 					
 					
 		this.journal.ajouter("Stock initial chocolat de marque : ");
+		
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
 		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
+		
+		
+		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
+		for (String marque : marquesDistributeurs) {
+			this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+		}
 		
 		
 	
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 30000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 30000, cryptogramme);
+			this.stockChocoMarque.put(c, 1000000.0); //le premier element de stockchocomarque correspond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 1000000.0, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
 		
@@ -234,7 +250,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+			return this.totalStocksChocoMarque.getValeur(cryptogramme); // A modifier
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
@@ -243,9 +259,14 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	@Override
 	public List<ChocolatDeMarque> getChocolatsProduits() {  
 		// TODO Auto-generated method stub
+		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
 		if (this.chocosProduits.size()==0){
 			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
 			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
+			for (String marque : marquesDistributeurs) {
+				this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, marque, 80)); //Pour les marques distributeurs on ne propose pour l'instant que du chocolat moyenne gamme
+			}
+			
 		}
 		return this.chocosProduits;
 	}
