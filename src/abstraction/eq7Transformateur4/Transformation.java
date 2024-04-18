@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Transformation extends Transformateur4VendeurAuxEncheres{
-	
+
 	//objectifs : vérifier le stocks de fève : s'il est suffisant pour une fève, produire du chocolat avec, puis attribuer aux chocolat une marque ou nom.
 	protected Journal journalTransfo ;
 	protected List<Double> lescouts; //liste qui contiendra certains des couts à faire pour un step, initialiser à une liste vide à chaque début de l'appel next
@@ -91,8 +91,14 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					peutencoreproduire = peutencoreproduire - qtutile1; // on retire de ce qu'on peut produire au total ce qu'on va effectivement produire
 					this.stockFeves.replace(Feve.F_HQ_BE, stock_hg_be - qtutile1);//on retire qtutile1 du stock de feve haut de gamme pour faire du chocolat
 					double qtechocoproduit = qtutile1*this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE); //la qte de choco produit à partir de qtutile1
+					
+					this.journalTransfo.ajouter("stock de " + c + " avant transfo est "+ this.stockChocoMarque.get(c));
+					
 					this.stockChocoMarque.replace(c, this.stockChocoMarque.get(c) + qtechocoproduit);
 					this.totalStocksChocoMarque.ajouter(this, qtechocoproduit, cryptogramme);
+					
+					this.journalTransfo.ajouter("stock de " + c + " après transfo est "+ this.stockChocoMarque.get(c));
+					
 					double payermachine = qtutile1*this.coutmachine; //prix des machines car on transforme une certaine qté de fèves
 					double pourcentageadjuvant = this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE)-1;
 					double payeradjuvant = this.coutadjuvant*pourcentageadjuvant*qtutile1;
@@ -131,8 +137,14 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					peutencoreproduire = peutencoreproduire - qtutile2; // on retire de ce qu'on peut produire au total ce qu'on va effectivement produire
 					this.stockFeves.replace(Feve.F_HQ, stock_hg - qtutile2);//on retire qtutile1 du stock de feve haut de gamme pour faire du chocolat
 					double qtechocoproduit = qtutile2*this.pourcentageTransfo.get(Feve.F_HQ).get(Chocolat.C_HQ); //la qte de choco produit à partir de qtutile1
+					
+					this.journalTransfo.ajouter("stock de " + c + " avant transfo  est "+ this.stockChocoMarque.get(c));
+					
 					this.stockChocoMarque.replace(c, this.stockChocoMarque.get(c) + qtechocoproduit);
 					this.totalStocksChocoMarque.ajouter(this, qtechocoproduit, cryptogramme);
+					
+					this.journalTransfo.ajouter("stock de " + c + " après transfo est "+ this.stockChocoMarque.get(c));
+					
 					double payermachine = qtutile2*this.coutmachine; //prix des machines car on transforme une certaine qté de fèves
 					double pourcentageadjuvant = this.pourcentageTransfo.get(Feve.F_HQ).get(Chocolat.C_HQ)-1;
 					double payeradjuvant = this.coutadjuvant*pourcentageadjuvant*qtutile2;
@@ -174,10 +186,13 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtTransformation", a_payer); //on paye tout d'un coup
 		
+		this.journalTransfo.ajouter("------------------------");
+		
 		//TEST :
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
+		this.journalTransfo.ajouter("stock totale est de " + this.totalStocksChocoMarque.getValeur(cryptogramme));
 
 	}
 	
@@ -186,4 +201,5 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			res.add(journalTransfo);
 			return res;
 		}
+		
 }

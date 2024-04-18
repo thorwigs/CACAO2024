@@ -20,7 +20,6 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur4VendeurAppelDOffre extends Transformation implements IVendeurAO {
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
-	
 
 	public Transformateur4VendeurAppelDOffre() {
 		super();
@@ -28,14 +27,12 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 	}
 
 	public void initialiser() {
-		
 		super.initialiser();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			this.prixAO.put(cm, new LinkedList<Double>());
 		}		
 	}
-	
 	public double prixMoyen(ChocolatDeMarque cm) {
 		List<Double> prix=prixAO.get(cm);
 		if (prix.size()>0) {
@@ -68,15 +65,15 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		}
 		if (prixAO.get(cm).size()==0) {
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double px = bourse.getCours(Feve.F_MQ).getMax()*1;
+			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
 			if (cm.getChocolat().getGamme()==Gamme.HQ) {
-				px = bourse.getCours(Feve.F_MQ).getMax()*1;
+				px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
 			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
-				px = bourse.getCours(Feve.F_BQ).getMax()*1;
+				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
 			}
 			return new OffreVente(offre, this, cm, px);
 		} else {
-			return new OffreVente(offre, this, cm, prixMoyen(cm)*0.95);
+			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
 		}
 	}
 
@@ -89,8 +86,6 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
-		
-		
 	}
 
 
@@ -103,11 +98,6 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
-	}
-
-	public void next() {
-		super.next();
-		
 	}
 
 }
