@@ -70,7 +70,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 		}
 	}
-	
+/**
+*@author Noemie_Grosset
+*/
 	public void initialiser() {
 		
 		
@@ -163,7 +165,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 				}
 			}
 		}
-		
+/**
+* @author Noemie_Grosset
+*/	
 		//payer les couts
 		coutStockage = (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage;
 		if (coutStockage > 0.0) {
@@ -278,7 +282,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		}
 		return this.chocosProduits;
 	}
-
+/**
+* @author Yannig
+*/
 	@Override
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();

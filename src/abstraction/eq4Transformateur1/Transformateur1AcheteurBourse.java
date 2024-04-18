@@ -9,7 +9,9 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
-
+/**
+ *  @author Bacem_CHTOUROU
+ */
 public class Transformateur1AcheteurBourse extends Transformateur1Acteur implements IAcheteurBourse {
 
 
