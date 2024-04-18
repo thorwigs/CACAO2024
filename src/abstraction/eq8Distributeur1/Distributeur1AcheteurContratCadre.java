@@ -107,7 +107,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
 			|| !this.stock_Choco.containsKey(contrat.getProduit())
 			|| !this.achete(contrat.getProduit())
-			|| this.chocoBan.contains(produit)) {
+			|| this.chocoBan.contains(produit)
+			|| contrat.getListePrix().size()>10) {
 			return null;
 		}
 		
@@ -145,7 +146,11 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				}
 			}
 			double e = this.stock_Choco.get(contrat.getProduit()); 
-		    x = new Echeancier (a,b,c-d-e+100);
+			if (contrat.getQuantiteTotale() > c-d-e+100) {
+			    x = new Echeancier (a,b,c-d-e+100+100*contrat.getListePrix().size());
+			} else {
+			    x = new Echeancier (a,b,c-d-e+100-100*contrat.getListePrix().size());
+			}
 		}
 		return x;
 	}
@@ -156,15 +161,14 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			return 0.0;
 		}
 		
-		if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())>=this.prix((ChocolatDeMarque)contrat.getProduit())
-			&& contrat.getPrix()<=Math.pow(contrat.getQuantiteTotale(),1/3)){ //peut être rajouter un coef
+		if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())-Math.pow(contrat.getQuantiteTotale(),1/3)>=this.prix((ChocolatDeMarque)contrat.getProduit())) {
 				return contrat.getPrix();
 		}
 //		if (contrat.getPrix()>0) {
 //			return contrat.getPrix();
 //		}
 		else {
-			return Math.pow(contrat.getQuantiteTotale(),1/3)*(1-1/Math.pow(2, contrat.getListePrix().size()))  ;
+			return (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())-Math.pow(contrat.getQuantiteTotale(),1/3))*(1+(Math.pow(contrat.getQuantiteTotale(),1/3))/Math.pow(2, contrat.getListePrix().size()))  ;
 		}
 	}
 
