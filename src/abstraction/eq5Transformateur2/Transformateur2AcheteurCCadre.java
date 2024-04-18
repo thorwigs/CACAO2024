@@ -27,10 +27,6 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	private HashMap<IVendeurContratCadre, Integer> BlackListVendeur;
 	private int Etapenego; //ajout d'un compteur de tours de négociation 
 	
-	////////////////////
-	//Fait par Vincent//
-	////////////////////
-	
 	/////////////////
 	// Constructor //
 	/////////////////
@@ -135,7 +131,10 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	//     Fonctions du protocole de Vente     //
 	/////////////////////////////////////////////
 	
-	
+
+	/**
+	 * Erwann
+	 */
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("F_MQ") || produit.getType().equals("F_MQ_E") || produit.getType().equals("F_BQ");
 	}
@@ -143,6 +142,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	/***
 	 * Robin et Vincent
 	 */
+	
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
@@ -177,7 +177,6 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)) ; //on garde tout tel quel
 	}
 			
-		
 	/***
 	 * Robin et Vincent
 	 */
@@ -209,7 +208,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		}
 	}
 	/***
-	 * Robin
+	 * Robin, Vincent
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
@@ -217,7 +216,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	}
 
 	/***
-	 * Robin
+	 * Robin, Erwann
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if (quantiteEnTonnes == 0) {

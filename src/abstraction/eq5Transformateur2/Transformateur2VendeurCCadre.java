@@ -90,9 +90,9 @@ this.journalCC.ajouter("=================================");
 				|| (produit.getType().equals("Feve") && this.getQuantiteEnStock(produit, cryptogramme)>10000)
 				|| (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)>0) ; //Valeur à changer
 	}
-
+	
 	/***
-	 * Robin
+	 * Robin, Vincent
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		if (contrat.getEcheancier().getQuantiteTotale()< this.totalStocksChoco.getValeur()){
@@ -105,7 +105,9 @@ this.journalCC.ajouter("=================================");
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return 1000.00;
 	}
-
+	/**
+	 * Vincent
+	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (Filiere.random.nextDouble() < 0.2) { // 20% des cas
 	        return contrat.getPrix(); // ne refait pas de contreproposition
@@ -117,7 +119,6 @@ this.journalCC.ajouter("=================================");
 	/***
 	 * Robin
 	 */
-	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if (contrat.getVendeur().equals(this)) {
 			this.journalCC.ajouter("Nouveau contrat vendeur accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
