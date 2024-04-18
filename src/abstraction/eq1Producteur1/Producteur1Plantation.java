@@ -17,6 +17,7 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 	protected HashMap<Feve, Double> prodAnnee;
 	protected HashMap<Feve, Variable> stock;
 	public void next() {
+		System.out.println(prodAnnee);
 		super.next();
 	}
 	public Producteur1Plantation() {
@@ -112,9 +113,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 
 	public HashMap<Feve, Double> prodAnnuel() {
 		this.prodAnnee = new HashMap<Feve, Double>();
-		this.prodAnnee.put(Feve.F_BQ,0.7*650*this.nombreHec);
-		this.prodAnnee.put(Feve.F_MQ, 650*0.28*this.nombreHec);
-		this.prodAnnee.put(Feve.F_HQ, 650*0.02*this.nombreHec);
+		this.prodAnnee.put(Feve.F_BQ,0.7*0.650*this.nombreHec);
+		this.prodAnnee.put(Feve.F_MQ, 0.650*0.28*this.nombreHec);
+		this.prodAnnee.put(Feve.F_HQ, 0.650*0.02*this.nombreHec);
 		this.prodAnnee.put(Feve.F_HQ_E, 0.0);
 		this.prodAnnee.put(Feve.F_HQ_BE, 0.0);
 		this.prodAnnee.put(Feve.F_MQ_E, 0.0);
