@@ -38,7 +38,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		super.next();
 		this.journalCC.ajouter("===VENDEUR=========STEP"+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-			if (this.stockChocoMarque.get(cm)>0) { // Modifier quantité minimale avant achat
+			if (this.stockChocoMarque.get(cm)>78*27500) { 
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
 				double parStep = 27500; // Changer quantité par Step
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep);
