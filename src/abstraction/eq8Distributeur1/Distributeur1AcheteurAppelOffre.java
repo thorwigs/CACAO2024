@@ -35,7 +35,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			this.prixRetenus.put(cm, new LinkedList<Double>());
 		}
 	}
-		
+
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme);
 		int moins_cher_total=0;
