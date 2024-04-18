@@ -20,6 +20,7 @@ public class TransformateurXVendeurAppelDOffre extends TransformateurXVendeurAux
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
 
+	
 	public TransformateurXVendeurAppelDOffre() {
 		super();
 		this.journalAO = new Journal(this.getNom()+" journal A.O.", this);
