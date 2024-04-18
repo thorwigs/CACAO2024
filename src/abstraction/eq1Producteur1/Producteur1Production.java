@@ -109,6 +109,7 @@ public class Producteur1Production extends Producteur1Plantation{
 	/**
      * Gère le stockage des fèves de cacao de haute qualité.
      * Initie le transfert de stock en fonction de certaines conditions.
+     * Ca prend pas encore en consideration l'equitable et bio equitable
      */
 	public void Stockage_HQ() {
 
@@ -243,6 +244,20 @@ public class Producteur1Production extends Producteur1Plantation{
 		res.add(journalProduction);
 		return res;
 
+	}
+	/*
+	 * Une fonction qui ajoute l'option d'ameliorer les condtions de stockage pour 
+	 * que les feves ne pourraient pas aussi rapidement
+	 * On traveillera sous la condition que si le stock depasse une quantite on aimera le reserver mieux
+	 */
+	public void AmeliorationStockage() {
+		
+		double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
+		double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
+		double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
+		boolean ame = stockHQ > 30 && stockMQ > 30 && stockBQ > 50;
+		this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
+		
 	}
 
 

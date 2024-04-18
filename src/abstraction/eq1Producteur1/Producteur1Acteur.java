@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eq1Producteur1.masseSalariale;
+import abstraction.eq1Producteur1.Producteru1MasseSalariale;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -26,7 +26,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
 	
-	protected masseSalariale liste_Ouvrier;
+	protected Producteru1MasseSalariale liste_Ouvrier;
 	protected int cryptogramme;
 	protected Journal journal;
 	//new stuff I added : Abdo
@@ -103,7 +103,7 @@ public class Producteur1Acteur implements IActeur {
 		int nb_enfants = 150;
 		int nb_equitables = 30;
 		int nb_employees_non_equitable = 100;
-		this.liste_Ouvrier=new masseSalariale();
+		this.liste_Ouvrier=new Producteru1MasseSalariale();
 		this.liste_Ouvrier.addOuvrier(nb_enfants,labourEnfant,false,false,true);
 		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,false,false,true);
 		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,true);

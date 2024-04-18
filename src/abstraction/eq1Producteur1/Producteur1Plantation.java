@@ -7,7 +7,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur1Plantation extends Producteur1Acteur implements IPlantation{
+public class Producteur1Plantation extends Producteru1MasseSalariale implements IPlantation{
 	protected double nombreHec = 3E6;
 	protected double nombreHecMax = 5E6;
 	protected Journal journalPlantation;
@@ -101,12 +101,12 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 		 * 
 		 */
 		// TODO Auto-generated method stub
+		int aEmbaucher = 0;
 		for (Feve feve : demand.keySet()) {
 			double requiredRendement = demand.get(feve);
-			
-			this.liste_Ouvrier.embauche((int)requiredRendement);
-			
-		}
+			aEmbaucher += ((int) requiredRendement);
+			}
+		this.liste_Ouvrier.embauche(aEmbaucher);
 		
 	}
 	public void achat(double hec) {
