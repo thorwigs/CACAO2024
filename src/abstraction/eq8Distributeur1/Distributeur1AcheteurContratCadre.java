@@ -229,11 +229,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				} else if (vendeurs.size()>1) {
 					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size())); // a améliorer dans la V2
 				}
-//				System.out.println(vendeur!=null);
 				
 				if (vendeur!=null) {
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
-//					System.out.println("Demande au superviseur de debuter les negociations pour un contrat cadre de \"+choc+\" avec le vendeur \"+vendeur");
 					int a = Filiere.LA_FILIERE.getEtape()+1;
 					int b = 24 ; 
 					double c = this.prevision(choc, b) ;	
@@ -246,8 +244,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					double e = this.stock_Choco.get(choc); 
 				    Echeancier x = new Echeancier (a,b,c-d-e+100);
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
-//					System.out.println("-->aboutit au contrat "+cc);
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"-->aboutit au contrat "+cc);
+					if (cc != null ) {
+						Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Livraison", 0.05*cc.getPrix());
+					}
 				}	
 			}
 		}
