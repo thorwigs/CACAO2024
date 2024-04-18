@@ -38,7 +38,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	}
 	
 	/***
-	 * Robin et Vincent
+	 * @author Robin et Vincent
 	 */
 	
 	///////////////////////////
@@ -55,7 +55,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	// Permet d'enregistrer et de garder une trace des contrats en cours et des anciens contrats //
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	/***
-	 * Robin et Vincent
+	 * @author Robin et Vincent
 	 */
 	
 	public void next() {
@@ -120,6 +120,10 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	/////////////////////////////////////
 	// Ajoute notre journal aux autres //
 	/////////////////////////////////////
+	/***
+	 * @author Vincent
+	 */
+	
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalCC);
@@ -133,14 +137,14 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	
 
 	/**
-	 * Erwann
+	 * @author Vincent Erwann
 	 */
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("F_MQ") || produit.getType().equals("F_MQ_E") || produit.getType().equals("F_BQ");
 	}
 
 	/***
-	 * Robin et Vincent
+	 * @author Robin et Vincent
 	 */
 	
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -190,7 +194,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	}
 			
 	/***
-	 * Robin et Vincent
+	 * @author Robin et Vincent
 	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
@@ -223,7 +227,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		}
 	}
 	/***
-	 * Robin, Vincent
+	 * @author Robin, Vincent
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
@@ -231,7 +235,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	}
 
 	/***
-	 * Robin, Erwann
+	 * @author Robin, Erwann
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if (quantiteEnTonnes == 0) {
