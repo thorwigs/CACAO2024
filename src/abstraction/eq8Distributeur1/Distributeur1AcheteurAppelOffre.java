@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
@@ -46,7 +47,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		}
 		if ((solde<propositions.get(moins_cher_total).getPrixT()*propositions.get(moins_cher_total).getQuantiteT())
 				&& (solde<propositions.get(0).getPrixT()*propositions.get(0).getQuantiteT())) {
-			journalAO.ajouter("   refus de l'AO : pas assez d'argent sur le compte");
+			journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN,"   refus de l'AO : pas assez d'argent sur le compte");
 			return null;
 		}
 		int choisi=-1; // permet de connaître la proposition choisi à la fin, la moins chere, ou renverra -1 si pas d'offre correspondante
@@ -60,12 +61,12 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			}
 		}
 		if (choisi==-1) {
-			journalAO.ajouter("   refus de l'AO : produit pas correspondant à la demande");
+			journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN,"   refus de l'AO : produit pas correspondant à la demande");
 			return null;
 		}
 		if ((solde<propositions.get(choisi).getPrixT()*propositions.get(choisi).getQuantiteT()))
 				 {
-			journalAO.ajouter("   refus de l'AO : pas assez d'argent sur le compte");
+			journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN,"   refus de l'AO : pas assez d'argent sur le compte");
 			return null;
 				 }
 		else {
@@ -126,20 +127,23 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 	
 	public void next() {
 		super.next();
-		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalAO.ajouter("");
+		this.journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			if (this.achete_AO(choc)>0) {
 				double x = this.achete_AO(choc) + 100 ;
 				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, choc, x);
-				journalAO.ajouter("   Je lance un appel d'offre de "+x+" T de "+choc);
+				journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"   Je lance un appel d'offre de "+x+" T de "+choc);
 				if (ov!=null) {
-					journalAO.ajouter("   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
+					journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
 					stock_Choco.put(choc,this.getQuantiteEnStock(choc,cryptogramme)+ x);
 					totalStockChoco.ajouter(this, x, cryptogramme);
 				}
 			}
 		}
-		this.journalAO.ajouter("=================================");
+		this.journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"=================================");
+		this.journalAO.ajouter("");
+
 	}
 
 }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
@@ -193,8 +194,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	
 	public void next() {
 		super.next();
-		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
+		this.journalCC.ajouter("");
+		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+//		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
@@ -211,12 +213,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		
 		
 		for (ChocolatDeMarque choc : chocolats) {
-			System.out.println(""+choc+ " a besoin d'être achté : " + this.achete(choc));
+//			System.out.println(""+choc+ " a besoin d'être achté : " + this.achete(choc));
 			if (this.achete(choc)) {
-				this.journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
-				System.out.println("Recherche d'un vendeur aupres de qui acheter");
+				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter");
+//				System.out.println("Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
-				System.out.println(vendeurs.size());
+//				System.out.println(vendeurs.size());
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
@@ -230,7 +232,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				}
 //				System.out.println(vendeur!=null);
 				if (vendeur!=null) {
-					this.journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
+					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
 					System.out.println("Demande au superviseur de debuter les negociations pour un contrat cadre de \"+choc+\" avec le vendeur \"+vendeur");
 					int a = Filiere.LA_FILIERE.getEtape()+1;
 					int b = 24 ; 
@@ -245,12 +247,13 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				    Echeancier x = new Echeancier (a,b,c-d-e+100);
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
 					System.out.println("-->aboutit au contrat "+cc);
-					this.journalCC.ajouter("-->aboutit au contrat "+cc);
+					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"-->aboutit au contrat "+cc);
 				}	
 			}
 		}
 		
-		this.journalCC.ajouter("=================================");
+		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
+		this.journalCC.ajouter("");
 
 	}
 }

@@ -48,7 +48,7 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
 		this.nombreMarquesParType=new HashMap<Chocolat,Integer>();
 		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
-		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK =====");
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK INITIALE =====");
 		for (ChocolatDeMarque cm : chocolats) {
 		    Chocolat typeChoco = cm.getChocolat();
 		    nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
@@ -81,6 +81,7 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 				this.chocoBan.add(cm);
 			}
 		}
+		this.journal.ajouter("");
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -95,9 +96,14 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 	public void next() {
-		this.journal.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		this.journal.ajouter("Stock == " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("=================================");
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK ETAPE "+Filiere.LA_FILIERE.getEtape()+" =====");
+		for (ChocolatDeMarque choc : chocolats) {
+			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,choc+"->"+this.stock_Choco.get(choc));
+		}
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"=================================");
+		this.journal.ajouter("");
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

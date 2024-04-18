@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
@@ -34,6 +35,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		for (ChocolatDeMarque choco : chocolats) {
 			this.setPrix(choco);
 		}
+		this.setNombreEmploye();
 	}
 
 	public void setPrix(ChocolatDeMarque choco) {
@@ -60,7 +62,6 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	
 	public double prix(ChocolatDeMarque choco) {
 		if (ListPrix.containsKey(choco)) {
-//			System.out.println("prix de "+choco+" est de "+ListPrix.get(choco));
 			return ListPrix.get(choco);
 		} 
 		else {
@@ -140,7 +141,6 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 		}
 		return 0;     
-//	return this.quantiteEnVente(choco, crypto)/10.0;
 	}
 	
 	public double quantiteEnVenteTGTotal() {
@@ -157,12 +157,12 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
 			totalStockChoco.retirer(this, quantite, cryptogramme);
 			}
-		journalVente.ajouter(client.getNom()+" a acheté "+quantite+" pour "+montant+" d'euros ");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+" pour "+montant+" d'euros ");
 		
 	}
 
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
-		journalVente.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE," Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
 	
 	public int getNombreEmploye() {
@@ -181,10 +181,15 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	
 	public void next() {
 		super.next();
-		journalVente.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		journalVente.ajouter("QuantitéEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
+		journalVente.ajouter("");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : " +this.quantiteEnVenteTotal());
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
+		journalVente.ajouter("");
 
-/*		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
+		
+		/*		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
 		System.out.println("quantiteEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
 		System.out.println("quantiteEnVenteTotal/10 : "+this.quantiteEnVenteTotal()*0.1);
 		System.out.println("capaciteDeVente/10 : "+this.capaciteDeVente*0.1);
@@ -195,9 +200,6 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			System.out.println("Quantite en vente TG de "+choc.getNom()+" : "+this.quantiteEnVenteTG(choc, cryptogramme));
 		}
 		System.out.println(""); */
-		journalVente.ajouter("=================================");
-		
-
 	}
 
 }
