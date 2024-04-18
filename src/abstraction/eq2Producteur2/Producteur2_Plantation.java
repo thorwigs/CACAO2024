@@ -24,9 +24,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
 
 	//protected int qualite;
-	protected double pourcentage_HQ;
-	protected double pourcentage_MQ;
-	protected double pourcentage_BQ;
+	protected int pourcentage_HQ;
+	protected int pourcentage_MQ;
+	protected int pourcentage_BQ;
 	
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
@@ -91,42 +91,42 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	/** Getter
 	 * @author Anthony
 	 */
-	public double getPourcentage_HQ() {
+	public int getPourcentage_HQ() {
 		return this.pourcentage_HQ;
 	}
 	
 	/** Setter
 	 * @author Anthony
 	 */
-	public void setPourcentage_HQ(double pourcentage_HQ) {
+	public void setPourcentage_HQ(int pourcentage_HQ) {
 		this.pourcentage_HQ = pourcentage_HQ;
 	}
 
 	/** Getter
 	 * @author Anthony
 	 */
-	public double getPourcentage_MQ() {
+	public int getPourcentage_MQ() {
 		return pourcentage_MQ;
 	}
 
 	/** Setter
 	 * @author Anthony
 	 */
-	public void setPourcentage_MQ(double pourcentage_MQ) {
+	public void setPourcentage_MQ(int pourcentage_MQ) {
 		this.pourcentage_MQ = pourcentage_MQ;
 	}
 
 	/** Getter
 	 * @author Anthony
 	 */
-	public double getPourcentage_BQ() {
+	public int getPourcentage_BQ() {
 		return pourcentage_BQ;
 	}
 
 	/** Setter
 	 * @author Anthony
 	 */
-	public void setPourcentage_BQ(double pourcentage_BQ) {
+	public void setPourcentage_BQ(int pourcentage_BQ) {
 		this.pourcentage_BQ = pourcentage_BQ;
 	}
 	
@@ -149,9 +149,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	public void initialiser() {
 		super.initialiser();
-		this.setPourcentage_HQ(0.02);
-		this.setPourcentage_MQ(0.38);
-		this.setPourcentage_BQ(0.60);
+		this.setPourcentage_HQ(2);
+		this.setPourcentage_MQ(38);
+		this.setPourcentage_BQ(60);
 	}
 	
 	/** Méthode pour obtenir les journaux
@@ -191,30 +191,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 			}
 		}
 	}
-	/** Met à jour les pourcentages de BQ, MQ et HQ en fonction des catégories d'employés
-	 * @author Noémie
-	 */
-	public void maj_pourcentage() {
 		
-		double ratio_equitable = this.getNb_employes_equitable()/this.getNb_Employes_total();
-		// On choisit la catégorie de fève qu'on produit le plus entre MQ et BQ baisser son pourcentage
-		if (getPourcentage_MQ() < getPourcentage_BQ() ) {
-			double diff = getPourcentage_HQ() - ratio_equitable;
-			if (getPourcentage_BQ()-diff > 0) {
-				this.setPourcentage_BQ(getPourcentage_BQ()-diff);
-				this.setPourcentage_HQ(ratio_equitable);
-			}
-		}
-		else {
-			double diff = getPourcentage_HQ() - ratio_equitable;
-			if (getPourcentage_MQ()-diff > 0) {
-				this.setPourcentage_MQ(getPourcentage_MQ()-diff);
-				this.setPourcentage_HQ(ratio_equitable);
-			}
-		}
-	}
-	
-	
 	/** retourne la production actuelle de cacao sur 2 semaines en tonnes
 	 * @author Anthony
 	 */
@@ -231,21 +208,21 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public double production_HQ() {
-		return production_cacao()* getPourcentage_HQ();
+		return production_cacao()* getPourcentage_HQ()/100;
 	}
 	
 	/** Retourne la production de cacao de basse qualité sur 2 semaines en tonnes
 	 * @author Anthony
 	 */
 	public double production_BQ() {
-		return production_cacao() * getPourcentage_BQ();
+		return production_cacao() * getPourcentage_BQ()/100;
 	}
 	
 	/** Retourne la production de cacao de moyenne qualité sur 2 semaines en tonnes
 	 * @author Anthony
 	 */
 	public double production_MQ() {
-		return production_cacao() * getPourcentage_MQ();
+		return production_cacao() * getPourcentage_MQ()/100;
 	}
 	
 	/** Retourne la production de cacao HQ_BE après calculs des rendements en tonnes
@@ -289,6 +266,10 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public void modifie_prodParStep() {
+		System.out.println("--------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------");
+		System.out.println(" prod bq " + get_prod_pest_BQ());
+		System.out.println(" prod mq " + get_prod_pest_MQ());
+		System.out.println(" prod hq " + get_prod_pest_HQ());
 	    this.prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
 	    this.prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
 	    this.prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
@@ -311,6 +292,27 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		double perte_un_next = pourcentage_perte * getNb_hectares_actuel();
 		setNb_hectares_actuel(getNb_hectares_actuel() - perte_un_next);
 		this.planter(perte_un_next);
+	}
+	
+	/** Met à jour les pourcentages de BQ, MQ et HQ en fonction des catégories d'employés
+	 * @author Noémie
+	 */
+	public void maj_pourcentage() {
+		int pourcentage_equitable = (int) Math.round(this.getPourcentage_equitable());
+		int diff = pourcentage_equitable - getPourcentage_HQ();
+		// On choisit la catégorie de fève qu'on produit le plus entre MQ et BQ pour baisser son pourcentage
+		if (getPourcentage_MQ() < getPourcentage_BQ()) {
+			if (getPourcentage_BQ()-diff > 0) {
+				this.setPourcentage_BQ(getPourcentage_BQ()-diff);
+				this.setPourcentage_HQ(pourcentage_equitable);
+			}
+		}
+		else {
+			if (getPourcentage_MQ()-diff > 0) {
+				this.setPourcentage_MQ(getPourcentage_MQ()-diff);
+				this.setPourcentage_HQ(pourcentage_equitable);
+			}
+		}
 	}
 	
 	/** Ajoute les nouvelles informations sur les plantations au journal des plantations
