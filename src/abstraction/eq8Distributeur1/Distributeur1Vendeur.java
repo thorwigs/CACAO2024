@@ -195,6 +195,8 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter("");
 		this.setNombreEmploye();
 //		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Fixe", this.Cout_Fixe());
+		
 	}
+	
 
 }
