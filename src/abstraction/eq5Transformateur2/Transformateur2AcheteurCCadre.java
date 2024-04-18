@@ -17,12 +17,12 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
-import abstraction.eqXRomu.general.Variable;
+
 
 public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale implements IAcheteurContratCadre {
 	protected SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
+	protected List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
 	private HashMap<IVendeurContratCadre, Integer> BlackListVendeur;
 	private int Etapenego; //ajout d'un compteur de tours de négociation 
@@ -41,6 +41,10 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		this.journalCC = new Journal(this.getNom()+" journal CC", this);
 	}
 	
+	/***
+	 * Robin et Vincent
+	 */
+	
 	///////////////////////////
 	// Initialise le contrat //
 	///////////////////////////
@@ -54,10 +58,13 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// Permet d'enregistrer et de garder une trace des contrats en cours et des anciens contrats //
 	///////////////////////////////////////////////////////////////////////////////////////////////
+	/***
+	 * Robin et Vincent
+	 */
+	
 	public void next() {
 		super.next();
-		this.Etapenego ++;  
-		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC.ajouter("==ACHETEUR=======STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if ((this.stockFeves.get(f)<1200) & (f.getGamme()!=Gamme.HQ)) { // Modifier quantité minimale avant achat
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
@@ -128,10 +135,14 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	//     Fonctions du protocole de Vente     //
 	/////////////////////////////////////////////
 	
+	
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("F_MQ") || produit.getType().equals("F_MQ_E") || produit.getType().equals("F_BQ");
 	}
 
+	/***
+	 * Robin et Vincent
+	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (contrat.getProduit().getType().equals("F_HQ") || contrat.getProduit().getType().equals("F_HQ_BE") || contrat.getProduit().getType().equals("F_HQ_E")) {
 			return null; // retourne null si ce n'est pas la bonne fève
@@ -167,7 +178,9 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	}
 			
 		
-
+	/***
+	 * Robin et Vincent
+	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		if (Filiere.random.nextDouble()<0.05) { //5% de chance 
@@ -195,17 +208,21 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 			}
 		}
 	}
-	
+	/***
+	 * Robin
+	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
 
-
+	/***
+	 * Robin
+	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if (quantiteEnTonnes == 0) {
 			if (this.BlackListVendeur.containsKey(contrat.getVendeur())) {
-				this.BlackListVendeur.put(contrat.getVendeur(),this.BlackListVendeur.get(contrat.getVendeur())+5);
+				this.BlackListVendeur.put(contrat.getVendeur(),this.BlackListVendeur.get(contrat.getVendeur())+5); // on fait monter le vendeur en blacklist si il ne livre pas
 			} else {
 				this.BlackListVendeur.put(contrat.getVendeur(), 5);
 				}

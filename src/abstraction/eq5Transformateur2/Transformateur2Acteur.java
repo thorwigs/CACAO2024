@@ -244,7 +244,10 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;
 	}
-
+	
+	/***
+	 * Robin,Erwann
+	 */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			if (p.getType().equals("Feve")) {
