@@ -28,7 +28,11 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	@Override
 	public double demande(Feve f, double cours) {
 	  
-	
+		// Notre acteur achète des fèves selon leurs différents cours en bourse, et ses stocks.
+		// Il a à la fois des seuils (pour le cours comme pour ses stocks), et des coefficients de 
+		// proportionnalité (+ le prix est bas, + il va en acheter pour les 2 seuils bas, 
+		// et + le prix est haut et moins il va en acheter pour le seuilHaut.
+		
 	    double seuilTrèsBas = 200;
 	    double seuilBas = 5000;
 	    double seuilHaut = 1000;
