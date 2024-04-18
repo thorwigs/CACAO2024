@@ -6,7 +6,7 @@ import java.util.Collections;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 
-
+/**@author youssef ben abdeljelil*/
 
 
 public class Producteru1MasseSalariale extends Producteur1Acteur {
