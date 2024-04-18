@@ -149,7 +149,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		}
 		if (Filiere.random.nextDouble()<0.05) { //5% de chance 
 			return contrat.getEcheancier(); //on ne négocie pas 
-		}		
+		}
 		if (contrat.getEcheancier().getNbEcheances()<52) { //durée trop courte 
 			if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>35000) { //quantité trop grande 
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,35000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-35000)) ; //on ramène la durée et la quantité aux bornes fixées
@@ -165,7 +165,6 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,130,20000-0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-20000)) ; //on ramène la durée et la quantité aux bornes fixées
 			}
 		}
-			
 			//Durée convenable
 			if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>35000) { //quantité trop grande 
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),35000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-35000)) ; //on ramène la quantité à la borne fixée et on garde la durée 
@@ -185,10 +184,10 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		if (Filiere.random.nextDouble()<0.05) { //5% de chance 
 			return contrat.getPrix(); //on ne négocie pas 
 		}
-		else { //dans 80% des cas on négocie 
+		else { //dans 95% des cas on négocie 
 			if (contrat.getProduit().getType().equals("F_BQ") || contrat.getProduit().getType().equals("F_MQ")) { // pour les fèves pour lesquelles on connaît le prix en bourse 
 				if (contrat.getEcheancier().getQuantiteTotale()*(bourse.getCours((Feve)contrat.getProduit()).getValeur()*(1-(0.1/this.Etapenego))) < contrat.getPrix()) { // si prix proposé par vendeur supérieur à prix voulu (varie à chaque tour de négo)
-					if (contrat.getPrix()*(1-(0.1/this.Etapenego))>=0.985) {
+					if (contrat.getPrix()*(1-(0.1/this.Etapenego))>=0.985*contrat.getPrix()) {
 						return contrat.getPrix();
 					}
 					this.Etapenego++;
@@ -199,7 +198,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 				}
 			}
 			else { //pas d'info sur la bourse pour équitable donc on renégocie par rapport au prix proposé par le vendeur sur le même modèle mathématique
-				if (contrat.getPrix()*(1-(0.1/this.Etapenego))>=0.985) {
+				if (contrat.getPrix()*(1-(0.1/this.Etapenego))>=0.985*contrat.getPrix()) {
 					return contrat.getPrix();
 				}
 				this.Etapenego++;
