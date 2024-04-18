@@ -42,7 +42,8 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 	
 	protected int cryptogramme;
-
+	
+	
 	public Transformateur3Acteur() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.journal = new Journal(this.getNom()+" journal", this);
