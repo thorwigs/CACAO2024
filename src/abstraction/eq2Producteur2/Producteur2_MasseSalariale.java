@@ -222,13 +222,13 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	public void strategie()  {
 		double solde = this.getSolde();
 		if (solde > 10*cout_humain_par_step()){
-			if ( getPourcentage_enfants() < 0.03) {
+			if (getPourcentage_enfants() < 0.02) {
 				this.embauche((int) (0.001*this.getNb_Employes_total()), "adulte équitable");
 			}
 			else {
 				int nb_enf = getNb_employes_enfants();
 				
-				// le nombre d'employés qui changent de catégorie est égale à 3% des enfants
+				// le nombre d'employés qui changent de catégorie est égal à 2% des enfants
 				int nb_employes_modif = (int) Math.round(0.02*nb_enf);
 				
 				// parmis ces employés, 80% passent en équitable
