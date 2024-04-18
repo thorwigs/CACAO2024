@@ -10,7 +10,6 @@ import abstraction.eqXRomu.general.Journal;
 
 
 public class Producteru1MasseSalariale extends Producteur1Acteur {
-	public double indemniteTotale = 0;
 	protected Journal journalOuvrier;
 
 	////c'est une classe qui contient des fonctions utiles à opérer sur une liste de type Ouvrier//
@@ -114,7 +113,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 		// Trier la liste des ouvriers à supprimer par ancienneté
 		Collections.sort(ouvriersASupprimer, (o1, o2) -> Double.compare(o1.getAnciennete(), o2.getAnciennete()));
-
+		int indemnitétotale=0;
 		// Supprimer le nombre spécifié d'ouvriers de la liste principale, à partir de l'ancienneté la plus basse
 		for (int i = 0; i < Math.min(nombreASupprimer, ouvriersASupprimer.size()); i++) {
 			Ouvrier ouvrier = ouvriersASupprimer.get(i);
@@ -123,7 +122,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 			double anciennetéEnAnnées = ouvrier.getAnciennete() / 365;
 			double salaire = ouvrier.getSalaire();
 			double indemnité = anciennetéEnAnnées <= 10 ? (salaire * 30 / 4) * anciennetéEnAnnées : (salaire * 30 / 4) * 10 + (salaire * 30 / 3) * (anciennetéEnAnnées - 10);
-			indemniteTotale += indemnité;
+			indemnitétotale += indemnité;
 
 
 
@@ -135,10 +134,6 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	//une méthode permetttant de "licensier" des ouvriers 
 	//selon un nombre en parametres et leurs types de 
 	//travail(equitable,enfant,formation)
-	//ResultatSuppression resultat = removeEmploye(listeOuvriers, 3, true, false, true);
-
-	// si on veut retourner la liste des oruvriers après supression , on fait:ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
-	//si on veut retounrer l'indemnite:double indemniteTotale = resultat.indemniteTotale;
 
 
 	public void UpdateAnciennete() {
@@ -191,7 +186,6 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	public void next() {
 		super.next();
 		liste_Ouvrier.UpdateAnciennete();
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemniteTotale = ",indemniteTotale );
 	}
 
 }
