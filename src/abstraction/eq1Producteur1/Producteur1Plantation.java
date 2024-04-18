@@ -19,7 +19,7 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 	protected HashMap<Feve, Double> Stocck;
 	public void next() {
 		super.next();
-		this.recruitWorkers(this.maindoeuvre());
+		//this.recruitWorkers(this.maindoeuvre());
 		
 	}
 	public Producteur1Plantation() {
@@ -106,7 +106,13 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 			double requiredRendement = demand.get(feve);
 			aEmbaucher += ((int) requiredRendement);
 			}
-		this.liste_Ouvrier.embauche(aEmbaucher);
+		this.addOuvrier((int)0.30*aEmbaucher, this.labourEquitable, true, false, false);
+		aEmbaucher -= (int)0.30*aEmbaucher;
+		this.addOuvrier((int)0.30*aEmbaucher, this.labourEnfant, false, false, true);
+		aEmbaucher -= (int)0.30*aEmbaucher;
+		this.addOuvrier(aEmbaucher, this.labourEquitable, false, false, false);
+
+		//this.liste_Ouvrier.embauche(aEmbaucher);
 		
 	}
 	public void achat(double hec) {
