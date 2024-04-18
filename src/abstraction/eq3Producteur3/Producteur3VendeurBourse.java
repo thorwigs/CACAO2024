@@ -11,20 +11,17 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 	 * @author Arthur
 	 */
 	public double offre(Feve f, double cours) {
-		//verifier si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
-		//prendre en compte des couts de stocks dans couts (donc separer les tonnes produites par step dans une liste ou autre)
-		
-		//vendre par bourse ce qui n'est pas vendue par contrat cadre
-		//vendre toute la production BQ en bourse
-		
-		if (f.getGamme() != Gamme.BQ) {
-			//pas de vente en bourse MQ et HQ pour le moment
-			return 0;
-		}
-		else {
+		//vendre par bourse ce qui n'est pas vendue par contrat cadre (a faire)
+		//vend toute la production BQ en bourse
+		//verifie si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
+		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
 			//mettre la quantite de stock BQ (mettre plus et ajuster selon la demande)
 			//plus on demande, plus on vend (attention a l'offre et a la demande)
 			return this.getQuantiteEnStock(f,this.cryptogramme);
+		}
+		else {
+			//pas de vente en bourse MQ et HQ pour le moment
+			return 0;
 		}
 	}
 

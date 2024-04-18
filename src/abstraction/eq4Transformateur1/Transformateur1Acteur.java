@@ -291,8 +291,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	@Override
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();
-		marques.add("LeaderKakao");
-		marques.add("CacaoMagic");
+
+		marques.add("LeaderKakao"); // HQ
+		marques.add("CacaoMagic"); // MQ
 		return marques;
 	}
 }
