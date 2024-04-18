@@ -13,16 +13,11 @@ public class Producteur3Production extends Producteur3Plantation {
 	protected double T_ha_HQ = 25.0/1000 ;
 	protected double T_ha_HQ_BE = 22.5/1000 ;   //sans pesticide (bio équitable)
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>();;
-	
-	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
-		prodTemps.put(0, d0);
-		prodTemps.put(1, d1);
-	}
-	
+
 	
 	/**
 	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao (et types bio/équitable). 
-	 * Prend en compte les surfaces de plantation et le prix.
+	 * Prend en compte les surfaces de plantation et les tonnes produites par hectare lors d'un step.
 	 * @author Gabin
 	 */
 	
@@ -62,19 +57,44 @@ public class Producteur3Production extends Producteur3Plantation {
 		
 		
 	}	
-	//stockage dans le temps de 2 dictionnaires @Gabin
+	/**Stockage dans le temps de 2 dictionnaires.
+	 *Nécessaire pour prendre en compte le temps de séchage.
+	 *Le premier dictionnaire est celui du step t-1 (clé 0), soit la quantité produite 1 step avant (2 semaines avant)
+	 *Le deuxième (clé 1) correspond au step t (actuel), soit la quantité produite à ce step
+	 * 
+	 * @author Gabin
+	 */
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps() {
-		prodTemps.put(0, prodTemps.get(1));
-		prodTemps.put(1, newQuantite());
+		prodTemps.put(0, prodTemps.get(1)); //step précédent
+		prodTemps.put(1, newQuantite());    //step actuel
 		return prodTemps;
-		
 	}
 	
-	//renvoie la quantité de fèves après séchage, soit 1 step avant (2 semaines plus tard)
-	// la quantité dispo pour la vente. @Gabin
+	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
+		prodTemps.put(0, d0);
+		prodTemps.put(1, d1);
+	}
+	
+	
+	/**Renvoie la quantité de fèves disponibles après séchage au step actuel
+	 *C'est la quantité dispo pour la vente (sans compter les stocks)
+	 * 
+	 * @author Gabin
+	 */
 	protected HashMap<Feve,Double> quantite(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		quantite=prodTemps().get(0);
+		return quantite;
+	}
+	
+	/**Renvoie la quantité de fèves disponibles après séchage au prochain step
+	 * Elle est utile pour l'établissement d'un contrat cadre
+	 * 
+	 * @author Alexis
+	 */
+	protected HashMap<Feve,Double> quantiteFuture(){
+		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
+		quantite = prodTemps().get(1);
 		return quantite;
 	}
 	

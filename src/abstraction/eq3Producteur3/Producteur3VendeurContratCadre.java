@@ -102,15 +102,16 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author mammouYoussef (et modification Arthur)
+	 * (et modification Alexis pour quantiteFuture())
 	 * @param Feve f
 	 * @return double quantiteDisponible
 	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
 	 */
 	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
 	        double quantiteDisponible = 0.0; // Valeur par défaut
-	        if (quantite().containsKey(f)) {
+	        if (quantiteFuture().containsKey(f)) {
 	        	//La quantite disponible de base correspond a ce que l'on produit
-	            quantiteDisponible = quantite().get(f);
+	            quantiteDisponible = quantiteFuture().get(f);
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
