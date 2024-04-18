@@ -109,7 +109,6 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		}
 		
-		
 		// Remplissage de pourcentageTransfo avec 0.1% de plus de cacao que le seuil minimal
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
