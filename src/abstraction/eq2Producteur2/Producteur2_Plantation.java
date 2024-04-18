@@ -197,7 +197,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void maj_pourcentage() {
 		
 		double ratio_equitable = this.getNb_employes_equitable()/this.getNb_Employes_total();
-		// On choisit la catégorie de fève qu'on produit le plus entre MQ et BQ baisser son pourcentage
+		// On choisit la catégorie de fève qu'on produit le plus entre MQ et BQ pour baisser son pourcentage
 		if (getPourcentage_MQ() < getPourcentage_BQ() ) {
 			double diff = getPourcentage_HQ() - ratio_equitable;
 			if (getPourcentage_BQ()-diff > 0) {

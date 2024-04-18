@@ -84,7 +84,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		this.nb_employes_enfants = nb_employes_enfants;
 	}
 	
-	/** ajoute les journal_RH la liste des autres journaux
+	/** ajoute les journal_RH à la liste des autres journaux
 	 * @author Noémie
 	 */
 	public List<Journal> getJournaux() {
@@ -131,7 +131,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		}
 	}
 	
-	/** Met à jour le nombre d'employés dans une catégorie. 
+	/** Met à jour le nombre d'employés dans une catégorie
 	 * @author Noémie
 	 */
 	public void setNombreEmployes(String categorie, int d) {
