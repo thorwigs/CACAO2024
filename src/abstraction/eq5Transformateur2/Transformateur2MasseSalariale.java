@@ -29,10 +29,16 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////////////////////////////////////////////
 	// Constructor & Initialization of values //
 	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public Transformateur2MasseSalariale() {
 		super();
 		this.JournalMasseSalariale=new Journal(this.getNom()+" journal MS", this);
 	}
+	/**
+	 * @Erwann
+	 */
 	public void initialiser() {
 		super.initialiser();
 		NbSalaries = 100;
@@ -56,6 +62,10 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////////////////////////////////////////////
 	//             Transformation             //
 	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 * @Victor
+	 */
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries*this.capaciteTransformation); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
@@ -65,6 +75,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		this.stockFeves.put(f, this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees); //Modifie le stock de feves
 		return tonnesTransformees; 
 	}
+	/**
+	 * @Erwann
+	 */
 	public double TotauxTonnesTransformees() {
 		double totaux = 0;
 		for (Feve f : Feve.values()) {
@@ -77,9 +90,15 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////////////////////////////////////////////
 	//      Calcul Coût de transformation     //
 	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
 		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
+	/**
+	 * @Erwann
+	 */
 	public double CoutTransformationTotal() {
 		double coutTotal = 0;
 		for (ChocolatDeMarque cm : chocosProduits) {
@@ -98,6 +117,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	/* Embauche si le nbr de salarié n'est pas assez important
 	 * Pas de licenciement pour l'instant
 	 */
+	/**
+	 * @Erwann
+	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
 
@@ -106,13 +128,15 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 			NbSalaries += embauche;
 			this.JournalMasseSalariale.ajouter("On embauche"+embauche+"personnes");
 			return embauche;
-			
 		}
 		else {
 			this.JournalMasseSalariale.ajouter("On ne licencie pas");
 			return 0;
 		}
 	}
+	/**
+	 * @Erwann
+	 */
 	public double CoutMasseSalariale(double TonnesTransformees) {
 		double cout_salaire = NbSalaries * salaire;
 		double cout_licenciement = 0;
@@ -126,6 +150,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////////////////////////////////////////////
 	//        Next : paiments des coûts       //
 	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public void next() {
 		super.next();
 		this.JournalMasseSalariale.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
@@ -145,6 +172,9 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	/////////////////////////////////////
 	//   Ajout du journal aux autres   //
 	/////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(JournalMasseSalariale);
