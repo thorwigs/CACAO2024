@@ -19,6 +19,8 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 	protected HashMap<Feve, Double> Stocck;
 	public void next() {
 		super.next();
+		this.recruitWorkers(this.maindoeuvre());
+		
 	}
 	public Producteur1Plantation() {
 		super();
@@ -32,6 +34,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 
 	@Override
 	public HashMap<Feve, Double> plantation() {
+		/*
+		 * Retourne un dictionnaire où chaque clé est une Feve et chaque valeur est la surface associée de cette feve.
+		 */
 		plantation = new HashMap<Feve, Double>();
 		
 		plantation.put(Feve.F_BQ,0.7*this.nombreHec );
@@ -43,6 +48,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 
 	@Override
 	public void adjustPlantationSize(HashMap<Feve, Double> adjustments) {
+		/*
+		 *  Si on n'a pas assez d'espace pour planter nos feves
+		 */
 	    for (Feve feve : adjustments.keySet()) {
 	        
 	        double adjustment = adjustments.get(feve);
@@ -56,7 +64,7 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 	            newSize = 0; 
 	        }
 	        
-	        
+	        this.achat(adjustment);
 	        plantation.put(feve, newSize);
 	        journalPlantation.ajouter(String.format("Adjusting %s plantation size by %.2f hectares", feve.name(), adjustment));
 	    }
@@ -66,7 +74,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 
 	@Override
 	public HashMap<Feve, Double> maindoeuvre() {
-		//return nombre d'ouvriers avec un rendement 1 necessaire
+		/*
+		 * return nombre d'ouvriers avec un rendement 1 necessaire
+		 */
 		HashMap<Feve,Double> ouvriers = new HashMap<Feve,Double>();
 		for (Feve f : this.plantation().keySet()) {
 			if (f.isBio()) {
@@ -86,14 +96,23 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 	}
 
 	@Override
-	public void recruitWorkers(HashMap<Feve, Double> demand) { //??????
+	public void recruitWorkers(HashMap<Feve, Double> demand) {
+		/* On embauche des gens selon la demnade
+		 * 
+		 */
 		// TODO Auto-generated method stub
 		for (Feve feve : demand.keySet()) {
 			double requiredRendement = demand.get(feve);
+			
+			this.liste_Ouvrier.embauche((int)requiredRendement);
+			
 		}
 		
 	}
 	public void achat(double hec) {
+		/*
+		 * Acheter des nouvelles hectares
+		 */
 		double cout = hec * 500;
 		if (this.nombreHec+hec > this.nombreHecMax && this.getSolde() > cout) {
 			this.journalPlantation.ajouter("On peut acheter la quantite demande; la quantite on peut acheter est: "+ (this.nombreHecMax-this.nombreHec));
@@ -112,6 +131,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 		
 
 	public HashMap<Feve, Double> prodAnnuel() {
+		/*
+		 * return la production annuel
+		 */
 		this.prodAnnee = new HashMap<Feve, Double>();
 		this.prodAnnee.put(Feve.F_BQ,0.7*0.650*this.nombreHec);
 		this.prodAnnee.put(Feve.F_MQ, 0.650*0.28*this.nombreHec);
@@ -122,6 +144,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 		return prodAnnee;
 	}
 	public HashMap<Feve, Double> quantite() {
+		/*
+		 * return la production annuel qui prennent en compte les pesticides
+		 */
 		// TODO Auto-generated method stub
 		this.prodAnnee = this.prodAnnuel();
 		this.production = new HashMap<Feve, Double>();
@@ -151,6 +176,9 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 		
 	}
 	public HashMap<Feve, Double> ProdParStep(){
+		/*
+		 * retourne la production par etape
+		 */
 		this.prodAnnee = this.prodAnnuel();
 		this.production = new HashMap<Feve, Double>();
 		if (pesticides) {
@@ -178,20 +206,27 @@ public class Producteur1Plantation extends Producteur1Acteur implements IPlantat
 }
 
 	public HashMap<Feve, Variable> IniStock(){
+		/*
+		 * Initialise un dictionnaire feve,variable pour visualiser le stock
+		 */
 		this.stock = new HashMap<Feve, Variable>();
 		HashMap<Feve, Double> pro = this.ProdParStep();
 		
 		for (Feve f : Feve.values()) {
-			Variable v =  new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, pro.get(f)*24, pro.get(f)*6);
+			Variable v =  new Variable(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, pro.get(f)*24, pro.get(f)*4);
 			this.stock.put(f, v);
 		}
 		return stock;
 	}
 	public HashMap<Feve, Double> InitiStock(){
+		/*
+		 * Initialise un dictionnaire feve,double pour facilier la minipulation du stock
+		 * On commence deja par le stock qu'on produit pendant 2 mois
+		 */
 		this.Stocck = new HashMap<Feve, Double>();
 		HashMap<Feve, Double> pro = this.ProdParStep();
 		for (Feve f : Feve.values()) {
-			this.Stocck.put(f, pro.get(f)*6);
+			this.Stocck.put(f, pro.get(f)*4);
 		}
 		return this.Stocck;
 	}

@@ -1,3 +1,7 @@
+/**
+ * Représente un gestionnaire de production pour un producteur spécifique dans la chaîne d'approvisionnement.
+ * Gère la production, la transformation et le stockage des fèves de cacao.
+ */
 package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
@@ -15,16 +19,23 @@ public class Producteur1Production extends Producteur1Plantation{
 
 	protected double prix_hq_F;
 	protected Journal journalProduction;
+	protected Journal journalStockage;
 	protected HashMap<String, Integer> ageStock;
 	protected ArrayList<Double> Stock_HQ;
 	protected ArrayList<Double> Stock_MQ;
 	protected ArrayList<Double> Stock_BQ;
+	protected static double stockMax;
 
 	//protected HashMap<Feve, Variable> stockag;
-
+	/**
+    * Constructeur pour la classe Producteur1Production.
+    * Initialise les journaux, le stock et d'autres structures de données nécessaires.
+    */
 	public Producteur1Production() {
+		// Initialisation des journaux, du stock et d'autres structures de données
 		super();
 		this.journalProduction = new Journal(this.getNom()+"   journal Production",this);
+		this.journalProduction = new Journal(this.getNom()+"   journal Stockage",this);
 		this.ageStock = new HashMap<String, Integer>();
 		this.Stock_HQ = new ArrayList<Double>();
 		this.Stock_MQ = new ArrayList<Double>();
@@ -42,6 +53,12 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
 
 	}
+	/**
+     * Récupère la quantité d'un produit spécifique en stock.
+     * @param p Le produit pour lequel la quantité est demandée.
+     * @param cryptogramme Le code d'identification pour accéder aux informations de stock.
+     * @return La quantité du produit spécifié en stock.
+     */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme && this.Stocck.containsKey(p)) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			return this.stock.get(p).getValeur(cryptogramme); // A modifier
@@ -49,7 +66,10 @@ public class Producteur1Production extends Producteur1Plantation{
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
-	
+	/**
+     * Convertit une partie des fèves de cacao ordinaires en fèves de cacao équitables.
+     * S'ils respectent les conditions equitables 
+     */
 	public void feveToEqui() {
 		
 		
@@ -60,7 +80,7 @@ public class Producteur1Production extends Producteur1Plantation{
 			if (nbe !=0) {
 				this.journalProduction.ajouter("On ne peut pas faire de l'equitable car on employe des enfants");
 			}
-			if (nb/nbt > 0.30) {
+			if (nb > 0.10*nbt) {
 				double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
 				double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
 				this.Stocck.put(Feve.F_MQ_E, 0.5*m);
@@ -68,10 +88,13 @@ public class Producteur1Production extends Producteur1Plantation{
 				this.stock.get(Feve.F_MQ_E).setValeur(this, 0.5*m);
 				this.stock.get(Feve.F_HQ_E).setValeur(this, 0.5*h);
 				this.journalProduction.ajouter("On a transforme 50% of MQ to MQ_E and 50% of HQ to HQ_E");
+				this.journalStockage.ajouter("On a transforme 50% of MQ to MQ_E and 50% of HQ to HQ_E");
 			
 		}
 	}
-	
+	/**
+     * Convertit une partie des fèves de cacao en fèves de cacao biologiques.
+     */
 	public void feveToBio() {
 		if (this.pesticides) {
 			this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
@@ -83,7 +106,10 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 
 	}
-
+	/**
+     * Gère le stockage des fèves de cacao de haute qualité.
+     * Initie le transfert de stock en fonction de certaines conditions.
+     */
 	public void Stockage_HQ() {
 
 		if (this.Stock_HQ.size() >= 4) {
@@ -106,13 +132,17 @@ public class Producteur1Production extends Producteur1Plantation{
 				this.stock.get(Feve.F_MQ).setValeur(this, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
 				this.Stocck.put(Feve.F_HQ, hq - this.Stock_HQ.get(this.Stock_HQ.size()-4));
 				this.Stocck.put(Feve.F_MQ, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
-				this.journalProduction.ajouter("On a eu une degradation de stock de HQ vers MQ de la quantite suivante:"+this.Stock_HQ.get(this.Stock_HQ.size()-4) );
+				this.journalStockage.ajouter("On a eu une degradation de stock de HQ vers MQ de la quantite suivante:"+this.Stock_HQ.get(this.Stock_HQ.size()-4) );
 				this.Stock_HQ.remove(this.Stock_HQ.size()-4);
 
 			}
 		}
 
 	}
+	/**
+     * Gère le stockage des fèves de cacao de qualité moyenne.
+     * Initie le transfert de stock en fonction de certaines conditions.
+     */
 	public void Stockage_MQ() {
 		
 		if (this.Stock_MQ.size() >= 8) {
@@ -134,7 +164,7 @@ public class Producteur1Production extends Producteur1Plantation{
 				this.stock.get(Feve.F_BQ).setValeur(this, pro + this.Stock_HQ.get(j));
 				this.Stocck.put(Feve.F_MQ, mq - this.Stock_MQ.get(j));
 				this.Stocck.put(Feve.F_BQ, pro + this.Stock_MQ.get(j));
-				this.journalProduction.ajouter("On a eu une degradation de stock de MQ vers BQ de la quantite suivante:"+this.Stock_MQ.get(this.Stock_MQ.size()-8) );
+				this.journalStockage.ajouter("On a eu une degradation de stock de MQ vers BQ de la quantite suivante:"+this.Stock_MQ.get(this.Stock_MQ.size()-8) );
 
 				
 
@@ -143,6 +173,10 @@ public class Producteur1Production extends Producteur1Plantation{
 			}
 		}
 	}
+	 /**
+     * Gère le stockage des fèves de cacao de basse qualité.
+     * Initie le transfert de stock en fonction de certaines conditions.
+     */
 	public void Stockage_BQ() {
 	    if (this.Stock_MQ.size() >= 12) {
 	        boolean check = true;
@@ -159,28 +193,34 @@ public class Producteur1Production extends Producteur1Plantation{
 	            double bqToRemove = this.Stock_BQ.get(j);
 	            this.stock.get(Feve.F_BQ).retirer(this, bqToRemove);
 	            this.Stocck.put(Feve.F_BQ, bq - this.Stock_BQ.get(j));
-	            this.journalProduction.ajouter("On a eu une degradation de stock de BQ de la quantite suivante:"+this.Stock_BQ.get(this.Stock_BQ.size()-12) );
+	            this.journalStockage.ajouter("On a eu une degradation de stock de BQ de la quantite suivante:"+this.Stock_BQ.get(this.Stock_BQ.size()-12) );
 	            this.Stock_BQ.remove(j);
 	        }
 	    }
 	}
 
-	
+	/**
+     * Récupère une liste d'indicateurs pertinents pour le fonctionnement du producteur.
+     * Inclut les informations sur le stock.
+     * @return Une liste d'indicateurs.
+     */
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = super.getIndicateurs();
 		res.addAll(this.stock.values());		
 		return res;
 	}
-
+	/**
+     * Passe à l'étape suivante de la simulation.
+     * Exécute la production, la transformation et la gestion du stock.
+     */
 	public void next() {
 		super.next();
 		this.feveToEqui();
 		this.feveToBio();
-		//this.updateAge();
-		//this.degradStock();
-		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_BQ)+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
-		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_MQ)+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
-		//this.journalProduction.ajouter("On a ces quantites:"+ this.prodParStep.get(Feve.F_HQ)+ "en stock pour la gamme HQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		
+		this.journalProduction.ajouter("On a ces quantites:"+ this.Stocck.get(Feve.F_BQ)+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.Stocck.get(Feve.F_MQ)+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.Stocck.get(Feve.F_HQ)+ "en stock pour la gamme HQ en  :"+ Filiere.LA_FILIERE.getEtape());
 
 		double totalStock = 0;
 		for (Feve f : Feve.values()) {
