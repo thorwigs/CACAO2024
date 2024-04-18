@@ -1,5 +1,5 @@
 package abstraction.eq2Producteur2;
-
+// Classe faite par Quentin
 import abstraction.eqXRomu.produits.*;
 import abstraction.eqXRomu.filiere.*;
 
