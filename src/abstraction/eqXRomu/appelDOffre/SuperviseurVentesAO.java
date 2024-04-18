@@ -18,6 +18,7 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IAssermente;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 
@@ -76,6 +77,7 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 		journal.ajouter(Journal.texteColore(acheteur, acheteur.getNom())+" veut acheter "+Journal.doubleSur(quantiteT, 2)+ " de "+produit);
 
 		List<OffreVente> propositions = new LinkedList<OffreVente>();
+		List<IActeur> banqueroutes=new LinkedList<IActeur>();
 		if (vendeurs.size()>0) {
 			for (IVendeurAO v : vendeurs) {
 				OffreVente prop = v.proposerVente(offre);
@@ -85,11 +87,24 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 					journal.ajouter( Journal.texteColore(v, "   "+v.getNom()+" est interesse par l'offre "+offre));
 					if (!prop.getVendeur().equals(v)) {
 						throw new IllegalArgumentException("la methode proposerVente(...) de "+v.getNom()+" retourne une proposition dont le vendeur n'est pas lui meme");
-					} //else if (!prop.getProduit().equals(offre.getProduit())) {
-					//	throw new IllegalArgumentException("la methode proposerVente(...) de "+v.getNom()+" retourne une proposition dont le chocolat de marque ne correspond pas au chocolat de l'offre d'achat");
-					//}
+					} else if (!prop.getProduit().equals(offre.getProduit())) {
+						throw new IllegalArgumentException("la methode proposerVente(...) de "+v.getNom()+" retourne une proposition dont le chocolat de marque ne correspond pas au chocolat de l'offre d'achat");
+					} 
+					// reste a verifier si le vendeur a bien le droit de vendre de produit
+					if (prop.getProduit().getType().equals("ChocolatDeMarque")) {
+						String marque = ((ChocolatDeMarque)prop.getProduit()).getMarque();
+						if (!Filiere.LA_FILIERE.getMarquesDistributeur().contains(marque)) {
+							if (!Filiere.LA_FILIERE.getProprietaireMarque(marque).equals(v)) {
+								System.err.println("l'equipe "+v+" vend du "+prop.getProduit()+" : l'entreprise est dissoute");
+								banqueroutes.add(v);
+							}
+						}
+					}
 					propositions.add( prop);
 				}
+			}
+			for (IActeur v : banqueroutes) {
+				Filiere.LA_FILIERE.getBanque().faireFaillite(v, this, cryptos.get(this));
 			}
 			if (propositions.size()>0) {
 				Collections.sort(propositions);
