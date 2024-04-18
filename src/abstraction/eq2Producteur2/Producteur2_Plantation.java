@@ -266,10 +266,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public void modifie_prodParStep() {
-		System.out.println("--------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------");
-		System.out.println(" prod bq " + get_prod_pest_BQ());
-		System.out.println(" prod mq " + get_prod_pest_MQ());
-		System.out.println(" prod hq " + get_prod_pest_HQ());
 	    this.prodParStep.put(Feve.F_HQ_E, this.get_prod_pest_HQ());
 	    this.prodParStep.put(Feve.F_MQ, this.get_prod_pest_MQ());
 	    this.prodParStep.put(Feve.F_BQ, this.get_prod_pest_BQ());
