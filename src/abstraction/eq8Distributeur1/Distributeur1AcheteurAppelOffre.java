@@ -18,16 +18,25 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+/**
+ * @author Clement E.
+ */
 public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContratCadre implements IAcheteurAO{
 	private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
 	private SuperviseurVentesAO supAO;
 	protected Journal journalAO;
 	
+	/**
+	 * @author Clement E.
+	 */
 	public Distributeur1AcheteurAppelOffre() {
 		super();
 		this.journalAO= new Journal (this.getNom() +"Journal AO", this);
 	}
 	
+	/**
+	 * @author Clement E.
+	 */
 	public void initialiser() {
 		super.initialiser();
 		this.supAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
@@ -37,6 +46,9 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		}
 	}
 
+	/**
+	 * @author Clement E.
+	 */
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme);
 		int moins_cher_total=0;
@@ -74,12 +86,18 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		}
 	}
 	
+	/**
+	 * @author Clement E.
+	 */
 	public List<Journal> getJournaux(){
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalAO);
 		return jx;
 	}
 	
+	/**
+	 * @author Clement E.
+	 */
 	public double achete_AO(IProduit produit) {
 				double a = 0 ; 
 				for (int i=0; i<contrat_en_cours.size(); i++) {
@@ -125,6 +143,9 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			}
 	
 	
+	/**
+	 * @author Clement E.
+	 */
 	public void next() {
 		super.next();
 		this.journalAO.ajouter("");
