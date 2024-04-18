@@ -10,8 +10,8 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
 /**
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
- * de qualité XQ
- * Calcul des valeurs initials par @galem
+ * de qualité XQ @alexis
+ * Calcul des valeurs initials par @gabin
  */
 	private double surfaceHQ = 22.74*1000;
 	private double surfaceHQBE = 8.42*1000;

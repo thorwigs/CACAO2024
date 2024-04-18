@@ -29,11 +29,14 @@ public abstract class Producteur3Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
-    //creation d'un tableau de variables qui donne la production pour chaque type de feve @alexis
+    //creation d'un tableau de variables qui donne la production pour chaque type de feve
+    //@alexis
     protected HashMap<Feve, Variable> prodfeve;
-    //creation d'un tableau de variables qui donne les ventes pour chaque type de feve @alexis
+    //creation d'un tableau de variables qui donne les ventes pour chaque type de feve 
+    //@alexis
     protected HashMap<Feve, Variable> ventefeve;
-    //creation d'un tableau de variables qui donne les stocks pour chaque type de feve @alexis
+    //creation d'un tableau de variables qui donne les stocks pour chaque type de feve 
+    //@alexis
     protected HashMap<Feve, Variable> stockfeve;
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
@@ -75,7 +78,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		MQ : 47.57 ha ; MQ_E : 11.89 
 		BQ : 134.775 ha 
 
-		 * @author galem (Gabin)
+		 * @author Gabin
 		 */
 		setQuantiteEnStock(Feve.F_BQ,7.58);
 		setQuantiteEnStock(Feve.F_MQ,1.26);

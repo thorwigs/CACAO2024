@@ -8,10 +8,10 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Production extends Producteur3Plantation { 
 	// prix production/ha.step
-	protected double T_ha_BQ = 28.125/1000 ;						//avec pesticide
+	protected double T_ha_BQ = 28.125/1000 ;	//avec pesticide
 	protected double T_ha_MQ = 26.5625/1000 ;
 	protected double T_ha_HQ = 25.0/1000 ;
-	protected double T_ha_HQ_BE = 22.5/1000 ;     					//sans pesticide (bio équitable)
+	protected double T_ha_HQ_BE = 22.5/1000 ;   //sans pesticide (bio équitable)
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>();;
 	
 	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
@@ -23,7 +23,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	/**
 	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao (et types bio/équitable). 
 	 * Prend en compte les surfaces de plantation et le prix.
-	 * @author galem (Gabin)
+	 * @author Gabin
 	 */
 	
 	//renvoie la quantité produite au step actuel
@@ -62,7 +62,7 @@ public class Producteur3Production extends Producteur3Plantation {
 		
 		
 	}	
-	//stockage dans le temps de 2 dictionnaires
+	//stockage dans le temps de 2 dictionnaires @Gabin
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps() {
 		prodTemps.put(0, prodTemps.get(1));
 		prodTemps.put(1, newQuantite());
@@ -71,7 +71,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	}
 	
 	//renvoie la quantité de fèves après séchage, soit 1 step avant (2 semaines plus tard)
-	// la quantité dispo pour la vente.
+	// la quantité dispo pour la vente. @Gabin
 	protected HashMap<Feve,Double> quantite(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		quantite=prodTemps().get(0);
