@@ -191,7 +191,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 			}
 		}
 	}
-		
+
 	/** retourne la production actuelle de cacao sur 2 semaines en tonnes
 	 * @author Anthony
 	 */

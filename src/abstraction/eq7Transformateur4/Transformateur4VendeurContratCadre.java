@@ -12,12 +12,13 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurContratCadre implements IVendeurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalVCC;
 
@@ -28,21 +29,31 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		this.journalVCC = new Journal(this.getNom()+" journal CC vente", this);
 	}
 	
+	//////////////je me permet de rajouter ça sinon on initialise pas supCC
+	public void initialiser() {
+		super.initialiser();
+		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+	}
+	//////////////
+	
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") 
-				&& stockChoco.get(produit)>450000; 
+		return produit.getType().equals("ChocolatDeMarque") 
+				&& stockChocoMarque.containsKey(produit)
+				&& stockChocoMarque.get(produit)>25000 ; 
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
+		
+		//j'ai modifié un truc : on vérifie que produit est bien un de nos chocolat de marque
 	}
 
 	//Négociations
 	
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		///à modifier selon comment on veut nos échéanciers
-		if (!contrat.getProduit().getType().equals("Chocolat")) {
+		if (!(contrat.getProduit().getType().equals("ChocolatDeMarque"))) {
 			return null;
 		}
 
-		if (stockChoco.get((Chocolat)(contrat.getProduit()))+restantALivrer((Chocolat)(contrat.getProduit()))+contrat.getEcheancier().getQuantiteTotale()>450000) {
+		if (stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()))-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
 			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
@@ -50,11 +61,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				return contrat.getEcheancier();
 			}
 		} else {
-			double marge = - 450000 + stockChoco.get((Chocolat)(contrat.getProduit())) + restantALivrer((Chocolat)(contrat.getProduit()));
-			if (marge<1200) {
+			double marge = - 25000 + stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit())) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
+			if (marge<100) {
 				return null;
 			} else {
-				double quantite = 1200 + Filiere.random.nextDouble()*(marge-1200); // un nombre aleatoire entre 1200 et la marge
+				double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 			}
 		}
@@ -62,40 +73,44 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return contrat.getQuantiteTotale()*5500;
-	}
+	}//à modifier selon variation du nb d'employer
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		return 0;
-	}//s'inspirer de AcheteurCC
+		return contrat.getPrix();
+	}//à modifier selon notre prix minimal accepté
 
 	//Après finalisation contrat 
 	
 	public double livrer(IProduit p, double quantite, ExemplaireContratCadre contrat) {
-		double stock = (double)stockChoco.get((Chocolat)(contrat.getProduit()));
-		if (quantite>=stock) {
+		double stock = (double)stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()));
+		if (quantite <= stock) {
 			journalVCC.ajouter("Livraison de "+quantite+" T de "+p+" du contrat "+contrat.getNumero());
-			stockChoco.put((Chocolat)p, stockChoco.get((Chocolat)p)-quantite);
-			totalStocksChoco.retirer(this, quantite, cryptogramme);
+			stockChocoMarque.put((ChocolatDeMarque)p, stockChocoMarque.get((ChocolatDeMarque)p)-quantite);
+			totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 			return quantite;
 		}
 		else {
 			journalVCC.ajouter("Livraison de "+stock+" T de "+p+" du contrat "+contrat.getNumero());
-			stockChoco.put((Chocolat)p, stockChoco.get((Chocolat)p)-stock);
-			totalStocksChoco.retirer(this, stock, cryptogramme);
+			stockChocoMarque.put((ChocolatDeMarque)p, stockChocoMarque.get((ChocolatDeMarque)p)-stock);
+			totalStocksChocoMarque.retirer(this, stock, cryptogramme);
 			return stock;
 		}
 		
 	}//s'inspirer de AcheteurCC
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalVCC.ajouter("Nouveau contrat :"+contrat);
-		this.contratsEnCours.add(contrat);
+		if (contrat.getVendeur().equals(this)) {
+			journalVCC.ajouter("Nouveau contrat :"+contrat);
+			this.contratsEnCours.add(contrat);
+		}
+		else {
+			super.notificationNouveauContratCadre(contrat);
+		}
 	}
 	
 	//Honorer le contrat
 	
-	public double restantALivrer(Chocolat choco) {
+	public double restantALivrer(ChocolatDeMarque choco) {
 		double res=0;			
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getProduit().equals(choco)) {
@@ -115,13 +130,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		
 	//Next
 		
-	public void next() { //à modifier
+	public void next() { 
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-				for (Chocolat choco : stockChoco.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (stockChoco.get(choco)+restantALivrer(choco)>30000) { 
+				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) && (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (-20000+stockChoco.get(choco)+restantALivrer(choco))/12); // au moins 100
+						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						if (acheteurs.size()>0) {
@@ -132,11 +147,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 							} else {
 								this.contratsEnCours.add(contrat);
-								journalVCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
 							}
 						} else {
 							journalVCC.ajouter("   pas d'acheteur");
 						}
+					} else {
+						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}
 				}
 		// On archive les contrats terminés  (pas à modifier)

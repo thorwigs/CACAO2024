@@ -51,7 +51,7 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 		return retire;
 	}
 
-	/** Indique dans le journal si un acteur est blaclisté
+	/** Indique dans le journal si un acteur est blacklisté
 	 * @author Maxime
 	 */
 	public void notificationBlackList(int dureeEnStep) {
