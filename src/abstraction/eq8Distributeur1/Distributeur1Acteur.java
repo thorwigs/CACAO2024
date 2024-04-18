@@ -34,7 +34,7 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
 	protected List<ChocolatDeMarque> chocoProduits;
 	protected List<ChocolatDeMarque> chocoBan;
-
+ 
 	
 	
 	/**

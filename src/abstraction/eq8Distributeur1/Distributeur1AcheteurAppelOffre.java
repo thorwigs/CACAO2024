@@ -32,7 +32,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 	public Distributeur1AcheteurAppelOffre() {
 		super();
 		this.journalAO= new Journal (this.getNom() +"Journal AO", this);
-	}
+	} 
 	
 	/**
 	 * @author Clement E.
