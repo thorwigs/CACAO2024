@@ -24,6 +24,9 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 	
 	
+	/**
+	 * Thomas 
+	 */
 	public void next() {
 		super.next();
 		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
@@ -39,7 +42,8 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
 					if (contrat==null) {
 						journalCC6.ajouter(Color.RED, Color.BLACK,"   echec des negociations");
-					} else {
+					}
+					else {
 						this.contratsEnCours.add(contrat);
 						journalCC6.ajouter(Color.GREEN, Color.BLACK, "   contrat signe");
 					}
@@ -59,7 +63,9 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		}
 		this.journalCC6.ajouter("=== Partie réception Fèves ====================");
 	}
-
+	/**
+	 * Thomas
+	 */
 	public double restantDu(Chocolat c) {
 		double res=0;
 		for (ExemplaireContratCadre p : this.contratsEnCours) {
@@ -69,20 +75,30 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		}
 		return res;
 	}
-
+	/**
+	 * Thomas
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		return jx;
 	}
 
+	/**
+	 * Thomas
+	 */
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>2000;
+		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>200;
 	}
-
+	/**
+	 * Thomas
+	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		return contrat.getEcheancier();
 	}
 
+	/**
+	 * Thomas
+	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double moyenne  = 0; 
 		int p = 0;
@@ -98,11 +114,16 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		prix = moyenne + 0.5 * 1200 + 8;
 		return 1.05 * prix;
 	}
-
+	/**
+	 * Thomas
+	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		return 0.95*contrat.getPrix();
 	}
 
+	/**
+	 * Thomas
+	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur()==this) {
 			journalCC6.ajouter(Color.ORANGE, Color.WHITE,"Nouveau contrat initié par un producteur");
@@ -115,7 +136,9 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 			this.contratsEnCours.add(contrat);
 		}
 	}
-
+	/**
+	 * Thomas
+	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
 		stockChoco.put((Chocolat)produit, stockChoco.get((Chocolat)produit)-quantite);
