@@ -113,18 +113,31 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 		// Trier la liste des ouvriers à supprimer par ancienneté
 		Collections.sort(ouvriersASupprimer, (o1, o2) -> Double.compare(o1.getAnciennete(), o2.getAnciennete()));
-		int indemnitétotale=0;
+		double indemnitétotale=0;
 		// Supprimer le nombre spécifié d'ouvriers de la liste principale, à partir de l'ancienneté la plus basse
 		for (int i = 0; i < Math.min(nombreASupprimer, ouvriersASupprimer.size()); i++) {
 			Ouvrier ouvrier = ouvriersASupprimer.get(i);
 			this.listeOuvrier.remove(ouvrier);
-
+			double indemnite =0;
 			double anciennetéEnAnnées = ouvrier.getAnciennete() / 365;
 			double salaire = ouvrier.getSalaire();
-			double indemnité = anciennetéEnAnnées <= 10 ? (salaire * 30 / 4) * anciennetéEnAnnées : (salaire * 30 / 4) * 10 + (salaire * 30 / 3) * (anciennetéEnAnnées - 10);
-			indemnitétotale += indemnité;
+			if (anciennetéEnAnnées <= 10) {
+			    indemnite = salaire * 0.30 * anciennetéEnAnnées;
+			} else if (anciennetéEnAnnées <= 15) {
+			    // Calcul pour les 10 premières années
+			    indemnite = salaire * 0.30 * 10;
+			    // Calcul pour les années entre 10 et 15
+			    indemnite += salaire * 0.35 * (anciennetéEnAnnées - 10);
+			} else {
+			    // Calcul pour les 10 premières années
+			    indemnite = salaire * 0.30 * 10;
+			    // Calcul pour les 5 années suivantes (10 à 15 ans)
+			    indemnite += salaire * 0.35 * 5;
+			    // Calcul pour les années au-delà de 15 ans
+			    indemnite += salaire * 0.40 * (anciennetéEnAnnées - 15);
+			}
 
-
+			indemnitétotale+=indemnite;
 
 
 		}
@@ -145,14 +158,11 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 			if ((ouvrier.getAnciennete()>3650) && (ouvrier.getIsEnfant())) {
 				ouvrier.setIsEnfant(false);
 				ouvrier.setSalaire(1.8);
+				//après 10 ans, un enfant devient adule et son salire devient le salaire minimal d'un adulte
 
 			}	//méthode pour mettre a jour l'anciennete chaque next par 
-			//ajout de 15 jurs à chaque ancienneté
-			if (ouvrier.getIsEnfant()==false) 
-			{
-				ouvrier.setRendement(ouvrier.getRendement()+0.2/(5*365/15));//augmente le rendement par 0.2 chaque 5 ans d'anciennete, c'est à dire de 0.2/(365*5/15) chaque step
-				ouvrier.setSalaire(ouvrier.getSalaire()+0.18/(5*365/5));////augmente le salaire par 10% du salaire de base  chaque 5 ans d'anciennete, c'est à dire de 0.18/(365*5/15) chaque step
-			}
+			//ajout de 15 jours à chaque ancienneté
+			
 		}
 	}
 
