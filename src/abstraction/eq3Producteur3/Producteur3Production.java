@@ -7,7 +7,7 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Production extends Producteur3Plantation { 
-	// prix production/ha.step
+	//tonne produite par hectare lors d'un step
 	protected double T_ha_BQ = 28.125/1000 ;	//avec pesticide
 	protected double T_ha_MQ = 26.5625/1000 ;
 	protected double T_ha_HQ = 25.0/1000 ;
