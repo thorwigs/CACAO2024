@@ -12,11 +12,11 @@ import java.util.Collections;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 
-
+/**@author youssef ben abdeljelil*/
 
 
 public class Producteru1MasseSalariale extends Producteur1Acteur {
-	public double indemniteTotale = 0;
+	double indemniteTotal = 0;
 	protected Journal journalOuvrier;
 
 	////c'est une classe qui contient des fonctions utiles à opérer sur une liste de type Ouvrier//
@@ -163,7 +163,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 		// Trier la liste des ouvriers à supprimer par ancienneté
 		Collections.sort(ouvriersASupprimer, (o1, o2) -> Double.compare(o1.getAnciennete(), o2.getAnciennete()));
-
+		
 		// Supprimer le nombre spécifié d'ouvriers de la liste principale, à partir de l'ancienneté la plus basse
 		for (int i = 0; i < Math.min(nombreASupprimer, ouvriersASupprimer.size()); i++) {
 			Ouvrier ouvrier = ouvriersASupprimer.get(i);
@@ -172,7 +172,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 			double anciennetéEnAnnées = ouvrier.getAnciennete() / 365;
 			double salaire = ouvrier.getSalaire();
 			double indemnité = anciennetéEnAnnées <= 10 ? (salaire * 30 / 4) * anciennetéEnAnnées : (salaire * 30 / 4) * 10 + (salaire * 30 / 3) * (anciennetéEnAnnées - 10);
-			indemniteTotale += indemnité;
+			this.indemniteTotal += indemnité;
 
 
 
@@ -240,9 +240,10 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	public void next() {
 		super.next();
 		liste_Ouvrier.UpdateAnciennete();
-		if (this.indemniteTotale > 0) {
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemniteTotale = ",indemniteTotale );
+		if (this.indemniteTotal > 0) {
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemniteTotale = ",indemniteTotal );
 		}
+
 	}
 
 }
