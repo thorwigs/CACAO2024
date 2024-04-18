@@ -44,6 +44,9 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	////////////////////////////////////////////
 	// Constructor & Initialization of stocks //
 	////////////////////////////////////////////
+	/**
+	 * @Robin 
+	 */
 	public Transformateur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.totalStocksFeves = new VariablePrivee("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
