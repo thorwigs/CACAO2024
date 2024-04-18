@@ -49,7 +49,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		///à modifier selon comment on veut nos échéanciers
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
+		if (!(contrat.getProduit().getType().equals("ChocolatDeMarque"))) {
 			return null;
 		}
 
@@ -83,7 +83,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public double livrer(IProduit p, double quantite, ExemplaireContratCadre contrat) {
 		double stock = (double)stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()));
-		if (quantite>=stock) {
+		if (quantite <= stock) {
 			journalVCC.ajouter("Livraison de "+quantite+" T de "+p+" du contrat "+contrat.getNumero());
 			stockChocoMarque.put((ChocolatDeMarque)p, stockChocoMarque.get((ChocolatDeMarque)p)-quantite);
 			totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
@@ -133,10 +133,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public void next() { 
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-				for (ChocolatDeMarque choco : stockChocoMarque.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (stockChocoMarque.get(choco)+restantALivrer(choco)>30000) { 
+				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) && (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (-20000+stockChocoMarque.get(choco)+restantALivrer(choco))/12); // au moins 100
+						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						if (acheteurs.size()>0) {
@@ -147,11 +147,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 							} else {
 								this.contratsEnCours.add(contrat);
-								journalVCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
 							}
 						} else {
 							journalVCC.ajouter("   pas d'acheteur");
 						}
+					} else {
+						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}
 				}
 		// On archive les contrats terminés  (pas à modifier)

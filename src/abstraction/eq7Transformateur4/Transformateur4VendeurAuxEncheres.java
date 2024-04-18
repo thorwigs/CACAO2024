@@ -76,7 +76,8 @@ public class Transformateur4VendeurAuxEncheres extends Transformateur4VendeurCon
 		this.journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			if (this.stockChocoMarque.get(cm)>5000) { // on ne lance pas une enchere pour moins de 5000 T
-				int quantite = 5000 + Filiere.random.nextInt((int)(this.stockChocoMarque.get(cm)-4990)); 
+				int quantite = 5000 ;
+						//+ Filiere.random.nextInt((int)(this.stockChocoMarque.get(cm)-4990)); 
 					// il faudrait aussi tenir compte des contrats cadres en cours afin de ne pas vendre ce qu'on s'est engage a livrer
 				Enchere enchere = supEncheres.vendreAuxEncheres(this, cryptogramme, cm, quantite);
 				journalEncheres.ajouter("   Je lance une enchere de "+quantite+" T de "+cm);
