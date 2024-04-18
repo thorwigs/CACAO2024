@@ -38,6 +38,7 @@ public abstract class Producteur3Acteur implements IActeur {
     //creation d'un tableau de variables qui donne les stocks pour chaque type de feve 
     //@alexis
     protected HashMap<Feve, Variable> stockfeve;
+    
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
     protected HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
@@ -58,7 +59,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
 			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
-			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 100.0));
+			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 1.0));
 			this.prodfeve.put(f,  new Variable("Eq3Prod "+f, this, 1.0));
 			this.ventefevebourse.put(f, 0.2);
 			this.ventefevecadre.put(f, 0.8);
@@ -71,24 +72,30 @@ public abstract class Producteur3Acteur implements IActeur {
 		//On set les stocks
 		/**
 		 *Initialisation basée sur les quantités produites actuellement au Pérou
-		 *On considère 2 steps de stocks
 		 *surface:
-		HQ_BE : 8.42 ha 
-		HQ : 22.74 ha ; HQ_E : 7.58 ha  (Non Bio) 
-		MQ : 47.57 ha ; MQ_E : 11.89 
-		BQ : 134.775 ha 
-
+		HQ_BE : 8 420 ha 
+		HQ : 22 740 ha ; HQ_E : 7 580 ha  (Non Bio) 
+		MQ : 47 570 ha ; MQ_E : 11 890 ha 
+		BQ : 134 775 ha 
 		 * @author Gabin
+		 
+		 *Modification valeurs:
+		 *On initialise à une valeur correspondant à la production pendant 2 steps
+		 HQ : 33 kg/(ha.2steps)
+		 MQ : 83 kg/(ha.2steps)
+		 BQ : 166 kg/(ha.2steps)
+		 Les quantités sont en tonnes
+		 *@author Alexis
 		 */
-		setQuantiteEnStock(Feve.F_BQ,7.58);
-		setQuantiteEnStock(Feve.F_MQ,1.26);
-		setQuantiteEnStock(Feve.F_MQ_E,0.316);
-		setQuantiteEnStock(Feve.F_HQ,0.5685);
-		setQuantiteEnStock(Feve.F_HQ_E,0.19);
-		setQuantiteEnStock(Feve.F_HQ_BE,0.19);
-		//
+		setQuantiteEnStock(Feve.F_BQ, 22372);
+		setQuantiteEnStock(Feve.F_MQ, 3900);
+		setQuantiteEnStock(Feve.F_MQ_E, 986);
+		setQuantiteEnStock(Feve.F_HQ, 750);
+		setQuantiteEnStock(Feve.F_HQ_E, 250);
+		setQuantiteEnStock(Feve.F_HQ_BE, 277);
+		
+		
 		//On set les productions
-	
 		HashMap<Feve,Double> d01 = new HashMap<Feve,Double>();
 		d01.put(Feve.F_BQ, 3.79);
 		d01.put(Feve.F_MQ, 2.527);		//80% de HQ est non équitable
