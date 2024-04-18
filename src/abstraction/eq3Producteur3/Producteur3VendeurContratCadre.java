@@ -1,18 +1,26 @@
 package abstraction.eq3Producteur3;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
+import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse implements IVendeurContratCadre {
-
+	//@youssef
+	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
+	private SuperviseurVentesContratCadre superviseur;
 	@Override
 	public boolean vend(IProduit produit) {
 		//On accepte les contrats cadres sur le HQ et MQ
@@ -22,48 +30,106 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 			return false;
 		}
 	}
-
+	
+	public void initialiser() {
+		super.initialiser();
+		superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup."+(SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE>1?SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE+"":"")+"CCadre");
+	}
+	
+	public void next() {
+        super.next();
+        proposerContrats();
+    }
+	
 	/**
 	 * @author mammouYoussef
 	 */
 	
+	public void proposerContrats() {
 	
-	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-	    Feve f = (Feve) contrat.getProduit();
-	    Echeancier echeancierPropose = contrat.getEcheancier();
-	    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
-
-
-	    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
-	        double quantiteDemandee = echeancierPropose.getQuantite(step);
-	        
-	     // Obtenir la quantité produite pour chaque étape
-		    HashMap<Feve, Double> quantiteProduite = quantite();
-
-	        if (quantiteProduite.containsKey(f) && quantiteProduite.get(f) >= quantiteDemandee) {
-	            // Si la quantité produite est suffisante pour l'échéance, ajouter cette quantité à l'échéancier
-	            nouvelEcheancier.ajouter(quantiteDemandee);
-	        } else {
-	            // Si la quantité produite est insuffisante, proposer la quantité disponible pour cette étape
-	        	// simple vérification:
-	        	double quantiteDisponible;
-	        	if (quantiteProduite.containsKey(f)) {
-	        	    quantiteDisponible = quantiteProduite.get(f);
-	        	} else {
-	        	    quantiteDisponible = 0;
-	        	}
-	        	
-	            if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-	                nouvelEcheancier.ajouter(quantiteDisponible);
-	            } else {
-	                nouvelEcheancier = null; // dernier cas: On ne peut pas satisfaire le contrat
-	                break; // Sortir de la boucle car on ne peut pas honorer le contrat
-	            }
+	    // Créer une liste de fèves de qualité BQ et HQ uniquement
+	    List<Feve> feves = new ArrayList<Feve>();
+	    for (Feve feve : Feve.values()) {
+	        if (feve.getGamme() == Gamme.BQ || feve.getGamme() == Gamme.HQ) {
+	            feves.add(feve);
 	        }
 	    }
-	    return nouvelEcheancier;
+	    for (Feve f : feves) { 
+	        List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
+	        for (IAcheteurContratCadre acheteur : acheteurs) {
+		        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
+		        if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+                    Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape(), 10, quantiteDisponible / 10); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
+                    superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
+	            }
+            }
+	    }
+	}
+	
+	
+	/**
+	 * @author mammouYoussef
+	 */
+	//Nettoyer la liste des contrats en cours, en éliminant ceux dont les obligations de livraison ont été entièrement satisfaites
+	public void setContratsEnCours() {
+	    LinkedList<ExemplaireContratCadre> contratsAConserver = new LinkedList<>();
+	    for (ExemplaireContratCadre contrat : contratsEnCours) {
+	        if (contrat.getQuantiteRestantALivrer() > 0) {
+	            contratsAConserver.add(contrat);
+	        }
+	    }
+	    contratsEnCours = contratsAConserver;
 	}
 
+
+	/**
+	 * @author mammouYoussef
+	 */
+	//Calculer et retourner la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
+	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
+	        double quantiteDisponible = 0.0; // Valeur par défaut
+	        if (quantite().containsKey(f)) {
+	            quantiteDisponible = quantite().get(f);
+	        }
+
+	        for (ExemplaireContratCadre contrat : contratsEnCours) {
+	            if (contrat.getProduit().equals(f)) {
+	                quantiteDisponible -= contrat.getQuantiteALivrerAuStep();
+	            }
+	        }
+	        if (quantiteDisponible < 0) {
+	        	quantiteDisponible = 0;
+	        }
+	        return quantiteDisponible;
+	    }
+	 
+	 /**
+		 * @author mammouYoussef (et modification Arthur)
+		 */
+	
+	 public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		    Feve f = (Feve) contrat.getProduit();
+		    Echeancier echeancierPropose = contrat.getEcheancier();
+		    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
+		    double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
+
+		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
+		        double quantiteDemandee = echeancierPropose.getQuantite(step);
+
+		        if (quantiteDisponible >= quantiteDemandee) {
+		            nouvelEcheancier.ajouter(quantiteDemandee);
+		        } else {
+		            nouvelEcheancier.ajouter(quantiteDisponible);
+		        }
+		    }
+		    if (nouvelEcheancier.getQuantiteTotale()>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+		        return nouvelEcheancier;
+		    } else {
+		        return null; // Retourner null si on ne peut pas satisfaire toutes les demandes :(
+		    }
+		}
+	 
+	
 	
 	/**
 	 * @author mammouYoussef
@@ -113,6 +179,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");	
+		this.contratsEnCours.add(contrat);
+		this.setContratsEnCours();
 	}
 
 	/**
