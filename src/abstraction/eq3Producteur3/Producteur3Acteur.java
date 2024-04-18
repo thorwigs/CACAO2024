@@ -58,8 +58,8 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
 			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
-			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 1.0));
-			this.prodfeve.put(f,  new Variable("Eq3Stock "+f, this, 1.0));
+			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 100.0));
+			this.prodfeve.put(f,  new Variable("Eq3Prod "+f, this, 1.0));
 			this.ventefevebourse.put(f, 0.2);
 			this.ventefevecadre.put(f, 0.8);
 		}
