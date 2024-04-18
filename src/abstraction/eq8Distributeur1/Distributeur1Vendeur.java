@@ -171,18 +171,13 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	} 
 	
 	public void setNombreEmploye() {
-		double valeur_tot=0;
-		for (ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			valeur_tot+= this.getQuantiteEnStock(choc, cryptogramme)*this.prix(choc);
-			
-		}
-		nombreEmploye=(int)(valeur_tot/10375);
+		nombreEmploye=(int)(this.totalStockChoco.getValeur(cryptogramme)/10375);
 	}
 	
 	public double Cout_Fixe() {
-		double stockage = 120 * this.totalStockChoco.getValeur();
+		double stockage = 120 * this.totalStockChoco.getValeur(cryptogramme);
 		double salaire = 1350 * this.getNombreEmploye();
-		return stockage+salaire;
+		return stockage + salaire;
 	}
 	
 	public void next() {
@@ -194,7 +189,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
 		this.setNombreEmploye();
-//		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Fixe", this.Cout_Fixe());
+		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Fixe", this.Cout_Fixe());
 	}
 	
 

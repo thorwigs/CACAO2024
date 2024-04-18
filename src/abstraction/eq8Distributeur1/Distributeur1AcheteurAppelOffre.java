@@ -138,6 +138,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 					journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
 					stock_Choco.put(choc,this.getQuantiteEnStock(choc,cryptogramme)+ x);
 					totalStockChoco.ajouter(this, x, cryptogramme);
+					Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Fixe", this.Cout_Fixe());
 				}
 			}
 		}
