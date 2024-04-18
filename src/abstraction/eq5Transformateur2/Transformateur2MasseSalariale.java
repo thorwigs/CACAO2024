@@ -30,14 +30,14 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	// Constructor & Initialization of values //
 	////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public Transformateur2MasseSalariale() {
 		super();
 		this.JournalMasseSalariale=new Journal(this.getNom()+" journal MS", this);
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public void initialiser() {
 		super.initialiser();
@@ -63,7 +63,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	//             Transformation             //
 	////////////////////////////////////////////
 	/**
-	 * Erwann et Victor
+	 * @Erwann
+	 * @Victor
 	 */
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries*this.capaciteTransformation); //Quantite maximale a transformer
@@ -75,7 +76,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		return tonnesTransformees; 
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public double TotauxTonnesTransformees() {
 		double totaux = 0;
@@ -90,13 +91,13 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	//      Calcul Coût de transformation     //
 	////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
 		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public double CoutTransformationTotal() {
 		double coutTotal = 0;
@@ -117,7 +118,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 * Pas de licenciement pour l'instant
 	 */
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
@@ -134,7 +135,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		}
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public double CoutMasseSalariale(double TonnesTransformees) {
 		double cout_salaire = NbSalaries * salaire;
@@ -150,7 +151,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	//        Next : paiments des coûts       //
 	////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public void next() {
 		super.next();
@@ -172,7 +173,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	//   Ajout du journal aux autres   //
 	/////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();

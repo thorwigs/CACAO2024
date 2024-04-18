@@ -52,7 +52,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	}
 	
 	/**
-	 * Robin et Erwann
+	 * @Robin 
+	 * @Erwann
 	 */
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
@@ -138,7 +139,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 	/**
-	 * Robin et Erwann
+	 * @Robin 
+	 * @Erwann
 	 */
 	public void next() {
 		this.journal.ajouter(" ===ETAPE = " + Filiere.LA_FILIERE.getEtape()+ " A L'ANNEE " + Filiere.LA_FILIERE.getAnnee()+" ===");
@@ -245,7 +247,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	}
 	
 	/***
-	 * Robin,Erwann
+	 * @Robin
+	 * @Erwann
 	 */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
@@ -279,7 +282,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	//        Déclaration de la marque CacaoFusion        //
 	////////////////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();
@@ -287,7 +290,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		return marques;
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public List<ChocolatDeMarque> getChocolatsProduits() {
 		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
