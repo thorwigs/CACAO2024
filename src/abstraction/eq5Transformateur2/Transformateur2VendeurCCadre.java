@@ -26,7 +26,9 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		return (produit.getType().equals("Chocolat") && this.getQuantiteEnStock(produit, cryptogramme)>0)
 				|| (produit.getType().equals("Feve") && this.getQuantiteEnStock(produit, cryptogramme)>10000); //Valeur à changer
 	}
-
+	/**
+	 * Vincent
+	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		if (contrat.getEcheancier().getQuantiteTotale()< totalStocksChoco.getValeur()){
 			return contrat.getEcheancier(); //peut être changé
@@ -38,7 +40,9 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return 1000.00;
 	}
-
+	/**
+	 * Vincent
+	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (Filiere.random.nextDouble() < 0.2) { // 20% des cas
 	        return contrat.getPrix(); // ne refait pas de contreproposition
