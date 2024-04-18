@@ -19,12 +19,20 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+
+/**
+ * @author ianis
+ */
 public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur implements IAcheteurContratCadre{
 	private SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contrat_en_cours;
 	protected List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
 	
+
+	/**
+	 * @author ianis
+	 */
 	public Distributeur1AcheteurContratCadre() {
 		super();
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
@@ -32,64 +40,107 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		this.journalCC= new Journal (this.getNom() + "journal CC", this);
 	}
 	
+
+	/**
+	 *@author ianis
+	 */
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public String getNom() {
 		return (super.getNom());
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public Color getColor() {
 		return(super.getColor());
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public String getDescription() {
 		return(super.getDescription());
 	}
 	
+	/**
+	 *@author ianis
+	 */
 	public List<Variable> getIndicateurs() {
 		return(super.getIndicateurs());
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public List<Variable> getParametres() {
 		return(super.getParametres());
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jour = super.getJournaux();
 		jour.add(journalCC);
 		return jour;
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public void setCryptogramme(Integer crypto) {
 		super.setCryptogramme(crypto);	
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public void notificationFaillite(IActeur acteur) {
 		super.notificationFaillite(acteur);
 		
 	}
 
 
+	/**
+	 *@author ianis
+	 */
 	public void notificationOperationBancaire(double montant) {
 		super.notificationOperationBancaire(montant);
 	}
 
 
+	/**
+	 *@author ianis
+	 */
 	public List<String> getNomsFilieresProposees() {
 		return(super.getNomsFilieresProposees());
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public Filiere getFiliere(String nom) {
 		return(super.getFiliere(nom));
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return(super.getQuantiteEnStock(p, cryptogramme));
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public boolean achete(IProduit produit) {
 		double a = 0 ; 
 		for (int i=0; i<contrat_en_cours.size(); i++) {
@@ -100,9 +151,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		return (produit.getType().equals("ChocolatDeMarque")
 				&& this.stock_Choco.containsKey(produit)
 				&& !this.chocoBan.contains(produit)
-				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a ); // a changer  
+				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a );   
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
 			|| !this.stock_Choco.containsKey(contrat.getProduit())
@@ -155,6 +209,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		return x;
 	}
 	
+	/**
+	 *@author ianis
+	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
 			|| this.chocoBan.contains(produit)) {
@@ -172,21 +229,35 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 	}
 
+	
+	/**
+	 *@author ianis
+	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.contrat_en_cours.add(contrat);
 		this.journalCC.ajouter("Nouveau contrat cadre :"+contrat);
 	}
 
+	/**
+	 *@author ianis
+	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero());
 		stock_Choco.put((ChocolatDeMarque)p, stock_Choco.get((ChocolatDeMarque)p)+quantiteEnTonnes);
 		this.totalStockChoco.ajouter(this, quantiteEnTonnes,cryptogramme);
 	}
 	
+	
+	/**
+	 * @author ianis
+	 */
 	public double prix_a_perte(IProduit p, Double prix) {
 		return this.prix((ChocolatDeMarque)p) - (120 + 0.05*prix + (1350*this.quantiteEnVente((ChocolatDeMarque)p, cryptogramme)*this.prix((ChocolatDeMarque)p))/ 10375 );
 	}
 	
+	/**
+	 * @author ianis
+	 */
 	public double prevision (IProduit p,int b) {
 		double d = 0.0;
 		int a = Filiere.LA_FILIERE.getEtape();
@@ -197,6 +268,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		return d ; 
 	}
 	
+	/**
+	 * @author ianis
+	 */
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("");
@@ -255,7 +329,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				}	
 			}
 		}
-		
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
 		this.journalCC.ajouter("");
 
