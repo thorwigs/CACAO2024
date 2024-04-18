@@ -29,7 +29,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	// Constructor //
 	/////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public Transformateur2VendeurAppelDOffre() {
 		super();
@@ -40,7 +40,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	// Initialise et remplie le dico {cm : ListePrix de nos Offres}  //
 	///////////////////////////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public void initialiser() {
 		super.initialiser();
@@ -54,7 +54,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	// Donne le prix moyen d'un ChocolatDeMarque pour les 10 dernières offres que l'on a fait //
 	////////////////////////////////////////////////////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public double prixMoyen(ChocolatDeMarque cm) {
 		List<Double> ListePrix = prixAO.get(cm);
@@ -73,7 +73,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	// Proposition de vente (avec prix, qtté et type de produit)//
 	//////////////////////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public OffreVente proposerVente(AppelDOffre offre) {
 		// On verifie d'abord que l'offre est un chocolat de marque
@@ -106,14 +106,14 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	// Notifs de si oui ou non la proposition est retenue  + Mise à jour JournalAO //	
 	/////////////////////////////////////////////////////////////////////////////////
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public void next() {
 		super.next();
 		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public void notifierVenteAO(OffreVente propositionRetenue) {
 		if(propositionRetenue.getProduit() instanceof ChocolatDeMarque & chocosProduits.contains(propositionRetenue.getProduit())) {   // On verif que le produit est bien un chocolat de marque et qu'il appartient aux produits que l'on vends
@@ -132,7 +132,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		}
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
 		ChocolatDeMarque cm = (ChocolatDeMarque)(propositionRefusee.getProduit());
@@ -147,7 +147,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		}		
 	}
 	/**
-	 * Erwann
+	 * @Erwann
 	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
