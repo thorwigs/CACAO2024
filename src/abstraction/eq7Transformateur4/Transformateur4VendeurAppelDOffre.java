@@ -99,5 +99,9 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
 	}
-
+	
+	public void next() {
+		super.next();
+		this.journalAO.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "==================");
+	}
 }

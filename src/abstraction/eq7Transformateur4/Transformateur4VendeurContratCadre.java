@@ -166,7 +166,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 			journalVCC.ajouter("Archivage du contrat "+c);
 			this.contratsEnCours.remove(c);
 		}
-		this.journalVCC.ajouter("=================================");
+		this.journalVCC.ajouter("=====================================");
 	}
 	
 	public List<Journal> getJournaux() {

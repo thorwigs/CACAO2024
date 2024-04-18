@@ -26,6 +26,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 	
 	public void next() {
 		super.next();
+		this.journalTransfo.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "==================");
 		HashMap<ChocolatDeMarque, Double> chocoalivrer = new HashMap<ChocolatDeMarque,Double>(); //critère pour la transformation des chocos de marque
 		this.lescouts = new LinkedList<Double>();//on initialise avec une liste vide (supprime les données du step precedent)
 		this.lesqtproduite = new LinkedList<Double>(); //on les reset à 0
@@ -186,13 +187,14 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtTransformation", a_payer); //on paye tout d'un coup
 		
-		this.journalTransfo.ajouter("------------------------");
+
 		
 		//TEST :
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
 		this.journalTransfo.ajouter("stock totale est de " + this.totalStocksChocoMarque.getValeur(cryptogramme));
+
 
 	}
 	
