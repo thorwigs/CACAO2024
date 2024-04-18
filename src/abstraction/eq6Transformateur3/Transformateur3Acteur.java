@@ -233,6 +233,7 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 			this.chocolatsChocoSharks.add(new ChocolatDeMarque(Chocolat.C_BQ, "ChocoSharks", 30));
 			this.chocolatsChocoSharks.add(new ChocolatDeMarque(Chocolat.C_MQ, "ChocoSharks", 50));
 			this.chocolatsChocoSharks.add(new ChocolatDeMarque(Chocolat.C_HQ, "ChocoSharks", 80));
+			
 		}
 			
 		return this.chocolatsChocoSharks;
