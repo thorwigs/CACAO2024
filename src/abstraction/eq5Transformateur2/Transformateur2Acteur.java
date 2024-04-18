@@ -34,6 +34,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected HashMap<ChocolatDeMarque, Double> VariationStockChocoMarque;
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // dictionnaire de dictionnaire [feve : [Type chocolat : % cacao ]]
 	protected List<ChocolatDeMarque> chocolatsFusion;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
@@ -64,10 +65,13 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, STOCKINITIAL);
-			this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
-			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+			if (f.getGamme()!=Gamme.HQ) {
+				this.stockFeves.put(f, STOCKINITIAL);
+				this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
+				this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
+			}
 		}
+		
 		this.lesChocolats = new LinkedList<Chocolat>();
 		this.journal.ajouter("Nos Chocolats sont :");
 		for (Chocolat c : Chocolat.values()) {
@@ -96,6 +100,13 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 			this.totalStocksChocoMarque.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+cm+" au stock total de Chocolat de marque // stock total : "+this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		}
+		
+		this.VariationStockChocoMarque = new HashMap<ChocolatDeMarque,Double>();
+		for (ChocolatDeMarque cm : this.chocosProduits) {
+			this.VariationStockChocoMarque.put(cm, 0.0);
+		
+		}
+		
 		
 		// Remplissage de pourcentageTransfo avec 0.1% de plus de cacao que le seuil minimal
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
@@ -147,6 +158,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 					double nbr_de_marque = chocosProduits.size();
 					double stock_initial = stockChocoMarque.get(cm);
 					stockChocoMarque.put(cm,stock_initial + stockChoco.get(c)/nbr_de_marque);
+					VariationStockChocoMarque.put(cm, stockChoco.get(c)/nbr_de_marque);
 				}
 			}
 			stockChoco.put(c,0.0);
