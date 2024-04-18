@@ -106,12 +106,13 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
 			|| !this.stock_Choco.containsKey(contrat.getProduit())
-			|| !this.achete(contrat.getProduit())) {
+			|| !this.achete(contrat.getProduit())
+			|| this.chocoBan.contains(produit)) {
 			return null;
 		}
+		
 		Echeancier x = contrat.getEcheancier();
-		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72
-			&& this.achete(contrat.getProduit()) 
+		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72 
 			&&	contrat.getQuantiteTotale()>= 30 ) {
 			
 			if (contrat.getProduit().toString().contains("C_BQ")
@@ -144,14 +145,14 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				}
 			}
 			double e = this.stock_Choco.get(contrat.getProduit()); 
-//		    x = new Echeancier (a,b,50);	
 		    x = new Echeancier (a,b,c-d-e+100);
 		}
 		return x;
 	}
 	
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
+		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
+			|| this.chocoBan.contains(produit)) {
 			return 0.0;
 		}
 		
@@ -204,7 +205,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				stock_Choco.put((ChocolatDeMarque)contrat.getProduit(),contrat.getQuantiteALivrerAuStep() );
 				totalStockChoco.ajouter(this, contrat.getQuantiteALivrerAuStep(), cryptogramme);
 			}
-			
 		}
 		
 		for(ExemplaireContratCadre contrat : contrat_term) {
@@ -222,15 +222,15 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
-				IVendeurContratCadre vendeur = null;
 				
-				
+				IVendeurContratCadre vendeur = null;		
 				if (vendeurs.size()==1) {
 					vendeur=vendeurs.get(0);
 				} else if (vendeurs.size()>1) {
 					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size())); // a améliorer dans la V2
 				}
 //				System.out.println(vendeur!=null);
+				
 				if (vendeur!=null) {
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
 					System.out.println("Demande au superviseur de debuter les negociations pour un contrat cadre de \"+choc+\" avec le vendeur \"+vendeur");

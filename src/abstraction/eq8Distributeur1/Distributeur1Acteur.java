@@ -40,7 +40,6 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.totalStockChoco = new VariablePrivee("Eq8DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
 		this.chocoBan = new LinkedList<ChocolatDeMarque>();
-
 	}
 	
 	public void initialiser() {
@@ -48,11 +47,13 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
 		this.nombreMarquesParType=new HashMap<Chocolat,Integer>();
 		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
-		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK INITIALE =====");
+		
 		for (ChocolatDeMarque cm : chocolats) {
 		    Chocolat typeChoco = cm.getChocolat();
 		    nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
 	    }
+		
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK INITIALE =====");
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
 			if (cm.getChocolat()==Chocolat.C_BQ && cm.getMarque() != "Chocoflow") {
@@ -91,6 +92,8 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
 	}
+	
+
 
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
@@ -103,6 +106,7 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		}
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"=================================");
 		this.journal.ajouter("");
+//		this.getSolde()=this.getSolde() - (1350*this.getNombreEmploye() );
 
 	}
 
@@ -158,6 +162,8 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	protected double getSolde() {
 		return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
 	}
+	
+	
 
 	////////////////////////////////////////////////////////
 	//        Pour la creation de filieres de test        //

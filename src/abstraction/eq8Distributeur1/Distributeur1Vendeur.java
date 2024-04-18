@@ -21,6 +21,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	protected String[] marques;
 	protected Journal journalVente;
 	protected int nombreEmploye;
+
 	
 	public Distributeur1Vendeur() {
 		super();
@@ -178,6 +179,11 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		nombreEmploye=(int)(valeur_tot/10375);
 	}
 	
+	public double Cout_Fixe() {
+		double stockage = 120 * this.totalStockChoco.getValeur();
+		double salaire = 1350 * this.getNombreEmploye();
+		return stockage+salaire;
+	}
 	
 	public void next() {
 		super.next();
@@ -187,19 +193,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
-
-		
-		/*		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
-		System.out.println("quantiteEnVenteTGTotal : "+this.quantiteEnVenteTGTotal());
-		System.out.println("quantiteEnVenteTotal/10 : "+this.quantiteEnVenteTotal()*0.1);
-		System.out.println("capaciteDeVente/10 : "+this.capaciteDeVente*0.1);
-		for (ChocolatDeMarque choc : chocolats) {
-			System.out.println(choc);
-			System.out.println("Stock de "+choc.getNom()+" : "+stock_Choco.get(choc));
-			System.out.println("Quantite en vente de "+choc.getNom()+" : "+this.quantiteEnVente(choc, cryptogramme));
-			System.out.println("Quantite en vente TG de "+choc.getNom()+" : "+this.quantiteEnVenteTG(choc, cryptogramme));
-		}
-		System.out.println(""); */
+	//4	Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Fixe", this.Cout_Fixe());
 	}
 
 }
