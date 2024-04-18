@@ -435,6 +435,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		gererLesEcheancesDesContratsEnCours();
 		archiverContrats();
 		eliminerFraudeurs();
+		eliminerMauvaisLivreursPayeurs();
 		contratsToCSV();
 	}
 
@@ -464,6 +465,26 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 			Filiere.LA_FILIERE.getBanque().faireFaillite(v, this, cryptos.get(this));
 		}
 	}
+	
+	public void eliminerMauvaisLivreursPayeurs() {
+		List<IActeur> banqueroutes= new LinkedList<IActeur>();
+		for (ContratCadre cc : this.contratsEnCours) {
+			int stepFin = cc.getEcheancier().getStepFin();
+			if (Filiere.LA_FILIERE.getEtape()>stepFin+12) { // plus de 6 mois que le CC devrait etre honore
+				if (cc.getQuantiteRestantALivrer()>ContratCadre.EPSILON) {
+					System.err.println("Etape :"+Filiere.LA_FILIERE.getEtape()+" l'equipe "+cc.getVendeur()+" n'a pas su livrer l'integralite de ce qu'il devait livrer sur le contrat "+cc.getNumero()+" 6 mois apres la fin prevue : l'entreprise est dissoute");
+					banqueroutes.add(cc.getVendeur());
+				} else if (cc.getMontantRestantARegler()>10){ 
+					System.err.println("Etape :"+Filiere.LA_FILIERE.getEtape()+" l'equipe "+cc.getAcheteur()+" n'a pas su payer l'integralite de ce qu'il devait payer sur le contrat "+cc.getNumero()+" 6 mois apres la fin prevue : l'entreprise est dissoute");
+					banqueroutes.add(cc.getAcheteur());
+				}
+			}
+		}
+		for (IActeur v : banqueroutes) {
+			Filiere.LA_FILIERE.getBanque().faireFaillite(v, this, cryptos.get(this));
+		}
+	}
+	
 	public String contratToCSV(ContratCadre cc) {
 		return cc.getNumero()+";"+cc.getVendeur()+";"+cc.getAcheteur()+";"+cc.getProduit()+";"+cc.getPrix()+";"+cc.getTeteGondole()+";"+cc.getQuantiteTotale()+";"+cc.getEcheancier().getStepDebut()+";"+cc.getEcheancier().getStepFin()+";";
 	}

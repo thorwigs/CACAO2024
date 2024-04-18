@@ -36,7 +36,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	}
 	
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("Feve") 
+		return produit.getType().equals("Feve")
 				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000; 
 		//à modifier selon nécessité de chaque type de fève
 	}
@@ -104,6 +104,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalACC.ajouter("Nouveau contrat :"+contrat);
+		this.contratsEnCours.add(contrat);
 	}
 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
