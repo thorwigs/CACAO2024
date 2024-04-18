@@ -18,18 +18,29 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	
 	protected Journal journalBourse;
 
+	/**
+	 * @author Cédric
+	 * 
+	 */
 	public Transformateur3AcheteurBourse() {
 		super();
 		this.journalBourse = new Journal(this.getNom()+" Journal Bourse", this);
 	}
 	
 	
-	
+	/**
+	 * @author Cédric
+	 * 
+	 */
 	public void next() {
 		super.next();
 		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 	}
 	@Override
+	/**
+	 * @author Cédric et Arthur
+	 * 
+	 */
 	public double demande(Feve f, double cours) {
 	  
 		// Notre acteur achète des fèves selon leurs différents cours en bourse, et ses stocks.
@@ -41,7 +52,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	    double seuilBas = 5000;
 	    double seuilHaut = 1000;
 	    double demandeDefault = 1000; 
-	    // Faut que je fasse différents seuils seulon les qualités
+	    // Il faut faire différents seuils selon les qualités
 	   
 	   
 	     if (this.stockFeves.get(f)<10000) {
@@ -70,7 +81,10 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	}
 
 	
-	
+	/**
+	 * @author Cédric 
+	 * 
+	 */	
 	@Override
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
@@ -83,7 +97,10 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	public void notificationBlackList(int dureeEnStep) {
 
 	}
-
+	/**
+	 * @author Cédric 
+	 * 
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
