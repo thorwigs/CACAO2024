@@ -42,7 +42,8 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 	
 	protected int cryptogramme;
-
+	
+	
 	public Transformateur3Acteur() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -114,6 +115,13 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		for (Feve f : stockFeves.keySet()) {
 			this.journal.ajouter("Stock de "+f+" = "+this.stockFeves.get(f));
 		}
+		this.journal.ajouter("Stock de "+Chocolat.C_BQ+" = "+this.stockChoco.get(Chocolat.C_BQ));
+		this.journal.ajouter("Stock de "+Chocolat.C_MQ+" = "+this.stockChoco.get(Chocolat.C_MQ));
+		this.journal.ajouter("Stock de "+Chocolat.C_HQ+" = "+this.stockChoco.get(Chocolat.C_HQ));
+		this.journal.ajouter("Stock de "+Chocolat.C_MQ_E+" = "+this.stockChoco.get(Chocolat.C_MQ_E));
+		this.journal.ajouter("Stock de "+Chocolat.C_HQ_E+" = "+this.stockChoco.get(Chocolat.C_HQ_E));
+		this.journal.ajouter("Stock de "+Chocolat.C_HQ_BE+" = "+this.stockChoco.get(Chocolat.C_HQ_BE));
+		this.journal.ajouter("Javais raison");
 		this.journal.ajouter("Stock de "+Chocolat.C_BQ+" = "+this.stockChocoMarque.get(Chocolat.C_BQ));
 		this.journal.ajouter("Stock de "+Chocolat.C_MQ+" = "+this.stockChocoMarque.get(Chocolat.C_MQ));
 		this.journal.ajouter("Stock de "+Chocolat.C_HQ+" = "+this.stockChocoMarque.get(Chocolat.C_HQ));
@@ -196,12 +204,21 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 // TEST 
 // TEST 2
 // TEST 3
+	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+		if (this.cryptogramme!=cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
+			return 0;
+	}
+		for(IProduit f : this.stockFeves.keySet()) {
+			if (f.equals(p)) { 
+			}
 		}
+		for(IProduit c : this.stockChoco.keySet()) {
+				if (c.equals(p)) { 
+				return stockChoco.get(c);
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -217,6 +234,7 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 			this.chocolatsChocoSharks.add(new ChocolatDeMarque(Chocolat.C_BQ, "ChocoSharks", 30));
 			this.chocolatsChocoSharks.add(new ChocolatDeMarque(Chocolat.C_MQ, "ChocoSharks", 50));
 			this.chocolatsChocoSharks.add(new ChocolatDeMarque(Chocolat.C_HQ, "ChocoSharks", 80));
+			
 		}
 			
 		return this.chocolatsChocoSharks;
