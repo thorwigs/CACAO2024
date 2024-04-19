@@ -1,5 +1,6 @@
 package abstraction.eq5Transformateur2;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,7 +125,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 				double quantite_initiale = stockChocoMarque.get(cm);
 				stockChocoMarque.put(cm, quantite_initiale - quantite_vendu);  // modif des stocks si la propisition est retenue
 				prixAO.get(cm).add(prix);
-				journalAO.ajouter("  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix);
+				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix);
 				if (prixAO.get(cm).size()>10) {
 					prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 				}
@@ -140,7 +141,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		double quantite = propositionRefusee.getQuantiteT();
 		if (prixAO.get(cm)!=null) {
 			prixAO.get(cm).add(prix*0.92); // on fait comme si on avait accepte avec 8% de baisse afin que lors des prochains echanges on fasse une meilleure offre
-			journalAO.ajouter("   Echec de vente par AO de "+quantite+" tonnes de "+cm+" au prix de  "+prix);
+			journalAO.ajouter(Color.RED, Color.white,"   Echec de vente par AO de "+quantite+" tonnes de "+cm+" au prix de  "+prix);
 			if (prixAO.get(cm).size()>10) {
 				prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 			}
