@@ -178,8 +178,8 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			return 0.0; // nous ne sommes pas en mesure de fournir un prix raisonnable
 		}
 		if (((Feve)contrat.getProduit()).isEquitable()) {
-			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
-			double alea = Filiere.random.nextInt((int)max);
+			
+			
 			if (contrat.getPrix()<0.8 * prixSansDecouvert) {
 				return contrat.getPrix();
 				}
