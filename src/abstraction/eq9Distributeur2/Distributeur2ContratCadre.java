@@ -115,8 +115,8 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		boolean modif = false;
 		ChocolatDeMarque cm = (ChocolatDeMarque) contrat.getProduit();
 		for (int i=0; i<e.getNbEcheances(); i++) {
-			if (e.getQuantite(e.getStepDebut()+i)>this.getCapaciteStockage()/12) {
-				quantites.add(Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12));
+			if (e.getQuantite(e.getStepDebut()+i)>5000 || e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
+				quantites.add(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm));
 				modif=true;
 			} else {
 				quantites.add(e.getQuantite(e.getStepDebut()+i));
@@ -141,11 +141,11 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		}
 		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.7 - this.getCoutStockage()*contrat.getQuantiteTotale();
 		if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(this, cryptogramme, contrat.getPrix())) {
-			/*if (contrat.getPrix() <= prix_limite) {*/
+			if (contrat.getPrix() <= prix_limite) {
 				return contrat.getPrix();
-			/*} else {
+			} else {
 				return prix_limite;
-			}*/
+			}
 		} else {
 			return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)*0.7-this.getCoutStockage()*contrat.getQuantiteTotale();
 		}
