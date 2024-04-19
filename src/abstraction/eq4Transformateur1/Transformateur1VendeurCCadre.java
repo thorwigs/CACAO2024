@@ -20,6 +20,9 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
+/**
+ * @author yannig_charonnat
+ */
 public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse implements IVendeurContratCadre {
 
 	private static int PRIX_DEFAUT = 4500;
