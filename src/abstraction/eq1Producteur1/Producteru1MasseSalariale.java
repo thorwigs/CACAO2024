@@ -26,15 +26,15 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	protected ArrayList<Ouvrier> liste_Ouvrier;
 
 	/**
-     * Constructeur pour la classe Producteru1MasseSalariale.
-     * Initialise le journal des ouvriers et la liste des ouvriers.
-     */
+	 * Constructeur pour la classe Producteru1MasseSalariale.
+	 * Initialise le journal des ouvriers et la liste des ouvriers.
+	 */
 	public Producteru1MasseSalariale() {
 		this.journalOuvrier = new Journal(this.getNom()+"   journal Ouvrier",this);
 		this.nb_enfants = 150;
 		this.nb_normal = 100;
 		this.nb_equitable = 30;
-		
+
 
 		this.listeOuvrier=new ArrayList<Ouvrier>();
 		this.addOuvrier(this.nb_enfants, this.labourEnfant, false, false, true);
@@ -43,33 +43,33 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 		liste_Ouvrier = listeOuvrier;
 	}
 	/**
-     * Renvoie la liste des ouvriers.
-     * @return La liste des ouvriers.
-     */
+	 * Renvoie la liste des ouvriers.
+	 * @return La liste des ouvriers.
+	 */
 	public ArrayList<Ouvrier> getListeOuvrier() {
 		return this.listeOuvrier;
 	}
 
-	
+
 	/**
-     * Calcule le salaire total de tous les ouvriers.
-     * @return Le salaire total.
-     */
+	 * Calcule le salaire total de tous les ouvriers.
+	 * @return Le salaire total.
+	 */
 	public double getSalaireTotal() {
 		double s =0;
 		for (Ouvrier ouvrier : this.listeOuvrier) {
 			s=s+ouvrier.getSalaire();
 
 		}
-		
+
 		return s;//retourne le salaire total à partir de notre liste d'ouvriers
 
 	}
 
 	/**
-     * Renvoie le nombre total d'enfants parmi les ouvriers.
-     * @return Le nombre d'enfants.
-     */
+	 * Renvoie le nombre total d'enfants parmi les ouvriers.
+	 * @return Le nombre d'enfants.
+	 */
 	public int getNombreEnfants() {
 		int s=0;
 		for (Ouvrier ouvrier : this.listeOuvrier) {
@@ -83,9 +83,9 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 	}
 	/**
-     * Renvoie le nombre d'ouvriers travaillant dans le domaine équitable.
-     * @return Le nombre d'ouvriers équitables.
-     */
+	 * Renvoie le nombre d'ouvriers travaillant dans le domaine équitable.
+	 * @return Le nombre d'ouvriers équitables.
+	 */
 	public int GetNombreOuvrierEquitable() {
 		int s=0;
 		for (Ouvrier ouvrier : this.listeOuvrier) {
@@ -99,9 +99,9 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 	}
 	/**
-     * Renvoie le nombre d'ouvriers travaillant dans le domaine non équitable.
-     * @return Le nombre d'ouvriers non équitables.
-     */
+	 * Renvoie le nombre d'ouvriers travaillant dans le domaine non équitable.
+	 * @return Le nombre d'ouvriers non équitables.
+	 */
 	public int GetNombreOuvrierNonEquitable() {
 		int s1=this.GetNombreOuvrierEquitable();
 		int s2=this.getNombreEnfants();
@@ -110,9 +110,9 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 	}
 	/**
-     * Renvoie le nombre d'ouvriers ayant suivi une formation.
-     * @return Le nombre d'ouvriers formés.
-     */
+	 * Renvoie le nombre d'ouvriers ayant suivi une formation.
+	 * @return Le nombre d'ouvriers formés.
+	 */
 	public int getNombreOuvrierFormés() {
 
 		int s=0;
@@ -127,13 +127,13 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 		return s;//retourne le nombre d'ouvriers ayant fait une formation
 	}
 	/**
-     * Ajoute un certain nombre d'ouvriers à la liste.
-     * @param nombre_à_ajouter Le nombre d'ouvriers à ajouter.
-     * @param salaire Le salaire des nouveaux ouvriers.
-     * @param isEquitable Indique si les nouveaux ouvriers travaillent dans le domaine équitable.
-     * @param isForme Indique si les nouveaux ouvriers ont suivi une formation.
-     * @param isEnfant Indique si les nouveaux ouvriers sont des enfants.
-     */
+	 * Ajoute un certain nombre d'ouvriers à la liste.
+	 * @param nombre_à_ajouter Le nombre d'ouvriers à ajouter.
+	 * @param salaire Le salaire des nouveaux ouvriers.
+	 * @param isEquitable Indique si les nouveaux ouvriers travaillent dans le domaine équitable.
+	 * @param isForme Indique si les nouveaux ouvriers ont suivi une formation.
+	 * @param isEnfant Indique si les nouveaux ouvriers sont des enfants.
+	 */
 	public void addOuvrier(int nombre_à_ajouter, double salaire, boolean isEquitable, boolean isForme, boolean isEnfant) {
 
 
@@ -147,19 +147,19 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	}
 
 	/**
-     * Supprime un certain nombre d'ouvriers de la liste en fonction de certains critères.
-     * @param nombreASupprimer Le nombre d'ouvriers à supprimer.
-     * @param isEquitable Indique si les ouvriers à supprimer travaillent dans le domaine équitable.
-     * @param isForme Indique si les ouvriers à supprimer ont suivi une formation.
-     * @param isEnfant Indique si les ouvriers à supprimer sont des enfants.
-     * 	//une méthode permetttant de "licensier" des ouvriers 
+	 * Supprime un certain nombre d'ouvriers de la liste en fonction de certains critères.
+	 * @param nombreASupprimer Le nombre d'ouvriers à supprimer.
+	 * @param isEquitable Indique si les ouvriers à supprimer travaillent dans le domaine équitable.
+	 * @param isForme Indique si les ouvriers à supprimer ont suivi une formation.
+	 * @param isEnfant Indique si les ouvriers à supprimer sont des enfants.
+	 * 	//une méthode permetttant de "licensier" des ouvriers 
 	//selon un nombre en parametres et leurs types de 
 	//travail(equitable,enfant,formation)
 	//ResultatSuppression resultat = removeEmploye(listeOuvriers, 3, true, false, true);
 
 	// si on veut retourner la liste des oruvriers après supression , on fait:ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
 	//si on veut retounrer l'indemnite:double indemniteTotale = resultat.indemniteTotale;
-     */
+	 */
 	public void removeEmploye(int nombreASupprimer, boolean isEquitable, boolean isForme, boolean isEnfant) {
 		// Créer une liste pour stocker temporairement les ouvriers à supprimer
 		ArrayList<Ouvrier> ouvriersASupprimer = new ArrayList<>();
@@ -175,7 +175,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 		// Trier la liste des ouvriers à supprimer par ancienneté
 		Collections.sort(ouvriersASupprimer, (o1, o2) -> Double.compare(o1.getAnciennete(), o2.getAnciennete()));
 
-		
+
 
 		// Supprimer le nombre spécifié d'ouvriers de la liste principale, à partir de l'ancienneté la plus basse
 		for (int i = 0; i < Math.min(nombreASupprimer, ouvriersASupprimer.size()); i++) {
@@ -189,19 +189,19 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 			this.indemniteTotal += indemnité;
 
 			if (anciennetéEnAnnées <= 10) {
-			    indemnite = salaire * 0.30 * anciennetéEnAnnées;
+				indemnite = salaire * 0.30 * anciennetéEnAnnées;
 			} else if (anciennetéEnAnnées <= 15) {
-			    // Calcul pour les 10 premières années
-			    indemnite = salaire * 0.30 * 10;
-			    // Calcul pour les années entre 10 et 15
-			    indemnite += salaire * 0.35 * (anciennetéEnAnnées - 10);
+				// Calcul pour les 10 premières années
+				indemnite = salaire * 0.30 * 10;
+				// Calcul pour les années entre 10 et 15
+				indemnite += salaire * 0.35 * (anciennetéEnAnnées - 10);
 			} else {
-			    // Calcul pour les 10 premières années
-			    indemnite = salaire * 0.30 * 10;
-			    // Calcul pour les 5 années suivantes (10 à 15 ans)
-			    indemnite += salaire * 0.35 * 5;
-			    // Calcul pour les années au-delà de 15 ans
-			    indemnite += salaire * 0.40 * (anciennetéEnAnnées - 15);
+				// Calcul pour les 10 premières années
+				indemnite = salaire * 0.30 * 10;
+				// Calcul pour les 5 années suivantes (10 à 15 ans)
+				indemnite += salaire * 0.35 * 5;
+				// Calcul pour les années au-delà de 15 ans
+				indemnite += salaire * 0.40 * (anciennetéEnAnnées - 15);
 			}
 
 			this.indemniteTotal+=indemnite;
@@ -215,9 +215,9 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 
 	/**
-     * Met à jour l'ancienneté de chaque ouvrier dans la liste.
-     * Met également à jour les caractéristiques des ouvriers en fonction de leur ancienneté.
-     */
+	 * Met à jour l'ancienneté de chaque ouvrier dans la liste.
+	 * Met également à jour les caractéristiques des ouvriers en fonction de leur ancienneté.
+	 */
 	public void UpdateAnciennete() {
 
 
@@ -231,13 +231,13 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 			}	//méthode pour mettre a jour l'anciennete chaque next par 
 			//ajout de 15 jours à chaque ancienneté
-			
+
 		}
 	}
 	/**
-     * Procède à une formation pour un certain nombre d'ouvriers.
-     * @param nbr_à_former Le nombre d'ouvriers à former.
-     */
+	 * Procède à une formation pour un certain nombre d'ouvriers.
+	 * @param nbr_à_former Le nombre d'ouvriers à former.
+	 */
 	public void formation (int nbr_à_former) {
 		double cout_formation=0;//dépend de l'ancienneté
 		double ancienneteMin =720;// ancienneté au moins de 2 ans pour faire une formation
@@ -257,7 +257,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 				double solde = ouvrier.soldeParStep.get(size);
 				double k =5;
 				ouvrier.soldeParStep.add(size-1, solde - k);
-*/
+				 */
 			}
 
 		}
@@ -275,7 +275,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	public void next() {
 		super.next();
 		double Labor = this.getSalaireTotal();
-		
+
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
 		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ this.GetNombreOuvrierNonEquitable());
 
@@ -286,7 +286,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 		this.formation(100);
 		this.UpdateAnciennete();
 		if (this.indemniteTotal > 0) {
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemniteTotale = ",indemniteTotal );
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemniteTotale = ",indemniteTotal );
 		}
 		this.amelioration();
 
@@ -298,27 +298,27 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 		int enfants = this.getNombreEnfants();
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
-		
+
 		if ((annee != 0)& (annee % 3 == 0) && croissant   ) {
-			
-			
+
+
 			this.removeEmploye(Math.min(10000, enfants), false, false, true);//remove 10 enfants
 
-			
-			
+
+
 			if (this.labourNormal < 2.5 ) { 
 				double nouveauSalaire = this.labourNormal*1.08;
 				this.labourNormal = nouveauSalaire;
-				
-				}
-			
+
+			}
+
 			if (this.labourEnfant < 2 ) { 
 				double nouveauSalaireE = this.labourEnfant*1.05;
 				this.labourEnfant= nouveauSalaireE;
-				
-				}
-			
-			
+
+			}
+
+
 		}
 	}
 

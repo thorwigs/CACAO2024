@@ -1,5 +1,5 @@
 package abstraction.eq1Producteur1;
-
+/**@author Abderrahmane ER-RAHMAOU*/
 import java.awt.Color;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class Producteur1Acteur implements IActeur {
 	protected Journal journal;
 	//new stuff I added : Abdo
 	private double coutStockage;
-	//Haythem
+	
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
@@ -53,7 +53,9 @@ public class Producteur1Acteur implements IActeur {
 
 
 	
-
+	 /**
+     * Constructeur de la classe Producteur1Acteur.
+     */
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
@@ -71,7 +73,9 @@ public class Producteur1Acteur implements IActeur {
 	public double getCoutStockage() {
 		return this.coutStockage;
 	}
-
+	 /**
+     * Initialise l'acteur Producteur1.
+     */
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		/*
@@ -214,7 +218,7 @@ public class Producteur1Acteur implements IActeur {
 
 
 
-	// Haythem
+	/**@author Haythem */
 	protected double CoutsProd() {
 		double CoutProdBQ=0;
 		double CoutProdMQ=0;

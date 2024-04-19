@@ -1,3 +1,4 @@
+/**@authors ER-RAHMAOUY Abderrahmane & Haythem*/
 package abstraction.eq1Producteur1;
 import java.awt.Color;
 import java.util.LinkedList;
@@ -17,7 +18,7 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implements IVendeurContratCadre {
-    
+
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
@@ -29,12 +30,14 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.journalCC = new Journal(this.getNom()+" journal CC", this);
 	}
-	
+
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
-	
+	/**
+	 * Gère les actions à effectuer à chaque étape pour le vendeur en contrat cadre.
+	 */
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
@@ -58,10 +61,14 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 					journalCC.ajouter("   pas d'acheteur");
 				}
 			}
-			
+
 		}
 	}
-		
+	/**
+	 * Calcule la quantité restante à livrer pour un type de fève donné.
+	 * @param f Le type de fève.
+	 * @return La quantité restante à livrer.
+	 */
 	public double restantDu(Feve f) {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -71,6 +78,11 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		}
 		return res;
 	}
+	/**
+	 * Calcule le prix des fèves en fonction des contrats en cours et terminés.
+	 * @param f Le type de fève.
+	 * @return Le prix des fèves.
+	 */
 	public double prix(Feve f) {
 		double res = 0;
 		int count = 0;
@@ -101,7 +113,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		if (gamme == Gamme.HQ && !bio && !equitable ) {
 			throw new IllegalArgumentException("Gamme HQ sans label ne se vend pas en Contrat Cadre.");
 		}
-		*/
+		 */
 		if (bio) {
 			prime += 100;
 		}
@@ -113,18 +125,18 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		}
 		res += prime + 1472;
 		return res;
-		
+
 	}
 
 	@Override
 	public boolean vend(IProduit produit) {
 		String s = produit.getType();
 		if (s.equals("Feve")) {
-		Feve f = (Feve) produit;
-		this.stock.get(f);
-		if (this.stock.get(f).getValeur()>10) {
-			return true;
-		}
+			Feve f = (Feve) produit;
+			this.stock.get(f);
+			if (this.stock.get(f).getValeur()>10) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -155,17 +167,17 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			boolean Accepted = true;
 		}
 		else {
-		if (ec.getQuantiteTotale()<=stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)) {
-			journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
-		} else {
-			journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12))));
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12)));
-		}
+			if (ec.getQuantiteTotale()<=stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)) {
+				journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
+			} else {
+				journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12))));
+				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12)));
+			}
 		}
 		journalCC.ajouter("Echencier accepted");
 		return ec;		
-	
+
 	}
 
 	@Override
@@ -175,9 +187,9 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			return 0;  
 		}
 		return prix((Feve) contrat.getProduit());
-		
 
-		
+
+
 	}
 
 	@Override
@@ -191,8 +203,8 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			double p = prix.get(0)/prix.get(1);
 			journalCC.ajouter("      contreproposition("+contrat.getPrix()+") retourne "+prix.get(0)*1.05);
 			return prix.get(0)*1.05;
-				}
-	
+		}
+
 	}
 
 	@Override
@@ -209,8 +221,12 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		stock.get(produit).setValeur(this, aLivre, (Integer)cryptogramme);
 		return aLivre;
-		
+
 	}
+	/**
+	 * Renvoie les journaux de l'acteur, y compris le journal des contrats cadre.
+	 * @return Une liste contenant les journaux de l'acteur.
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> res=super.getJournaux();
 		res.add(journalCC);
