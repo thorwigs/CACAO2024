@@ -3,7 +3,6 @@
  */
 package abstraction.eq1Producteur1;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
