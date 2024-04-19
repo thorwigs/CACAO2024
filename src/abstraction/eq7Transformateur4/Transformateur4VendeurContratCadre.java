@@ -43,7 +43,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	}
 	//////////////
 	
-	public boolean vend(IProduit produit) {
+	//codé par Eliott		
+	public boolean vend(IProduit produit) { 
+
 		for (ChocolatDeMarque c : this.chocolatCocOasis) {
 			if ((produit.getType().equals("ChocolatDeMarque")) && (c == (ChocolatDeMarque)produit) && (stockChocoMarque.get(produit)>25000) ) {
 				return true;
@@ -67,7 +69,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 			return null;
 		}
 
-		//si ce sont des mirages
+		//si ce sont des mirages , codé par Anaïs et Pierrick
 		if ( ((ChocolatDeMarque)contrat.getProduit()).getMarque() == "Mirage") {
 			if (stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()))-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
 			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
@@ -86,9 +88,8 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				}
 			}
 			
-		//si ce ne sont pas des Mirage
+		//si ce ne sont pas des Mirage; codé par Eliott
 		} else {		
-			
 			if (stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() )-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
 			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
@@ -121,7 +122,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public double livrer(IProduit p, double quantite, ExemplaireContratCadre contrat) {
 	
-		//Si la livraison concerne des choco Mirage
+		//Si la livraison concerne des choco Mirage, codé par Anaïs et Pierrick
 		if ( ((ChocolatDeMarque)p).getMarque() == "Mirage") {
 				double stockMarque = (double)stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()));
 				
@@ -138,7 +139,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					return stockMarque;
 				}
 				
-		//Si ce sont des chocos distributeurs
+		//Si ce sont des chocos distributeurs, codé par Eliott
 		} else {
 			double stockDistrib = (double)stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() );
 			
@@ -203,7 +204,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		
 		
-			//Pour les chocos de la marque CocOasis
+			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) && (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
@@ -232,7 +233,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				}
 				
 				
-			//Pour les chocos de marque distributeur
+			//Pour les chocos de marque distributeur, codé par Eliott
 				
 				for(ChocolatDeMarque choco : this.chocolatDistributeur) {
 					

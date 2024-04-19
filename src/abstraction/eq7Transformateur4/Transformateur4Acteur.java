@@ -5,7 +5,6 @@ package abstraction.eq7Transformateur4;
 //Pierrick : définition des autres attributs et variables, du constructeur, de la méthode initialiser() puis de toutes les autres méthodes à partir du fichier TransformateurXActeur
 
 
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +26,8 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarque, IMarqueChocolat {
+	
+	//variables codé par Pierrick
 	
 	protected int cryptogramme;
 	private Journal journal;
@@ -72,6 +73,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 	}
 	
+	//initialisation feves + pourcentage trasnfo : Pierrick, initialisation chocolat : ELiott
 	public void initialiser() {
 		this.coutStockageTransfo = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
@@ -168,11 +170,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
+	
+	
+	//codé par Pierrick
 	public void next() {
 		this.journal.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "===============");
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		
-		
 		
 	
 		
@@ -265,6 +268,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	}
 
 	@Override
+	
+	//codé par Eliott
 	public List<ChocolatDeMarque> getChocolatsProduits() {  
 		// TODO Auto-generated method stub
 		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
@@ -281,6 +286,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	}
 
 	@Override
+	
+	//codé par Eliott
 	public List<String> getMarquesChocolat() {
 		// TODO Auto-generated method stub
 		LinkedList<String> marques = new LinkedList<String>();
