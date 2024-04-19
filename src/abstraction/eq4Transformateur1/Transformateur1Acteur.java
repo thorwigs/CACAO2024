@@ -79,7 +79,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 *@author Noemie_Grosset
 */
 	public void initialiser() {
-		
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
@@ -175,9 +175,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 * @author Noemie_Grosset
 */	
 		//payer les couts
-		coutStockage = (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage;
-		if (coutStockage > 0.0) {
-			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", coutStockage);
+		double couts = (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage;
+		if (couts > 0.0) {
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", couts);
 		}
 		
 		coutMainDOeuvre = 1000*0.27*nbTonnesProduites;
