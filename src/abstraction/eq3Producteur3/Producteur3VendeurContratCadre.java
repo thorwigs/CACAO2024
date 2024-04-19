@@ -21,6 +21,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	//@youssef
 	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
 	private SuperviseurVentesContratCadre superviseur;
+	private ExemplaireContratCadre contr;
 	
 	/**
 	 * @author Arthur
@@ -77,9 +78,15 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
 		        if (quantiteDisponible*10 > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
                     //on propose de livrer a chaque step la quantite qui nous reste apres livraison des autres CC
-		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape(), 10, quantiteDisponible); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
-                    superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
-	            }
+		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 11, quantiteDisponible); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
+                    contr = superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
+                    if (contr != null) {
+                    	//la fonction notificationNouveauContratCadre n'étant pas appellée, on fait son travail ici
+                    	this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contr.getNumero()+" avec "+contr.getAcheteur().getNom()+" : "+contr.getQuantiteTotale()+" T de "+contr.getProduit()+" a "+contr.getPrix()+" E/T");	
+                		this.contratsEnCours.add(contr);
+                		this.setContratsEnCours();
+                    }
+		        }
             }
 	    }
 	}
@@ -105,18 +112,20 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * @param Feve f (feve a laquelle on s'interesse)
 	 * @return double quantiteDisponible (quantite qu'on l'on peut disposer pour les CC pas encore négociés)
 	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
+	 * On regarde ici la quantité disponible au tour suivant pour anticiper (et surtout car les nouvelles livraisons commencent au tour d'après)
 	 */
 	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
 	        double quantiteDisponible = 0.0; // Valeur par défaut
 	        if (quantiteFuture().containsKey(f)) {
-	        	//La quantite disponible de base correspond a ce que l'on produit
+	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après
 	            quantiteDisponible = quantiteFuture().get(f);
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
 	            if (contrat.getProduit().equals(f)) {
 	            	//il faut ensuite enlever ce que l'on doit livrer pour avoir la quantite disponible pour d'autres CC
-	                quantiteDisponible -= contrat.getQuantiteALivrerAuStep();
+	                //On prend la quantité a livrer au tour d'après pour prendre en compte la première livraison
+	            	quantiteDisponible -= contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1);
 	            }
 	        }
 	        if (quantiteDisponible < 0) {
