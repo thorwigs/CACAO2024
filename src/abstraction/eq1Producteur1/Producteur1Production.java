@@ -81,9 +81,9 @@ public class Producteur1Production extends Producteur1Plantation{
 		int nbe = this.getNombreEnfants();
 		int nbt = this.GetNombreOuvrierEquitable()+ this.GetNombreOuvrierNonEquitable()+this.getNombreOuvrierFormés();
 
-		//if (nbe !=0) {
-			//this.journalProduction.ajouter("On ne peut pas faire de l'equitable car on employe des enfants");
-		//}
+		if (nbe !=0) {
+			this.journalProduction.ajouter("On ne peut pas faire de l'equitable car on employe des enfants");
+		}
 		if (nb > 0.10*nbt) {
 			double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
 			double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
@@ -105,9 +105,9 @@ public class Producteur1Production extends Producteur1Plantation{
 			this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
 		}
 		else {
-		if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
-			this.prodParStep.put(Feve.F_HQ_BE, null);
-		}
+			if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
+				this.prodParStep.put(Feve.F_HQ_BE, null);
+			}
 		}
 
 	}
