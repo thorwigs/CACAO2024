@@ -21,11 +21,12 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	//@youssef
 	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
 	private SuperviseurVentesContratCadre superviseur;
+	private ExemplaireContratCadre contr;
 	
 	/**
 	 * @author Arthur
-	 * @param IProduit produit
-	 * @return boolean
+	 * @param IProduit produit (produit potentiellment que l'on veut vendre ou non)
+	 * @return boolean (reponse si on vend ou pas)
 	 * La fonction renvoie si oui ou non, on veut vendre du produit proposer en CC (oui si feve HQ et MQ)
 	 */
 	public boolean vend(IProduit produit) {
@@ -77,10 +78,15 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
 		        if (quantiteDisponible*10 > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
                     //on propose de livrer a chaque step la quantite qui nous reste apres livraison des autres CC
-		        	// Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
-		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape(), 10, quantiteDisponible); 
-                    superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
-	            }
+		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 11, quantiteDisponible); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
+                    contr = superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
+                    if (contr != null) {
+                    	//la fonction notificationNouveauContratCadre n'étant pas appellée, on fait son travail ici
+                    	this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contr.getNumero()+" avec "+contr.getAcheteur().getNom()+" : "+contr.getQuantiteTotale()+" T de "+contr.getProduit()+" a "+contr.getPrix()+" E/T");	
+                		this.contratsEnCours.add(contr);
+                		this.setContratsEnCours();
+                    }
+		        }
             }
 	    }
 	}
@@ -103,24 +109,24 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 
 	/**
-	 * @author mammouYoussef (et modification Arthur)
-	 * (et modification Alexis pour quantiteFuture())
-	 * @param Feve f
-	 * @return double quantiteDisponible
-	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux 
-	 * contrats, en prenant en compte les engagements existants
+	 * @author mammouYoussef (et modification Arthur et Alexis pour quantiteFuture)
+	 * @param Feve f (feve a laquelle on s'interesse)
+	 * @return double quantiteDisponible (quantite qu'on l'on peut disposer pour les CC pas encore négociés)
+	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
+	 * On regarde ici la quantité disponible au tour suivant pour anticiper (et surtout car les nouvelles livraisons commencent au tour d'après)
 	 */
 	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
 	        double quantiteDisponible = 0.0; // Valeur par défaut
 	        if (quantiteFuture().containsKey(f)) {
-	        	//La quantite disponible de base correspond a ce que l'on produit
+	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après
 	            quantiteDisponible = quantiteFuture().get(f);
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
 	            if (contrat.getProduit().equals(f)) {
 	            	//il faut ensuite enlever ce que l'on doit livrer pour avoir la quantite disponible pour d'autres CC
-	                quantiteDisponible -= contrat.getQuantiteALivrerAuStep();
+	                //On prend la quantité a livrer au tour d'après pour prendre en compte la première livraison
+	            	quantiteDisponible -= contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1);
 	            }
 	        }
 	        if (quantiteDisponible < 0) {
@@ -132,10 +138,9 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 
 	 /**
 	  * @author mammouYoussef (et modification Arthur)
-	  * @param ExemplaireContratCadre contrat
-	  * @return Echeancier nouvelEcheancier
-	  * Propose un echeancier dans le but de satisfaire au mieux celui proposé par 
-	  * le vendeur tout en prenant en compte nos capacités à fournir ce qui est demandé
+	  * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
+	  * @return Echeancier nouvelEcheancier (écheancier proposé en retour)
+	  * Propose un echeancier dans le but de satisfaire au mieux celui proposé par le vendeur tout en prenant en compte nos capacités à fournir ce qui est demandé
 	  */
 	 public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		    Feve f = (Feve) contrat.getProduit();
@@ -166,8 +171,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	/**
 	 * @author mammouYoussef
-	 * @param ExemplaireContratCadre contrat
-	 * @return double prixBase
+	 * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
+	 * @return double prixBase (prix proposé a la tonne)
 	 * Propose un prix de base du cacao en fonction de la feve du contrat
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
@@ -193,8 +198,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author mammouYoussef
-	 * @param ExemplaireContratCadre contrat
-	 * @return double prix
+	 * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
+	 * @return double prix (contre proposition du prix)
 	 * On propose un nouveau prix (potentiellement le meme) suite a la contre-proposition faite par l'acheteur
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
@@ -216,7 +221,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author Arthur
-	 * @param ExemplaireContratCadre contrat
+	 * @param ExemplaireContratCadre contrat (contrat actuel de la négociation)
 	 * Prend en compte le nouveau contrat conclu 
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
@@ -228,8 +233,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author Arthur
-	 * @param Iproduit produit, double quantite, ExemplaireContratCadre contrat
-	 * @return double quantiteLivrer
+	 * @param Iproduit produit, double quantite, ExemplaireContratCadre contrat (données de la négociation)
+	 * @return double (quantié que l'on va effectivement livrer)
 	 * Renvoie la quantite livrée 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
