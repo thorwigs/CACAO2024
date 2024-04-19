@@ -11,7 +11,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
 
- // @author Cédric et Arthur
+
 
 public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre implements IAcheteurBourse {
 	protected Journal journalBourse;
