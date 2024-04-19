@@ -29,12 +29,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	private double coutMainDOeuvre;
 
 	protected List<Feve> lesFeves;
-	private List<ChocolatDeMarque>chocosProduits;
 	protected HashMap<Feve, Variable> stockFeves;
 	protected HashMap<Chocolat, Variable> stockChoco;
 	protected HashMap<ChocolatDeMarque, Variable> stockChocoMarque;
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
-	protected List<ChocolatDeMarque> chocolatsVillors;
+	private List<Chocolat> chocolatsAVendre;
+	private List<ChocolatDeMarque>chocosProduits;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
@@ -44,12 +44,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	
 	public Transformateur1Acteur() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+		//this.getChocolatsProduits();
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChocoMarque = new VariablePrivee("EqXTStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		
-		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Variable>();
 
 		this.lesFeves = new LinkedList<Feve>();
 		this.journal.ajouter("Les Feves sont :");
@@ -64,10 +64,18 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
 		}
 		
-		this.stockChoco=new HashMap<Chocolat,Variable>();
-		for (Chocolat c : Chocolat.values()) {
+		this.stockChoco = new HashMap<Chocolat,Variable>();
+		this.chocolatsAVendre = new LinkedList<Chocolat>();
+		this.chocolatsAVendre.add(Chocolat.C_MQ);
+		for (Chocolat c : this.chocolatsAVendre) {
 			this.stockChoco.put(c, new Variable("EQ4_stock_choco_"+c, this));
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
+		}
+		
+		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Variable>();
+		for (ChocolatDeMarque c : this.chocosProduits) {
+			this.stockChocoMarque.put(c, new Variable("EQ4_stock_choco_"+c, this));
+			this.totalStocksChocoMarque.ajouter(this, 0.0, this.cryptogramme);
 		}
 	}
 /**
@@ -111,11 +119,11 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.journal.ajouter("prix stockage chez producteur : "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
 		for (Feve f : stockFeves.keySet()) {
-			this.journal.ajouter(" - Stock de feves "+f.getGamme()+" : "+stockFeves.get(f));
+			this.journal.ajouter(" - Stock de feves "+f.getGamme()+" : "+stockFeves.get(f).getValeur());
 		}
 		
 		for (ChocolatDeMarque cm : stockChocoMarque.keySet()) {
-			this.journal.ajouter(" - Stock de "+cm.getNom()+" : "+stockChocoMarque.get(cm));
+			this.journal.ajouter(" - Stock de "+cm.getNom()+" : "+stockChocoMarque.get(cm).getValeur());
 		}
 		
 		double nbTonnesProduites = 0.0;
@@ -128,8 +136,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+Journal.entierSur6(transfo)+" T de "+f+" en :"+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
 
+					
 					// La moitie (newChoco) sera stockee sous forme de chocolat, l'autre moitie directement etiquetee "LeaderKakao"
-					boolean tropDeChoco = this.totalStocksChoco.getValeur((Integer)cryptogramme)>100000;
+					boolean tropDeChoco = this.totalStocksChoco.getValeur((Integer)cryptogramme)>=0; // 100000 pour la V2
 					double newChoco = tropDeChoco ? 0.0 : ((transfo/2.0)*this.pourcentageTransfo.get(f).get(c)); // la moitie en chocolat tant qu'on n'en n'a pas trop
 					double newChocoMarque = ((transfo)*this.pourcentageTransfo.get(f).get(c))-newChoco;
 					if (newChoco>0.0) {
@@ -159,9 +168,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					}
 						
 					//this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
-					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f));
-					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c));
-					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f).getValeur());
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c).getValeur());
+					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm).getValeur());
 				}
 			}
 		}
