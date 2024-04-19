@@ -24,10 +24,7 @@ import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 
-/**
- * @author Mahel, Thomas, Cédric et Arthur
- * 
- */
+
 
 public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabricantChocolatDeMarque {
 	
@@ -56,7 +53,9 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.totalStocksChocoMarque = new VariablePrivee("EqXTStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 	
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
@@ -122,11 +121,12 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
+	/**
+	 * @author Thomas
+	 */
 	public void next() {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape() );
 		this.journal.ajouter("=== STOCKS === ");
-		this.journal.ajouter ("cout moyen stockage producteur" + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4);
 		for (Feve f : stockFeves.keySet()) {
 			this.journal.ajouter("Stock de "+f+" = "+this.stockFeves.get(f));
 		}
@@ -136,11 +136,7 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.journal.ajouter("Stock de "+Chocolat.C_MQ_E+" = "+this.stockChoco.get(Chocolat.C_MQ_E));
 		this.journal.ajouter("Stock de "+Chocolat.C_HQ_E+" = "+this.stockChoco.get(Chocolat.C_HQ_E));
 		this.journal.ajouter("Stock de "+Chocolat.C_HQ_BE+" = "+this.stockChoco.get(Chocolat.C_HQ_BE));
-		/*
-		for(ChocolatDeMarque c : chocosProduits) {
-			this.journal.ajouter("Stock de "+Chocolat.C_BQ+" = "+this.stockChocoMarque.get(c));
-		}*/
-				// mon commentaire perso
+		
 	
 	}
 
@@ -211,10 +207,11 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;
 	}
-// TEST 
-// TEST 2
-// TEST 3
+
 	
+	/**
+	 * @author Mahel
+	 */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme!=cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			return 0;
@@ -231,13 +228,17 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		return 0;
 	}
 
-	@Override
+	/**
+	 * @author Mahel
+	 */
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> marques = new LinkedList<String>();
 		marques.add("ChocoSharks");
 		return marques;
 	}
-
+	/**
+	 * @author Mahel
+	 */
 	@Override
 	public List<ChocolatDeMarque> getChocolatsProduits() {
 		if (this.chocosProduits.size()==0) {
