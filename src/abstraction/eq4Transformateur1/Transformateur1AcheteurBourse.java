@@ -36,8 +36,9 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	 *  70% pour les fèves de moyenne qualité (MQ)
 	 */
 	public double demande(Feve f, double cours) {
-		double stockCible= Math.max(2*this.demandeCC, 20000);
-		this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de fève");
+		double stockCible = Math.max(2*this.demandeCC, 20000);
+		stockCible = stockCible - this.totalStocksChocoMarque.getValeur(this.cryptogramme);
+		this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de feve");
 		double demandeMin=100;
 		double stockCibleHQ = 0.3 * stockCible;
 	    double stockCibleMQ = 0.7 * stockCible;
