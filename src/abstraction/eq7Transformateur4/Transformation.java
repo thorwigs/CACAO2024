@@ -1,6 +1,8 @@
 package abstraction.eq7Transformateur4;
 
-//fichier codé par Pierrick
+//fichier codé par  Eliott et Pierrick
+//Eliott : tout ce qui concerne les journaux
+//Pierrick : tout le reste
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +16,6 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Transformation extends Transformateur4VendeurAuxEncheres{
 
-	//objectifs : vérifier le stocks de fève : s'il est suffisant pour une fève, produire du chocolat avec, puis attribuer aux chocolat une marque ou nom.
 	protected Journal journalTransfo ;
 	protected List<Double> lescouts; //liste qui contiendra certains des couts à faire pour un step, initialiser à une liste vide à chaque début de l'appel next
 	protected List<Double> lesqtproduite; //liste qui contiendra toutes nos qtés de chocolats produits pour ce step
