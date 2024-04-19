@@ -25,6 +25,9 @@ public class Producteur1Production extends Producteur1Plantation{
 	protected ArrayList<Double> Stock_MQ;
 	protected ArrayList<Double> Stock_BQ;
 	protected static double stockMax;
+	protected int degrHQ = 4;
+	protected int degrMQ = 8;
+	protected int degrBQ = 12;
 
 	//protected HashMap<Feve, Variable> stockag;
 	/**
@@ -35,7 +38,7 @@ public class Producteur1Production extends Producteur1Plantation{
 		// Initialisation des journaux, du stock et d'autres structures de données
 		super();
 		this.journalProduction = new Journal(this.getNom()+"   journal Production",this);
-		this.journalProduction = new Journal(this.getNom()+"   journal Stockage",this);
+		this.journalStockage = new Journal(this.getNom()+"   journal Stockage",this);
 		this.ageStock = new HashMap<String, Integer>();
 		this.Stock_HQ = new ArrayList<Double>();
 		this.Stock_MQ = new ArrayList<Double>();
@@ -73,9 +76,9 @@ public class Producteur1Production extends Producteur1Plantation{
 	public void feveToEqui() {
 		
 		
-		int nb = this.liste_Ouvrier.GetNombreOuvrierEquitable();
-		int nbe = this.liste_Ouvrier.getNombreEnfants();
-		int nbt = this.liste_Ouvrier.GetNombreOuvrierEquitable()+ this.liste_Ouvrier.GetNombreOuvrierNonEquitable()+this.liste_Ouvrier.getNombreOuvrierFormés();
+		int nb = this.GetNombreOuvrierEquitable();
+		int nbe = this.getNombreEnfants();
+		int nbt = this.GetNombreOuvrierEquitable()+ this.GetNombreOuvrierNonEquitable()+this.getNombreOuvrierFormés();
 		
 			if (nbe !=0) {
 				this.journalProduction.ajouter("On ne peut pas faire de l'equitable car on employe des enfants");
@@ -113,9 +116,9 @@ public class Producteur1Production extends Producteur1Plantation{
      */
 	public void Stockage_HQ() {
 
-		if (this.Stock_HQ.size() >= 4) {
+		if (this.Stock_HQ.size() >= this.degrHQ) {
 			boolean check = true;
-			for (int i  =this.Stock_HQ.size()-4; i<this.Stock_HQ.size()-1 ;i++) {
+			for (int i  =this.Stock_HQ.size()-this.degrHQ; i<this.Stock_HQ.size()-1 ;i++) {
 				if (this.Stock_HQ.get(i+1) <= this.Stock_HQ.get(i)) {
 					
 					check = false;
@@ -129,12 +132,12 @@ public class Producteur1Production extends Producteur1Plantation{
 				
 				double hq = this.Stocck.get(Feve.F_HQ);
 				double pro = this.Stocck.get(Feve.F_MQ);
-				this.stock.get(Feve.F_HQ).retirer(this, this.Stock_HQ.get(this.Stock_HQ.size()-4));
-				this.stock.get(Feve.F_MQ).setValeur(this, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
-				this.Stocck.put(Feve.F_HQ, hq - this.Stock_HQ.get(this.Stock_HQ.size()-4));
-				this.Stocck.put(Feve.F_MQ, pro + this.Stock_HQ.get(this.Stock_HQ.size()-4));
+				this.stock.get(Feve.F_HQ).retirer(this, this.Stock_HQ.get(this.Stock_HQ.size()-this.degrHQ));
+				this.stock.get(Feve.F_MQ).setValeur(this, pro + this.Stock_HQ.get(this.Stock_HQ.size()-this.degrHQ));
+				this.Stocck.put(Feve.F_HQ, hq - this.Stock_HQ.get(this.Stock_HQ.size()-this.degrHQ));
+				this.Stocck.put(Feve.F_MQ, pro + this.Stock_HQ.get(this.Stock_HQ.size()-this.degrHQ));
 				this.journalStockage.ajouter("On a eu une degradation de stock de HQ vers MQ de la quantite suivante:"+this.Stock_HQ.get(this.Stock_HQ.size()-4) );
-				this.Stock_HQ.remove(this.Stock_HQ.size()-4);
+				this.Stock_HQ.remove(this.Stock_HQ.size()-this.degrHQ);
 
 			}
 		}
@@ -146,9 +149,9 @@ public class Producteur1Production extends Producteur1Plantation{
      */
 	public void Stockage_MQ() {
 		
-		if (this.Stock_MQ.size() >= 8) {
+		if (this.Stock_MQ.size() >= this.degrMQ) {
 			boolean check = true;
-			int j = this.Stock_MQ.size()-8;
+			int j = this.Stock_MQ.size()-this.degrMQ;
 			for (int i = j; i<j+7 ;i++) {
 				if (this.Stock_MQ.get(i) <= this.Stock_MQ.get(i)) {
 					check = false;
@@ -179,9 +182,9 @@ public class Producteur1Production extends Producteur1Plantation{
      * Initie le transfert de stock en fonction de certaines conditions.
      */
 	public void Stockage_BQ() {
-	    if (this.Stock_MQ.size() >= 12) {
+	    if (this.Stock_MQ.size() >= this.degrBQ) {
 	        boolean check = true;
-	        int j = this.Stock_MQ.size() - 12;
+	        int j = this.Stock_MQ.size() - this.degrBQ;
 	        for (int i = j; i < j + 11; i++) {
 	            if (this.Stock_BQ.get(i) <= this.Stock_BQ.get(i + 1)) {
 	                check = false;
@@ -229,7 +232,8 @@ public class Producteur1Production extends Producteur1Plantation{
 			totalStock += this.stock.get(f).getValeur();
 		}
 		this.getJournaux().get(0).ajouter("Stock= "+ totalStock);
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.getCoutStockage());
+		double coutame = this.AmeliorationStockage() ? 1 : 0;
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*(this.getCoutStockage()+2));
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme,"Cout Prod",this.CoutsProd());
 		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
 		this.Stockage_HQ();
@@ -237,6 +241,12 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.Stockage_MQ();
 		this.Stock_BQ.add(this.getQuantiteEnStock(Feve.F_BQ, cryptogramme));
 		this.Stockage_BQ();
+		if (this.AmeliorationStockage() || this.degrHQ > 4 || this.degrMQ > 8 || this.degrBQ > 12) {
+			this.degrHQ += 2;
+			this.degrMQ += 4;
+			this.degrBQ += 6;
+		}
+		
 
 	}
 	public List<Journal> getJournaux() {
@@ -250,14 +260,14 @@ public class Producteur1Production extends Producteur1Plantation{
 	 * que les feves ne pourraient pas aussi rapidement
 	 * On traveillera sous la condition que si le stock depasse une quantite on aimera le reserver mieux
 	 */
-	public void AmeliorationStockage() {
+	public boolean AmeliorationStockage() {
 		
 		double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
 		double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
 		double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
-		boolean ame = stockHQ > 30 && stockMQ > 30 && stockBQ > 50;
+		boolean ame = stockHQ > 50 && stockMQ > 50 && stockBQ > 100;
 		this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
-		
+		return ame;
 	}
 
 

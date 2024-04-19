@@ -48,6 +48,8 @@ public class Producteur1Acteur implements IActeur {
 	protected  double labourEquitable = 3;
 	protected double Part = 0.25;
 	protected int nb_enfants;
+	protected int nb_normal;
+	protected int nb_equitable;
 
 
 	
@@ -56,37 +58,9 @@ public class Producteur1Acteur implements IActeur {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
 		
-	}
-	public void amelioration() {
-		int etape = Filiere.LA_FILIERE.getEtape();
-		int annee = Filiere.LA_FILIERE.getAnnee(etape);
-		float croissement =0 ;	
-		int enfants = liste_Ouvrier.getNombreEnfants();
-		int size = this.croissanceParStep.size();
-		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 		
-		if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
-			
-			
-			this.liste_Ouvrier.removeEmploye(Math.min(10, enfants), false, false, true);//remove 10 enfants
-
-			
-			
-			if (this.labourNormal < 2.5 ) { 
-				double nouveauSalaire = this.labourNormal*1.08;
-				this.labourNormal = nouveauSalaire;
-				
-				}
-			
-			if (this.labourEnfant < 2 ) { 
-				double nouveauSalaireE = this.labourEnfant*1.05;
-				this.labourEnfant= nouveauSalaireE;
-				
-				}
-			
-			
-		}
 	}
+	
 		
 	
 	
@@ -100,13 +74,13 @@ public class Producteur1Acteur implements IActeur {
 
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		int nb_enfants = 150;
-		int nb_equitables = 30;
-		int nb_employees_non_equitable = 100;
+		/*
+		this.nb_enfants = 150;
 		this.liste_Ouvrier=new Producteru1MasseSalariale();
 		this.liste_Ouvrier.addOuvrier(nb_enfants,labourEnfant,false,false,true);
-		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,false,false,true);
-		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,true);
+		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,true,false,false);
+		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,false);
+		*/
 		/*
 		this.stockIni = new HashMap<Feve, Double>();
 		for (Feve feve : Feve.values()) {
@@ -149,19 +123,12 @@ public class Producteur1Acteur implements IActeur {
 
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 
-		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ liste_Ouvrier.GetNombreOuvrierNonEquitable());
-
-		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ liste_Ouvrier.GetNombreOuvrierNonEquitable());
-
-		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ liste_Ouvrier.GetNombreOuvrierEquitable());
-		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ liste_Ouvrier.getNombreEnfants());
+		
 		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = liste_Ouvrier.getSalaireTotal();
 		
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
 		
 		double diffSolde = this.getSolde()-this.soldeInitiale;
 		this.getJournaux().get(0).ajouter("Le solde a l'etape " + Filiere.LA_FILIERE.getEtape() + "est augemente de :"+ this.getSolde());
@@ -171,7 +138,7 @@ public class Producteur1Acteur implements IActeur {
 		this.getJournaux().get(0).ajouter("La croissance economique est :"+(this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
 		this.croissanceParStep.add((this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
 		this.getJournaux().get(0).ajouter("Les nouveaux salaire sont:"+ this.labourNormal);
-		this.amelioration();
+		//this.amelioration();
 		this.getJournaux().get(0).ajouter("Le cout de production total a l'etape " + Filiere.LA_FILIERE.getEtape() + "est "+ this.CoutsProd());
 
 	}

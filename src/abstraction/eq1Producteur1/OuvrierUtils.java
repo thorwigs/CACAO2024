@@ -1,4 +1,6 @@
-package abstraction.eq1Producteur1;
+
+
+/*package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -189,3 +191,4 @@ public static double getSalaireTotal(ArrayList<Ouvrier> listeOuvrier) {
 	}
 	
 }
+*/

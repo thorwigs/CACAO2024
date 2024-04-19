@@ -3,11 +3,13 @@
  * Représente un gestionnaire de la masse salariale pour un acteur producteur spécifique dans la filière.
  * Gère les salaires, les effectifs et les formations du personnel ouvrier.
  * Code par Youssef en globalite
+
  */
 package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -20,7 +22,8 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	protected Journal journalOuvrier;
 
 	////c'est une classe qui contient des fonctions utiles à opérer sur une liste de type Ouvrier//
-	private ArrayList<Ouvrier> listeOuvrier;
+	protected ArrayList<Ouvrier> listeOuvrier;
+	protected ArrayList<Ouvrier> liste_Ouvrier;
 
 	/**
      * Constructeur pour la classe Producteru1MasseSalariale.
@@ -28,8 +31,16 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
      */
 	public Producteru1MasseSalariale() {
 		this.journalOuvrier = new Journal(this.getNom()+"   journal Ouvrier",this);
+		this.nb_enfants = 150;
+		this.nb_normal = 100;
+		this.nb_equitable = 30;
+		
 
 		this.listeOuvrier=new ArrayList<Ouvrier>();
+		this.addOuvrier(this.nb_enfants, this.labourEnfant, false, false, true);
+		this.addOuvrier(this.nb_equitable, this.labourEquitable, true, false, false);
+		this.addOuvrier(this.nb_normal, this.labourEnfant, false, false, false);
+		liste_Ouvrier = listeOuvrier;
 	}
 	/**
      * Renvoie la liste des ouvriers.
@@ -50,7 +61,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 			s=s+ouvrier.getSalaire();
 
 		}
-		this.journalOuvrier.ajouter("Salaire Totale est:"+s);
+		
 		return s;//retourne le salaire total à partir de notre liste d'ouvriers
 
 	}
@@ -156,7 +167,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 		// Filtrer la liste en fonction des attributs isEquitable, isForme, et isEnfant
 		for (Ouvrier ouvrier : this.listeOuvrier) {
-			if (ouvrier.isEquitable == isEquitable && ouvrier.isForme == isForme && ouvrier.estEnfant == isEnfant) {
+			if (ouvrier.isEquitable == isEquitable && ouvrier.isForme == isForme && ouvrier.estEnfant == false) {
 				ouvriersASupprimer.add(ouvrier);
 			}
 		}
@@ -197,6 +208,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 
 		}
+		this.journalOuvrier.ajouter("On a licence "+ Math.min(nombreASupprimer, ouvriersASupprimer.size())+ "personnes et on a due paye un total d'indemnite de:"+ this.indemniteTotal);
 
 	}
 
@@ -240,11 +252,12 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 				ouvrier.setRendement(ouvrier.getRendement()+ augmentationRendement);
 				ouvrier.setSalaire(ouvrier.getSalaire()+augmentationSalaire);
 				ouvrier.setIsForme(true);
+				/*
 				int size = ouvrier.soldeParStep.size();
 				double solde = ouvrier.soldeParStep.get(size);
 				double k =5;
 				ouvrier.soldeParStep.add(size-1, solde - k);
-
+*/
 			}
 
 		}
@@ -253,13 +266,60 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 
 	}
+	public List<Journal> getJournaux() {
+		List<Journal> res = super.getJournaux();
+		res.add(this.journalOuvrier);
+		return res;
+
+	}
 	public void next() {
 		super.next();
-		liste_Ouvrier.UpdateAnciennete();
+		double Labor = this.getSalaireTotal();
+		
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ this.GetNombreOuvrierNonEquitable());
+
+		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ this.GetNombreOuvrierNonEquitable());
+
+		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ this.GetNombreOuvrierEquitable());
+		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ this.getNombreEnfants());
+		this.formation(100);
+		this.UpdateAnciennete();
 		if (this.indemniteTotal > 0) {
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemniteTotale = ",indemniteTotal );
 		}
+		this.amelioration();
 
+	}
+	public void amelioration() {
+		int etape = Filiere.LA_FILIERE.getEtape();
+		int annee = Filiere.LA_FILIERE.getAnnee(etape);
+		float croissement =0 ;	
+		int enfants = this.getNombreEnfants();
+		int size = this.croissanceParStep.size();
+		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
+		
+		if ((annee != 0)& (annee % 3 == 0) && croissant   ) {
+			
+			
+			this.removeEmploye(Math.min(10000, enfants), false, false, true);//remove 10 enfants
+
+			
+			
+			if (this.labourNormal < 2.5 ) { 
+				double nouveauSalaire = this.labourNormal*1.08;
+				this.labourNormal = nouveauSalaire;
+				
+				}
+			
+			if (this.labourEnfant < 2 ) { 
+				double nouveauSalaireE = this.labourEnfant*1.05;
+				this.labourEnfant= nouveauSalaireE;
+				
+				}
+			
+			
+		}
 	}
 
 }
