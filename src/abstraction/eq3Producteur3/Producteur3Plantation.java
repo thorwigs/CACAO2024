@@ -9,8 +9,8 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	abstract HashMap<Feve,Double> quantite();
 	abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
 /**
- * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves
- * de qualité XQ @alexis
+ * @author Alexis et Gabin
+ * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves de qualité XQ 
  * Calcul des valeurs initials par @gabin
  */
 	private double surfaceHQ = 22.74*1000;
@@ -23,9 +23,9 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 ///Gestion de la plantation
 	
 	/**
-	 * Le dictionnaire plantation a pour cle Feve 
-	 * et pour valeur la variable surfaceXQ associee du step precedent.
 	 * @author Alexis
+	 * @return HashMap<Feve,Double> (tableau des surfaces par feve)
+	 * Le dictionnaire plantation a pour cle Feve et pour valeur la variable surfaceXQ associee du step precedent + les eventuelles extensions.
 	 */
 	protected HashMap<Feve, Double> plantation() {
 		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
@@ -42,15 +42,16 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	}
 
 	/**
+	 * @author Alexis
+	 * @param HashMap<Feve,Double> surfaces (tableau des surfaces par feve)
+	 * @return HashMap<Feve,Double> surfaces (tableau des surfaces par feve)
 	 * Cette methode determine la surface supplementaire a acheter pour chaque type de feve
 	 * Elle s'appuie sur la production et les ventes du step precedent
-	 * @author Alexis
 	 */
 	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
 		for (Feve f : prodfeve.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
 			double delta = ventefeve.get(f).getValeur() - prodfeve.get(f).getValeur();// difference entre vente et production de f
-			// this.journal.ajouter(f.toString() + "ventes " + ventefeve.get(f).getValeur()+", "+"production " + prodfeve.get(f).getValeur());
 			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit (en tonnes)
 				supp += 100; 
 			}
@@ -63,9 +64,9 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 ///Gestion de la main d'oeuvre///
 
 	/**
-	 * Renvoie le nombre d'ouvriers necessaires et le type de feve 
-	 * selon la superficie (en ha) et le type de plantation
 	 * @author Arthur
+	 * @return HashMap<Feve,Double> ouvriers (nombre d'ouvriers par type de feve)
+	 * Renvoie le nombre d'ouvriers necessaires et le type de feve selon la superficie (en ha) et le type de plantation
 	*/
 	protected HashMap<Feve,Double> maindoeuvre() {
 		//renvoie le nombre d'ouvriers necessaires et le type de feve selon la superficie (en ha) et le type de plantation

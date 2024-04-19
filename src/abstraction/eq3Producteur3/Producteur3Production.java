@@ -14,6 +14,20 @@ public class Producteur3Production extends Producteur3Plantation {
 	protected double T_ha_HQ_BE = 22.5/1000 ;   //sans pesticide (bio équitable)
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>(); //variable qui sert a prendre en compte le temps de séchage
 	
+	public void initialiser() {
+		super.initialiser();
+		//On set les productions
+		//@Gabin
+		HashMap<Feve,Double> d01 = new HashMap<Feve,Double>();
+		d01.put(Feve.F_BQ, 3.79);
+		d01.put(Feve.F_MQ, 2.527);		//80% de HQ est non équitable
+		d01.put(Feve.F_MQ_E, 0.63);        //20% de MQ est équitable
+		d01.put(Feve.F_HQ, 1.137);			//60% de HQ est ni bio ni équitable
+		d01.put(Feve.F_HQ_E, 0.379);		//20% de HQ est équitable
+		d01.put(Feve.F_HQ_BE, 0.3789);		//20% de HQ est bio équitable
+		setProdTemps(d01,d01);
+	}
+	
 	/**
 	 * @author Gabin
 	 * @return HashMap<Feve,Double> (tableau des récoltes selon les fèves)
