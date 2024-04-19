@@ -62,6 +62,10 @@ public class PrévisionAide extends Transformateur3Acteur{
 		
 		}
 		else {
+			/**
+			 * @author Mahel et Cédric
+			 */
+			
 			for(Feve f :stockFeves.keySet()){
 				// HashMap<Feve,Double> steps_avantdernier = historiquesStockFeves.get(historiquesStockFeves.size()-2);
 				HashMap<Feve,Double> steps_dernier = historiquesStockFeves.get(historiquesStockFeves.size()-1);
