@@ -157,5 +157,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		totalStocksChoco.retirer(this, quantite, cryptogramme);
 		return quantite;
 	}
+	
+
 }
 
