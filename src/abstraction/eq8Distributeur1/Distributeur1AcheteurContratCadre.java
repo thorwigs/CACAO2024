@@ -206,7 +206,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			    x = new Echeancier (a,b,f+100*(1+contrat.getListePrix().size()));
 			} else {
 			    x = new Echeancier (a,b,f-100*(1+contrat.getListePrix().size()));
-			}
+			} 
 		}
 		return x;
 	}
