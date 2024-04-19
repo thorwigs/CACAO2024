@@ -113,7 +113,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			if (choco.toString().contains("C_BQ")) {
 				double x = (capaciteDeVente*0.32)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));
-			}
+			} 
 			if (choco.toString().contains("C_MQ_E")) {
 				double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));
