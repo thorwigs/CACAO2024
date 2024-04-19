@@ -134,7 +134,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 			return 1.049*contrat.getPrix();
 		}
 		else {
-			return 1.099*contrat.getPrix();  // Si les 2 premiers pile ou face ont échoué, on négocie la vente à +9,9%
+			return 1.099*contrat.getPrix();  //  Si les 2 premiers pile ou face ont échoué, on négocie la vente à +9,9%
 		}
 	}
 
