@@ -72,9 +72,6 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	
 	public void TransformationChocodeMarque() {
 		for(ChocolatDeMarque c : this.chocosProduits) {
-			System.out.println(stockChocoMarque.get(c) + " chocomarque");
-			System.out.println(stockChocoMarque);
-			System.out.println(stockChoco.get(c.getChocolat()) + " choco");
 			if(stockChocoMarque.get(c) != null) {
 				this.stockChocoMarque.put(c, stockChocoMarque.get(c)+stockChoco.get(c.getChocolat()));
 				this.stockChoco.put(c.getChocolat(), (double) 0);
