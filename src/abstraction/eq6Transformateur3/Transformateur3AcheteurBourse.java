@@ -10,8 +10,10 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
+
+// CHAUVOT Cédric
+
 public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre implements IAcheteurBourse {
-	
 	protected Journal journalBourse;
 
 	public Transformateur3AcheteurBourse() {
@@ -25,19 +27,17 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 		super.next();
 		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 	}
-	@Override
+	
 	public double demande(Feve f, double cours) {
 	  
-		// Notre acteur achète des fèves selon leurs différents cours en bourse, et ses stocks.
-		// Il a à la fois des seuils (pour le cours comme pour ses stocks), et des coefficients de 
-		// proportionnalité (+ le prix est bas, + il va en acheter pour les 2 seuils bas, 
-		// et + le prix est haut et moins il va en acheter pour le seuilHaut.
+		// Stratégie : Notre acteur achète des fèves selon leurs différents cours en bourse, et ses stocks.
+		// Il achète en fonction de seuils pour le cours comme pour ses stocks
 		
-	    double seuilTrèsBas = 200;
-	    double seuilBas = 5000;
-	    double seuilHaut = 1000;
+	    double seuilTrèsBas = 2000;
+	    double seuilBas = 4000;
+	    double seuilHaut = 8000;
 	    double demandeDefault = 1000; 
-	    // Faut que je fasse différents seuils seulon les qualités
+
 	   
 	   
 	     if (this.stockFeves.get(f)<10000) {
@@ -46,7 +46,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	
 	
 	    else if (cours < seuilTrèsBas) {
-	        return demandeDefault * 3.0 * cours/seuilTrèsBas; // Si le cours est vraiment bas, on achète beaucoup
+	        return demandeDefault * 3.0 ; // Si le cours est vraiment bas, on achète beaucoup
 	    }
 	    
 	     if (this.stockFeves.get(f)>50000) { // Si on a trop de stocks, on achète uniquement si le cours est très bas (if du dessus, sinon on ignore les if suivants)
@@ -54,20 +54,20 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 		    }
 	   
 	    else if (cours < seuilBas) {
-	        return demandeDefault*1.5 *  cours/seuilBas;  // Si le cours est bas, on n'achète un peu plus que d'habitude
+	        return demandeDefault*1.5 ;  // Si le cours est bas, on n'achète un peu plus que d'habitude
 	    }
 	    
 	    else if (cours > seuilHaut) { // Si le cours est haut, on n'achète rien (les CC devraient suffire, et en cas d'urgence le premier if fera l'affaire)
 	    	return 0;
 	    }
 	   	    else {
-	        return demandeDefault *  (1-cours/seuilTrèsBas); // Si le cours est normal, on achète une quantité 
+	        return demandeDefault ; // Si le cours est normal, on achète une quantité normale
 	    }
 	}
 
 	
 	
-	@Override
+	
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
@@ -75,9 +75,9 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 		
 	}
 
-	@Override
+	// Pas de Blacklist en V1
 	public void notificationBlackList(int dureeEnStep) {
-
+	
 	}
 
 	public List<Journal> getJournaux() {
