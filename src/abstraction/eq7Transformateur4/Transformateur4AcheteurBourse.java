@@ -20,10 +20,13 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	
 
 	public double demande(Feve f, double cours) {
-		
-		D = 20;
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
-		return D;
+		if (this.stockFeves.get(f) <= 100) {
+			D = 20;
+			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
+			return D;
+		} else {
+			return 0;
+		}
 	}
 	
 	
