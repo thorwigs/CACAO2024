@@ -1,5 +1,5 @@
 package abstraction.eq1Producteur1;
-/**@author Abderrahmane ER-RAHMAOU*/
+/**@author Abderrahmane ER-RAHMAOUY*/
 import java.awt.Color;
 import java.awt.Color;
 import java.util.ArrayList;
