@@ -42,7 +42,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	public double demande(Feve f, double cours) {
 	  
 		// Stratégie : Notre acteur achète des fèves selon leurs différents cours en bourse, et ses stocks.
-		// Il achète en fonction de seuils pour le cours comme pour ses stocks
+		// Il achète en fonction de seuils pour le cours comme pour ses stocks.
 		
 		if (f.getGamme()==Gamme.BQ) {
 			 double seuilTrèsBas_BQ = 1000.0;
