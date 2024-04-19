@@ -21,7 +21,9 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.filiere.Banque;
 
 
-////////////// Maureen Leprince ///////////////////////
+////////////// Codé par Maureen Leprince ///////////////////////
+
+// ajouter qqpart Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep())); //
 
 
 public abstract class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
@@ -72,7 +74,8 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 						journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
 					}
 				}
-			}	
+			}
+			
 		}
 	}
 	
@@ -158,7 +161,6 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		this.journal_CC.ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat #"+contrat.getNumero());
-		
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
 			this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);

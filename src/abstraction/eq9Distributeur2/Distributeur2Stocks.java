@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 
-
+// Classe codée par Margot Lourenço Da Silva( pour la mise à jour du journal voir next dans la classe Distributeur2Acteur
 public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected List<ChocolatDeMarque> chocolatsVillors;
@@ -24,7 +24,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	public Distributeur2Stocks() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		
-		this.totalStocksChocoMarque = new VariablePrivee("Eq9DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksChocoMarque = new VariablePrivee("Eq9DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
 
 	}
 	
@@ -52,7 +52,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
 		return this.stockChocoMarque;
 	}
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
+	public double getQuantiteEnStock(IProduit p, int cryptogramme) {//modifié par maxime car il y avait deux fonctions différentes réalisant la même tache
 		if(this.cryptogramme==cryptogramme) {
 		return this.stockChocoMarque.get(p);}
 		else{return 0.0;}
