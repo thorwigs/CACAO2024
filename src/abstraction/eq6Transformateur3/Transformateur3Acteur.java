@@ -136,10 +136,10 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.journal.ajouter("Stock de "+Chocolat.C_MQ_E+" = "+this.stockChoco.get(Chocolat.C_MQ_E));
 		this.journal.ajouter("Stock de "+Chocolat.C_HQ_E+" = "+this.stockChoco.get(Chocolat.C_HQ_E));
 		this.journal.ajouter("Stock de "+Chocolat.C_HQ_BE+" = "+this.stockChoco.get(Chocolat.C_HQ_BE));
-		this.journal.ajouter("Javais raison");
+		/*
 		for(ChocolatDeMarque c : chocosProduits) {
 			this.journal.ajouter("Stock de "+Chocolat.C_BQ+" = "+this.stockChocoMarque.get(c));
-		}
+		}*/
 				// mon commentaire perso
 	
 	}
