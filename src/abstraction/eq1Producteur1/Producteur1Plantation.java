@@ -140,7 +140,7 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 		//On embauche tout au meme temps en embauchera que le quart
 		//System.out.println(getListeOuvrier().size());
 		this.journalOuvrier.ajouter("On a besoin d'embaucher:"+ aEmbaucher);
-		double what = 0.2*aEmbaucher;
+		double what = 0.1*aEmbaucher;
 		aEmbaucher =(int) Math.round(what);
 
 		this.addOuvrier((int)Math.round(0.30*aEmbaucher), this.labourEquitable, true, false, false);
