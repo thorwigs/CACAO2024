@@ -24,6 +24,9 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	////////////////////////////////////////////
 	// Constructeur --> met à jour le journal //
 	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public Transformateur2AcheteurBourse() {
 		super();
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
@@ -33,6 +36,9 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	/////////////	
 	// Demande //
 	/////////////
+	/**
+	 * @Erwann
+	 */
 	public double demande(Feve f, double cours) {
 
 		//à faire : faire les strat sur le nbr de tonne demandé sur BQ
@@ -59,18 +65,30 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	///////////////////////////////////////////////////////////////////////
 	// Notifs de la vente ou de la BlackList + Mise à jour JournalBourse //	
 	///////////////////////////////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public void next() {
 		super.next();
 		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 	}
+	/**
+	 * @Erwann
+	 */
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+"");
 	}
+	/**
+	 * @Erwann
+	 */
 	public void notificationBlackList(int dureeEnStep) {
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" ## BLACKLIST ## pendant "+dureeEnStep+" etapes");
 	}
+	/**
+	 * @Erwann
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
