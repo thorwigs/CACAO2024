@@ -108,7 +108,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	/**
-	 * @author Thomas
+	 * @author Thomas et Cédric
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double moyenne  = 0; 
@@ -123,7 +123,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		}
 		moyenne = moyenne/p;
 		prix = moyenne + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
-		return 1.05 * prix;
+		return 1.03 * prix;
 	}
 	/**
 	 * @author Thomas et Cédric
