@@ -14,7 +14,9 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre implements IVendeurContratCadre{
@@ -30,17 +32,17 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	public void next() {
 		super.next();
 		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
-		for (Chocolat c : stockChoco.keySet()) { 
-			if (stockChoco.get(c)-restantDu(c)>200) { 
+		for (ChocolatDeMarque c : chocosProduits) { 
+			if (stockChocoMarque.get(c) - restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				double parStep = Math.max(100, (stockChocoMarque.get(c)-restantDu(c))/12); 
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 					journalCC6.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
-					if (contrat==null) {
+					if (contrat == null) {
 						journalCC6.ajouter(Color.RED, Color.BLACK,"   echec des negociations");
 					}
 					else {
@@ -66,7 +68,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	/**
 	 * @author Thomas
 	 */
-	public double restantDu(Chocolat c) {
+	public double restantDu(ChocolatDeMarque c) {
 		double res=0;
 		for (ExemplaireContratCadre p : this.contratsEnCours) {
 			if (p.getProduit().equals(c)) {
@@ -87,13 +89,15 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Thomas
 	 */
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>200;
+		
+		return (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)- restantDu((ChocolatDeMarque)produit)>200) ;
+		
 	}
 	/**
 	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("Chocolat")) {
+		if (!contrat.getProduit().getType().equals(chocosProduits)) {
 			return null;
 		}
 		if ( contrat.getEcheancier().getQuantiteTotale()< totalStocksChocoMarque.getValeur()){
@@ -105,36 +109,50 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	/**
-	 * @author Thomas
+	 * @author Thomas et Cédric
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		double moyenne  = 0; 
+		if (contratsEnCours.size() != 0) {
+		double somme  = 0; 
 		int p = 0;
 		double prix = 0;
 		for (ExemplaireContratCadre contratCC : contratsEnCours) {
 			if (((Feve) contrat.getProduit()).equals((Feve) contratCC.getProduit())) {
-				moyenne += contratCC.getPrix();
+				somme += contratCC.getPrix();
 				p += 1;
 			
-			}
+			} 
 		}
-		moyenne = moyenne/p;
+		double moyenne = somme/p;
 		prix = moyenne + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
-		return 1.05 * prix;
+		
+		return 1.03 * prix; // un petit +3% pour maximiser le prfofit
+		} else {
+			
+			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+			return bourse.getCours(Feve.F_MQ).getMax();
+			// Si on n'a pas de contrat en cours, on propose le contrat au max des prix des fèves moyennes qualités en bourse
+			// Mais j'ai l'impression que ce cas n'arrive jamais
+		}
 	}
 	/**
-	 * @author Thomas
+	 * @author Thomas et Cédric
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (Filiere.random.nextDouble()<0.5) {
-			return contrat.getPrix(); // on ne cherche pas a negocier dans 50% des cas
-		} else {//dans 50% des cas on fait une contreproposition differente
-			return 1.05*contrat.getPrix();
+			return 0.5*contrat.getPrix(); // Premier pile ou face, pour savoir si on négocie ou non (ici si la 
+									  // condition est vérifiée on ne négocie pas)
+		} 
+		else if (Filiere.random.nextDouble()<0.5){ // Deuxième pile ou face, s'il est vérifié on négocie la vente à +4,9%
+			return 1.049*contrat.getPrix();
+		}
+		else {
+			return 1.099*contrat.getPrix();  //  Si les 2 premiers pile ou face ont échoué, on négocie la vente à +9,9%
 		}
 	}
 
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur()==this) {
@@ -143,19 +161,21 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 			this.contratsEnCours.add(contrat);
 		}
 		else {
-			System.out.println(">>>>>>>>>>>>>>>> nouveau contrat"+contrat);
+	
 			this.journalCC6.ajouter("Nouveau contrat de ventes " + contrat.getNumero());
 			this.contratsEnCours.add(contrat);
 		}
 	}
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		stockChoco.put((Chocolat)produit, stockChoco.get((Chocolat)produit)-quantite);
-		totalStocksChoco.retirer(this, quantite, cryptogramme);
+		this.journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
+		this.stockChocoMarque.put((ChocolatDeMarque)produit, this.stockChocoMarque.get((ChocolatDeMarque)produit)-quantite);
+		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
-	}
+		}
+	
+
 }
 
