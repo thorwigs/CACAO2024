@@ -33,7 +33,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		for (Chocolat c : stockChoco.keySet()) { 
 			if (stockChoco.get(c)-restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/12); 
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
 				if (acheteurs.size()>0) {
