@@ -1,4 +1,4 @@
-package abstraction.eq6Transformateur3;
+package abstraction.eq7Transformateur4;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -9,6 +9,7 @@ import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
+import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -16,20 +17,17 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurAuxEncheres implements IVendeurAO {
-
-	
+public class Transformateur4VendeurAppelDOffre extends Transformation implements IVendeurAO {
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
 
-	public Transformateur3VendeurAppelDOffre() {
+	public Transformateur4VendeurAppelDOffre() {
 		super();
 		this.journalAO = new Journal(this.getNom()+" journal A.O.", this);
 	}
 
 	public void initialiser() {
 		super.initialiser();
-		this.stockChocoMarque = new HashMap<ChocolatDeMarque, Double>();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			this.prixAO.put(cm, new LinkedList<Double>());
@@ -102,6 +100,4 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurAux
 		}
 	}
 
-	
-	
 }

@@ -24,11 +24,14 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 	
 	
+	/**
+	 * @author Thomas 
+	 */
 	public void next() {
 		super.next();
 		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
 		for (Chocolat c : stockChoco.keySet()) { 
-			if (stockChoco.get(c)-restantDu(c)>2000) { 
+			if (stockChoco.get(c)-restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
@@ -38,10 +41,11 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 					journalCC6.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
 					if (contrat==null) {
-						journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
-					} else {
+						journalCC6.ajouter(Color.RED, Color.BLACK,"   echec des negociations");
+					}
+					else {
 						this.contratsEnCours.add(contrat);
-						journalCC6.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+						journalCC6.ajouter(Color.GREEN, Color.BLACK, "   contrat signe");
 					}
 				} else {
 					journalCC6.ajouter("   pas d'acheteur");
@@ -59,7 +63,9 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		}
 		this.journalCC6.ajouter("=== Partie réception Fèves ====================");
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public double restantDu(Chocolat c) {
 		double res=0;
 		for (ExemplaireContratCadre p : this.contratsEnCours) {
@@ -69,34 +75,82 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		}
 		return res;
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		return jx;
 	}
 
+	/**
+	 * @author Thomas
+	 */
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>2000;
+		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>200;
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getEcheancier();
+		if (!contrat.getProduit().getType().equals("Chocolat")) {
+			return null;
+		}
+		if ( contrat.getEcheancier().getQuantiteTotale()< totalStocksChocoMarque.getValeur()){
+			return contrat.getEcheancier();
+		}
+		else {
+			return null;
+		}
 	}
 
+	/**
+	 * @author Thomas
+	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		
-		return contrat.getPrix(); 
-		
+		double moyenne  = 0; 
+		int p = 0;
+		double prix = 0;
+		for (ExemplaireContratCadre contratCC : contratsEnCours) {
+			if (((Feve) contrat.getProduit()).equals((Feve) contratCC.getProduit())) {
+				moyenne += contratCC.getPrix();
+				p += 1;
+			
+			}
+		}
+		moyenne = moyenne/p;
+		prix = moyenne + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
+		return 1.05 * prix;
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		if (Filiere.random.nextDouble()<0.5) {
+			return contrat.getPrix(); // on ne cherche pas a negocier dans 50% des cas
+		} else {//dans 50% des cas on fait une contreproposition differente
+			return 1.05*contrat.getPrix();
+		}
 	}
 
+	/**
+	 * @author Thomas
+	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		this.contratsEnCours.add(contrat);
+		if(contrat.getAcheteur()==this) {
+			journalCC6.ajouter(Color.ORANGE, Color.WHITE,"Nouveau contrat initié par un producteur");
+			journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
+			this.contratsEnCours.add(contrat);
+		}
+		else {
+			System.out.println(">>>>>>>>>>>>>>>> nouveau contrat"+contrat);
+			this.journalCC6.ajouter("Nouveau contrat de ventes " + contrat.getNumero());
+			this.contratsEnCours.add(contrat);
+		}
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
 		stockChoco.put((Chocolat)produit, stockChoco.get((Chocolat)produit)-quantite);
