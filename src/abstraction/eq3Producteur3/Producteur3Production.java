@@ -98,7 +98,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	 */
 	protected HashMap<Feve,Double> quantiteFuture(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
-		quantite = prodTemps().get(1);
+		quantite = prodTemps.get(1);
 		return quantite;
 	}
 	
