@@ -153,7 +153,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					if (this.stockChocoMarque.keySet().contains(cm)) {
 						this.stockChocoMarque.get(cm).setValeur(this, this.stockChocoMarque.get(cm).getValeur()+newChocoMarque);
 					} else {
-						this.stockChocoMarque.put(cm, new Variable(cm.getNom(), this));
+						this.stockChocoMarque.put(cm, new Variable(cm.getNom(), this, newChocoMarque));
 					}
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChocoMarque,3,2)+" T de "+cm);
 					this.totalStocksChocoMarque.ajouter(this,newChocoMarque, this.cryptogramme);
