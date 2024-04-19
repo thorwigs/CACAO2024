@@ -17,8 +17,10 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 
-//faite par Maxime
-
+/** classe Contrat Cadre
+ * @author Maxime
+ * @author Prof
+ */
 
 public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse implements IVendeurContratCadre {
 
@@ -41,7 +43,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	
-	//Stock dans Producteur2Acteur
+	/** next
+	 * @author Maxime
+	 */
 	
 	public void next() {
 		super.next();
@@ -80,6 +84,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.journalCC.ajouter("=================================");
 	}
 
+
+	/** Retourne la quantité de fèves qui doivent encore être livrées
+	 * @author Maxime
+	 */
 	public double restantDu(Feve f) {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -90,6 +98,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		return res;
 	}
 
+	/** prix  
+	 * @author Maxime
+	 */
 	public double prix(Feve f) {
 		double res=0;
 		List<Double> lesPrix = new LinkedList<Double>();
@@ -112,17 +123,27 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		}
 		return res;
 	}
-
+	
+	/** Ajoute le journalCC aux autres journaux
+	 * @author Maxime
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalCC);
 		return jx;
 	}
 
+	/** Indique par un booléen si on a assez de fèves pour passer un contrat cadre
+	 * @author Maxime
+	 */
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200;
 	}
 
+
+	/** contre proposition du vendeur
+	 * @author Maxime
+	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("      contreProposition("+contrat.getProduit()+" avec echeancier "+contrat.getEcheancier());
 		Echeancier ec = contrat.getEcheancier();
@@ -154,6 +175,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 				return res;
 	}
 
+
+	/** Proposition de prix contrat cadre
+	 * @author Maxime
+	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0; // ne peut pas etre le cas normalement 
@@ -169,6 +194,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		return res;
 	}
 
+
+	/** Contre proposition de prix du vendeur pour un
+	 * @author Maxime
+	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0; // ne peut pas etre le cas normalement 
@@ -200,6 +229,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.contratsEnCours.add(contrat);
 	}
 
+	/** Retire les fèves du stock pour les livrer au client
+	 * @author Maxime
+	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double stockActuel = stock.get(produit);
 		double aLivre = Math.min(quantite, stockActuel);
