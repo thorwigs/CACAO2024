@@ -297,8 +297,8 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 	}
 	public void next() {
 		super.next();
-		this.maindoeuvre();
-		this.recruitWorkers(this.ouvriers);
+		//this.maindoeuvre();
+		//this.recruitWorkers(this.ouvriers);
 		if (Filiere.LA_FILIERE.getEtape() == 12) {
 			this.achat(nombreHecMax-nombreHec);
 		}
