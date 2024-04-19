@@ -9,7 +9,6 @@ package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -25,48 +24,31 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	////c'est une classe qui contient des fonctions utiles à opérer sur une liste de type Ouvrier//
 	protected ArrayList<Ouvrier> listeOuvrier;
 	protected ArrayList<Ouvrier> liste_Ouvrier;
-	protected HashMap<Ouvrier, Integer> listeEmployee;
-	protected Ouvrier enfant;
-	protected Ouvrier Equitable;
-	protected Ouvrier Normal;
-	protected Ouvrier forme;
-	protected Ouvrier EquiForme;
+
 	/**
 	 * Constructeur pour la classe Producteru1MasseSalariale.
 	 * Initialise le journal des ouvriers et la liste des ouvriers.
 	 */
 	public Producteur1MasseSalariale() {
 		this.journalOuvrier = new Journal(this.getNom()+"   journal Ouvrier",this);
-		this.listeEmployee = new HashMap<Ouvrier, Integer>();
-		this.enfant = new Ouvrier(0, 1, 0.8, false, false, true);
-		this.Equitable = new Ouvrier(0, 1, 3, true, false, false);
-		this.Normal = new Ouvrier(0, 1, 1.8, false, false, false);
-		this.forme = new Ouvrier(0, 1, 2.2, false, true, false);
-		this.EquiForme = new Ouvrier(0, 1, 3.5, true, true, false);
 		this.nb_enfants = 150;
 		this.nb_normal = 100;
 		this.nb_equitable = 30;
-		this.listeEmployee.put(enfant, nb_enfants);
-		this.listeEmployee.put(Equitable, nb_equitable);
-		this.listeEmployee.put(Normal, nb_normal);
-		this.listeEmployee.put(EquiForme, 0);
-		this.listeEmployee.put(forme, 0);
 
-/*
+
 		this.listeOuvrier=new ArrayList<Ouvrier>();
 		this.addOuvrier(this.nb_enfants, this.labourEnfant, false, false, true);
 		this.addOuvrier(this.nb_equitable, this.labourEquitable, true, false, false);
 		this.addOuvrier(this.nb_normal, this.labourEnfant, false, false, false);
 		liste_Ouvrier = listeOuvrier;
-		*/
 	}
 	/**
 	 * Renvoie la liste des ouvriers.
 	 * @return La liste des ouvriers.
 	 */
-	//public ArrayList<Ouvrier> getListeOuvrier() {
-	//	return this.listeOuvrier;
-	//}
+	public ArrayList<Ouvrier> getListeOuvrier() {
+		return this.listeOuvrier;
+	}
 
 
 	/**
@@ -74,11 +56,11 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 * @return Le salaire total.
 	 */
 	public double getSalaireTotal() {
-		double s = 0;
-		for (Ouvrier o : this.listeEmployee.keySet()) {
-			s += o.getSalaire()* this.listeEmployee.get(o);
+		double s =0;
+		for (Ouvrier ouvrier : this.listeOuvrier) {
+			s=s+ouvrier.getSalaire();
+
 		}
-		
 
 		return s;//retourne le salaire total à partir de notre liste d'ouvriers
 
@@ -89,9 +71,13 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 * @return Le nombre d'enfants.
 	 */
 	public int getNombreEnfants() {
-		int s = 0;
-		for (Ouvrier o : this.listeEmployee.keySet()) {
-			s += (o.getIsEnfant() ? 1 : 0 )*this.listeEmployee.get(o);
+		int s=0;
+		for (Ouvrier ouvrier : this.listeOuvrier) {
+			if (ouvrier.getIsEnfant()) {
+				s=s+1;
+
+			}
+
 		}
 		return s;//retourne le nombre d'enfants
 
@@ -101,9 +87,13 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 * @return Le nombre d'ouvriers équitables.
 	 */
 	public int GetNombreOuvrierEquitable() {
-		int s = 0;
-		for (Ouvrier o : this.listeEmployee.keySet()) {
-			s += (o.getIsEquitable() ? 1 : 0 )*this.listeEmployee.get(o);
+		int s=0;
+		for (Ouvrier ouvrier : this.listeOuvrier) {
+			if (ouvrier.isEquitable) {
+				s=s+1;
+
+			}
+
 		}
 		return s;//retourne le nombre de travailleurs dans l'équitable
 
@@ -126,12 +116,15 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	public int getNombreOuvrierFormés() {
 
 		int s=0;
-		
-		for (Ouvrier o : this.listeEmployee.keySet()) {
-			s += (o.getIsForme() ? 1 : 0 )*this.listeEmployee.get(o);
+		for (Ouvrier ouvrier : this.listeOuvrier) {
+			if (ouvrier.isForme) {
+				s=s+1;
+
+			}
+
+
 		}
-		return s;
-		//retourne le nombre d'ouvriers ayant fait une formation
+		return s;//retourne le nombre d'ouvriers ayant fait une formation
 	}
 	/**
 	 * Ajoute un certain nombre d'ouvriers à la liste.
@@ -145,22 +138,10 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 		// Ajout des nouveaux ouvriers à la nouvelle liste
-		if (isEquitable) {
-			this.listeEmployee.put(Equitable, nombre_à_ajouter);
+		for (int i = 0; i < nombre_à_ajouter; i++) {
+			Ouvrier ouvrier_a_ajouter = new Ouvrier(0, 1.0, salaire, isForme, isEquitable, isEnfant);
+			this.listeOuvrier.add(ouvrier_a_ajouter);
 		}
-		if (isEnfant) {
-			this.listeEmployee.put(enfant, nombre_à_ajouter);
-		}
-		if (!(isEquitable) && !(isEnfant)) {
-			this.listeEmployee.put(Normal, nombre_à_ajouter);
-		}
-		if (isEquitable && isForme) {
-			this.listeEmployee.put(EquiForme, nombre_à_ajouter);
-		}
-		if (!(isEquitable) && isForme) {
-			this.listeEmployee.put(forme, nombre_à_ajouter);
-		}
-	
 
 
 	}
@@ -232,7 +213,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	}
 
 
-	
+
 	/**
 	 * Met à jour l'ancienneté de chaque ouvrier dans la liste.
 	 * Met également à jour les caractéristiques des ouvriers en fonction de leur ancienneté.
@@ -296,12 +277,12 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		double Labor = this.getSalaireTotal();
 
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
-		this.journalOuvrier.ajouter("Le nombre d'employees noramux = "+ this.GetNombreOuvrierNonEquitable());
+		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ this.GetNombreOuvrierNonEquitable());
 
-		this.journalOuvrier.ajouter("Le nombre d'employees normaux = "+ this.GetNombreOuvrierNonEquitable());
+		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ this.GetNombreOuvrierNonEquitable());
 
-		this.journalOuvrier.ajouter("Le nombre d'employees equitable = "+ this.GetNombreOuvrierEquitable());
-		this.journalOuvrier.ajouter("Le nombre d'enfants employees = "+ this.getNombreEnfants());
+		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ this.GetNombreOuvrierEquitable());
+		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ this.getNombreEnfants());
 		this.formation(100);
 		this.UpdateAnciennete();
 		if (this.indemniteTotal > 0) {
