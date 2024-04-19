@@ -130,7 +130,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (Filiere.random.nextDouble()<0.5) {
-			return contrat.getPrix(); // Premier pile ou face, pour savoir si on négocie ou non (ici si la 
+			return 0.5*contrat.getPrix(); // Premier pile ou face, pour savoir si on négocie ou non (ici si la 
 									  // condition est vérifiée on ne négocie pas)
 		} 
 		else if (Filiere.random.nextDouble()<0.5){ // Deuxième pile ou face, s'il est vérifié on négocie la vente à +4,9%
