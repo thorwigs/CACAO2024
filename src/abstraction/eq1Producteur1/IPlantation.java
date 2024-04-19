@@ -24,7 +24,7 @@ public interface IPlantation {
      * Renvoie le nombre d'ouvriers nécessaires et le type de feve 
      * selon la superficie (en ha) et le type de plantation
      */
-    HashMap<Feve, Double> maindoeuvre();
+    void maindoeuvre();
     
     /**
      * Recrute de la main-d'œuvre en fonction des besoins et des conditions du marché.
