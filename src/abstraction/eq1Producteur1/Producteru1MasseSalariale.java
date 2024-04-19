@@ -145,6 +145,10 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 
 	}
+	//
+	//
+	//
+	//
 
 	/**
 	 * Supprime un certain nombre d'ouvriers de la liste en fonction de certains critères.
