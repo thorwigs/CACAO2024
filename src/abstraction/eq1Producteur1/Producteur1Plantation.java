@@ -3,7 +3,9 @@
  */
 package abstraction.eq1Producteur1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -296,9 +298,17 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 	}
 	public void next() {
 		super.next();
-		//this.maindoeuvre();
-		//this.recruitWorkers(this.ouvriers);
+		this.maindoeuvre();
+		this.recruitWorkers(this.ouvriers);
+		if (Filiere.LA_FILIERE.getEtape() == 12) {
+			this.achat(nombreHecMax-nombreHec);
+		}
 
+	}
+	public List<Journal> getJournaux() {
+		List<Journal> res=super.getJournaux();
+		res.add(this.journalPlantation);
+		return res;
 	}
 
 }
