@@ -1,6 +1,7 @@
 package abstraction.eq2Producteur2;
 
 import java.awt.Color;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,12 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+
+
+/** classe Contrat Cadre
+ * @author Maxime
+ * @author Prof
+ */
 
 public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse implements IVendeurContratCadre {
 
@@ -36,13 +43,13 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	
-	//Stock dans Producteur2Acteur
+	/** next
+	 * @author Maxime
+	 */
 	
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		//System.out.println("\n stock "+stock);
-		//System.out.println("feves en stock \n"+stock.keySet());
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
@@ -77,6 +84,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.journalCC.ajouter("=================================");
 	}
 
+
+	/** Retourne la quantité de fèves qui doivent encore être livrées
+	 * @author Maxime
+	 */
 	public double restantDu(Feve f) {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -87,6 +98,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		return res;
 	}
 
+	/** prix  
+	 * @author Maxime
+	 */
 	public double prix(Feve f) {
 		double res=0;
 		List<Double> lesPrix = new LinkedList<Double>();
@@ -109,17 +123,27 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		}
 		return res;
 	}
-
+	
+	/** Ajoute le journalCC aux autres journaux
+	 * @author Maxime
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalCC);
 		return jx;
 	}
 
+	/** Indique par un booléen si on a assez de fèves pour passer un contrat cadre
+	 * @author Maxime
+	 */
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200;
 	}
 
+
+	/** contre proposition du vendeur
+	 * @author Maxime
+	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("      contreProposition("+contrat.getProduit()+" avec echeancier "+contrat.getEcheancier());
 		Echeancier ec = contrat.getEcheancier();
@@ -151,6 +175,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 				return res;
 	}
 
+
+	/** Proposition de prix contrat cadre
+	 * @author Maxime
+	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0; // ne peut pas etre le cas normalement 
@@ -166,6 +194,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		return res;
 	}
 
+
+	/** Contre proposition de prix du vendeur pour un
+	 * @author Maxime
+	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0; // ne peut pas etre le cas normalement 
@@ -197,12 +229,14 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.contratsEnCours.add(contrat);
 	}
 
+	/** Retire les fèves du stock pour les livrer au client
+	 * @author Maxime
+	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double stockActuel = stock.get(produit);
 		double aLivre = Math.min(quantite, stockActuel);
 		this.stock_a_vendre((Feve) produit, quantite);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		//this.ajout_stock((Feve) produit, stock.get((Feve) produit)-aLivre);
 		return aLivre;
 	} 
 }
