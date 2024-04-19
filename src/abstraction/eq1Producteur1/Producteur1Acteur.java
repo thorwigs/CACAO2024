@@ -1,12 +1,12 @@
 package abstraction.eq1Producteur1;
-
+/**@author Abderrahmane ER-RAHMAOUY*/
 import java.awt.Color;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eq1Producteur1.OuvrierUtils.ResultatSuppression;
+import abstraction.eq1Producteur1.Producteur1MasseSalariale;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -26,12 +26,12 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
 	
-	protected ArrayList<Ouvrier> liste_Ouvrier;
+	protected Producteur1MasseSalariale liste_Ouvrier;
 	protected int cryptogramme;
 	protected Journal journal;
 	//new stuff I added : Abdo
 	private double coutStockage;
-	//Haythem
+	
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
@@ -48,41 +48,23 @@ public class Producteur1Acteur implements IActeur {
 	protected  double labourEquitable = 3;
 	protected double Part = 0.25;
 	protected int nb_enfants;
+	protected int nb_normal;
+	protected int nb_equitable;
 
 
 	
-
+	 /**
+     * Constructeur de la classe Producteur1Acteur.
+     */
 	public Producteur1Acteur() {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
 		
-	}
-	public void amelioration() {
-		int etape = Filiere.LA_FILIERE.getEtape();
-		int annee = Filiere.LA_FILIERE.getAnnee(etape);
-		float croissement =0 ;
-		int enfants = OuvrierUtils.getNombreEnfants(liste_Ouvrier);
-		int size = this.croissanceParStep.size();
-		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
-		if ((annee != 0)& (annee % 5 == 0) && croissant & (OuvrierUtils.getNombreEnfants(liste_Ouvrier)>=10)  ) {
-			ResultatSuppression resultat =OuvrierUtils.removeEmploye(this.liste_Ouvrier, 10, false, false, true);//remove 10 enfants
-			ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
-			this.liste_Ouvrier=listeMiseAJour;			
-			if (this.labourNormal < 2.5 ) { 
-				double nouveauSalaire = this.labourNormal*1.08;
-				this.labourNormal = nouveauSalaire;
-				
-				}
-			if (this.labourEnfant < 2 ) { 
-				double nouveauSalaireE = this.labourEnfant*1.05;
-				this.labourEnfant= nouveauSalaireE;
-				
-				}
-			
-			
-		}
 		
 	}
+	
+		
+	
 	
 	
 	public HashMap<Feve, Double> getProd(){
@@ -91,32 +73,25 @@ public class Producteur1Acteur implements IActeur {
 	public double getCoutStockage() {
 		return this.coutStockage;
 	}
-
+	 /**
+     * Initialise l'acteur Producteur1.
+     */
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		int nb_enfants = 150;
-		int nb_equitables = 30;
-		int nb_employees_non_equitable = 100;
-		this.liste_Ouvrier=new ArrayList<Ouvrier>();
-
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_enfants,0,labourEnfant,1,false,false,true);
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_equitables,0,labourEquitable,1,true,false,false);
-		OuvrierUtils.addOuvrier(liste_Ouvrier,nb_employees_non_equitable,0,labourNormal,1,false,false,false);
+		/*
+		this.nb_enfants = 150;
+		this.liste_Ouvrier=new Producteru1MasseSalariale();
+		this.liste_Ouvrier.addOuvrier(nb_enfants,labourEnfant,false,false,true);
+		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,true,false,false);
+		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,false);
+		*/
 		/*
 		this.stockIni = new HashMap<Feve, Double>();
 		for (Feve feve : Feve.values()) {
 			this.stockIni.put(feve, 20000.0); //le nombre reste a changer
 		}
 */
-
-		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_enfants,0,labourEnfant,1,false,false,true);
-		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_equitables,0,labourEquitable,1,true,false,false);
-		this.liste_Ouvrier=OuvrierUtils.addOuvrier(liste_Ouvrier,nb_employees_non_equitable,0,labourNormal,1,false,false,false);
-
-	
 		
-
-
 		this.soldeInitiale = this.getSolde();
 		this.soldeParStep.add(this.soldeInitiale);
 		this.croissanceParStep = new ArrayList<Double>();
@@ -148,26 +123,16 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-
-		OuvrierUtils.UpdateAnciennete(liste_Ouvrier);//mettre a jour l'anciennete
 		
 
-	
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
 
-		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ OuvrierUtils.GetNombreOuvrierNonEquitable(this.liste_Ouvrier));
-
-		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ OuvrierUtils.GetNombreOuvrierNonEquitable(this.liste_Ouvrier));
-
-		this.getJournaux().get(0).ajouter("Le nombre d'employees equitable = "+ OuvrierUtils.GetNombreOuvrierEquitable(this.liste_Ouvrier));
-		this.getJournaux().get(0).ajouter("Le nombre d'enfants employees = "+ OuvrierUtils.getNombreEnfants(this.liste_Ouvrier));
+		
 		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
 		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		*/
-		double Labor = OuvrierUtils.getSalaireTotal(liste_Ouvrier);
 		
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
 		
 		double diffSolde = this.getSolde()-this.soldeInitiale;
 		this.getJournaux().get(0).ajouter("Le solde a l'etape " + Filiere.LA_FILIERE.getEtape() + "est augemente de :"+ this.getSolde());
@@ -177,7 +142,7 @@ public class Producteur1Acteur implements IActeur {
 		this.getJournaux().get(0).ajouter("La croissance economique est :"+(this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
 		this.croissanceParStep.add((this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
 		this.getJournaux().get(0).ajouter("Les nouveaux salaire sont:"+ this.labourNormal);
-		this.amelioration();
+	
 		this.getJournaux().get(0).ajouter("Le cout de production total a l'etape " + Filiere.LA_FILIERE.getEtape() + "est "+ this.CoutsProd());
 
 	}
@@ -253,7 +218,7 @@ public class Producteur1Acteur implements IActeur {
 
 
 
-	// Haythem
+	/**@author Haythem */
 	protected double CoutsProd() {
 		double CoutProdBQ=0;
 		double CoutProdMQ=0;
