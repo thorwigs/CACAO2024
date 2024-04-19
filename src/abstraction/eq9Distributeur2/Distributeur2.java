@@ -15,6 +15,6 @@ public class Distributeur2 extends Distributeur2MarqueDistributeur  {
 		frais = this.totalStocksChocoMarque.getValeur(cryptogramme)*this.getCoutStockage();
 		if (frais>0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, getDescription(), frais);}
-			this.getJournaux().get(0).ajouter("Ce coup si, nous avons payé : "+frais+"en coût de stockage : ");
+			this.getJournaux().get(0).ajouter("Ce coup si, nous avons payé : "+frais+" en coût de stockage : ");
 		}
 }
