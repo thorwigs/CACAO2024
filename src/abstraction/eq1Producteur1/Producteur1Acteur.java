@@ -105,8 +105,8 @@ public class Producteur1Acteur implements IActeur {
 		int nb_employees_non_equitable = 100;
 		this.liste_Ouvrier=new Producteru1MasseSalariale();
 		this.liste_Ouvrier.addOuvrier(nb_enfants,labourEnfant,false,false,true);
-		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,false,false,true);
-		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,true);
+		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,true,false,false);
+		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,false);
 		/*
 		this.stockIni = new HashMap<Feve, Double>();
 		for (Feve feve : Feve.values()) {
@@ -148,8 +148,6 @@ public class Producteur1Acteur implements IActeur {
 		
 
 		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
-
-		this.getJournaux().get(0).ajouter("Le nombre d'employees noramux = "+ liste_Ouvrier.GetNombreOuvrierNonEquitable());
 
 		this.getJournaux().get(0).ajouter("Le nombre d'employees normaux = "+ liste_Ouvrier.GetNombreOuvrierNonEquitable());
 

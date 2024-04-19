@@ -35,7 +35,7 @@ public class Producteur1Production extends Producteur1Plantation{
 		// Initialisation des journaux, du stock et d'autres structures de données
 		super();
 		this.journalProduction = new Journal(this.getNom()+"   journal Production",this);
-		this.journalProduction = new Journal(this.getNom()+"   journal Stockage",this);
+		this.journalStockage = new Journal(this.getNom()+"   journal Stockage",this);
 		this.ageStock = new HashMap<String, Integer>();
 		this.Stock_HQ = new ArrayList<Double>();
 		this.Stock_MQ = new ArrayList<Double>();
