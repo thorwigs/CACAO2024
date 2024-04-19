@@ -1,6 +1,8 @@
 package abstraction.eq7Transformateur4;
 
-//fichier codé par Pierrick
+//fichier codé par  Eliott et Pierrick
+//Eliott : tout ce qui concerne les journaux
+//Pierrick : tout le reste
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +16,6 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Transformation extends Transformateur4VendeurAuxEncheres{
 
-	//objectifs : vérifier le stocks de fève : s'il est suffisant pour une fève, produire du chocolat avec, puis attribuer aux chocolat une marque ou nom.
 	protected Journal journalTransfo ;
 	protected List<Double> lescouts; //liste qui contiendra certains des couts à faire pour un step, initialiser à une liste vide à chaque début de l'appel next
 	protected List<Double> lesqtproduite; //liste qui contiendra toutes nos qtés de chocolats produits pour ce step
@@ -26,7 +27,10 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			}
 	
 	public void next() {
+		
+//Pierrick
 		super.next();
+		this.journalTransfo.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "==================");
 		HashMap<ChocolatDeMarque, Double> chocoalivrer = new HashMap<ChocolatDeMarque,Double>(); //critère pour la transformation des chocos de marque
 		this.lescouts = new LinkedList<Double>();//on initialise avec une liste vide (supprime les données du step precedent)
 		this.lesqtproduite = new LinkedList<Double>(); //on les reset à 0
@@ -38,12 +42,14 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 		//Pour les chocos de marque //////////////////////////////////////////////////////////
 		
 		//on fixe le critère : ce qu'on doit produire comme choco de marque
+		
+//Pierrick
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			if (c.getChocolat().isBio() && c.getChocolat().isEquitable()) {
 				double alivrer = 0.0;
 				for (ExemplaireContratCadre contrat : this.contratsEnCours) {
 					if (contrat.getProduit().equals(c)) {
-						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
+						alivrer = alivrer + contrat.getQuantiteALivrerAuStep();
 					}
 				}
 				chocoalivrer.put(c, alivrer);
@@ -53,7 +59,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 				double alivrer = 0.0;
 				for (ExemplaireContratCadre contrat : this.contratsEnCours) {
 					if (contrat.getProduit().equals(c)) {
-						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
+						alivrer = alivrer + contrat.getQuantiteALivrerAuStep();
 					}
 				}
 				chocoalivrer.put(c, alivrer);
@@ -68,9 +74,19 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			if (c.getChocolat().isBio() && c.getChocolat().isEquitable()) {
 				double qtutile1 = 0; //correspond à la qte de fève qu'on va effectivement transformer
 				double stock_hg_be = this.stockFeves.get(Feve.F_HQ_BE);
-				if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)) {
-					//on a moins que ce qu'on doit livrer, donc on produit
-					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 100; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
+				if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)+25000) {
+					//ATTENTION j'ai changé ici la condition :
+					//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 25000 pour pouvoir faire des contrats cadre
+					
+					//on a moins que ce qu'on doit livrer, donc on produit ce qu'on va devoir livrer
+					double aproduire = chocoalivrer.get(c) ;
+					
+					//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
+					if (this.stockChocoMarque.get(c) < 25000) {
+						aproduire = aproduire + 12500; //12500 parce qu'on ne peut produire que 17000 chaque step et qu'il y a déjà les chocolat à livrer a produire, comme ça en deux tour on peut remettre notre stock au dessus de 25000
+					}
+					//donc si on a pas assez de chocolat, on va nécessairement produire de quoi respecté les contrats mais aussi de quoi relancer des contrats
+					
 					double fevenecessaire = aproduire/(this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE)); //formule conversion entre qte feve et qte choco
 					if (stock_hg_be > 0) {
 						if (stock_hg_be > fevenecessaire) {
@@ -116,7 +132,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 				double stock_hg = this.stockFeves.get(Feve.F_HQ);
 				if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)) {
 					//on a moins que ce qu'on doit livrer, donc on produit
-					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 100; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
+					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 500; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
 					double fevenecessaire = aproduire/(this.pourcentageTransfo.get(Feve.F_HQ).get(Chocolat.C_HQ)); //formule conversion entre qte feve et qte choco
 					if (stock_hg > 0) {
 						if (stock_hg > fevenecessaire) {
@@ -187,13 +203,19 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtTransformation", a_payer); //on paye tout d'un coup
 		
-		this.journalTransfo.ajouter("------------------------");
+
 		
 		//TEST :
+		for (Feve f : this.lesFeves) {
+			this.journalTransfo.ajouter("stock de fève" + f+ "après ce step est "+ this.stockFeves.get(f));
+		}
+		
+		
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
 		this.journalTransfo.ajouter("stock totale est de " + this.totalStocksChocoMarque.getValeur(cryptogramme));
+
 
 	}
 	
