@@ -70,15 +70,24 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
 		}
+		this.journalCC.ajouter("---------------------------------");
+		for (ExemplaireContratCadre cc: this.contratsEnCours) {
+			this.journalCC.ajouter(cc.toString());
+		}
+		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+			this.journalCC.ajouter("Feve "+f+" en stock="+stock.get(f).getValeur()+" restant du="+restantDu(f));
+		}
 		this.journalCC.ajouter("=================================");
 	}
 
 	public double restantDu(Feve f) {
 		double res=0;
+		this.journalCC.ajouter("RESTANT DU "+f+" ----");
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getProduit().equals(f)) {
 				res+=c.getQuantiteRestantALivrer();
 			}
+			this.journalCC.ajouter("contrat "+c.getNumero()+" feve "+c.getProduit()+" vs "+f+" RD="+res);
 		}
 		return res;
 	}
@@ -121,11 +130,14 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 		Echeancier ec = contrat.getEcheancier();
 		IProduit produit = contrat.getProduit();
 		Echeancier res = ec;
+		journalCC.ajouter("Echeancier contrat #"+contrat.getNumero()+" volume total="+ec.getQuantiteTotale()+" stock="+stock.get((Feve)produit).getValeur()+" restantdu="+restantDu((Feve)produit));
 		boolean acceptable = produit.getType().equals("Feve")
 				&& ec.getQuantiteTotale()>=1200  // au moins 100 tonnes par step pendant 6 mois
 				&& ec.getStepFin()-ec.getStepDebut()>=11   // duree totale d'au moins 12 etapes
 				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8 // ca doit demarrer dans moins de 4 mois
 				&& ec.getQuantiteTotale()<stock.get((Feve)produit).getValeur()-restantDu((Feve)produit);
+				journalCC.ajouter("Echeancier contrat # acceptable ? "+acceptable);
+				
 				if (!acceptable) {
 					if (!produit.getType().equals("Feve") || stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)<1200) {
 						if (!produit.getType().equals("Feve")) {
@@ -139,8 +151,8 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 					} else {
-						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12))));
-						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12)));
+						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))/12))));
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))/12)));
 					}
 				}
 				journalCC.ajouter("      j'accepte l'echeancier");
