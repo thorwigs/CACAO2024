@@ -77,7 +77,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	
 
 	/**
-	 * @author Cédric 
+	 * @author Arthur 
 	 * 
 	 */	
 
@@ -93,7 +93,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	
 	}
 	/**
-	 * @author Cédric 
+	 * @author Arthur 
 	 * 
 	 */
 	public List<Journal> getJournaux() {
