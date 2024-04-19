@@ -178,13 +178,13 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			return 0.0; // nous ne sommes pas en mesure de fournir un prix raisonnable
 		}
 		if (((Feve)contrat.getProduit()).isEquitable()) {
-			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
-			double alea = Filiere.random.nextInt((int)max);
+			
+			
 			if (contrat.getPrix()<0.8 * prixSansDecouvert) {
 				return contrat.getPrix();
 				}
 			else {
-				return Math.min(0.9*prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*1.25);
+				return Math.min(0.8*prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*1.25);
 			}
 			
 		}
@@ -203,12 +203,11 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	 * @author Thomas
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		System.out.println(">>>>>> "+"Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 		journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur().getNom().equals("EQ6")) {
