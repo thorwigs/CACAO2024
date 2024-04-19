@@ -79,7 +79,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 					
 					//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
 					if (this.stockChocoMarque.get(c) < 25000) {
-						aproduire = aproduire + 25000;
+						aproduire = aproduire + 12500; //12500 parce qu'on ne peut produire que 17000 chaque step et qu'il y a déjà les chocolat à livrer a produire, comme ça en deux tour on peut remettre notre stock au dessus de 25000
 					}
 					//donc si on a pas assez de chocolat, on va nécessairement produire de quoi respecté les contrats mais aussi de quoi relancer des contrats
 					
