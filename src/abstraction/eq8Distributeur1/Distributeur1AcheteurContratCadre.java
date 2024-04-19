@@ -203,9 +203,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
 			
 			if (contrat.getQuantiteTotale() > c-d-e+100) {
-			    x = new Echeancier (a,b,f+1000*(1+contrat.getListePrix().size()));
+			    x = new Echeancier (a,b,f+100*(1+contrat.getListePrix().size()));
 			} else {
-			    x = new Echeancier (a,b,f-1000*(1+contrat.getListePrix().size()));
+			    x = new Echeancier (a,b,f-100*(1+contrat.getListePrix().size()));
 			}
 		}
 		return x;
