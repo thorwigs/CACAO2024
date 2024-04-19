@@ -58,6 +58,15 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 		else{return 0.0;}
 	}
 	
-	
+	public double getTotalStock(int cryptogramme) {
+		if(this.cryptogramme==cryptogramme) {
+			double total =0.0;
+			for (double quantité : this.getStockChocoMarque().values()) {
+				total+=quantité;
+			}
+			return total;
+		}
+		else {return 0.0;}
+	}
 
 }
