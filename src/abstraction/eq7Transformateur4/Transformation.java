@@ -70,9 +70,19 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			if (c.getChocolat().isBio() && c.getChocolat().isEquitable()) {
 				double qtutile1 = 0; //correspond à la qte de fève qu'on va effectivement transformer
 				double stock_hg_be = this.stockFeves.get(Feve.F_HQ_BE);
-				if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)) {
-					//on a moins que ce qu'on doit livrer, donc on produit
-					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 500; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
+				if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)+25000) {
+					//ATTENTION j'ai changé ici la condition :
+					//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 25000 pour pouvoir faire des contrats cadre
+					
+					//on a moins que ce qu'on doit livrer, donc on produit ce qu'on va devoir livrer
+					double aproduire = chocoalivrer.get(c) ;
+					
+					//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
+					if (this.stockChocoMarque.get(c) < 25000) {
+						aproduire = aproduire + 25000;
+					}
+					//donc si on a pas assez de chocolat, on va nécessairement produire de quoi respecté les contrats mais aussi de quoi relancer des contrats
+					
 					double fevenecessaire = aproduire/(this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE)); //formule conversion entre qte feve et qte choco
 					if (stock_hg_be > 0) {
 						if (stock_hg_be > fevenecessaire) {

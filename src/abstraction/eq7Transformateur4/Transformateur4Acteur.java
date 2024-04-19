@@ -65,7 +65,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		this.coutadjuvant = 1200;
 		this.coutmachine = 8.0;
-		this.nbemployeCDI = 5340;
+		this.nbemployeCDI = 8000; //cela nous permet de faire 30000t de chocolat par step
 		this.tauxproductionemploye = 3.75;
 		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
 		this.coutproduction_tonne_step = new HashMap<Chocolat,Double>();
