@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
@@ -22,18 +23,23 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	public Transformateur2VendeurCCadre () {
 		super();
 	}
-	
+	/***
+	 * @author Robin
+	 */
 	public void initialiser() {
 		super.initialiser();
 		this.BlackListAcheteur = new HashMap<IAcheteurContratCadre, Integer>();
 	}
 	
+	/***
+	 * @author Robin
+	 */
 	public void next() {
 		super.next();
 		this.journalCC.ajouter("===VENDEUR=========STEP"+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-			if (this.stockChocoMarque.get(cm)>0) { // Modifier quantité minimale avant achat
-				this.journalCC.ajouter("   "+cm+" suffisamment peu en stock pour passer un CC");
+			if (this.stockChocoMarque.get(cm)>78*27500) { 
+				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
 				double parStep = 27500; // Changer quantité par Step
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(cm);
@@ -66,7 +72,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 					this.EtapenegoVente=0;
 			}
 			} else {
-				journalCC.ajouter(cm+" suffisament de stock pour ne pas passer de contrat cadre");
+				journalCC.ajouter(cm+" pas asssez de stock pour passer un contrat cadre");
 				this.EtapenegoVente=0;
 			}
 		}	
@@ -86,16 +92,14 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		}
 	
 	/***
-	 * Robin, Erwann
+	 * @author Robin, Erwann
 	 */
 	public boolean vend(IProduit produit) {
-		return (produit.getType().equals("Chocolat") && this.getQuantiteEnStock(produit, cryptogramme)>0)
-				|| (produit.getType().equals("Feve") && this.getQuantiteEnStock(produit, cryptogramme)>10000)
-				|| (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)>0) ; //Valeur à changer
+		return (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)>0) ; //Valeur à changer
 	}
 	
 	/***
-	 * Robin, Vincent
+	 * @author Robin, Vincent
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		if (contrat.getEcheancier().getQuantiteTotale()< this.totalStocksChocoMarque.getValeur()){
@@ -107,24 +111,32 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		}
 	
 	/***
-	 * Robin, Vincent
+	 * @author Robin,Erwann
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		
+		ChocolatDeMarque cm = (ChocolatDeMarque)contrat.getProduit();
+		Gamme gamme = cm.getGamme();
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		double prix = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+		if (gamme == Gamme.BQ) {
+			prix = bourse.getCours(Feve.F_BQ).getMax()*2.0;
+		}
+		return prix;
 	}
 	/**
-	 * Vincent
+	 * @author Robin,Vincent
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		if (Filiere.random.nextDouble() < 0.2) { // 20% des cas
+		if (Filiere.random.nextDouble() < 0.05) { // 5% des cas
 	        return contrat.getPrix(); // ne refait pas de contreproposition
 	    } else {
+	    	EtapenegoVente++;
 	        return contrat.getPrix() * 1.07; // Contreproposition de 7% à la hausse
 	    }
 	}
 	
 	/***
-	 * Robin
+	 * @author Robin
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if (contrat.getVendeur().equals(this)) {
@@ -136,12 +148,12 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	}
 	
 	/***
-	 * Robin
+	 * @author Robin
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockFeves.put((Feve)produit, stockFeves.get((Feve)produit)-quantite);
-		this.totalStocksFeves.retirer(this, quantite, cryptogramme);
+		this.stockChocoMarque.put((ChocolatDeMarque)produit, this.stockChocoMarque.get((ChocolatDeMarque)produit)-quantite);
+		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
 		}
 

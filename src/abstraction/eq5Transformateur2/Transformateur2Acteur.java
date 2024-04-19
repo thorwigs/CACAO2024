@@ -37,9 +37,9 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected HashMap<ChocolatDeMarque, Double> VariationStockChocoMarque; // pour le calcul des coûts de transfo
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // dictionnaire de dictionnaire [feve : [Type chocolat : % cacao ]]
 	protected List<ChocolatDeMarque> chocolatsFusion;
-	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
-	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
-	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
+	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
+	protected Variable totalStocksChoco;  // La qualntite totale de stock de chocolat 
+	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
 	
 	////////////////////////////////////////////
 	// Constructor & Initialization of stocks //
@@ -155,9 +155,9 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 		
-		// Paiment coûts de stockage
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage);
-
+		// Paiment coûts de stockage, le stockage du chocolat de marque n'est pas encore operationnel donc on ne le prend pas en compte.
+		// à rajouter pour choco marque : +this.totalStocksChocoMarque.getValeur(this.cryptogramme))
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
 		
 		// Transformation de tous les chocolats en chocolats de marque`avec une répartition équitable entre les marques
 		for (Chocolat c : lesChocolats) {
