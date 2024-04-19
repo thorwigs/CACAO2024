@@ -18,6 +18,9 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurAuxEncheres implements IVendeurAO{
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
+	/**
+	 * @author noémie
+	 */
 	protected Journal journalAO;
 
 	public Transformateur1VendeurAppelDOffre() {
