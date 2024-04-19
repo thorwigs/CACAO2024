@@ -108,34 +108,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 	    }
 		}
 		else  { // donc si (f.getGamme()==Gamme.HQ)
-			 double seuilTrèsBas_HQ = 5000.0;
-			    double seuilBas_HQ = 8000.0;
-			    double seuilHaut_HQ = 13000.0;
-			    double demandeDefault_HQ = 500.0; 
-
-			     if (this.stockFeves.get(f)<10000.0) {
-					return 10000-this.stockFeves.get(f); // Si on n'a plus de fèves, on en achète en urgence en bourse pour avoir un "fond de roulement" à 10k
-				}
-			
-			
-			    else if (cours < seuilTrèsBas_HQ) {
-			        return demandeDefault_HQ * 3.0 ; // Si le cours est vraiment bas, on achète beaucoup
-			    }
-			    
-			     if (this.stockFeves.get(f)>50000.0) { // Si on a trop de stocks, on achète uniquement si le cours est très bas (if du dessus, sinon on ignore les if suivants)
-				    	return 0.0;
-				    }
-			   
-			    else if (cours < seuilBas_HQ) {
-			        return demandeDefault_HQ*2 ;  // Si le cours est bas, on n'achète un peu plus que d'habitude
-			    }
-			    
-			    else if (cours > seuilHaut_HQ) { // Si le cours est haut, on n'achète rien (les CC devraient suffire, et en cas d'urgence le premier if fera l'affaire)
-			    	return 0.0;
-			    }
-			   	    else {
-			        return demandeDefault_HQ ; // Si le cours est normal, on achète une quantité normale
-			    }
+			 return 0.0; // car on n'achète pas de fèves hautes qualités en bourse
 				
 		}
 	}
