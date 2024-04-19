@@ -38,10 +38,10 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		super.next();
 		this.journalCC.ajouter("===VENDEUR=========STEP"+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-			if (this.stockChocoMarque.get(cm)>78*27500) { 
+			if (this.stockChocoMarque.get(cm)>0) { 
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
-				double parStep = 27500; // Changer quantité par Step
-				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep);
+				double parStep = this.stockChocoMarque.get(cm)/(52*2); // On vend la moitié de la quantité totale de notre stock
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 52, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(cm);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
@@ -102,9 +102,9 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 * @author Robin, Vincent
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		if (contrat.getEcheancier().getQuantiteTotale()< this.totalStocksChocoMarque.getValeur()){
+		if (contrat.getEcheancier().getQuantiteTotale() > this.stockChocoMarque.get((ChocolatDeMarque)contrat.getProduit())){
 			this.EtapenegoVente++;
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,this.totalStocksChocoMarque.getValeur()/52) ; //on ramène la durée et la quantité aux bornes fixées
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,this.stockChocoMarque.get((ChocolatDeMarque)contrat.getProduit())/(52*2)) ; //on ramène la durée et la quantité aux bornes fixées
 		}else {
 			return contrat.getEcheancier();
 			}
