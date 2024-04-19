@@ -206,7 +206,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) && (stockChocoMarque.get(choco) >= 100*12)) { 
+					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) || (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);	
@@ -238,7 +238,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				for(ChocolatDeMarque choco : this.chocolatDistributeur) {
 					
 						
-					if ((stockChoco.get(choco.getChocolat()) - restantALivrer(choco)>=30000) && (stockChoco.get(choco.getChocolat()) >= 100*12)) { 
+					if ((stockChoco.get(choco.getChocolat()) - restantALivrer(choco)>=30000) || (stockChoco.get(choco.getChocolat()) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (-20000 + stockChoco.get(choco.getChocolat()) - restantALivrer(choco))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
