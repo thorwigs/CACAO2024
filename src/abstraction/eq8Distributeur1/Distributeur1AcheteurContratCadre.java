@@ -266,6 +266,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)p,i);
 		}
 		d = d * (1+(Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
+		System.out.println("prévision pour : "+p+ " est "+d);
 		return d ; 
 	}
 	
@@ -276,7 +277,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		super.next();
 		this.journalCC.ajouter("");
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-//		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
+		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
+		System.out.println("prevision : ");
+		for (ChocolatDeMarque choc : chocolats ) {
+			this.prevision(choc, 24);
+		}
+
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
 				contrat_term.add(contrat);
@@ -292,12 +298,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		
 		
 		for (ChocolatDeMarque choc : chocolats) {
-//			System.out.println(""+choc+ " a besoin d'être achté : " + this.achete(choc));
+			System.out.println(""+choc+ " a besoin d'être achté : " + this.achete(choc));
 			if (this.achete(choc)) {
 				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter");
 //				System.out.println("Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
-//				System.out.println(vendeurs.size());
+				System.out.println(vendeurs.size());
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
