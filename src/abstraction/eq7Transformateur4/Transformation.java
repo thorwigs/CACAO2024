@@ -45,7 +45,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 				double alivrer = 0.0;
 				for (ExemplaireContratCadre contrat : this.contratsEnCours) {
 					if (contrat.getProduit().equals(c)) {
-						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
+						alivrer = alivrer + contrat.getQuantiteALivrerAuStep();
 					}
 				}
 				chocoalivrer.put(c, alivrer);
@@ -55,7 +55,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 				double alivrer = 0.0;
 				for (ExemplaireContratCadre contrat : this.contratsEnCours) {
 					if (contrat.getProduit().equals(c)) {
-						alivrer = alivrer + contrat.getQuantiteRestantALivrer();
+						alivrer = alivrer + contrat.getQuantiteALivrerAuStep();
 					}
 				}
 				chocoalivrer.put(c, alivrer);
@@ -72,7 +72,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 				double stock_hg_be = this.stockFeves.get(Feve.F_HQ_BE);
 				if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)) {
 					//on a moins que ce qu'on doit livrer, donc on produit
-					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 100; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
+					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 500; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
 					double fevenecessaire = aproduire/(this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE)); //formule conversion entre qte feve et qte choco
 					if (stock_hg_be > 0) {
 						if (stock_hg_be > fevenecessaire) {
@@ -118,7 +118,7 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 				double stock_hg = this.stockFeves.get(Feve.F_HQ);
 				if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)) {
 					//on a moins que ce qu'on doit livrer, donc on produit
-					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 100; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
+					double aproduire = chocoalivrer.get(c) - this.stockChocoMarque.get(c) + 500; //ce qu'on doit livrer moins ce qu'on a déjà en stock en prenant une marge
 					double fevenecessaire = aproduire/(this.pourcentageTransfo.get(Feve.F_HQ).get(Chocolat.C_HQ)); //formule conversion entre qte feve et qte choco
 					if (stock_hg > 0) {
 						if (stock_hg > fevenecessaire) {
@@ -192,6 +192,11 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 
 		
 		//TEST :
+		for (Feve f : this.lesFeves) {
+			this.journalTransfo.ajouter("stock de fève" + f+ "après ce step est "+ this.stockFeves.get(f));
+		}
+		
+		
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
