@@ -134,7 +134,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur()==this) {
@@ -149,7 +149,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		}
 	}
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());

@@ -24,6 +24,11 @@ import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 
+/**
+ * @author Mahel, Thomas, Cédric et Arthur
+ * 
+ */
+
 public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabricantChocolatDeMarque {
 	
 	protected Journal journal;

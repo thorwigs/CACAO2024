@@ -208,7 +208,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.contratsEnCours.add(contrat);
 	}
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur().getNom().equals("EQ6")) {
