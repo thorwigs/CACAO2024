@@ -1,5 +1,8 @@
 package abstraction.eq8Distributeur1;
 
+/**
+ * @author ianis
+ */
 public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	
 	/**
@@ -18,14 +21,23 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	Distributeur1   
 	 */
 		
+	/**
+	 * @author ianis
+	 */
 	public Distributeur1() {
 		super() ;
 	}
 	
+	/**
+	 * @author ianis
+	 */
 	public void next() {
 		super.next();
 	}
 	
+	/**
+	 *@author ianis
+	 */
 	public void initialiser() {
 		super.initialiser();
 	}
