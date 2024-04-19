@@ -107,7 +107,11 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		if (contrat.getEcheancier().getQuantiteTotale() > this.stockChocoMarque.get((ChocolatDeMarque)contrat.getProduit())){
 			this.EtapenegoVente++;
-			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,this.stockChocoMarque.get((ChocolatDeMarque)contrat.getProduit())/(52*2)) ; //on ramène la durée et la quantité aux bornes fixées
+			double parStepnego=this.stockChocoMarque.get((ChocolatDeMarque)contrat.getProduit())/52*2;
+			if (parStepnego<100) {
+				parStepnego=100;
+			}
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,52,parStepnego) ; //on ramène la durée et la quantité aux bornes fixées
 		}else {
 			return contrat.getEcheancier();
 			}
