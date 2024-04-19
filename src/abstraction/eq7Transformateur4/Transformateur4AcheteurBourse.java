@@ -7,6 +7,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
+//codé par Yanis
 
 public class Transformateur4AcheteurBourse extends Transformateur4Acteur implements IAcheteurBourse {
 
