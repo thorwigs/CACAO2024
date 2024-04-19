@@ -8,7 +8,10 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
-//Faite par Maxime 
+/** classe Vendeur Bourse
+ * @author Maxime
+ * @author Prof
+ */
 
 public abstract class Producteur2VendeurBourse extends Producteur2_Plantation implements IVendeurBourse {
 	
@@ -20,7 +23,9 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 
 	}
 
-	@Override
+	/** Propose une offre à la bourse
+	 * @author Maxime
+	 */
 	public double offre(Feve f, double cours) {
 		if (f.getGamme()==Gamme.MQ) {
 			double offre = this.stock.get(f)*(Math.min(cours, 5000)/5000.0);
@@ -36,24 +41,34 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 		}
 	}
 
-	@Override
+	/** Indique dans le journal qu'une vente a eu lieu et retire les quantités voulues du stock
+	 * @author Maxime
+	 */
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double retire = Math.min(this.stock.get(f), quantiteEnT);;
-		stock.put(f, stock.get(f)-retire);
+		this.stock_a_vendre(f, stock.get(f)-retire);
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f));
 		return retire;
 	}
 
-	@Override
+	/** Indique dans le journal si un acteur est blacklisté
+	 * @author Maxime
+	 */
 	public void notificationBlackList(int dureeEnStep) {
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je suis blackliste pour une duree de "+dureeEnStep+" etapes");
 	}
 	
+	/** Ajoute le journal Bourse à la liste des autres journaux 
+	 * @author Maxime
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalBourse);
 		return jx;
 	}
+	/** Next
+	 * @author Maxime
+	 */
 	public void next() {
 		journalBourse.ajouter("------------ ETAPE " + Filiere.LA_FILIERE.getEtape() + " ---------------");
 		super.next();

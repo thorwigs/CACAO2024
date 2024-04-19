@@ -14,6 +14,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
+//classe 'codé' par Eliott, néanmoins ce n'est pour l'instant qu'un copé-collé de l'exemple de Vendeur aux Enchères fourni
 
 public class Transformateur4VendeurAuxEncheres extends Transformateur4VendeurContratCadre implements IVendeurAuxEncheres {
 	private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
