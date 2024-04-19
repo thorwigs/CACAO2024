@@ -4,7 +4,9 @@ import java.util.*;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 //class pour les décisions de quantité d'achats
-
+/**
+ * @author Mahel
+ */
 public class PrévisionAide extends Transformateur3Acteur{
 	
 	private ArrayList<HashMap<Feve, Double>> historiquesStockFeves;
@@ -17,13 +19,17 @@ public class PrévisionAide extends Transformateur3Acteur{
 		historiquesStockChoco = new ArrayList<>();
 		historiquesStockChoco.add(stockChoco);
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	
 	public ArrayList<HashMap<Feve, Double>> gethistoriquesStockFeves() {
 		return historiquesStockFeves;
 	}
 	
-	
+	/**
+	 * @author Mahel
+	 */
 	
 	public ArrayList<HashMap<Chocolat, Double>> historiquesStockChoco(){
 		return historiquesStockChoco;
@@ -40,7 +46,9 @@ public class PrévisionAide extends Transformateur3Acteur{
 		historiquesStockFeves.add(stockFeves);
 		historiquesStockChoco.add(stockChoco);
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	public HashMap<Feve,Integer> Decision(){
 		HashMap<Feve, Integer> Decision = new HashMap<>();
 		if(historiquesStockFeves.size()<=1) {

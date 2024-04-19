@@ -43,7 +43,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	/**
-	 * @author Thomas
+	 * @author Mahel et Thomas
 	 * 
 	 */
 	public void next() {

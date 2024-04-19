@@ -10,7 +10,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
-public class ProducteurXVendeurBourse extends ProducteurXActeur implements IVendeurBourse{
+public abstract class ProducteurXVendeurBourse extends ProducteurXActeur implements IVendeurBourse{
 	private Journal journalBourse;
 	
 	public ProducteurXVendeurBourse() {
@@ -18,14 +18,17 @@ public class ProducteurXVendeurBourse extends ProducteurXActeur implements IVend
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
 
 	}
+	abstract public double restantDu(Feve f);
 	
 	public double offre(Feve f, double cours) {
 		if (f.getGamme()==Gamme.MQ) {
-			double offre = this.stock.get(f).getValeur()*(Math.min(cours, 5000)/5000.0);
+			double restant = Math.max(0.0, this.stock.get(f).getValeur()- restantDu(f)-2400);
+			double offre = restant*(Math.min(cours, 5000)/5000.0);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+offre+" T de "+f);
 			return offre;
 		} else if (f.getGamme()==Gamme.BQ) {
-			double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
+			double restant = Math.max(0, this.stock.get(f).getValeur()- restantDu(f)-2400);
+			double offre =  restant*(Math.min(cours, 3000)/3000.0);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+offre+" T de "+f);
 			return offre;			
 		} else { // normalement impossible vu que le HQ n'est pas en bourse

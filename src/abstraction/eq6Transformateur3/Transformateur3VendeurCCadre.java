@@ -33,7 +33,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		for (Chocolat c : stockChoco.keySet()) { 
 			if (stockChoco.get(c)-restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/12); 
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
 				if (acheteurs.size()>0) {
@@ -93,7 +93,15 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getEcheancier();
+		if (!contrat.getProduit().getType().equals("Chocolat")) {
+			return null;
+		}
+		if ( contrat.getEcheancier().getQuantiteTotale()< totalStocksChocoMarque.getValeur()){
+			return contrat.getEcheancier();
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -111,14 +119,18 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 			}
 		}
 		moyenne = moyenne/p;
-		prix = moyenne + 0.5 * 1200 + 8;
+		prix = moyenne + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
 		return 1.05 * prix;
 	}
 	/**
 	 * @author Thomas
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return 0.95*contrat.getPrix();
+		if (Filiere.random.nextDouble()<0.5) {
+			return contrat.getPrix(); // on ne cherche pas a negocier dans 50% des cas
+		} else {//dans 50% des cas on fait une contreproposition differente
+			return 1.05*contrat.getPrix();
+		}
 	}
 
 	/**

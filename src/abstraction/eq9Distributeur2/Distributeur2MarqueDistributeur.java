@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.IProduit;
 
 
 public class Distributeur2MarqueDistributeur extends Distributeur2AppelOffre implements IMarqueChocolat {
@@ -15,5 +17,7 @@ public class Distributeur2MarqueDistributeur extends Distributeur2AppelOffre imp
 		choco.add("Ecacaodor");
 		return choco;
 	}
+
+
 
 }
