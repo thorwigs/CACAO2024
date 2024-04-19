@@ -161,7 +161,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 			this.contratsEnCours.add(contrat);
 		}
 		else {
-			System.out.println(">>>>>>>>>>>>>>>> nouveau contrat"+contrat);
+	
 			this.journalCC6.ajouter("Nouveau contrat de ventes " + contrat.getNumero());
 			this.contratsEnCours.add(contrat);
 		}
