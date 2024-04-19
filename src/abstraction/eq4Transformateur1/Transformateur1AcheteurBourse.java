@@ -30,10 +30,10 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	}
 
 	/**
-	 * Retourne la quantite en tonnes de feves de type f desiree par l'acheteur 
-	 * sachant que le cours actuel de la feve f est cours
-	 * @param f le type de feve
-	 * ici 20000 correspond au stock total de fèves voulues - à changer en fonction dans la simulation
+	 * l'idée est de calculer la quantité de fèves à acheter en bourse
+	 *  en fonction des besoins pour deux mois de contrats cadres. 
+	 * La répartition des stocks est de 30% pour les fèves de haute qualité (HQ) et
+	 *  70% pour les fèves de moyenne qualité (MQ)
 	 */
 	public double demande(Feve f, double cours) {
 		double stockCible= Math.max(2*this.demandeCC, 20000);
