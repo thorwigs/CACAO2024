@@ -16,6 +16,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre implements IVendeurContratCadre{
@@ -111,6 +112,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Thomas et Cédric
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
+		if (contratsEnCours.size() != 0) {
 		double somme  = 0; 
 		int p = 0;
 		double prix = 0;
@@ -119,11 +121,19 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 				somme += contratCC.getPrix();
 				p += 1;
 			
-			}
+			} 
 		}
 		double moyenne = somme/p;
 		prix = moyenne + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
-		return 1.03 * prix; // un petit +3% ne fait jamais de mal
+		
+		return 1.03 * prix; // un petit +3% pour maximiser le prfofit
+		} else {
+			
+			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+			return bourse.getCours(Feve.F_MQ).getMax();
+			// Si on n'a pas de contrat en cours, on propose le contrat au max des prix des fèves moyennes qualités en bourse
+			// Mais j'ai l'impression que ce cas n'arrive jamais
+		}
 	}
 	/**
 	 * @author Thomas et Cédric
