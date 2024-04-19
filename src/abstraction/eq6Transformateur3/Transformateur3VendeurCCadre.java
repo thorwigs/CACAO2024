@@ -123,13 +123,18 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 		return 1.05 * prix;
 	}
 	/**
-	 * @author Thomas
+	 * @author Thomas et Cédric
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (Filiere.random.nextDouble()<0.5) {
-			return contrat.getPrix(); // on ne cherche pas a negocier dans 50% des cas
-		} else {//dans 50% des cas on fait une contreproposition differente
-			return 1.05*contrat.getPrix();
+			return contrat.getPrix(); // Premier pile ou face, pour savoir si on négocie ou non (ici si la 
+									  // condition est vérifiée on ne négocie pas)
+		} 
+		else if (Filiere.random.nextDouble()<0.5){ // Deuxième pile ou face, s'il est vérifié on négocie la vente à +4,9%
+			return 1.049*contrat.getPrix();
+		}
+		else {
+			return 1.099*contrat.getPrix();  //  Si les 2 premiers pile ou face ont échoué, on négocie la vente à +9,9%
 		}
 	}
 
