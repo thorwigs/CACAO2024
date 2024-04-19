@@ -115,9 +115,12 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		boolean modif = false;
 		ChocolatDeMarque cm = (ChocolatDeMarque) contrat.getProduit();
 		for (int i=0; i<e.getNbEcheances(); i++) {
-			if (e.getQuantite(e.getStepDebut()+i)>5000 || e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
-				quantites.add(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm));
+			if (e.getQuantite(e.getStepDebut()+i)>5000 )  {
+				quantites.add(5000.);
 				modif=true;
+			} else if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
+				quantites.add(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm));
+				modif = true;
 			} else {
 				quantites.add(e.getQuantite(e.getStepDebut()+i));
 			}
