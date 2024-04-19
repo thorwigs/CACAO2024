@@ -1,5 +1,12 @@
 package abstraction.eq7Transformateur4;
 
+//fichier codé par Anaïs, Eliott et Pierrick
+//Eliott : méthode vend()
+//Pierrick : méthode initialiser()
+//Anaïs : tout le reste
+
+
+
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +57,6 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		return false ; 
 		
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
-		//j'ai modifié un truc : on vérifie que produit est bien un de nos chocolat de marque
 	}
 
 	//Négociations
