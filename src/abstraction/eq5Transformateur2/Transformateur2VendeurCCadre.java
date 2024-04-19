@@ -41,6 +41,9 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 			if (this.stockChocoMarque.get(cm)>0) { 
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
 				double parStep = this.stockChocoMarque.get(cm)/(52*2); // On vend la moitié de la quantité totale de notre stock
+				if (parStep<100) {
+					parStep=100;
+				}
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 52, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(cm);
 				if (acheteurs.size()>0) {
