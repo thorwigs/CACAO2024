@@ -138,7 +138,7 @@ public class Producteur1Acteur implements IActeur {
 		this.getJournaux().get(0).ajouter("La croissance economique est :"+(this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
 		this.croissanceParStep.add((this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
 		this.getJournaux().get(0).ajouter("Les nouveaux salaire sont:"+ this.labourNormal);
-		//this.amelioration();
+	
 		this.getJournaux().get(0).ajouter("Le cout de production total a l'etape " + Filiere.LA_FILIERE.getEtape() + "est "+ this.CoutsProd());
 
 	}

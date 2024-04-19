@@ -75,7 +75,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	}
 	
 	
-	
+	/**
+	*@author youssef ben abdeljelil*/
 	public double revenus_bourse_seuil_AO(AppelDOffre offre,BourseCacao bourse) {
 		
 		
@@ -166,7 +167,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 
 
 			
-		
+	     /**
+	 	*@author youssef ben abdeljelil*/
 		
 		//on va ajouter une strategie pour savoir si on doit porcéder à une vente par appel d'offre 
 		//ou non qui dépend des prix en bourse ,les seuils sur les quanites min et max peuvent 
@@ -181,7 +183,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 			
 
-			 return new OffreVente(offre, this, offre.getProduit(),1000.0);
+			 return new OffreVente(offre, this, offre.getProduit(),this.prix_defaut_feve.get(offre.getProduit()));
 		 }
 		 
 			
@@ -217,7 +219,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 			//ajouter un -1 au score de la blacklist pour cet acheteur pour avoir refusé l'offre
 			mise_a_jour_black_list(acheteur_AO, produit_AO,"notifierVenteAO");
-		
+			/**
+			*@author youssef ben abdeljelil*/
 		
 		
 		
@@ -245,7 +248,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 			
 		
-			
+			/**
+			*@author youssef ben abdeljelil*/
 			
 		}
 		
@@ -288,7 +292,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 			
 			black_list_Acheteur_AO.add(acheteur_AO);
 			
-			
+			/**
+			*@author youssef ben abdeljelil*/
 		}
 	}
 		  
