@@ -16,7 +16,6 @@ import abstraction.eqXRomu.general.Journal;
 
 /**@author youssef ben abdeljelil*/
 
-
 public class Producteru1MasseSalariale extends Producteur1Acteur {
 	double indemniteTotal = 0;
 	protected Journal journalOuvrier;
@@ -46,6 +45,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	 * Renvoie la liste des ouvriers.
 	 * @return La liste des ouvriers.
 	 */
+	/**@author Haythem*/
 	public ArrayList<Ouvrier> getListeOuvrier() {
 		return this.listeOuvrier;
 	}
@@ -160,6 +160,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	// si on veut retourner la liste des oruvriers après supression , on fait:ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
 	//si on veut retounrer l'indemnite:double indemniteTotale = resultat.indemniteTotale;
 	 */
+	/**@author youssef ben abdeljelil*/
 	public void removeEmploye(int nombreASupprimer, boolean isEquitable, boolean isForme, boolean isEnfant) {
 		// Créer une liste pour stocker temporairement les ouvriers à supprimer
 		ArrayList<Ouvrier> ouvriersASupprimer = new ArrayList<>();
@@ -218,6 +219,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	 * Met à jour l'ancienneté de chaque ouvrier dans la liste.
 	 * Met également à jour les caractéristiques des ouvriers en fonction de leur ancienneté.
 	 */
+	/**@author Haythem*/
 	public void UpdateAnciennete() {
 
 
@@ -266,6 +268,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 
 	}
+	/**@author youssef ben abdeljelil*/
 	public List<Journal> getJournaux() {
 		List<Journal> res = super.getJournaux();
 		res.add(this.journalOuvrier);
