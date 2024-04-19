@@ -52,7 +52,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
 		return this.stockChocoMarque;
 	}
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
+	public double getQuantiteEnStock(IProduit p, int cryptogramme) {//modifié par maxime car il y avait deux fonctions différentes réalisant la même tache
 		if(this.cryptogramme==cryptogramme) {
 		return this.stockChocoMarque.get(p);}
 		else{return 0.0;}

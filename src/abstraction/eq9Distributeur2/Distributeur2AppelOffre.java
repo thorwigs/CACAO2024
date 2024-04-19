@@ -10,7 +10,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
-public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
+public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO { //classe codé par maxime
 	protected Journal journal_AO;
 	public Distributeur2AppelOffre() {
 		super();
