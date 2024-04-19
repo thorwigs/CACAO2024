@@ -21,11 +21,15 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 	protected HashMap<Feve, Double> prodAnnee;
 	protected HashMap<Feve, Variable> stock;
 	protected HashMap<Feve, Double> Stocck;
+
+	
+
 	protected HashMap<Feve,Double> ouvriers ;
 	/**
 	 * Constructeur pour la classe Producteur1Plantation.
 	 * Initialise les attributs et le journal de la plantation.
 	 */
+
 	public Producteur1Plantation() {
 		super();
 		this.prodAnnee =  new HashMap<Feve, Double>();
