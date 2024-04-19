@@ -145,11 +145,15 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 
 		this.addOuvrier((int)Math.round(0.30*aEmbaucher), this.labourEquitable, true, false, false);
 		aEmbaucher -=(int) Math.round(0.30*aEmbaucher);
-
-		this.addOuvrier((int)Math.round(0.30*aEmbaucher), this.labourEnfant, false, false, true);
-		aEmbaucher -=(int) Math.round(0.30*aEmbaucher);
-
+		this.addOuvrier((int) Math.round(0.40*aEmbaucher), this.labourNormal, false, false, false);
+		aEmbaucher -=(int) Math.round(0.40*aEmbaucher); 
+		if (this.getNombreEnfants() != 0) {
+			this.addOuvrier((int)Math.round(0.30*aEmbaucher), this.labourEnfant, false, false, true);
+			aEmbaucher -=(int) Math.round(0.30*aEmbaucher);
+		}
 		this.addOuvrier(aEmbaucher, this.labourNormal, false, false, false);
+
+
 	}
 	/**
 	 * Méthode pour acheter une certaine quantité de terres.
@@ -274,10 +278,10 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 		}
 		return stock;
 	}
-	 /**
-     * Méthode pour initialiser le stock de fèves pour chaque type de fève.
-     * @return Un dictionnaire avec chaque fève et sa quantité de stock associée.
-     */
+	/**
+	 * Méthode pour initialiser le stock de fèves pour chaque type de fève.
+	 * @return Un dictionnaire avec chaque fève et sa quantité de stock associée.
+	 */
 	public HashMap<Feve, Double> InitiStock(){
 		/*
 		 * Initialise un dictionnaire feve,double pour facilier la minipulation du stock
@@ -292,8 +296,8 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 	}
 	public void next() {
 		super.next();
-		this.maindoeuvre();
-		this.recruitWorkers(this.ouvriers);
+		//this.maindoeuvre();
+		//this.recruitWorkers(this.ouvriers);
 
 	}
 

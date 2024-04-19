@@ -7,7 +7,6 @@
 package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
-import abstraction.eq1Producteur1.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -99,12 +98,13 @@ public class Producteur1Production extends Producteur1Plantation{
 	}
 	/**
 	 * Convertit une partie des fèves de cacao en fèves de cacao biologiques.
+	 * Cela n'est pas encore fait car on fait pas de bio pour l'instant.
 	 */
 	public void feveToBio() {
 		if (this.pesticides) {
 			this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
 		}
-		else {	boolean bio = true;
+		else {
 		if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
 			this.prodParStep.put(Feve.F_HQ_BE, null);
 		}
@@ -234,8 +234,12 @@ public class Producteur1Production extends Producteur1Plantation{
 			totalStock += this.stock.get(f).getValeur();
 		}
 		this.getJournaux().get(0).ajouter("Stock= "+ totalStock);
-		double coutame = this.AmeliorationStockage() ? 1 : 0;
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*(this.getCoutStockage()+2));
+		double coutame = this.AmeliorationStockage() ? 2 : 0;
+		/*
+		 * Le cout de stockage par ton augmentera de 2 PM si on a decide d'ameliorer le stock
+		 * 
+		 */
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*(this.getCoutStockage()+coutame));
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme,"Cout Prod",this.CoutsProd());
 		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
 		this.Stockage_HQ();

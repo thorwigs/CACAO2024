@@ -291,6 +291,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 		this.amelioration();
 
 	}
+	/*Ecrit par Fatima-ezzahra*/
 	public void amelioration() {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
