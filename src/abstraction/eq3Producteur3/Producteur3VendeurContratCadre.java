@@ -77,7 +77,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
 		        if (quantiteDisponible*10 > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
                     //on propose de livrer a chaque step la quantite qui nous reste apres livraison des autres CC
-		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape(), 10, quantiteDisponible); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
+		        	// Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
+		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape(), 10, quantiteDisponible); 
                     superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
 	            }
             }
@@ -87,7 +88,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	/**
 	 * @author mammouYoussef
-	 * Nettoie la liste des contrats en cours, en éliminant ceux dont les obligations de livraison ont été entièrement satisfaites
+	 * Nettoie la liste des contrats en cours, en éliminant ceux dont les obligations 
+	 * de livraison ont été entièrement satisfaites
 	 */
 	public void setContratsEnCours() {
 	    LinkedList<ExemplaireContratCadre> contratsAConserver = new LinkedList<>();
@@ -105,7 +107,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * (et modification Alexis pour quantiteFuture())
 	 * @param Feve f
 	 * @return double quantiteDisponible
-	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
+	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux 
+	 * contrats, en prenant en compte les engagements existants
 	 */
 	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
 	        double quantiteDisponible = 0.0; // Valeur par défaut
@@ -131,13 +134,14 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	  * @author mammouYoussef (et modification Arthur)
 	  * @param ExemplaireContratCadre contrat
 	  * @return Echeancier nouvelEcheancier
-	  * Propose un echeancier dans le but de satisfaire au mieux celui proposé par le vendeur tout en prenant en compte nos capacités à fournir ce qui est demandé
+	  * Propose un echeancier dans le but de satisfaire au mieux celui proposé par 
+	  * le vendeur tout en prenant en compte nos capacités à fournir ce qui est demandé
 	  */
 	 public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		    Feve f = (Feve) contrat.getProduit();
 		    Echeancier echeancierPropose = contrat.getEcheancier();
 		    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
-		    //on estime la quantite disponible est similaire a chaque step en V1
+		    //on estime que la quantite disponible est similaire a chaque step en V1
 		    double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
 
 		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
