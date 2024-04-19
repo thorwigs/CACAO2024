@@ -46,9 +46,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		//this.getChocolatsProduits();
 		this.journal = new Journal(this.getNom()+" journal", this);
-		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksFeves = new VariablePrivee("Eq4_StockFeves", "<html>Quantite totale de feves en stock</html>",this);
+		this.totalStocksChoco = new VariablePrivee("Eq4_StockChoco", "<html>Quantite totale de chocolat en stock</html>",this);
+		this.totalStocksChocoMarque = new VariablePrivee("Eq4_StockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this);
 		
 
 		this.lesFeves = new LinkedList<Feve>();
@@ -61,7 +61,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.stockFeves=new HashMap<Feve,Variable>();
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, new Variable("EQ4_stock_feve_"+f, this));
-			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
 		}
 		
 		this.stockChoco = new HashMap<Chocolat,Variable>();
@@ -69,13 +68,11 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.chocolatsAVendre.add(Chocolat.C_MQ);
 		for (Chocolat c : this.chocolatsAVendre) {
 			this.stockChoco.put(c, new Variable("EQ4_stock_choco_"+c, this));
-			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 		}
 		
 		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Variable>();
 		for (ChocolatDeMarque c : this.chocosProduits) {
 			this.stockChocoMarque.put(c, new Variable("EQ4_stock_choco_"+c, this));
-			this.totalStocksChocoMarque.ajouter(this, 0.0, this.cryptogramme);
 		}
 	}
 	
@@ -200,6 +197,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		res.add(this.stockFeves.get(Feve.F_MQ));
 		res.addAll(this.stockChoco.values());
 		res.addAll(this.stockChocoMarque.values());
+		res.add(this.totalStocksChocoMarque);
 		return res;
 	}
 
