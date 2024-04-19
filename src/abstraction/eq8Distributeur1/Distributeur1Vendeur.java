@@ -158,7 +158,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		if (choco.getMarque()== "Chocoflow") {
 			return Math.abs(Math.min((capaciteTG*0.6)/chocoProduits.size(), this.getQuantiteEnStock(choco,crypto)));
 		}
-		
+		 
 		else {
 			if(choco.getChocolat().isEquitable()) {
 				if(choco.getChocolat().getGamme()==Gamme.MQ) {
