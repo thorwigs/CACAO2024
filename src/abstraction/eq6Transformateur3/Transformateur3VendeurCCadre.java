@@ -14,6 +14,7 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -30,17 +31,17 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	public void next() {
 		super.next();
 		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
-		for (Chocolat c : stockChoco.keySet()) { 
-			if (stockChoco.get(c)-restantDu(c)>200) { 
+		for (ChocolatDeMarque c : chocosProduits) { 
+			if (stockChocoMarque.get(c) - restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stockChoco.get(c)-restantDu(c))/12); 
+				double parStep = Math.max(100, (stockChocoMarque.get(c)-restantDu(c))/12); 
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 					journalCC6.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
-					if (contrat==null) {
+					if (contrat == null) {
 						journalCC6.ajouter(Color.RED, Color.BLACK,"   echec des negociations");
 					}
 					else {
@@ -66,7 +67,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	/**
 	 * @author Thomas
 	 */
-	public double restantDu(Chocolat c) {
+	public double restantDu(ChocolatDeMarque c) {
 		double res=0;
 		for (ExemplaireContratCadre p : this.contratsEnCours) {
 			if (p.getProduit().equals(c)) {
@@ -87,13 +88,15 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Thomas
 	 */
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>200;
+		
+		return (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)- restantDu((ChocolatDeMarque)produit)>200) ;
+		
 	}
 	/**
 	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("Chocolat")) {
+		if (!contrat.getProduit().getType().equals(chocosProduits)) {
 			return null;
 		}
 		if ( contrat.getEcheancier().getQuantiteTotale()< totalStocksChocoMarque.getValeur()){
