@@ -21,7 +21,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.filiere.Banque;
 
 
-////////////// plafonner le cout d'achat pck la on fait faillite ! ///////////////////////
+////////////// Maureen Leprince ///////////////////////
 
 
 public abstract class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
@@ -47,30 +47,32 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		super.next();
 		this.journal_CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) { 
-			if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000) {
-				this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
-				double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
-				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
-				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
-				journal_CC.ajouter(vendeurs.toString());
-				boolean est_contratPasse = false;
-				for (IVendeurContratCadre vendeur : vendeurs ) {
-					journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-					ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
-					if (contrat==null) {
-						journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
-					} else {
-						this.contratsEnCours.add(contrat);
-						est_contratPasse=true;
-						journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
-						journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
-						break;
+			if (this.stockChocoMarque.get(cm)<2*this.getVentePrecedente(cm)) {
+				if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000) {
+					this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
+					double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
+					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+					List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
+					journal_CC.ajouter(vendeurs.toString());
+					boolean est_contratPasse = false;
+					for (IVendeurContratCadre vendeur : vendeurs ) {
+						journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
+						if (contrat==null) {
+							journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
+						} else {
+							this.contratsEnCours.add(contrat);
+							est_contratPasse=true;
+							journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
+							break;
+						}
+					}
+					if (!est_contratPasse) {
+						journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
 					}
 				}
-				if (!est_contratPasse) {
-					journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
-				}
-			}
+			}	
 		}
 	}
 	
@@ -134,7 +136,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		if (!Filiere.LA_FILIERE.getChocolatsProduits().contains(choco)) { //tous les chocos sont censé être défini et stockés initialement, bizarre bizarre
 			return 0.;
 		}
-		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.9 - this.getCoutStockage()*contrat.getQuantiteTotale();
+		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.7 - this.getCoutStockage()*contrat.getQuantiteTotale();
 		if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(this, cryptogramme, contrat.getPrix())) {
 			/*if (contrat.getPrix() <= prix_limite) {*/
 				return contrat.getPrix();
@@ -142,7 +144,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 				return prix_limite;
 			}*/
 		} else {
-			return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)*0.9-this.getCoutStockage()*contrat.getQuantiteTotale();
+			return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)*0.7-this.getCoutStockage()*contrat.getQuantiteTotale();
 		}
 		
 	}
