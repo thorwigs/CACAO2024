@@ -9,10 +9,16 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
-// Classe faite par Quentin
+/** Classe permettant de gérer les stocks
+ * @author Quentin
+ */
 
 public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
+	
+	/** Définition des variables
+	 * @author Quentin
+	 */	
 	//seuil max de la production stockee
 	private static final double SEUIL = 400000;
 	
@@ -26,6 +32,9 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	
 	protected abstract void trop_d_employes();
 	
+	/** Constructeur de classe
+	 * @author Quentin
+	 */
 	public Producteur2_Stocks() {
 		super();
 		this.journalStocks = new Journal(this.getNom()+" journalStocks", this);
@@ -33,42 +42,69 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 	}
 	
+	/** Initialisation
+	 * @author Quentin
+	 */
 	public void initialiser() {
 		super.initialiser();
 	}
 	
+	/** Getter
+	 * @author Quentin
+	 */
 	public static double getSeuil() {
 		return SEUIL;
 	}
 	
+	/** Getter
+	 * @author Quentin
+	 */
 	public static double getDelaiHqMq() {
 		return DELAI_HQ_MQ;
 	}
 	
+	/** Getter
+	 * @author Quentin
+	 */
 	public static double getDelaiMqBq() {
 		return DELAI_MQ_BQ;
 	}
 	
+	/** Getter
+	 * @author Quentin
+	 */
 	public List<Producteur2_Lot> getLst_Stock_total() {
 		return this.lst_stock_total;
 	}
 	
+	/** Setter
+	 * @author Quentin
+	 */
 	public void SetLst_Stock_total( List<Producteur2_Lot> lst) {
 		this.lst_stock_total = lst;
 	}
 	
+	/** Méthode pour retirer un lot de la liste des lots
+	 * @author Quentin
+	 */
 	public void retire_lot(Producteur2_Lot  l) {
 		this.lst_stock_total.remove(l);
 	}
 	
+	/** Méthode pour obtenir les journaux
+	 * @author Quentin
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx = super.getJournaux();
 		jx.add(journalStocks);
 		return jx;
 	}
 	
-	//Faite par Quentin
-	//Met à jour la liste des stocks en ajoutant un lot produit
+	/** Met à jour la liste des stocks en ajoutant un lot produit
+	 * @param type_feve
+	 * @param quantite
+	 * @author Quentin
+	 */
 	public void ajout_stock(Feve type_feve, double quantite) {
 		
 		//Si on dépasse le seuil de stockage
@@ -98,8 +134,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 	
-	//Faite par Quentin
-	//Initialiser les stocks à l'étape 0 de la filière
+	/** Initialiser les stocks à l'étape 0 de la filière
+	 * @param type_feve
+	 * @param quantite
+	 * @author Quentin
+	 */
 	public void init_stock(Feve type_feve, double quantite) {
 		List<Producteur2_Lot> stocks =  new ArrayList<Producteur2_Lot>();
 		if(quantite != 0 && type_feve == Feve.F_BQ) {
@@ -123,8 +162,10 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.lst_stock_total = stocks;
 	}
 	
-	//Faite par Noémie
-	//Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
+	
+	/** Fonction qui parcourt l'ensemble des lots et récupère la quantité de fève pour chaque type de fèves
+	 * @author Noémie
+	 */
 	public void lot_to_hashmap() {
 		List<Producteur2_Lot> l = this.getLst_Stock_total();
 		double feve_bq = 0;
@@ -167,8 +208,9 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 	}
 	
-	//Faite par Quentin
-	//Change la qualité des fèves en fonction de la durée de stockage
+	/** Change la qualité des fèves en fonction de la durée de stockage
+	 * @author Quentin
+	 */
 	public void changement_qualite() {
 		for(Producteur2_Lot lot : this.lst_stock_total) {
 			if((lot.getType_feve() == Feve.F_HQ_E || lot.getType_feve() == Feve.F_HQ_BE) && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_HQ_MQ)) {
@@ -187,8 +229,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 			}
 	}
 	
-	//Faite par Noémie
-	//Retourne une liste contenant tous les lots d'un même type de fèves
+	
+	/** Retourne une liste contenant tous les lots d'un même type de fèves
+	 * @param type_feve
+	 * @author Noémie
+	 */
 	public List<Producteur2_Lot> lot_type_feve(Feve type_feve){
 		
 		List<Producteur2_Lot> lst_lot  = this.lst_stock_total; 
@@ -202,15 +247,19 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		return lst_lot_feve;
 	}
 	
-	//Faite par Quentin
-	//Calcule le coût total de stockage
+	/** Calcule le coût total de stockage
+	 * @author Quentin
+	 */
 	public double cout_total_stock() {
 		double cout_moyen = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 		return cout_moyen * this.getStockTotal(this.cryptogramme);
 	}
 	
-	//Faite par Quentin
-	//Met à jour la liste des lots dans le stock en fonction du type de fève et de la quantité à vendre souhaités
+	/** Met à jour la liste des lots dans le stock en fonction du type de fève et de la quantité à vendre souhaités
+	 * @param type_feve
+	 * @param quantite_demandee
+	 * @author Quentin
+	 */
 	public double stock_a_vendre(Feve type_feve, double quantite_demandee) {
 		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
 		double quantite_prise = 0;
@@ -232,8 +281,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		return quantite_prise;
 	}
 	
-	//Faite par Noemie 
-	//Permet de gérer le surplus de stock après avoir dépassé le seuil défini
+	/** Permet de gérer le surplus de stock après avoir dépassé le seuil défini
+	 * @param type_feve
+	 * @param quantite
+	 * @author Noémie
+	 */
 	public void trop_de_stock(Feve type_feve, double quantite) {
 		this.trop_d_employes();
 		double stock_init = this.getStockTotal(cryptogramme);
@@ -259,8 +311,9 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		}
 	}
 	
-	//Faite par Quentin
-	//Ajoute les nouvelles informations sur le stock au journal du stock
+	/** Ajoute les nouvelles informations sur le stock au journal du stock
+	 * @author Quentin
+	 */
 	public void ajout_stock_journal() {
 		this.journalStocks.ajouter(" ");
 		this.journalStocks.ajouter("------------ ETAPE " + Filiere.LA_FILIERE.getEtape() + " ---------------");
@@ -275,7 +328,9 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		this.journalStocks.ajouter("Le coût total du stock est de "+this.cout_total_stock()+"€");
 	}
 	
-	//Faite par Quentin
+	/** Next
+	 * @author Quentin
+	 */
 	public void next() {
 		super.next();
 		this.lot_to_hashmap();
