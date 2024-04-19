@@ -1,5 +1,10 @@
 package abstraction.eq7Transformateur4;
 
+//Fichier codé par Eliott et Pierrick
+//Eliott : défintion de certains attributs, définition des méthodes next(), getChocolatsProduits() et getMarquesChocolat()
+//Pierrick : définition des autres attributs et variables, du constructeur, de la méthode initialiser() puis de toutes les autres méthodes à partir du fichier TransformateurXActeur
+
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +26,8 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarque, IMarqueChocolat {
+	
+	//variables codé par Pierrick
 	
 	protected int cryptogramme;
 	private Journal journal;
@@ -59,13 +66,14 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		this.coutadjuvant = 1200;
 		this.coutmachine = 8.0;
-		this.nbemployeCDI = 5340;
+		this.nbemployeCDI = 4534; //cela nous permet de faire 17000t de chocolat par step
 		this.tauxproductionemploye = 3.75;
 		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
 		this.coutproduction_tonne_step = new HashMap<Chocolat,Double>();
 		
 	}
 	
+	//initialisation feves + pourcentage trasnfo : Pierrick, initialisation chocolat : ELiott
 	public void initialiser() {
 		this.coutStockageTransfo = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
@@ -84,17 +92,38 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 			this.journal.ajouter("ajout de 2000000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		
-		//////////a changer, pour l'instant on met dans nos stocks 20000 de chaque types de chocolat au départ
+		//le premier stock est celui de chocolat sans marque, le deuxième est celui de chocolat avec marque
 		this.stockChoco=new HashMap<Chocolat,Double>();
-		for (Chocolat c : Chocolat.values()) {
-			this.stockChoco.put(c, 20000.0);
-			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+		
+		//grâce à ceci on pourra accéder à nos chocolats de marque
+		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
+		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
+		
+		
+		//grâce à ceci on pourra accéder aux différents chocolats marque distributeur (ici 2)
+		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
+		for (String marque : marquesDistributeurs) {
+			this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
 		}
+		
+		
+		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
+		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
+		this.stockChoco.put(Chocolat.C_MQ, 10000.0);
+		this.totalStocksChoco.ajouter(this, 10000.0, this.cryptogramme);
+		this.journal.ajouter("ajout de 10000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 	
 
 
-		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
+		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
+		for (ChocolatDeMarque c : chocolatCocOasis) {
+			this.stockChocoMarque.put(c, 100000.0); //le premier element de stockchocomarque correspond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 100000.0, cryptogramme);
+			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
+		}
+		
 		
 		//on créé la Hashmap de pourcentageTransfo, qu'on va compléter ensuite avec les infos connues par tout le monde ; ne va peut être pas servir...
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
@@ -117,32 +146,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 					
 					
 		this.journal.ajouter("Stock initial chocolat de marque : ");
-		
-		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
-		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
-		
-		
-		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
-		for (String marque : marquesDistributeurs) {
-			this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
-		}
+
+		this.journal.ajouter("le stock de chocolat sans marque initial est de " + totalStocksChoco.getValeur(cryptogramme));
+		this.journal.ajouter("le stock de chocolat avec notre marque initial est de " + totalStocksChocoMarque.getValeur(cryptogramme));
+
 		
 		
-	
-		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
-		
-		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 1000000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 1000000.0, cryptogramme);
-			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
-		}
-		
-		
-		
-		
-		
-		
-		// à continuer..
+		// à modifier pour la V2
 
 	}
 	
@@ -160,11 +170,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
+	
+	
+	//codé par Pierrick
 	public void next() {
-		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "===============");
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		
-		
 		
 	
 		
@@ -257,6 +268,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	}
 
 	@Override
+	
+	//codé par Eliott
 	public List<ChocolatDeMarque> getChocolatsProduits() {  
 		// TODO Auto-generated method stub
 		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
@@ -268,10 +281,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 			}
 			
 		}
+		this.journal.ajouter(" " + chocosProduits);
 		return this.chocosProduits;
 	}
 
 	@Override
+	
+	//codé par Eliott
 	public List<String> getMarquesChocolat() {
 		// TODO Auto-generated method stub
 		LinkedList<String> marques = new LinkedList<String>();
