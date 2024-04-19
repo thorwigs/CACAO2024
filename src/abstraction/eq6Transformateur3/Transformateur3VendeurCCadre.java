@@ -108,29 +108,29 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	/**
-	 * @author Thomas
+	 * @author Thomas et Cédric
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		double moyenne  = 0; 
+		double somme  = 0; 
 		int p = 0;
 		double prix = 0;
 		for (ExemplaireContratCadre contratCC : contratsEnCours) {
 			if (((Feve) contrat.getProduit()).equals((Feve) contratCC.getProduit())) {
-				moyenne += contratCC.getPrix();
+				somme += contratCC.getPrix();
 				p += 1;
 			
 			}
 		}
-		moyenne = moyenne/p;
+		double moyenne = somme/p;
 		prix = moyenne + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
-		return 1.05 * prix;
+		return 1.03 * prix;
 	}
 	/**
 	 * @author Thomas et Cédric
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (Filiere.random.nextDouble()<0.5) {
-			return contrat.getPrix(); // Premier pile ou face, pour savoir si on négocie ou non (ici si la 
+			return 0.5*contrat.getPrix(); // Premier pile ou face, pour savoir si on négocie ou non (ici si la 
 									  // condition est vérifiée on ne négocie pas)
 		} 
 		else if (Filiere.random.nextDouble()<0.5){ // Deuxième pile ou face, s'il est vérifié on négocie la vente à +4,9%

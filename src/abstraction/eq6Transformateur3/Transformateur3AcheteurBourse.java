@@ -80,7 +80,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre 
 			
 	    double seuilTrèsBas_MQ = 1500.0;
 	    double seuilBas_MQ = 3000.0;
-	    double seuilHaut_MQ = 5000.0;
+	    double seuilHaut_MQ = 4000.0;
 	    double demandeDefault_MQ = 500.0; 
 
 	     if (this.stockFeves.get(f)<10000.0) {
