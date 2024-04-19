@@ -299,15 +299,15 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	public void amelioration() {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
-		float croissement =0 ;	
+	
 		int enfants = this.getNombreEnfants();
 		int size = this.croissanceParStep.size();
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 
-		if ((annee != 0)& (annee % 3 == 0) && croissant   ) {
+		if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
 
 
-			this.removeEmploye(Math.min(10000, enfants), false, false, true);//remove 10 enfants
+			this.removeEmploye(Math.min(10, enfants), false, false, true);//remove 10 enfants
 
 
 

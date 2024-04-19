@@ -21,11 +21,20 @@ public class Producteur1Plantation extends Producteru1MasseSalariale implements 
 	protected HashMap<Feve, Double> prodAnnee;
 	protected HashMap<Feve, Variable> stock;
 	protected HashMap<Feve, Double> Stocck;
+<<<<<<< HEAD
+	public void next() {
+		System.out.println(prodAnnee);
+		super.next();
+		this.recruitWorkers(this.maindoeuvre());
+		
+	}
+=======
 	protected HashMap<Feve,Double> ouvriers ;
 	/**
 	 * Constructeur pour la classe Producteur1Plantation.
 	 * Initialise les attributs et le journal de la plantation.
 	 */
+>>>>>>> branch 'main' of https://github.com/Haythem7/CACAO2024.git
 	public Producteur1Plantation() {
 		super();
 		this.prodAnnee =  new HashMap<Feve, Double>();
