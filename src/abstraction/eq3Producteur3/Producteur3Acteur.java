@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -31,12 +33,12 @@ public abstract class Producteur3Acteur implements IActeur {
     protected HashMap<Feve, Variable> prodfeve;
     //creation d'un tableau de variables qui donne les ventes pour chaque type de feve @alexis
     protected HashMap<Feve, Variable> ventefeve;
+    //creation d'un tableau de variables qui donne les stocks pour chaque type de feve @alexis
+    protected HashMap<Feve, Variable> stockfeve;
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
-    //@youssef
-    private double salaireOuvrier = 2.6; 
-    private HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
-    private HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
+    protected HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
+    protected HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
@@ -48,11 +50,13 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.journal_contrat_cadre = new Journal(this.getNom()+" journal contrat cadre",this);
 		this.prodfeve = new HashMap<Feve,Variable>();
 		this.ventefeve = new HashMap<Feve,Variable>();
+		this.stockfeve = new HashMap<Feve,Variable>();
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
 		for (Feve f : Feve.values()) {
-			this.prodfeve.put(f,  new Variable("Prod "+f, this, 1.1));
-			this.ventefeve.put(f,  new Variable("Vente "+f, this, 1.0));
+			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
+			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 1.0));
+			this.prodfeve.put(f,  new Variable("Eq3Stock "+f, this, 1.0));
 			this.ventefevebourse.put(f, 0.2);
 			this.ventefevecadre.put(f, 0.8);
 		}
@@ -149,9 +153,10 @@ public abstract class Producteur3Acteur implements IActeur {
 	
 	public void next() {
 		//On gere nos intrants de production
-		gestionStock();
+		gestionStock(); 
 		//On met a jour les variables GammeStep
 		majGammeStep();
+		peremption();
 		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
 		/**
 		 * Implémentation des journaux spécifiques à la bourse et aux contrats cadres
@@ -167,7 +172,9 @@ public abstract class Producteur3Acteur implements IActeur {
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
 			this.ventefeve.get(f).setValeur(this, ventefevecadre.get(f)+ventefevebourse.get(f));
+			this.stockfeve.get(f).setValeur(this, this.getQuantiteEnStock(f, cryptogramme)) ;
 		}
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -182,7 +189,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : Feve.values()) {
-			res.add(prodfeve.get(f));
+			res.add(stockfeve.get(f));
 		}
 		return res;
 	}
@@ -311,21 +318,31 @@ public abstract class Producteur3Acteur implements IActeur {
 	  * @author mammouYoussef
 	  */	
 	 
-	  protected double coutMaindoeuvre() {
-		   //Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
-		  
-		  
-	        HashMap<Feve, Double> ouvriers = maindoeuvre();
-	        double coutMaindoeuvre = 0;
-	        
-	        // Pour chaque type de fève, calculer le coût de la main-d'œuvre en fonction du nombre d'ouvriers avec le même salaire fixé
-	        for (Feve f : ouvriers.keySet()) {
-	            double nbOuvriers = ouvriers.get(f); 
-	            coutMaindoeuvre += nbOuvriers * salaireOuvrier;  // 2.6 = Salaire par jour par ouvrier, le prix minimal (pour le pérou) décidé avec les autres producteurs
-	        }
-	        
-	        return  coutMaindoeuvre;
-	    }
+	 protected double coutMaindoeuvre() {
+		    // Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
+
+		    HashMap<Feve, Double> ouvriers = maindoeuvre();
+		    double coutMaindoeuvre = 0;
+
+		    // Pour chaque type de fève, calculer le coût de la main-d'œuvre en fonction du nombre d'ouvriers
+		    // et ajuster le salaire selon que la fève est équitable ou non
+		    for (Feve f : ouvriers.keySet()) {
+		        double nbOuvriers = ouvriers.get(f);
+		        double salaireOuvrier; 
+
+		        // Déterminer le salaire en fonction du type de fève
+		        if (f.isEquitable()) {
+		            salaireOuvrier = 3.9; // Salaire pour l'equitable (bio ou non)
+		        } else {
+		            salaireOuvrier = 2.6; // Salaire standard pour les non équitable 
+		        }
+
+		        // Calculer le coût total pour tous les types de fève
+		        coutMaindoeuvre += nbOuvriers * salaireOuvrier;
+		    }
+
+		    return coutMaindoeuvre;
+		}
 	
 	 
 	 protected double calculerCouts() {
@@ -354,7 +371,11 @@ public abstract class Producteur3Acteur implements IActeur {
 			//on ajoute la production du step
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
 		 //on ajoute les couts du step
-			coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6);
+			 if (f.isEquitable()) {
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9);
+			 } else {
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6);
+			 }
 		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts
 			LinkedList<Integer> steps = new LinkedList<Integer>();
 			steps.addAll(stockGammeStep.get(f).keySet());
@@ -383,25 +404,101 @@ public abstract class Producteur3Acteur implements IActeur {
 	 
 	 /**
 	  * @author Arthur
-	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee
+	  * La fonction renvoie le cout de revient pour une gamme et une quantite donnee par tonnes
 	  * On vend en priorite les vieilles feves
 	  */
 	 protected double coutRevient(Feve f,double quantiteDem) {
-		 double accu = 0.0;
-		 //On veut destocker step par step
-		 LinkedList<Integer> steps = new LinkedList<Integer>();
-		 steps.addAll(stockGammeStep.get(f).keySet());
-		 Collections.sort(steps);
-		 for (Integer step : steps) {
-			 double stockStep = stockGammeStep.get(f).get(step);
-			 //On ajoute les couts de revient en proportion de la quantite demandee
-			 if (stockStep > quantiteDem) {
-				 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
-			 } else {
-				 accu += coutGammeStep.get(f).get(step);
-				 quantiteDem -= stockStep;
+		 if (quantiteDem <= 0) {
+			 return 0.0;
+		 } else {
+			 double accu = 0.0;
+			 //On veut destocker step par step
+			 LinkedList<Integer> steps = new LinkedList<Integer>();
+			 steps.addAll(stockGammeStep.get(f).keySet());
+			 Collections.sort(steps);
+			 for (Integer step : steps) {
+				 double stockStep = stockGammeStep.get(f).get(step);
+				 //On ajoute les couts de revient en proportion de la quantite demandee
+				 if (stockStep > quantiteDem) {
+					 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
+				 } else {
+					 accu += coutGammeStep.get(f).get(step);
+					 quantiteDem -= stockStep;
+				 }
 			 }
+			 return accu/quantiteDem;
 		 }
-		 return accu;
+	 }
+	 
+	 /**
+	  * @author Arthur
+	  * A executer apres majGammeStep
+	  * Degrade la qualite des feves selon la duree
+	  */
+	 protected void peremption() {
+		//apres 2 mois, HQ_BE devient MQ_E (garde le label equitable)
+		 Set<Integer> stepsHQBE = new HashSet<Integer>();
+		 stepsHQBE.addAll(stockGammeStep.get(Feve.F_HQ_BE).keySet());
+		for (Integer step : stepsHQBE) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 4) {
+				stockGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_HQ_BE).get(step)+((stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_HQ_BE).remove(step);
+				coutGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_HQ_BE).get(step)+((coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_HQ_BE).remove(step);
+			}
+		}
+		//apres 2 mois, HQ_E devient MQ_E (garde le label equitable)
+		 Set<Integer> stepsHQE = new HashSet<Integer>();
+		 stepsHQE.addAll(stockGammeStep.get(Feve.F_HQ_E).keySet());
+		for (Integer step : stepsHQE) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 4) {
+				stockGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_HQ_E).get(step)+((stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_HQ_E).remove(step);
+				coutGammeStep.get(Feve.F_MQ_E).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_HQ_E).get(step)+((coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_MQ_E).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_HQ_E).remove(step);			
+			}
+		} 
+		//apres 2 mois, HQ devient MQ
+		 Set<Integer> stepsHQ = new HashSet<Integer>();
+		 stepsHQ.addAll(stockGammeStep.get(Feve.F_HQ).keySet());
+		for (Integer step : stepsHQ) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 4) {
+				stockGammeStep.get(Feve.F_MQ).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_HQ).get(step)+((stockGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_HQ).remove(step);
+				coutGammeStep.get(Feve.F_MQ).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_HQ).get(step)+((coutGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_MQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_HQ).remove(step);			
+			}
+		} 
+		//apres 4 mois, MQ devient BQ 
+		 Set<Integer> stepsMQ = new HashSet<Integer>();
+		 stepsMQ.addAll(stockGammeStep.get(Feve.F_MQ).keySet());
+		for (Integer step : stepsMQ) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 8) {
+				stockGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_MQ).get(step)+((stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_MQ).remove(step);
+				coutGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_MQ).get(step)+((coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_MQ).remove(step);			
+			}
+		} 
+		//apres 4 mois, MQ_E devient BQ (et perd son label)
+		 Set<Integer> stepsMQE = new HashSet<Integer>();
+		 stepsMQE.addAll(stockGammeStep.get(Feve.F_MQ_E).keySet());
+		for (Integer step : stepsMQE) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 8) {
+				stockGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(),stockGammeStep.get(Feve.F_MQ_E).get(step)+((stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?stockGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				stockGammeStep.get(Feve.F_MQ_E).remove(step);
+				coutGammeStep.get(Feve.F_BQ).put(Filiere.LA_FILIERE.getEtape(), coutGammeStep.get(Feve.F_MQ_E).get(step)+((coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape())!=null)?coutGammeStep.get(Feve.F_BQ).get(Filiere.LA_FILIERE.getEtape()):0));
+				coutGammeStep.get(Feve.F_MQ_E).remove(step);				
+			}
+		}
+		//apres 6 mois, BQ perime
+		 Set<Integer> stepsBQ = new HashSet<Integer>();
+		 stepsBQ.addAll(stockGammeStep.get(Feve.F_BQ).keySet());
+		for (Integer step : stepsBQ) {
+			if (Filiere.LA_FILIERE.getEtape() - step > 8) {
+				stockGammeStep.get(Feve.F_BQ).remove(step);
+				coutGammeStep.get(Feve.F_BQ).remove(step);
+			}
+		} 		
 	 }
 }
