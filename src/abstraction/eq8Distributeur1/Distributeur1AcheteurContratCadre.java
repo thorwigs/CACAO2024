@@ -200,12 +200,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				}
 			}
 			double e = this.stock_Choco.get(contrat.getProduit()); 
-			double f = (c-d-e)/b;
+			double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
 			
 			if (contrat.getQuantiteTotale() > c-d-e+100) {
-			    x = new Echeancier (a,b,f+100+100*contrat.getListePrix().size());
+			    x = new Echeancier (a,b,f+1000*(1+contrat.getListePrix().size()));
 			} else {
-			    x = new Echeancier (a,b,f-100-100*contrat.getListePrix().size());
+			    x = new Echeancier (a,b,f-1000*(1+contrat.getListePrix().size()));
 			}
 		}
 		return x;
@@ -220,7 +220,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			return 0.0;
 		}
 		
-		System.out.println("prix a perte pour "+contrat.getProduit()+" est de : "+this.prix_a_perte(contrat.getProduit(),contrat.getPrix()));
 		if (contrat.getPrix() <= this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*0.80*contrat.getQuantiteTotale()) {
 				return contrat.getPrix();
 		}
@@ -276,7 +275,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		super.next();
 		this.journalCC.ajouter("");
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		System.out.println("Etape : "+Filiere.LA_FILIERE.getEtape());
 
 		for (ExemplaireContratCadre contrat : contrat_en_cours) {
 			if (contrat.getMontantRestantARegler()==0 && contrat.getQuantiteRestantALivrer()==0) {
@@ -293,11 +291,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		
 		
 		for (ChocolatDeMarque choc : chocolats) {
-			System.out.println(""+choc+ " a besoin d'être achté : " + this.achete(choc));
 			if (this.achete(choc)) {
 				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter");
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
-				System.out.println(vendeurs.size());
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
@@ -321,7 +317,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 						}
 					}
 					double e = this.stock_Choco.get(choc); 
-					double f = (c-d-e)/(b+this.nombreMarquesParType.get(choc.getChocolat()));
+					double f = (c-d-e)/(b*this.nombreMarquesParType.get(choc.getChocolat()));
 				    Echeancier x = new Echeancier (a,b,f+1000);
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"-->aboutit au contrat "+cc);
