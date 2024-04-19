@@ -1,5 +1,7 @@
 package abstraction.eq5Transformateur2;
 
+import java.util.List;
+
 import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -24,34 +26,58 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	protected double coutAdjuvants;//cout des adjuvants pour 1 tonne de chocolat
 	protected double coutMachines;//cout des machines pour 1 tonne de chocolat
 	
-	
+	////////////////////////////////////////////
+	// Constructor & Initialization of values //
+	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public Transformateur2MasseSalariale() {
 		super();
-		this.JournalMasseSalariale=new Journal(this.getNom()+" journal Masse Salariale", this);
+		this.JournalMasseSalariale=new Journal(this.getNom()+" journal MS", this);
 	}
+	/**
+	 * @Erwann
+	 */
 	public void initialiser() {
 		super.initialiser();
-		NbSalaries = 100000;
+		NbSalaries = 100;
 		salaire = 2000;
 		coutLicenciement1Salarie = 4*salaire;
 		capaciteTransformation = 3.7;
 		coutAdjuvants = 1200;
 		coutMachines = 8;
 		
-		this.JournalMasseSalariale.ajouter(""); // ajouter les infos 
+		this.JournalMasseSalariale.ajouter("_____________Initialement_______________________________________");
+		this.JournalMasseSalariale.ajouter("Nombre de salarié :"+NbSalaries);
+		this.JournalMasseSalariale.ajouter("coût d'un salarié par step :"+salaire);
+		this.JournalMasseSalariale.ajouter("coût de licenciement d'un salarié :"+coutLicenciement1Salarie);
+		this.JournalMasseSalariale.ajouter("coût entretien/achat des machines par step :"+coutMachines);
+		this.JournalMasseSalariale.ajouter("coût 1 tonne d'Adjuvants :"+coutAdjuvants);
+		this.JournalMasseSalariale.ajouter("1 salarié peut transformé "+capaciteTransformation+" tonnes de fèves en chocolat par step");
+		this.JournalMasseSalariale.ajouter("________________________________________________________________");
 	}
 	
-	/////////////////////////////////////
-	// Nombres de tonnes Transformées  //
-	/////////////////////////////////////
+
+	////////////////////////////////////////////
+	//             Transformation             //
+	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 * @Victor
+	 */
 	public double TonnesTransformees(Feve f) {
-		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries/0.27); //Quantite maximale a transformer
+		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.NbSalaries*this.capaciteTransformation); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
-		this.stockChoco.put(c, this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees); //Modifie le stock de tablettes
+		//ChocolatDeMarque cm = new ChocolatDeMarque(c,"CacaoFusion",40);//Pourcentage de cacao a modifier
+		//this.stockChocoMarque.put(cm, this.getQuantiteEnStock(cm,cryptogramme)+tonnesTransformees); //Modifie le stock de chocolat de marque
 		this.stockFeves.put(f, this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees); //Modifie le stock de feves
 		return tonnesTransformees; 
 	}
+	/**
+	 * @Erwann
+	 */
 	public double TotauxTonnesTransformees() {
 		double totaux = 0;
 		for (Feve f : Feve.values()) {
@@ -61,35 +87,38 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		return totaux;
 	}
 	
-	/////////////////////////////////////
-	//        Coûts de Transfo         //
-	/////////////////////////////////////
+	////////////////////////////////////////////
+	//      Calcul Coût de transformation     //
+	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
-		return tonnes*coutMachines + tonnes*(1-cm.getPourcentageCacao())*coutAdjuvants ;
+		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
+	/**
+	 * @Erwann
+	 */
 	public double CoutTransformationTotal() {
 		double coutTotal = 0;
-		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			double t = 100; // à modif
-			coutTotal += this.CoutTransformation(cm,t);	
+		for (ChocolatDeMarque cm : chocosProduits) {
+			if (cm.getGamme()!= Gamme.HQ) {
+				double t = VariationStockChocoMarque.get(cm);
+				coutTotal += this.CoutTransformation(cm,t);	
+			}
 		}
 		this.JournalMasseSalariale.ajouter("Le cout total de la transformation est de"+coutTotal);
 		return coutTotal;
 	}
 	
-	
-	/////////////////////////////////////
-	//     Embauche/Licenciement       //
-	/////////////////////////////////////
-	/* Stratégie Embauche/Licenciement :
-	 * - Pas de Licenciement pour l'instant
-	 * - On embauche seulement si le nombre de tonnes a transformées dépasse la capacité de transfo actuelle
-	 * - On caclul ensuite le total
-	 * 
-	 *  Pour la V2 :
-	 * - créer stratégie de licenciement
-	 * - rajouter intérimaire
-	 * - prendre en compte l'historique
+	////////////////////////////////////////////
+	//         Calcul Masse Salariale         //
+	////////////////////////////////////////////
+	/* Embauche si le nbr de salarié n'est pas assez important
+	 * Pas de licenciement pour l'instant
+	 */
+	/**
+	 * @Erwann
 	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = NbSalaries * capaciteTransformation;
@@ -97,39 +126,60 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		if (TonnesTransformees >= CapaciteTransfoTotale) {
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/capaciteTransformation);
 			NbSalaries += embauche;
+			this.JournalMasseSalariale.ajouter("On embauche"+embauche+"personnes");
 			return embauche;
-			
 		}
-		return 0;
+		else {
+			this.JournalMasseSalariale.ajouter("On ne licencie pas");
+			return 0;
+		}
 	}
+	/**
+	 * @Erwann
+	 */
 	public double CoutMasseSalariale(double TonnesTransformees) {
 		double cout_salaire = NbSalaries * salaire;
 		double cout_licenciement = 0;
 		if (this.EmbaucheLicenciement(TonnesTransformees)<0) {
 			cout_licenciement = this.EmbaucheLicenciement(TonnesTransformees) * coutLicenciement1Salarie ;
 		}
+		this.JournalMasseSalariale.ajouter("La masse salariale est de"+cout_salaire);
 		return  cout_salaire + cout_licenciement;
 	}
 	
-	
-	//////////////////////////////////////////////////////
-	//   Next : permet de payer les coûts à la banque   //
-	//////////////////////////////////////////////////////
+	////////////////////////////////////////////
+	//        Next : paiments des coûts       //
+	////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public void next() {
 		super.next();
+		this.JournalMasseSalariale.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		
 		// Paiement des coût de la masse salariale
 		double TotauxTransformees = this.TotauxTonnesTransformees();
-		if (this.CoutMasseSalariale(TotauxTransformees)>=0) {
-			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Masse Salariale", this.CoutMasseSalariale(TotauxTransformees));
+		if (TotauxTransformees > 0.0) {
+			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût MS", this.CoutMasseSalariale(TotauxTransformees));
 		}
-		
 		// Paiement des coût de transformation
 		double TotalCout = this.CoutTransformationTotal();
-		if (TotalCout>=0) {
+		if (TotalCout > 0.0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , TotalCout);
 		}
 	}
 
+	/////////////////////////////////////
+	//   Ajout du journal aux autres   //
+	/////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(JournalMasseSalariale);
+		return jx;
+	}
 }
 
 

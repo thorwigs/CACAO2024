@@ -25,7 +25,7 @@ public class Transformateur4VendeurAuxEncheres extends Transformateur4VendeurCon
 		this.journalEncheres = new Journal(this.getNom()+" journal Encheres vente", this);
 	}
 
-	public void initialiser() {
+	public void initialiser() { // chocomarque ou feves ???
 		super.initialiser();
 		this.supEncheres = (SuperviseurVentesAuxEncheres)(Filiere.LA_FILIERE.getActeur("Sup.Encheres"));
 		this.prixRetenus = new HashMap<ChocolatDeMarque, List<Double>>();
@@ -34,7 +34,7 @@ public class Transformateur4VendeurAuxEncheres extends Transformateur4VendeurCon
 		}		
 	}
 	
-	public Enchere choisir(List<Enchere> propositions) {   
+	public Enchere choisir(List<Enchere> propositions) {   //à modifier
 		//si enchère de fèves, à modifier selon prix auquel on vend les fèves
 		//si enchère de produits finis, remplacer fèves dans le code, par chocolats
 		double prix = propositions.get(0).getPrixTonne();
@@ -71,12 +71,13 @@ public class Transformateur4VendeurAuxEncheres extends Transformateur4VendeurCon
 	
 	//Next
 	
-	public void next() {  //à lire
+	public void next() {  // à lire
 		super.next();
 		this.journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			if (this.stockChocoMarque.get(cm)>5000) { // on ne lance pas une enchere pour moins de 5000 T
-				int quantite = 5000 + Filiere.random.nextInt((int)(this.stockChocoMarque.get(cm)-4990)); 
+				int quantite = 5000 ;
+						//+ Filiere.random.nextInt((int)(this.stockChocoMarque.get(cm)-4990)); 
 					// il faudrait aussi tenir compte des contrats cadres en cours afin de ne pas vendre ce qu'on s'est engage a livrer
 				Enchere enchere = supEncheres.vendreAuxEncheres(this, cryptogramme, cm, quantite);
 				journalEncheres.ajouter("   Je lance une enchere de "+quantite+" T de "+cm);
