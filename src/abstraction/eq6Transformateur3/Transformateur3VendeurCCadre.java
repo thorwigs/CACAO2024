@@ -160,11 +160,11 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Arthur
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-		journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		stockChoco.put((Chocolat)produit, stockChoco.get((Chocolat)produit)-quantite);
-		totalStocksChoco.retirer(this, quantite, cryptogramme);
+		this.journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
+		this.stockChocoMarque.put((ChocolatDeMarque)produit, this.stockChocoMarque.get((ChocolatDeMarque)produit)-quantite);
+		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
-	}
+		}
 	
 
 }
