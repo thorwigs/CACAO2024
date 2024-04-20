@@ -9,6 +9,9 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	
+	/**
+	 * @author Mahel
+	 */
 	public Chocolat Correspond(Feve f) {
 		switch( f ) {
 			
@@ -23,6 +26,9 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 			return Chocolat.C_HQ_BE ;
 	}
 	
+	/**
+	 * @author Mahel
+	 */
 	public void next() {
 		super.next();
 		
@@ -61,6 +67,10 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 		}
 	}
 	
+	/**
+	 * 
+	 * @author Mahel
+	 */
 	public void TransformationFeve(Feve f) {
 		double feve_en_stock = this.stockFeves.get(f);
 		double choco_en_stock = this.stockChoco.get(this.Correspond(f));
@@ -70,6 +80,9 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 		}
 	}
 	
+	/**
+	 * @author Mahel
+	 */
 	public void TransformationChocodeMarque() {
 		for(ChocolatDeMarque c : this.chocosProduits) {
 			if(stockChocoMarque.get(c) != null) {
