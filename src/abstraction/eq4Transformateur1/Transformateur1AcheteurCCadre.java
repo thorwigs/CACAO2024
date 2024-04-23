@@ -18,6 +18,9 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
+/**
+ * @author Oscar_Brian
+ */
 public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsEnCours;
@@ -121,6 +124,9 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 
 
 	@Override
+	/**
+	 * @author Yannig_charonnat
+	 */	
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {   
 	    if (!(contrat.getProduit() instanceof Feve)) {
 	        return null;
