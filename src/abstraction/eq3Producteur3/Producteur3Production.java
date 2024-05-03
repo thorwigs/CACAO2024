@@ -2,6 +2,8 @@ package abstraction.eq3Producteur3;
 
 import java.util.HashMap;
 
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
@@ -13,7 +15,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	protected double T_ha_HQ = 25.0/1000 ;
 	protected double T_ha_HQ_BE = 22.5/1000 ;   //sans pesticide (bio équitable)
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>(); //variable qui sert a prendre en compte le temps de séchage
-	
+	protected Journal journal_Production;
 	public void initialiser() {
 		super.initialiser();
 		//On set les productions

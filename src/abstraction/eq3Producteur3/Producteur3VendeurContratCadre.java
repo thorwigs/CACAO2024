@@ -226,7 +226,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		//CC conclu, on l'affiche dans les journaux et on met a jour les variables pour estimer la quantite disponible de feve
-		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");	
+		this.journal_contrat_cadre.ajouter("Nouveau contrat cadre signé: Contrat N°" + contrat.getNumero() +  ", avec " + contrat.getAcheteur().getNom() +  ", pour " + contrat.getQuantiteTotale() + " tonnes de " + contrat.getProduit() +    " à " + contrat.getPrix() + " €/T");
 		this.contratsEnCours.add(contrat);
 		this.setContratsEnCours();
 	}
