@@ -227,4 +227,3 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 }
 	
 
-
