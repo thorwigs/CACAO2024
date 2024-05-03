@@ -87,6 +87,12 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 			this.contratsEnCours.remove(c);
 		}
 		this.journalCC.ajouter("=================================");
+		
+		for (Feve f : Feve.values()) {
+			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+		}
+		this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC());
+		this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
 	}
 
 
@@ -251,6 +257,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		double stockActuel = stock.get(produit);
 		double aLivre = Math.min(quantite, stockActuel);
 		this.stock_a_vendre((Feve) produit, quantite);
+		/*for (Feve f : Feve.values()) {
+			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+		}*/
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		this.quantiteVendueCC = this.quantiteVendueCC + aLivre;
 		return Math.max(aLivre, 0);

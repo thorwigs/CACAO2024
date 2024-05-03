@@ -68,7 +68,7 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 	 * @author Maxime
 	 */
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		double retire = Math.min(this.stock.get(f), quantiteEnT);;
+		double retire = Math.min(this.stock.get(f), quantiteEnT);
 		this.stock_a_vendre(f, stock.get(f)-retire);
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f));
 		this.setQuantiteVendue(this.getQuantiteVendue() + quantiteEnT);
