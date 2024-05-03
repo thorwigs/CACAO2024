@@ -84,7 +84,7 @@ public class FiliereParDefaut extends Filiere {
 		this.ajouterActeur(new Producteur1());
 		this.ajouterActeur(new Producteur2());
 		this.ajouterActeur(new Producteur3());
-		this.ajouterActeur(new ProducteurX());
+//		this.ajouterActeur(new ProducteurX());
 		this.ajouterActeur(new Transformateur1());
 		this.ajouterActeur(new Transformateur2());
 		this.ajouterActeur(new Transformateur3());
@@ -92,7 +92,7 @@ public class FiliereParDefaut extends Filiere {
 		this.ajouterActeur(new TransformateurX());
 		this.ajouterActeur(new Distributeur1());
 		this.ajouterActeur(new Distributeur2());
-		this.ajouterActeur(new DistributeurX());
+//		this.ajouterActeur(new DistributeurX());
 		this.ajouterActeur(new Romu());
 		this.superviseurCC=new SuperviseurVentesContratCadre();
 		this.ajouterActeur(this.superviseurCC);
