@@ -200,7 +200,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(this.stockFeves.get(Feve.F_HQ));
 		res.add(this.stockFeves.get(Feve.F_MQ));
-		res.addAll(this.stockChoco.values());
+		//res.addAll(this.stockChoco.values());
 		res.addAll(this.stockChocoMarque.values());
 		res.add(this.totalStocksChocoMarque);
 		return res;

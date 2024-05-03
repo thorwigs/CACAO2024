@@ -83,7 +83,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    }
 	    for (ExemplaireContratCadre c : this.contratsTermines) {
 	        journalCC.ajouter("Archivage du contrat " + c);
-	        this.contratsEnCours.remove(c);
+	        this.contratsTermines.remove(c);
 	    }
 	    this.journalCC.ajouter("=================================");}
 	    
