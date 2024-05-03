@@ -22,7 +22,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
-	protected Journal journal_bourse;
+	protected Journal journal_bourse; 
 	protected Journal journal_contrat_cadre;
 	private HashMap<IProduit,Integer> stocks;
 	//passable en parametre/indicateurs

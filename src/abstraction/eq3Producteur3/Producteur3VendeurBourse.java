@@ -23,8 +23,12 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 			return this.getQuantiteEnStock(f,this.cryptogramme);
 		}
 		else {
-			//pas de vente en bourse MQ et HQ pour le moment
-			return 0;
+			if ((getQuantiteEnStock(f,cryptogramme) - ventefeve.get(f).getValeur() > 10)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
+				return this.getQuantiteEnStock(f, cryptogramme);
+			}
+			else {
+				return 0;
+			}
 		}
 	}
 
