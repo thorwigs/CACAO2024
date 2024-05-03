@@ -48,12 +48,6 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.Stocck = this.InitiStock();
 
 		this.stock = this.IniStock();
-		for (Feve feve : this.stock.keySet()) {
-			String s = feve.toString()+"/" +this.getQuantiteEnStock(feve, cryptogramme);
-			this.ageStock.put(s, 0);
-			//this.journalProduction.ajouter(s+ " a l'age suivant"+ this.ageStock.get(s));
-		}
-
 		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));
 
 	}

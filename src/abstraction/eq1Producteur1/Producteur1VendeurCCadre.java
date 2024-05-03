@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.TransformateurX;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -47,7 +48,11 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
+				
+				acheteurs.remove(acheteurs.size()-1);
+				
 				if (acheteurs.size()>0) {
+					
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, f, e, cryptogramme, false);
@@ -164,8 +169,8 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			journalCC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
-		if (Filiere.LA_FILIERE.getEtape() < 24) {
-			journalCC.ajouter("On fait pas de contract pendant la 1ere annee");
+		if (Filiere.LA_FILIERE.getEtape() < 12) {
+			journalCC.ajouter("On fait pas de contract pendant les 6ers mois");
 			return null;
 		}
 		if (this.contratsEnCours.size() >=3 ) {
