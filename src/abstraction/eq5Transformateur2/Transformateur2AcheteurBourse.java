@@ -15,10 +15,6 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	protected Journal journalBourse;
 	private double achatMaxParStep;
 	
-	/* A faire : 
-	 * --> Stratégie sur la demande (nbr de tonne demandée)
-	 * --> 
-	 */
 
 	////////////////////////////////////////////
 	// Constructeur --> met à jour le journal //
@@ -40,18 +36,25 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	 */
 	public double demande(Feve f, double cours) {
 
-		//à faire : faire les strat sur le nbr de tonne demandé sur BQ
-		//à faire : faire les strat sur le nbr de tonne demandé sur HQ
-		
 		//Stratégie sur le BQ
 		if (f.getGamme()==Gamme.BQ) {
-			return 50;
+			if (stockFeves.get(f) <= STOCKINITIAL) {
+				return STOCKINITIAL - stockFeves.get(f);
+			}
+			else {
+				return 0;
+			}
 
 		}
 		
 		//Stratégie sur le MQ
 		if (f.getGamme()==Gamme.MQ) {
-			return 50;
+			if (stockFeves.get(f) <= STOCKINITIAL) {
+				return STOCKINITIAL - stockFeves.get(f);
+			}
+			else {
+				return 0;
+			}
 		}
 		
 		//Stratégie sur le HG => pas d'achat de HQ
