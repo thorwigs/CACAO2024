@@ -54,7 +54,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		this.JournalMasseSalariale.ajouter("coût de licenciement d'un salarié :"+coutLicenciement1Salarie);
 		this.JournalMasseSalariale.ajouter("coût entretien/achat des machines par step :"+coutMachines);
 		this.JournalMasseSalariale.ajouter("coût 1 tonne d'Adjuvants :"+coutAdjuvants);
-		this.JournalMasseSalariale.ajouter("1 salarié peut transformé "+capaciteTransformation+" tonnes de fèves en chocolat par step");
+		this.JournalMasseSalariale.ajouter("1 salarié peut transformer "+capaciteTransformation+" tonnes de fèves en chocolat par step");
 		this.JournalMasseSalariale.ajouter("________________________________________________________________");
 	}
 	
@@ -66,7 +66,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 * @Erwann
 	 * @Victor
 	 * @param
-	 * @return le nombre de tonne transformé pour une fève f + met à jour les stocks
+	 * @return le nombre de tonne transformées pour une fève f + met à jour les stocks
 	 */
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = this.getQuantiteEnStock(f, cryptogramme); //Quantite maximale a transformer
