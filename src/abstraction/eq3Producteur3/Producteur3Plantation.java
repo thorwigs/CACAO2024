@@ -70,7 +70,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * Elle s'appuie sur 
 	 */
 	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve, Double> surfaces) {
-		
+		return surfaces;
 	}
 	
 ///Gestion de la main d'oeuvre///
