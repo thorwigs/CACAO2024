@@ -1,6 +1,8 @@
 package abstraction.eq3Producteur3;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -24,29 +26,29 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 /**
  * @author Arthur
  * variable qui répertorie l'âge des plants	
- * pour chaque type de fève, il y a un dictionnaire qui donne le nombre de plants achetés lors d'un step (clé)
+ * pour chaque type de fève, il y a un dictionnaire dont les clés sont les steps de fin de vie d'une partie de la plantation
  */
 	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
 	
 	public void initialiser() {
 		super.initialiser();
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
-		agePlant.get(Feve.F_BQ).put(-700, surfaceBQ*0.3);
-		agePlant.get(Feve.F_BQ).put(-300, surfaceBQ*0.3);
-		agePlant.get(Feve.F_BQ).put(0, surfaceBQ*0.4);
-		agePlant.get(Feve.F_MQ).put(-650, surfaceMQ*0.2);
-		agePlant.get(Feve.F_MQ).put(-200, surfaceMQ*0.3);
-		agePlant.get(Feve.F_MQ).put(0, surfaceMQ*0.5);
-		agePlant.get(Feve.F_MQ_E).put(-150, surfaceMQE*0.1);
-		agePlant.get(Feve.F_MQ_E).put(-50, surfaceMQE*0.2);
-		agePlant.get(Feve.F_MQ_E).put(0, surfaceMQE*0.7);
-		agePlant.get(Feve.F_HQ).put(-710, surfaceHQ*0.1);
-		agePlant.get(Feve.F_HQ).put(-300, surfaceHQ*0.4);
-		agePlant.get(Feve.F_HQ).put(0, surfaceHQ*0.5);
-		agePlant.get(Feve.F_HQ_E).put(-100, surfaceHQE*0.7);
-		agePlant.get(Feve.F_HQ_E).put(0, surfaceHQE*0.3);
-		agePlant.get(Feve.F_HQ_BE).put(-50, surfaceHQBE*0.1);
-		agePlant.get(Feve.F_HQ_BE).put(0, surfaceHQBE*0.9);	
+		agePlant.get(Feve.F_BQ).put(20, surfaceBQ*0.3);
+		agePlant.get(Feve.F_BQ).put(420, surfaceBQ*0.3);
+		agePlant.get(Feve.F_BQ).put(720, surfaceBQ*0.4);
+		agePlant.get(Feve.F_MQ).put(70, surfaceMQ*0.2);
+		agePlant.get(Feve.F_MQ).put(520, surfaceMQ*0.3);
+		agePlant.get(Feve.F_MQ).put(720, surfaceMQ*0.5);
+		agePlant.get(Feve.F_MQ_E).put(570, surfaceMQE*0.1);
+		agePlant.get(Feve.F_MQ_E).put(670, surfaceMQE*0.2);
+		agePlant.get(Feve.F_MQ_E).put(720, surfaceMQE*0.7);
+		agePlant.get(Feve.F_HQ).put(10, surfaceHQ*0.1);
+		agePlant.get(Feve.F_HQ).put(420, surfaceHQ*0.4);
+		agePlant.get(Feve.F_HQ).put(720, surfaceHQ*0.5);
+		agePlant.get(Feve.F_HQ_E).put(620, surfaceHQE*0.7);
+		agePlant.get(Feve.F_HQ_E).put(720, surfaceHQE*0.3);
+		agePlant.get(Feve.F_HQ_BE).put(670, surfaceHQBE*0.1);
+		agePlant.get(Feve.F_HQ_BE).put(720, surfaceHQBE*0.9);	
 	}
 	
 
@@ -90,7 +92,8 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		}
 		return surfaces;
 	}
-			
+
+
 	/**
 	 * @author Alexis
 	 * @param  agePlant
@@ -100,6 +103,10 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
 		HashMap<Feve,Double> tropVieux = new HashMap<Feve,Double>();
 		for(Feve f: agePlant.keySet()) {
+			LinkedList<Integer> steps = new LinkedList<Integer>();
+			//steps.addAll(f.get().keySet());
+			//for(Integer step: ) {
+			//}
 		}
 		return tropVieux;
 	}
