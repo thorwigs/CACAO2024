@@ -25,6 +25,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	protected Journal JournalMasseSalariale;
 	protected double coutAdjuvants;//cout des adjuvants pour 1 tonne de chocolat
 	protected double coutMachines;//cout des machines pour 1 tonne de chocolat
+	protected double moyProd;
+	protected double totalProd;
 	
 	////////////////////////////////////////////
 	// Constructor & Initialization of values //
@@ -47,6 +49,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		capaciteTransformation = 3.7;
 		coutAdjuvants = 1200;
 		coutMachines = 8;
+		moyProd=0;
+		totalProd=0;
 		
 		this.JournalMasseSalariale.ajouter("_____________Initialement_______________________________________");
 		this.JournalMasseSalariale.ajouter("Nombre de salarié :"+NbSalaries);
@@ -170,6 +174,10 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , TotalCout);
 		}
 		this.JournalMasseSalariale.ajouter("Nbr salariés : "+NbSalaries);
+		
+		this.totalProd+=TotauxTransformees;
+		this.moyProd=this.totalProd/(Filiere.LA_FILIERE.getEtape()+1);
+		this.JournalMasseSalariale.ajouter("La production moyenne de l'acteur est "+moyProd);		
 	}
 
 	/////////////////////////////////////
