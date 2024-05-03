@@ -1,5 +1,6 @@
 package abstraction.eq9Distributeur2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,10 +17,10 @@ import abstraction.eqXRomu.produits.IProduit;
 
 // Classe codée par Margot Lourenço Da Silva( pour la mise à jour du journal voir next dans la classe Distributeur2Acteur
 public abstract class Distributeur2Stocks extends Distributeur2Acteur{
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected List<ChocolatDeMarque> chocolatsVillors;
 	private List<ChocolatDeMarque>chocosProduits;
-	
+	protected Variable totalStocksChocoMarque;  
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque= new HashMap();
 	public Distributeur2Stocks() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		
@@ -47,7 +48,18 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 		
 		}
 		
-
+	public List<Variable> getIndicateurs(){
+		List<Variable> res = new ArrayList<Variable>();
+		res.add(totalStocksChocoMarque);
+		
+		HashMap<ChocolatDeMarque, Variable> stockChocoIndicateur = this.variabilisation(stockChocoMarque);
+		res.addAll(stockChocoIndicateur.values());
+		
+		
+		return res;}
+	
+	
+	
 
 	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
 		return this.stockChocoMarque;
