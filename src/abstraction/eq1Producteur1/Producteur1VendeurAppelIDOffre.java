@@ -1,4 +1,3 @@
-/**@author Youssef Ben Abdeljelil*/
 package abstraction.eq1Producteur1;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
@@ -23,9 +22,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 
 
 
-	/*/////////////////////////////////////////////////////////////////////////////////
-	 /////////////////////////////////* youssef ben abdeljelil/////////////////////////
-	 */
+	/**@author Youssef Ben Abdeljelil */
 	//prix minimal pour chaque type de fève 
 	private double prix_seuil_BQ;
 	private double prix_seuil_MQ;
