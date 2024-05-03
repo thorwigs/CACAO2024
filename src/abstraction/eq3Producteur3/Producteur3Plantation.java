@@ -20,14 +20,33 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQ = 47.57*1000;
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
+	
+/**
+ * @author Arthur
+ * variable qui répertorie l'âge des plants	
+ * pour chaque type de fève, il y a un dictionnaire qui donne le nombre de plants achetés lors d'un step (clé)
+ */
 	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
-	protected Journal journal_Plantation;
 	
-	
-	
-		public void intialiser() {
+	public void initialiser() {
 		super.initialiser();
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
+		agePlant.get(Feve.F_BQ).put(-700, surfaceBQ*0.3);
+		agePlant.get(Feve.F_BQ).put(-300, surfaceBQ*0.3);
+		agePlant.get(Feve.F_BQ).put(0, surfaceBQ*0.4);
+		agePlant.get(Feve.F_MQ).put(-650, surfaceMQ*0.2);
+		agePlant.get(Feve.F_MQ).put(-200, surfaceMQ*0.3);
+		agePlant.get(Feve.F_MQ).put(0, surfaceMQ*0.5);
+		agePlant.get(Feve.F_MQ_E).put(-150, surfaceMQE*0.1);
+		agePlant.get(Feve.F_MQ_E).put(-50, surfaceMQE*0.2);
+		agePlant.get(Feve.F_MQ_E).put(0, surfaceMQE*0.7);
+		agePlant.get(Feve.F_HQ).put(-710, surfaceHQ*0.1);
+		agePlant.get(Feve.F_HQ).put(-300, surfaceHQ*0.4);
+		agePlant.get(Feve.F_HQ).put(0, surfaceHQ*0.5);
+		agePlant.get(Feve.F_HQ_E).put(-100, surfaceHQE*0.7);
+		agePlant.get(Feve.F_HQ_E).put(0, surfaceHQE*0.3);
+		agePlant.get(Feve.F_HQ_BE).put(-50, surfaceHQBE*0.1);
+		agePlant.get(Feve.F_HQ_BE).put(0, surfaceHQBE*0.9);	
 	}
 	
 
@@ -74,13 +93,15 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 			
 	/**
 	 * @author Alexis
-	 * @param 
+	 * @param  agePlant
 	 * @return HashMap<Feve,Double> aRemplacer (tableau des surfaces à remplacer par feve)
 	 * Cette methode détermine la quantité de plants trop vieux à remplacer
-	 * Elle s'appuie sur 
 	 */
-	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve, Double> surfaces) {
-		return surfaces;
+	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
+		HashMap<Feve,Double> tropVieux = new HashMap<Feve,Double>();
+		for(Feve f: agePlant.keySet()) {
+		}
+		return tropVieux;
 	}
 	
 ///Gestion de la main d'oeuvre///
