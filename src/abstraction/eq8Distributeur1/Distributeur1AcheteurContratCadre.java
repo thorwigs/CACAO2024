@@ -223,12 +223,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			return 0.0; 
 		}
 		
-		if (contrat.getPrix() <= this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*0.80*contrat.getQuantiteTotale()) {
+		if (contrat.getPrix() <= this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*0.80) {
 				return contrat.getPrix();
 		}
 		
 		else {
-			return this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*(0.80+(0.15*contrat.getListePrix().size())/supCC.MAX_PRIX_NEGO)*contrat.getQuantiteTotale();
+			return this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*(0.80+(0.15*contrat.getListePrix().size())/supCC.MAX_PRIX_NEGO);
 		}
 	}
 
@@ -332,6 +332,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
 		this.journalCC.ajouter("");
+		
+		for (ChocolatDeMarque choc : chocolats) {
+			System.out.println();
+		}
 
 	}
 }
