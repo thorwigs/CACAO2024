@@ -27,6 +27,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	private static final double PART=0.1;
 	protected HashMap <Feve, Variable> stock_variable;
 	protected HashMap <Feve, Variable> prod_step;
+	protected ArrayList<Double> solde;
 
 	public abstract double get_prod_pest_BQ();
 	public abstract double get_prod_pest_MQ();
@@ -41,6 +42,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.prodParStep= new HashMap<Feve, Double>();
 		this.stock_variable= new HashMap<Feve, Variable>();
 		this.prod_step = new HashMap<Feve, Variable>();
+		this.solde=new ArrayList<Double>();
 		
 		this.init_stock(Feve.F_BQ, 103846153.8);
 		this.init_stock(Feve.F_MQ, 62115384.62);
@@ -58,6 +60,8 @@ public abstract class Producteur2Acteur implements IActeur {
 			this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
 			this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
 		}
+		
+		
 	}
 	
 	/** Définition de méthodes abstraites
@@ -66,7 +70,22 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract void init_stock(Feve type_feve, double quantite);
 	public abstract void lot_to_hashmap();
 	
+	/** getBenefice
+	 * 
+	 * @author Maxime
+	 */
+	public double getBenefice() {
+		int n=solde.size();
+		if(n<=1) {
+			return solde.get(n-1);
+		}
+		else{
+			return solde.get(n-1)-solde.get(n-2);
+		}
+	}
+	
 	public void initialiser() {
+		solde.add(this.getSolde()); //initialisation solde initial
 		// les initialisations sont faites dans le constructeur
 	}
 	
@@ -109,6 +128,10 @@ public abstract class Producteur2Acteur implements IActeur {
 		for (Feve f : Feve.values()) {
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
+		}
+		solde.add(this.getSolde());
+		if(solde.size()>2) {
+			solde.remove(0);
 		}
 	}
 
@@ -173,7 +196,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	// Renvoie le solde actuel de l'acteur
 	protected double getSolde() {
-		return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
+		return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme);
 	}
 
 	////////////////////////////////////////////////////////

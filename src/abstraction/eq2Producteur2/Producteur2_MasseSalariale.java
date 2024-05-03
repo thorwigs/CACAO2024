@@ -220,10 +220,12 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	 * @author Noémie
 	 */
 	public void strategie()  {
-		double solde = this.getSolde();
-		if (solde > 10*cout_humain_par_step()){
+		double benef = this.getBenefice();
+		if (benef > 10*cout_humain_par_step()){
 			if (getPourcentage_enfants() < 0.02) {
-				this.embauche((int) (0.001*this.getNb_Employes_total()), "adulte équitable");
+				double nb_ade=0.001*this.getNb_Employes_total();
+				double nb_ade_max=0.2*this.getNb_Employes_total();
+				this.embauche(Math.min((int) nb_ade,(int) nb_ade_max), "adulte équitable");
 			}
 			else {
 				int nb_enf = getNb_employes_enfants();
