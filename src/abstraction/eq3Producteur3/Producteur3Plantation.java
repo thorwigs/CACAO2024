@@ -19,6 +19,13 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQ = 47.57*1000;
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
+	
+	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
+	
+	public void intialiser() {
+		super.initialiser();
+		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
+	}
 
 
 
