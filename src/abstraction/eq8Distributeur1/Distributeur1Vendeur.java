@@ -81,17 +81,12 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 			else if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
 				ListPrix.replace(choco, ListPrix.get(choco)*0.8);
-				//System.out.println(choco);
-				//System.out.println(ListPrix.get(choco));
-				//System.out.println(Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)+"PM");
 			}
 			else if ((Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-1)-Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2))/Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2)>0.02) {
 				ListPrix.replace(choco, ListPrix.get(choco)*1.02);
-				//System.out.println(ListPrix.get(choco)+"prix chocolat augmente de 2%");
 			}
 			else if ((Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-1)-Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2))/Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2)<0.02) {
 				ListPrix.replace(choco, ListPrix.get(choco)*0.98);
-				//System.out.println(ListPrix.get(choco)+"prix chocolat diminue de 2%");
 			}
 		}
 	}
