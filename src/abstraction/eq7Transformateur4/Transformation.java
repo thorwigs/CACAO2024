@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformation extends Transformateur4VendeurAuxEncheres{
+public class Transformation extends Transformateur4VendeurContratCadre{
 
 	protected Journal journalTransfo ;
 	protected List<Double> lescouts; //liste qui contiendra certains des couts à faire pour un step, initialiser à une liste vide à chaque début de l'appel next
