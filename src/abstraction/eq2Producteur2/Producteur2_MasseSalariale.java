@@ -220,10 +220,12 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	 * @author Noémie
 	 */
 	public void strategie()  {
-		double solde = this.getSolde();
-		if (solde > 10*cout_humain_par_step()){
+		double benef = this.getBenefice();
+		if (benef > 10*cout_humain_par_step()){
 			if (getPourcentage_enfants() < 0.02) {
-				this.embauche((int) (0.001*this.getNb_Employes_total()), "adulte équitable");
+				double nb_ade=0.001*this.getNb_Employes_total();
+				double nb_ade_max=0.2*this.getNb_Employes_total();
+				this.embauche(Math.min((int) nb_ade,(int) nb_ade_max), "adulte équitable");
 			}
 			else {
 				int nb_enf = getNb_employes_enfants();
@@ -249,9 +251,6 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		super.next();
 		this.strategie();
 		this.journalRH.ajouter("\n-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
-		/*this.journalRH.ajouter("nombre d'employes équitable :" + this.getNb_employes_equitable());
-		this.journalRH.ajouter("nombre d'employes adultes : "+ this.getNb_employes());
-		this.journalRH.ajouter("nombre d'employes enfants " + this.getNb_employes_enfants());*/
 		this.journalRH.ajouter("nombre d'employes dans la plantation " + this.getNb_Employes_total());
 		this.journalRH.ajouter("pourcentage d'enfants " + this.getPourcentage_enfants());
 		this.journalRH.ajouter("pourcentage d'employés équitable " + this.getPourcentage_equitable());
