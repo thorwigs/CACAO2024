@@ -122,13 +122,14 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		if (totalStep<this.moyProd) {
 			VenteActive = true;
 		}
-		return (this.chocosProduits.contains(produit) && VenteActive) ; //Valeur à changer
+		return (this.chocosProduits.contains(produit) && VenteActive) ;
 	}
 	
 	/***
 	 * @author Robin, Vincent
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		
 		return contrat.getEcheancier();
 		}
 	
