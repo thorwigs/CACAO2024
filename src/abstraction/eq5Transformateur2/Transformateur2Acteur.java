@@ -163,7 +163,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		// Paiment coûts de stockage, le stockage du chocolat de marque n'est pas encore operationnel donc on ne le prend pas en compte.
 		// à rajouter pour choco marque : +this.totalStocksChocoMarque.getValeur(this.cryptogramme))
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
+	
+		//Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
 		
 		// Transformation de tous les chocolats en chocolats de marque`avec une répartition équitable entre les marques
 		for (Chocolat c : lesChocolats) {
