@@ -183,5 +183,4 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
 		}
-
 }
