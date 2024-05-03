@@ -3,6 +3,7 @@ package abstraction.eq3Producteur3;
 import java.util.HashMap;
 
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur3Plantation extends Producteur3Acteur {
@@ -27,7 +28,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
  */
 	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
 	
-	public void intialiser() {
+	public void initialiser() {
 		super.initialiser();
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
 		agePlant.get(Feve.F_BQ).put(-700, surfaceBQ*0.3);
@@ -47,7 +48,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		agePlant.get(Feve.F_HQ_BE).put(-50, surfaceHQBE*0.1);
 		agePlant.get(Feve.F_HQ_BE).put(0, surfaceHQBE*0.9);	
 	}
-
+	
 
 
 ///Gestion de la plantation
@@ -92,13 +93,15 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 			
 	/**
 	 * @author Alexis
-	 * @param 
+	 * @param  agePlant
 	 * @return HashMap<Feve,Double> aRemplacer (tableau des surfaces à remplacer par feve)
 	 * Cette methode détermine la quantité de plants trop vieux à remplacer
-	 * Elle s'appuie sur 
 	 */
-	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve, Double> surfaces) {
-		return surfaces;
+	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
+		HashMap<Feve,Double> tropVieux = new HashMap<Feve,Double>();
+		for(Feve f: agePlant.keySet()) {
+		}
+		return tropVieux;
 	}
 	
 ///Gestion de la main d'oeuvre///
