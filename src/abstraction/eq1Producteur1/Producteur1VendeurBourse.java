@@ -37,6 +37,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	public double offre(Feve f, double cours) {
 		// TODO Auto-generated method stub
 
+		if (f.isBio() || f.isEquitable()) {
+			journalBourse.ajouter("On vend pas de bio ni equitable en bourse");
+			return 0;
+		}
 		double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
 
 

@@ -1,4 +1,4 @@
-package abstraction.eqXRomu.acteurs;
+package abstraction.eq6Transformateur3;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,17 +16,20 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class TransformateurXVendeurAppelDOffre extends TransformateurXVendeurAuxEncheres implements IVendeurAO{
+public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurAuxEncheres implements IVendeurAO {
+
+	
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
 
-	public TransformateurXVendeurAppelDOffre() {
+	public Transformateur3VendeurAppelDOffre() {
 		super();
 		this.journalAO = new Journal(this.getNom()+" journal A.O.", this);
 	}
 
 	public void initialiser() {
 		super.initialiser();
+		this.stockChocoMarque = new HashMap<ChocolatDeMarque, Double>();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			this.prixAO.put(cm, new LinkedList<Double>());
@@ -54,27 +57,26 @@ public class TransformateurXVendeurAppelDOffre extends TransformateurXVendeurAux
 
 
 	public OffreVente proposerVente(AppelDOffre offre) {
-//		IProduit p = offre.getProduit();
-//		if (!(p instanceof ChocolatDeMarque)) {
-//			return null;
-//		}
-//		ChocolatDeMarque cm = (ChocolatDeMarque)p;
-//		if (!(stockChocoMarque.keySet().contains(cm))) {
-//			return null;
-//		}
-//		if (prixAO.get(cm).size()==0) {
-//			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-//			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
-//			if (cm.getChocolat().getGamme()==Gamme.HQ) {
-//				px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
-//			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
-//				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
-//			}
-//			return new OffreVente(offre, this, cm, px);
-//		} else {
-//			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
-//		}
-		return null;
+		IProduit p = offre.getProduit();
+		if (!(p instanceof ChocolatDeMarque)) {
+			return null;
+		}
+		ChocolatDeMarque cm = (ChocolatDeMarque)p;
+		if (!(stockChocoMarque.keySet().contains(cm))) {
+			return null;
+		}
+		if (prixAO.get(cm).size()==0) {
+			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
+			if (cm.getChocolat().getGamme()==Gamme.HQ) {
+				px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
+				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
+			}
+			return new OffreVente(offre, this, cm, px);
+		} else {
+			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
+		}
 	}
 
 	public void notifierVenteAO(OffreVente propositionRetenue) {
@@ -100,4 +102,6 @@ public class TransformateurXVendeurAppelDOffre extends TransformateurXVendeurAux
 		}
 	}
 
+	
+	
 }

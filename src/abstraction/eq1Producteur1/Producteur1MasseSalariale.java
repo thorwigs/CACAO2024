@@ -17,7 +17,7 @@ import abstraction.eqXRomu.general.Journal;
 /**@author youssef ben abdeljelil*/
 
 
-public class Producteru1MasseSalariale extends Producteur1Acteur {
+public class Producteur1MasseSalariale extends Producteur1Acteur {
 	double indemniteTotal = 0;
 	protected Journal journalOuvrier;
 
@@ -29,7 +29,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	 * Constructeur pour la classe Producteru1MasseSalariale.
 	 * Initialise le journal des ouvriers et la liste des ouvriers.
 	 */
-	public Producteru1MasseSalariale() {
+	public Producteur1MasseSalariale() {
 		this.journalOuvrier = new Journal(this.getNom()+"   journal Ouvrier",this);
 		this.nb_enfants = 150;
 		this.nb_normal = 100;
@@ -55,6 +55,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	 * Calcule le salaire total de tous les ouvriers.
 	 * @return Le salaire total.
 	 */
+	/**@author Haythem*/
 	public double getSalaireTotal() {
 		double s =0;
 		for (Ouvrier ouvrier : this.listeOuvrier) {
@@ -135,21 +136,16 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	 * @param isEnfant Indique si les nouveaux ouvriers sont des enfants.
 	 */
 	public void addOuvrier(int nombre_à_ajouter, double salaire, boolean isEquitable, boolean isForme, boolean isEnfant) {
-	    // Ensure enough capacity is allocated to prevent resizing during additions
-	    if (this.listeOuvrier instanceof ArrayList) {
-	        ((ArrayList<Ouvrier>) this.listeOuvrier).ensureCapacity(this.listeOuvrier.size() + nombre_à_ajouter);
-	    }
 
-	    // Ajout des nouveaux ouvriers à la liste
-	    for (int i = 0; i < nombre_à_ajouter; i++) {
-	        Ouvrier ouvrier_a_ajouter = new Ouvrier(0, 1.0, salaire, isForme, isEquitable, isEnfant);
-	        this.listeOuvrier.add(ouvrier_a_ajouter);
-	    }
+
+		// Ajout des nouveaux ouvriers à la nouvelle liste
+		for (int i = 0; i < nombre_à_ajouter; i++) {
+			Ouvrier ouvrier_a_ajouter = new Ouvrier(0, 1.0, salaire, isForme, isEquitable, isEnfant);
+			this.listeOuvrier.add(ouvrier_a_ajouter);
+		}
+
+
 	}
-	//
-	//
-	//
-	//
 
 	/**
 	 * Supprime un certain nombre d'ouvriers de la liste en fonction de certains critères.
@@ -165,6 +161,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	// si on veut retourner la liste des oruvriers après supression , on fait:ArrayList<Ouvrier> listeMiseAJour = resultat.listeMiseAJour;
 	//si on veut retounrer l'indemnite:double indemniteTotale = resultat.indemniteTotale;
 	 */
+	/**@author youssef ben abdeljelil*/
 	public void removeEmploye(int nombreASupprimer, boolean isEquitable, boolean isForme, boolean isEnfant) {
 		// Créer une liste pour stocker temporairement les ouvriers à supprimer
 		ArrayList<Ouvrier> ouvriersASupprimer = new ArrayList<>();
@@ -222,7 +219,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 	/**
 	 * Met à jour l'ancienneté de chaque ouvrier dans la liste.
 	 * Met également à jour les caractéristiques des ouvriers en fonction de leur ancienneté.
-	 */
+	/**@author Haythem*/
 	public void UpdateAnciennete() {
 
 
@@ -271,6 +268,7 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 
 
 	}
+	/**@author youssef ben abdeljelil*/
 	public List<Journal> getJournaux() {
 		List<Journal> res = super.getJournaux();
 		res.add(this.journalOuvrier);
@@ -292,7 +290,8 @@ public class Producteru1MasseSalariale extends Producteur1Acteur {
 		this.UpdateAnciennete();
 		if (this.indemniteTotal > 0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemniteTotale = ",indemniteTotal );
-		}
+			this.indemniteTotal = 0;
+			}
 		this.amelioration();
 
 	}

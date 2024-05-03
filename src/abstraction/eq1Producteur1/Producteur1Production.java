@@ -105,9 +105,9 @@ public class Producteur1Production extends Producteur1Plantation{
 			this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
 		}
 		else {
-		if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
-			this.prodParStep.put(Feve.F_HQ_BE, null);
-		}
+			if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
+				this.prodParStep.put(Feve.F_HQ_BE, null);
+			}
 		}
 
 	}
