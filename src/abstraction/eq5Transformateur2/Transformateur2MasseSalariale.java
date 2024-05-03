@@ -58,7 +58,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		this.JournalMasseSalariale.ajouter("coût de licenciement d'un salarié :"+coutLicenciement1Salarie);
 		this.JournalMasseSalariale.ajouter("coût entretien/achat des machines par step :"+coutMachines);
 		this.JournalMasseSalariale.ajouter("coût 1 tonne d'Adjuvants :"+coutAdjuvants);
-		this.JournalMasseSalariale.ajouter("1 salarié peut transformé "+capaciteTransformation+" tonnes de fèves en chocolat par step");
+		this.JournalMasseSalariale.ajouter("1 salarié peut transformer "+capaciteTransformation+" tonnes de fèves en chocolat par step");
 		this.JournalMasseSalariale.ajouter("________________________________________________________________");
 	}
 	
@@ -70,14 +70,14 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 * @Erwann
 	 * @Victor
 	 * @param
-	 * @return le nombre de tonne transformé pour une fève f + met à jour les stocks
+	 * @return le nombre de tonne transformées pour une fève f + met à jour les stocks
 	 */
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = this.getQuantiteEnStock(f, cryptogramme); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
 		this.stockFeves.put(f, this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees); //Modifie le stock de feves
-		this.stockChoco.put(c, this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees);
+		this.stockChoco.put(c, this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees); //Modifie le stock de feves
 		return tonnesTransformees; 
 	}
 	/**
@@ -155,6 +155,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////////////////////////////////////////////
 	//        Next : paiments des coûts       //
 	////////////////////////////////////////////
+	
 	/**
 	 * @Erwann
 	 */
@@ -182,6 +183,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	/////////////////////////////////////
 	//   Ajout du journal aux autres   //
 	/////////////////////////////////////
+	
 	/**
 	 * @Erwann
 	 */
