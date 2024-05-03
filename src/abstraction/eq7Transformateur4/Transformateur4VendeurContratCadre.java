@@ -184,7 +184,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		double pPropose = contrat.getPrix();
-		double pPrecedent = prixPrecedent.get(contrat);
+		double pPrecedent = 0.0;
+		if (coutproduction_tonne_marque_step.isEmpty()) {
+			pPrecedent = propositionPrix(contrat);
+		}
+		else {
+			pPrecedent = prixPrecedent.get(contrat);
+		}
 		double qte = contrat.getQuantiteTotale();
 		double coutProd = qte*(coutproduction_tonne_marque_step.get(contrat.getProduit())+ getPrixFèves(contrat.getProduit()));
 		
