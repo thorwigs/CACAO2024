@@ -42,9 +42,9 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.stock_variable= new HashMap<Feve, Variable>();
 		this.prod_step = new HashMap<Feve, Variable>();
 		
-		this.init_stock(Feve.F_BQ, 103846153.8);
-		this.init_stock(Feve.F_MQ, 62115384.62);
-		this.init_stock(Feve.F_HQ_E, 3076923.076);
+		this.init_stock(Feve.F_BQ, 1); //103846153.8
+		this.init_stock(Feve.F_MQ, 1); //62115384.62
+		this.init_stock(Feve.F_HQ_E, 1); //3076923.076
 		this.lot_to_hashmap();
 		
 		prodParStep.put(Feve.F_HQ_BE, 0.0);
@@ -55,7 +55,18 @@ public abstract class Producteur2Acteur implements IActeur {
 		prodParStep.put(Feve.F_BQ, 0.0);
 		
 		for (Feve f : Feve.values()) {
-			this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
+			if(f == Feve.F_BQ) {
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+			}
+			else if(f == Feve.F_MQ) {
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+			}
+			else if(f == Feve.F_HQ_E) {
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+			}
+			else {
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
+			}
 			this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
 		}
 	}
