@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -21,26 +22,34 @@ import abstraction.eqXRomu.produits.IProduit;
 public abstract class Producteur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
+	protected Journal journal_prix;
 
 	protected HashMap<Feve,Double> stock; //Feve = qualite et Variable = quantite
 	protected HashMap<Feve,Double> prodParStep;
 	private static final double PART=0.1;
 	protected HashMap <Feve, Variable> stock_variable;
 	protected HashMap <Feve, Variable> prod_step;
+	protected Variable tonnes_vendues;
 
 	public abstract double get_prod_pest_BQ();
 	public abstract double get_prod_pest_MQ();
 	public abstract double get_prod_pest_HQ();
+	
+	protected abstract double getNbTonnesVenduesBourse();
+	protected abstract double getNbTonnesVenduesCC();
+	protected abstract double prix(Feve f);
 	
 	/** Constructeur de classe
 	 * @author Quentin, Noémie
 	 */
 	public Producteur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
+		this.journal_prix = new Journal(this.getNom()+" journal prix", this);
 		this.stock = new HashMap<Feve, Double>();
 		this.prodParStep= new HashMap<Feve, Double>();
 		this.stock_variable= new HashMap<Feve, Variable>();
 		this.prod_step = new HashMap<Feve, Variable>();
+		this.tonnes_vendues =  new Variable("Tonnes livrées", this);
 		
 		this.init_stock(Feve.F_BQ, 103846153.8);
 		this.init_stock(Feve.F_MQ, 62115384.62);
@@ -69,6 +78,12 @@ public abstract class Producteur2Acteur implements IActeur {
 	public void initialiser() {
 		// les initialisations sont faites dans le constructeur
 	}
+	
+	public double getCoursBourse(Feve f) {
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		Variable cours = bourse.getCours(f);
+		return cours.getValeur();
+		}
 	
 	/** Getter
 	 * @author Noémie
@@ -106,12 +121,18 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal.ajouter("\n Argent sortant : " + this.getCoutTotalParStep());
 		this.journal.ajouter("Solde après débit : " + this.getSolde()+"\n");
 		
+		this.journal_prix.ajouter("--------------- étape = " + Filiere.LA_FILIERE.getEtape()+ " -----------------------------");
+		this.journal_prix.ajouter("prix de la bourse feve BQ : " + this.getCoursBourse(Feve.F_BQ));
+		this.journal_prix.ajouter("prix d'achat lors d'un contrat cadre feve BQ: " + this.prix(Feve.F_BQ));	
+		
 		for (Feve f : Feve.values()) {
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
 		}
+		double tonnes_total = this.getNbTonnesVenduesBourse() + this.getNbTonnesVenduesCC();
+		this.tonnes_vendues.setValeur(this, tonnes_total);
 	}
-
+	
 	public Color getColor() { //NE PAS MODIFIER
 		return new Color(244, 198, 156); 
 	}
@@ -126,12 +147,19 @@ public abstract class Producteur2Acteur implements IActeur {
 	/** Renvoie les indicateurs
 	 * @author Noémie
 	 */
+	
 	public List<Variable> getIndicateurs() {
+		
 		List<Variable> res = new ArrayList<Variable>();
+		
 		for (Feve f: Feve.values()) {
-			res.add(this.stock_variable.get(f));
 			res.add(this.prod_step.get(f));
 		}
+		for (Feve f: Feve.values()) {
+			res.add(this.stock_variable.get(f));
+		}
+		
+		res.add(this.tonnes_vendues);
 		return res;
 	}
 
@@ -147,6 +175,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
+		res.add(journal_prix);
 		return res;
 	}
 
