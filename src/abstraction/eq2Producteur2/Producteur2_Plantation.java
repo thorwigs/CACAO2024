@@ -152,6 +152,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.setPourcentage_HQ(2);
 		this.setPourcentage_MQ(38);
 		this.setPourcentage_BQ(60);
+		
 	}
 	
 	/** Méthode pour obtenir les journaux
@@ -340,9 +341,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void next() {
 		super.next();
 		modifie_prodParStep();
-		/*for (Feve f : Feve.values()) {
+		for (Feve f : Feve.values()) {
 			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
-		}*/
+		}
 		
 		//On place dans le stock tout ce qu'on produit en un tour
 		this.nouveau_stock();

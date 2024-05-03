@@ -136,12 +136,12 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal_prix.ajouter("prix de la bourse feve BQ : " + this.getCoursBourse(Feve.F_BQ));
 		this.journal_prix.ajouter("prix d'achat lors d'un contrat cadre feve BQ: " + this.prix(Feve.F_BQ));	
 		
-		for (Feve f : Feve.values()) {
+		/*for (Feve f : Feve.values()) {
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
-		}
-		double tonnes_total = this.getNbTonnesVenduesBourse() + this.getNbTonnesVenduesCC();
-		this.tonnes_vendues.setValeur(this, tonnes_total);
+		}*/
+		//double tonnes_total = this.getNbTonnesVenduesBourse() + this.getNbTonnesVenduesCC();
+		//this.tonnes_vendues.setValeur(this, tonnes_total);
 	}
 	
 	public Color getColor() { //NE PAS MODIFIER

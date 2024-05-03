@@ -87,6 +87,12 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 			this.contratsEnCours.remove(c);
 		}
 		this.journalCC.ajouter("=================================");
+		
+		for (Feve f : Feve.values()) {
+			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+		}
+		double tonnes_total = this.getNbTonnesVenduesBourse() + this.getNbTonnesVenduesCC();
+		this.tonnes_vendues.setValeur(this, tonnes_total);
 	}
 
 
