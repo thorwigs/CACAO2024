@@ -140,8 +140,8 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					qtetot += c.getQuantiteTotale();
 				}
 			}
-			if (qtetot == 0.0) { //si on a pas de contrat cadre (au début) pour les fèves, on se base sur le cours de la bourse pour des F_HQ+10%
-				prix_F = bourse.getCours(Feve.F_HQ).getValeur()*1.1;
+			if (qtetot == 0.0) { //si on a pas de contrat cadre (au début) pour les fèves, on se base sur le cours de la bourse pour des F_HQ
+				prix_F = bourse.getCours(Feve.F_HQ).getValeur();
 			}
 			else {
 				prix_F = prixtot/qtetot;
@@ -172,10 +172,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double prixPropose = 0.0;
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit())) + (1000*this.nbemployeCDI + 658)*0.15;
+			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit())) + (1000*this.nbemployeCDI + 658)*0.1;
 		}
 		else {
-			prixPropose = contrat.getQuantiteTotale()*1.1*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+			prixPropose = contrat.getQuantiteTotale()*1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
 		}
 		prixPrecedent.put(contrat, prixPropose);
 		return prixPropose;
@@ -195,21 +195,21 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		double coutProd = qte*(coutproduction_tonne_marque_step.get(contrat.getProduit())+ getPrixFèves(contrat.getProduit()));
 		
 		if (pPropose <  pPrecedent) {
-			if ((pPropose+pPrecedent)/2 >= coutProd*1.05){
+			if ((pPropose+pPrecedent)/2 >= coutProd*1.02){
 				prixPrecedent.put(contrat, (pPropose+pPrecedent)/2);
 				return (pPropose+pPrecedent)/2;
 			}
-			if ((pPropose+2*pPrecedent)/3 >= coutProd*1.05){
+			if ((pPropose+2*pPrecedent)/3 >= coutProd*1.02){
 				prixPrecedent.put(contrat, (pPropose+2*pPrecedent)/3);
 				return (pPropose+2*pPrecedent)/3;
 			}
-			if ((pPropose+3*pPrecedent)/4 >= coutProd*1.05){
+			if ((pPropose+3*pPrecedent)/4 >= coutProd*1.02){
 				prixPrecedent.put(contrat, (pPropose+3*pPrecedent)/4);
 				return (pPropose+3*pPrecedent)/4;
 			}
 			else {
-				prixPrecedent.put(contrat, coutProd*1.05);
-				return coutProd*1.05;
+				prixPrecedent.put(contrat, coutProd*1.02);
+				return coutProd*1.02;
 			}
 		}
 		else {
