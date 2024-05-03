@@ -31,12 +31,14 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journal_CC;
+	private double totalCoutAPayer;
 	
 	public Distributeur2ContratCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>(); 
 		this.journal_CC= new Journal(this.getNom()+" journal Contrat Cadre", this);
+		this.totalCoutAPayer = 0;
 	}
 	
 	public void initialiser() {
@@ -64,6 +66,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 							journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
 						} else {
 							this.contratsEnCours.add(contrat);
+							this.totalCoutAPayer += contrat.getPrix();
 							est_contratPasse=true;
 							journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
 							journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
@@ -144,7 +147,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			return 0.;
 		}
 		ChocolatDeMarque choco = (ChocolatDeMarque) contrat.getProduit();
-		if (!Filiere.LA_FILIERE.getChocolatsProduits().contains(choco)) { //tous les chocos sont censé être défini et stockés initialement, bizarre bizarre
+		if (!Filiere.LA_FILIERE.getChocolatsProduits().contains(choco)) { //tous les chocos sont censés être définis et stockés initialement, bizarre bizarre
 			return 0.;
 		}
 		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.7 - this.getCoutStockage()*contrat.getQuantiteTotale();
@@ -164,6 +167,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
 		this.contratsEnCours.add(contrat);
+		this.totalCoutAPayer += contrat.getPrix();
 	}
 
 	@Override
@@ -172,6 +176,8 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
 			this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
+			this.totalCoutAPayer -= contrat.getPaiementAEffectuerAuStep();
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep()));
 		}
 		if (Filiere.LA_FILIERE.getEtape() == contrat.getEcheancier().getStepFin()) {
 			this.contratsTermines.add(contrat);
