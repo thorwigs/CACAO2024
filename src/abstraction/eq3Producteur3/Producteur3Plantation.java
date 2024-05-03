@@ -26,6 +26,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	public void intialiser() {
 		super.initialiser();
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
+	    this.journal_Plantation = new Journal(this.getNom()+" journal Plantation",this);
 	}
 	
 	/**
@@ -34,7 +35,6 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	  */
 	public void next() {
 	    super.next();
-	    this.journal_Plantation = new Journal(this.getNom()+" journal Plantation",this);
 	    this.journal_Plantation.ajouter("Etape=" + Filiere.LA_FILIERE.getEtape() + " : Gestion de la plantation et main d'oeuvre");
 	    HashMap<Feve, Double> plantation = plantation();
 	    for (Feve f : Feve.values()) {
