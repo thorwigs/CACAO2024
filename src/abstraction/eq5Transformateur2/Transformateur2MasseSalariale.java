@@ -174,6 +174,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	/////////////////////////////////////
 	//   Ajout du journal aux autres   //
 	/////////////////////////////////////
+	
 	/**
 	 * @Erwann
 	 */

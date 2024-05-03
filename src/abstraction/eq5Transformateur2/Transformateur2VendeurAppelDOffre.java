@@ -87,6 +87,10 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		if (!(stockChocoMarque.keySet().contains(cm))) {
 			return null;
 		}
+		// On verif qu'on a assez de stock
+		if (offre.getQuantiteT() >= stockChocoMarque.get(cm) ) {
+			return null;
+		}
 		// Si on n'a jamais fait d'offre --> on se base sur la bourse pour donner un prix
 		if (prixAO.get(cm).size()==0) {
 			Gamme gamme = cm.getGamme();
@@ -123,7 +127,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 				double prix = propositionRetenue.getPrixT();
 				double quantite_vendu = propositionRetenue.getQuantiteT();
 				double quantite_initiale = stockChocoMarque.get(cm);
-				stockChocoMarque.put(cm, quantite_initiale - quantite_vendu);  // modif des stocks si la propisition est retenue
+				stockChocoMarque.put(cm, quantite_initiale - quantite_vendu);  // modif des stocks si la proposition est retenue
 				prixAO.get(cm).add(prix);
 				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix);
 				if (prixAO.get(cm).size()>10) {
