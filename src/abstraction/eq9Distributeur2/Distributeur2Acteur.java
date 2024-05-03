@@ -81,7 +81,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	}
 
 	
-	//Fonction à appeler juste après avoir réalisé un achat (maxime)
+	//Fonction appelée juste après avoir réalisé un achat
 	public double coutDacheminement(double prix) {
 		return 0.05*prix;
 	}

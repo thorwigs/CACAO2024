@@ -21,7 +21,9 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.filiere.Banque;
 
 
-////////////// plafonner le cout d'achat pck la on fait faillite ! ///////////////////////
+////////////// Codé par Maureen Leprince ///////////////////////
+
+// ajouter qqpart Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep())); //
 
 
 public abstract class Distributeur2ContratCadre extends Distributeur2Vente implements IAcheteurContratCadre{
@@ -29,12 +31,14 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journal_CC;
+	private double totalCoutAPayer;
 	
 	public Distributeur2ContratCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>(); 
 		this.journal_CC= new Journal(this.getNom()+" journal Contrat Cadre", this);
+		this.totalCoutAPayer = 0;
 	}
 	
 	public void initialiser() {
@@ -45,33 +49,11 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	
 	public void next() {
 		super.next();
-		this.journal_CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) { 
-			if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000) {
-				this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
-				double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
-				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
-				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
-				journal_CC.ajouter(vendeurs.toString());
-				boolean est_contratPasse = false;
-				for (IVendeurContratCadre vendeur : vendeurs ) {
-					journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-					ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
-					if (contrat==null) {
-						journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
-					} else {
-						this.contratsEnCours.add(contrat);
-						est_contratPasse=true;
-						journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
-						journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
-						break;
-					}
-				}
-				if (!est_contratPasse) {
-					journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
-				}
-			}
-		}
+		this.lancerNouveauCC();
+		/*for (ExemplaireContratCadre c : this.contratsEnCours) {
+			receptionner(c.getProduit(), c.getQuantiteALivrerAuStep(), c);
+		}*/
+		
 	}
 	
 	public double restantDu(ChocolatDeMarque cm) {
@@ -109,10 +91,18 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		LinkedList<Double> quantites = new LinkedList<Double>();
 		boolean modif = false;
 		ChocolatDeMarque cm = (ChocolatDeMarque) contrat.getProduit();
+		
+		if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && 2*this.getVentePrecedente(cm)<this.stockChocoMarque.get(cm)+this.restantDu(cm)) {
+			return null;
+		}
+		
 		for (int i=0; i<e.getNbEcheances(); i++) {
-			if (e.getQuantite(e.getStepDebut()+i)>this.getCapaciteStockage()/12) {
-				quantites.add(Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12));
+			if (e.getQuantite(e.getStepDebut()+i)>5000 )  {
+				quantites.add(5000.);
 				modif=true;
+			} else if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
+				quantites.add(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm));
+				modif = true;
 			} else {
 				quantites.add(e.getQuantite(e.getStepDebut()+i));
 			}
@@ -131,35 +121,71 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			return 0.;
 		}
 		ChocolatDeMarque choco = (ChocolatDeMarque) contrat.getProduit();
-		if (!Filiere.LA_FILIERE.getChocolatsProduits().contains(choco)) { //tous les chocos sont censé être défini et stockés initialement, bizarre bizarre
+		if (!Filiere.LA_FILIERE.getChocolatsProduits().contains(choco)) { //tous les chocos sont censés être définis et stockés initialement, bizarre bizarre
 			return 0.;
 		}
-		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.9 - this.getCoutStockage()*contrat.getQuantiteTotale();
+		double prix_limite = Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.7 - this.getCoutStockage()*contrat.getQuantiteTotale();
 		if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(this, cryptogramme, contrat.getPrix())) {
-			/*if (contrat.getPrix() <= prix_limite) {*/
+			if (contrat.getPrix() <= prix_limite) {
 				return contrat.getPrix();
-			/*} else {
+			} else {
 				return prix_limite;
-			}*/
+			}
 		} else {
-			return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)*0.9-this.getCoutStockage()*contrat.getQuantiteTotale();
+			return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)*0.7-this.getCoutStockage()*contrat.getQuantiteTotale();
 		}
 		
 	}
+	
+	public void lancerNouveauCC() {
+		this.journal_CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) { 
+			if (this.stockChocoMarque.get(cm)<2*this.getVentePrecedente(cm)) {
+				if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000) {
+					this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
+					double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
+					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+					List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
+					journal_CC.ajouter(vendeurs.toString());
+					boolean est_contratPasse = false;
+					for (IVendeurContratCadre vendeur : vendeurs ) {
+						journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
+						if (contrat==null) {
+							journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
+						} else {
+							est_contratPasse=true;
+							journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							notificationNouveauContratCadre(contrat);
+							break;
+						}
+					}
+					if (!est_contratPasse) {
+						journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
+					}
+				}
+			}
+			
+		}
+	}
+	
 	
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
 		this.contratsEnCours.add(contrat);
+		this.totalCoutAPayer += contrat.getPrix();
 	}
 
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
+		System.out.println("appel receptionner");
 		this.journal_CC.ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat #"+contrat.getNumero());
-		
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
 			this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
+			this.totalCoutAPayer -= contrat.getPaiementAEffectuerAuStep();
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep()));
 		}
 		if (Filiere.LA_FILIERE.getEtape() == contrat.getEcheancier().getStepFin()) {
 			this.contratsTermines.add(contrat);
