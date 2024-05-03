@@ -82,7 +82,7 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3Produit im
 		double px = propositionRetenue.getPrixT();
 		double quantite = propositionRetenue.getQuantiteT();
 		prixAO.get(cm).add(px); // on fait comme si on avait accepte avec 5% d'augmentation afin que lors des prochains echanges on accepte des prix un peu plus eleves
-		journalAO.ajouter("   Vente par AO de "+quantite+" T de "+cm+" au prix de  "+px);
+		journalAO.ajouter("   Vente par AO de "+quantite+" T de "+cm+" au p	rix de  "+px);
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
