@@ -18,6 +18,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	protected Journal journal;
 	private int capaciteStockage;
 	protected double coutStockage;
+	protected Variable totalStocksChocoMarque;  
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -64,6 +65,8 @@ public abstract class Distributeur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		res.add(totalStocksChocoMarque);
+		
 		return res;
 	}
 
