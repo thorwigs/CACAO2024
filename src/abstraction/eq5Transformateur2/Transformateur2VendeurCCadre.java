@@ -68,7 +68,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 					} else {
 						this.contratsEnCours.add(contrat);
 						this.EtapenegoVente=0;
-						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+						journalCC.ajouter(Color.MAGENTA, acheteur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 					}
 				} else {
 					journalCC.ajouter("   pas de vendeur");
@@ -138,7 +138,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	        return contrat.getPrix(); // ne refait pas de contreproposition
 	    } else {
 	    	EtapenegoVente++;
-	        return contrat.getPrix() * 1.07; // Contreproposition de 7% à la hausse
+	        return contrat.getPrix() * 0.98; // Contreproposition de 2% à la baisse
 	    }
 	}
 	
