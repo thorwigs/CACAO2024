@@ -114,6 +114,11 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		LinkedList<Double> quantites = new LinkedList<Double>();
 		boolean modif = false;
 		ChocolatDeMarque cm = (ChocolatDeMarque) contrat.getProduit();
+		
+		if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && 2*this.getVentePrecedente(cm)<this.stockChocoMarque.get(cm)+this.restantDu(cm)) {
+			return null;
+		}
+		
 		for (int i=0; i<e.getNbEcheances(); i++) {
 			if (e.getQuantite(e.getStepDebut()+i)>5000 )  {
 				quantites.add(5000.);
