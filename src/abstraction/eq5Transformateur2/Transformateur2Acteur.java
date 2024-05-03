@@ -26,7 +26,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected int cryptogramme;
 	private double coutStockage;
 	
-	protected static double STOCKINITIAL=10000.0;
+
+	protected static final double STOCKINITIAL = 50000.0;
 	
 	protected List<Feve> lesFeves;
 	protected List<Chocolat> lesChocolats;

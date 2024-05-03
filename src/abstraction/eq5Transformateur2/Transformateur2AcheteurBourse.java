@@ -84,7 +84,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, new Variable("Eq5Stock "+f, this,this.stockFeves.get(f).getValeur()+quantiteEnT));
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+"");
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+"au prix de"+quantiteEnT*coursEnEuroParT);
 	}
 	/**
 	 * @Erwann

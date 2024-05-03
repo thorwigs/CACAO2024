@@ -1,6 +1,7 @@
 package abstraction.eq5Transformateur2;
 
 import java.awt.Color;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +25,7 @@ import abstraction.eqXRomu.produits.IProduit;
  */
 
 public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBourse implements IVendeurAO {
-	private HashMap<ChocolatDeMarque, List<Double>> prixAO;  //dictionnaire ( key --> ChocolatDeMarque // value --> prix )
+	protected HashMap<ChocolatDeMarque, List<Double>> prixAO;  //dictionnaire des 10 derniers prix proposés ( ChocolatDeMarque : prix proposé )
 	protected Journal journalAO;
 	
 	/////////////////
@@ -57,12 +58,13 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	////////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * @Erwann
+	 * Cette fonction fait la moyenne des 10 derniers prix proposés
 	 */
 	public double prixMoyen(ChocolatDeMarque cm) {
-		List<Double> ListePrix = prixAO.get(cm);
+		List<Double> ListePrix = prixAO.get(cm);		
 		if (ListePrix.size()>0) {
 			double somme =0.0;
-			for (Double d : ListePrix) {
+			for (double d : ListePrix) {
 				somme+=d;
 			}
 			return somme/ListePrix.size();
@@ -90,15 +92,16 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		}
 		// On verif qu'on a assez de stock
 		if (offre.getQuantiteT() >= stockChocoMarque.get(cm).getValeur() ) {
+			journalAO.ajouter(Color.WHITE, Color.red," Pas assez de stock pour l'AO sur "+cm);
 			return null;
 		}
 		// Si on n'a jamais fait d'offre --> on se base sur la bourse pour donner un prix
 		if (prixAO.get(cm).size()==0) {
 			Gamme gamme = cm.getGamme();
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double prix = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+			double prix = bourse.getCours(Feve.F_MQ).getMax()*5.5;
 			if (gamme == Gamme.BQ) {
-				prix = bourse.getCours(Feve.F_BQ).getMax()*2.0;
+				prix = bourse.getCours(Feve.F_BQ).getMax()*4.5;
 			}
 			return new OffreVente(offre, this, cm, prix);
 		} 
@@ -129,7 +132,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 				double quantite_vendu = propositionRetenue.getQuantiteT();
 				double quantite_initiale = stockChocoMarque.get(cm).getValeur();
 				stockChocoMarque.put(cm,new Variable("Eq5Stock "+cm, this,quantite_initiale - quantite_vendu));  // modif des stocks si la proposition est retenue
-				prixAO.get(cm).add(prix);
+				prixAO.get(cm).add(prix*1.08);  // on fait comme si on avait accepte avec 8% de hausse afin que lors des prochains echanges on fasse une offre + honéreuse
 				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix);
 				if (prixAO.get(cm).size()>10) {
 					prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
@@ -145,7 +148,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		double prix = propositionRefusee.getPrixT();
 		double quantite = propositionRefusee.getQuantiteT();
 		if (prixAO.get(cm)!=null) {
-			prixAO.get(cm).add(prix*0.92); // on fait comme si on avait accepte avec 8% de baisse afin que lors des prochains echanges on fasse une meilleure offre
+			prixAO.get(cm).add(prix*0.90); // on fait comme si on avait accepte avec 10% de baisse afin que lors des prochains echanges on fasse une meilleure offre
 			journalAO.ajouter(Color.RED, Color.white,"   Echec de vente par AO de "+quantite+" tonnes de "+cm+" au prix de  "+prix);
 			if (prixAO.get(cm).size()>10) {
 				prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
