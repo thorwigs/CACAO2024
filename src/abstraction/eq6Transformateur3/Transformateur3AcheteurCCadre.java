@@ -28,7 +28,8 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	protected SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contratsEnCours;
 	protected List<ExemplaireContratCadre> contratsTermines;
-
+	protected HashMap<Feve, Double > coûtMoyenAchatFeve;
+	protected HashMap<Feve, Integer > nbAchatFeve;
 	protected Journal journalCC6;
 
 	public Transformateur3AcheteurCCadre() {
@@ -36,11 +37,33 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.contratsEnCours= new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC6 = new Journal(this.getNom()+" journal CC6", this);
+		this.coûtMoyenAchatFeve = new HashMap<Feve, Double > ();
+		this.nbAchatFeve = new HashMap<Feve, Integer >();
+		
 	}
 
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+		coûtMoyenAchatFeve.put(Feve.F_BQ,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_MQ,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_MQ_E,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_HQ,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_HQ_E,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_HQ_BE,0.0);
+		
+		nbAchatFeve.put(Feve.F_BQ,0);
+		nbAchatFeve.put(Feve.F_MQ,0);
+		nbAchatFeve.put(Feve.F_MQ_E,0);
+		nbAchatFeve.put(Feve.F_HQ,0);
+		nbAchatFeve.put(Feve.F_HQ_E,0);
+		nbAchatFeve.put(Feve.F_HQ_BE,0);
+	
+	
+	
+	
+	
+	
 	}
 	/**
 	 * @author Mahel et Thomas
@@ -75,6 +98,16 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 							journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
 						} 
 						else {
+							if ( nbAchatFeve.get(f) == 0) {
+								nbAchatFeve.put(f, nbAchatFeve.get(f)+1);
+								coûtMoyenAchatFeve.put(f, (contrat.getPrix()));
+							}
+							else{
+								double m = coûtMoyenAchatFeve.get(f) * nbAchatFeve.get(f);
+								nbAchatFeve.put(f, nbAchatFeve.get(f)+1);
+								coûtMoyenAchatFeve.put(f, (m+ contrat.getPrix())/nbAchatFeve.get(f));
+							}
+	
 							journalCC6.ajouter("liste des contrats en cours");
 							for(ExemplaireContratCadre c : this.contratsEnCours) {
 								journalCC6.ajouter("Contrat numéro : " + c.getNumero());
