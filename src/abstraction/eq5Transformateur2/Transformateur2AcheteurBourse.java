@@ -20,7 +20,6 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	 * --> 
 	 */
 
-
 	////////////////////////////////////////////
 	// Constructeur --> met à jour le journal //
 	////////////////////////////////////////////
