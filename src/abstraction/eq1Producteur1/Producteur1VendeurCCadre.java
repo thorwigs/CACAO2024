@@ -167,7 +167,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			journalCC.ajouter("On fait pas de contract pendant la 1ere annee");
 			return null;
 		}
-		if (this.contratsEnCours.size() <3 ) {
+		if (this.contratsEnCours.size() >=3 ) {
 			journalCC.ajouter("On fait pas plus que de 3 contracts en meme temps");
 			return null;
 		}
