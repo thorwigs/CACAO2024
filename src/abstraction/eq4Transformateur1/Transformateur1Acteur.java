@@ -71,9 +71,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		}
 		
 		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Variable>();
-		for (ChocolatDeMarque c : this.chocosProduits) {
-			this.stockChocoMarque.put(c, new Variable("EQ4_stock_choco_"+c, this));
-		}
 
 		this.demandeCC = 0;
 	}
@@ -96,6 +93,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		//conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		//this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
+		this.getChocolatsProduits();
+		for (ChocolatDeMarque c : this.chocosProduits) {
+			this.stockChocoMarque.put(c, new Variable("EQ4_stock_choco_"+c, this));
+		}
 
 	}
 
