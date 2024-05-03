@@ -154,13 +154,12 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	        return contrat.getPrix(); // ne refait pas de contreproposition
 	    } else {
 	    	EtapenegoVente++;
-	    	if (EtapenegoVente>=contrat.getListePrix().size() ) {
+	    	if (EtapenegoVente<=contrat.getListePrix().size() ) {
 	    		double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; //renegocie le prix de 50% de la variation entre le prix proposé au tour précédent et la proposition de l'acheteur 
 		        return contrat.getPrix() + renego;
 	    	}else {
-	    		return 0.0;// aie
+	    		return contrat.getPrix();// aie
 	    	}
-	    	
 	    }
 	}
 	
