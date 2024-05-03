@@ -36,7 +36,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected HashMap<ChocolatDeMarque, Double> VariationStockChocoMarque; // pour le calcul des coûts de transfo
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // dictionnaire de dictionnaire [feve : [Type chocolat : % cacao ]]
-	protected List<ChocolatDeMarque> chocolatsFusion; 
+	protected List<ChocolatDeMarque> chocolatsFusion;
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualntite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
