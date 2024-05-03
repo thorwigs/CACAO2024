@@ -95,7 +95,6 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		
 		this.demandeCC = 0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			System.out.println(c.getQuantiteALivrerAuStep());
 			this.demandeCC += c.getQuantiteALivrerAuStep();
 		}
 		this.journalCC.ajouter("La demande des contrats cadres est de "+this.demandeCC+"T");

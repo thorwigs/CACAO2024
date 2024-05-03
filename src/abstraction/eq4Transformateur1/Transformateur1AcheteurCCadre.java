@@ -142,7 +142,6 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    
 	    // Utilisation de la logique de la méthode achete pour déterminer si on achète la fève
         if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-        	System.out.println("test");
             if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 5000) {
                 // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
                 return contrat.getEcheancier();

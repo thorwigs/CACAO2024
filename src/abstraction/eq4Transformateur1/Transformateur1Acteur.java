@@ -66,7 +66,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.stockChoco = new HashMap<Chocolat,Variable>();
 		this.chocolatsAVendre = new LinkedList<Chocolat>();
 		this.chocolatsAVendre.add(Chocolat.C_MQ);
-		for (Chocolat c : this.chocolatsAVendre) {
+		for (Chocolat c : Chocolat.values()) {
 			this.stockChoco.put(c, new Variable("EQ4_stock_choco_"+c, this));
 		}
 		
@@ -92,9 +92,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
 		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
 		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
-		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
+		//this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
+		//conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
+		//this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
 
 	}
@@ -155,7 +155,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					} else {
 						this.stockChocoMarque.put(cm, new Variable(cm.getNom(), this, newChocoMarque));
 					}
-					System.out.println("test erreur");
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChocoMarque,3,2)+" T de "+cm);
 					this.totalStocksChocoMarque.ajouter(this,newChocoMarque, this.cryptogramme);
 					
