@@ -53,11 +53,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		this.journal_CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		this.journal_negoc.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		super.next();
-		this.lancerNouveauCC();
-		/*for (ExemplaireContratCadre c : this.contratsEnCours) {
-			receptionner(c.getProduit(), c.getQuantiteALivrerAuStep(), c);
-		}*/
-		
+		this.lancerNouveauCC();		
 	}
 	
 	public double restantDu(ChocolatDeMarque cm) {
@@ -72,11 +68,11 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	
 	
 	@Override
-	public boolean achete(IProduit produit) {
+	public boolean achete(IProduit produit) { //regarder attractivité peut etre
 		if (produit.getType().equals("ChocolatDeMarque")) {
 			ChocolatDeMarque cm = (ChocolatDeMarque) produit;
 			if (this.stockChocoMarque.get(cm)!=null) {
-				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000;
+				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<500000;
 			} else {
 				return this.totalStocksChocoMarque.getValeur(cryptogramme)<100000;
 			}
@@ -205,7 +201,9 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
 			this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
 			this.totalCoutAPayer -= contrat.getPaiementAEffectuerAuStep();
-			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep()));
+			if (contrat.getPaiementAEffectuerAuStep()>0.) {
+				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep()));
+			}
 		}
 		if (Filiere.LA_FILIERE.getEtape() == contrat.getEcheancier().getStepFin()) {
 			this.contratsTermines.add(contrat);
