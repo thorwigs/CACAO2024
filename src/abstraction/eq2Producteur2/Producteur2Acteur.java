@@ -29,7 +29,8 @@ public abstract class Producteur2Acteur implements IActeur {
 	private static final double PART=0.1;
 	protected HashMap <Feve, Variable> stock_variable;
 	protected HashMap <Feve, Variable> prod_step;
-	protected Variable tonnes_vendues;
+	protected Variable tonnes_venduesCC;
+	protected Variable tonnes_venduesBourse;
 
 	public abstract double get_prod_pest_BQ();
 	public abstract double get_prod_pest_MQ();
@@ -49,7 +50,8 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.prodParStep= new HashMap<Feve, Double>();
 		this.stock_variable= new HashMap<Feve, Variable>();
 		this.prod_step = new HashMap<Feve, Variable>();
-		this.tonnes_vendues =  new Variable("Tonnes livrées", this);
+		this.tonnes_venduesCC =  new Variable("Tonnes livrées CC ", this);
+		this.tonnes_venduesBourse =  new Variable("Tonnes livrées Bourse ", this);
 		
 		this.init_stock(Feve.F_BQ, 103846153.8);
 		this.init_stock(Feve.F_MQ, 62115384.62);
@@ -129,8 +131,9 @@ public abstract class Producteur2Acteur implements IActeur {
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
 		}
-		double tonnes_total = this.getNbTonnesVenduesBourse() + this.getNbTonnesVenduesCC();
-		this.tonnes_vendues.setValeur(this, tonnes_total);
+		
+		this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC());
+		this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
 	}
 	
 	public Color getColor() { //NE PAS MODIFIER
@@ -159,7 +162,8 @@ public abstract class Producteur2Acteur implements IActeur {
 			res.add(this.stock_variable.get(f));
 		}
 		
-		res.add(this.tonnes_vendues);
+		res.add(this.tonnes_venduesCC);
+		res.add(this.tonnes_venduesBourse);
 		return res;
 	}
 

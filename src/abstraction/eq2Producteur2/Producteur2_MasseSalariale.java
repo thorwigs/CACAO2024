@@ -249,9 +249,6 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		super.next();
 		this.strategie();
 		this.journalRH.ajouter("\n-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
-		/*this.journalRH.ajouter("nombre d'employes équitable :" + this.getNb_employes_equitable());
-		this.journalRH.ajouter("nombre d'employes adultes : "+ this.getNb_employes());
-		this.journalRH.ajouter("nombre d'employes enfants " + this.getNb_employes_enfants());*/
 		this.journalRH.ajouter("nombre d'employes dans la plantation " + this.getNb_Employes_total());
 		this.journalRH.ajouter("pourcentage d'enfants " + this.getPourcentage_enfants());
 		this.journalRH.ajouter("pourcentage d'employés équitable " + this.getPourcentage_equitable());

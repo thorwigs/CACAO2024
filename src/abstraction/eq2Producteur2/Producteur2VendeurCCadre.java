@@ -146,7 +146,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	}
 	
 	public double getNbTonnesVenduesCC() {
-		double nb = this.getQuantiteVendue();
+		double nb = this.quantiteVendueCC;
 		
 		if (Filiere.LA_FILIERE.getEtape() != this.etapeCC) {
 			// On remet à 0 la quantité vendue à chaque tour (on souhaite suivre la vente par tour)
