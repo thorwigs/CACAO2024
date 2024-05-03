@@ -5,6 +5,7 @@ import java.util.List;
 import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
@@ -76,8 +77,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.capaciteTransformation*this.NbSalaries); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
-		this.stockFeves.put(f, this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees); //Modifie le stock de feves
-		this.stockChoco.put(c, this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees); //Modifie le stock de feves
+		this.stockFeves.put(f, new Variable("Eq5Stock ", this,this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees)); //Modifie le stock de feves
+		this.stockChoco.put(c, new Variable("Eq5Stock ", this,this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees)); //Modifie le stock de feves
 		return tonnesTransformees; 
 	}
 	/**
