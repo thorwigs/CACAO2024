@@ -23,10 +23,14 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
 	protected Journal journal_Plantation;
 	
-	public void intialiser() {
+	public Producteur3Plantation() {
+		super();
+		this.journal_Plantation = new Journal(this.getNom()+" journal Plantation",this);
+	}
+	
+		public void intialiser() {
 		super.initialiser();
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
-	    this.journal_Plantation = new Journal(this.getNom()+" journal Plantation",this);
 	}
 	
 	/**
