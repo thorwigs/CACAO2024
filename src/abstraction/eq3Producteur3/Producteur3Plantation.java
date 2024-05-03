@@ -20,7 +20,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
 
-/**
+
 
 ///Gestion de la plantation
 	
