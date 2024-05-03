@@ -201,12 +201,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			}
 			double e = this.stock_Choco.get(contrat.getProduit()); 
 			double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
-			
-			if (contrat.getQuantiteTotale() > c-d-e+100
-				&& f-100*(1+contrat.getListePrix().size())>0
-				&& f+100*(1+contrat.getListePrix().size())>0) {
+			System.out.println(f);
+			if (contrat.getQuantiteTotale() > c-d-e+100) {
 			    x = new Echeancier (a,b,f+100*(1+contrat.getListePrix().size()));
-			} else {
+			} else if (f-100*(1+contrat.getListePrix().size())>0){
 			    x = new Echeancier (a,b,f-100*(1+contrat.getListePrix().size()));
 			}
 		}
@@ -326,16 +324,13 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"-->aboutit au contrat "+cc);
 					if (cc != null ) {
 						Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Livraison", 0.05*cc.getPrix());
+						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"l'accord du contrat cadre est : Quantitée totale de "+cc.getQuantiteTotale()+" pour un prix par Step de "+cc.getPrix() );
 					}
 				}	
 			}
 		}
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
 		this.journalCC.ajouter("");
-		
-		for (ChocolatDeMarque choc : chocolats) {
-			System.out.println();
-		}
 
 	}
 }
