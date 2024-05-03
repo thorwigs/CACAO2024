@@ -10,7 +10,7 @@ import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
-import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.Filiere;	
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
