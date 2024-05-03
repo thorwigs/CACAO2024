@@ -194,11 +194,6 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
-		res.add(this.stockFeves.get(Feve.F_MQ));
-		res.addAll(this.stockChoco.values());
-		res.addAll(this.stockChocoMarque.values());
-		res.add(this.totalStocksChocoMarque);
-		return res;
 		/*
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : Feve.values()) {
@@ -218,6 +213,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 			}
 		}
 		*/
+		return res;
 	}
 
 	// Renvoie les parametres
