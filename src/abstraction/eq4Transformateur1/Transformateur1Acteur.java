@@ -134,7 +134,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+Journal.entierSur6(transfo)+" T de "+f+" en :"+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
 
-					
 					// La moitie (newChoco) sera stockee sous forme de chocolat, l'autre moitie directement etiquetee "LeaderKakao"
 					boolean tropDeChoco = this.totalStocksChoco.getValeur((Integer)cryptogramme)>=0; // 100000 pour la V2
 					double newChoco = tropDeChoco ? 0.0 : ((transfo/2.0)*this.pourcentageTransfo.get(f).get(c)); // la moitie en chocolat tant qu'on n'en n'a pas trop
@@ -156,6 +155,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 					} else {
 						this.stockChocoMarque.put(cm, new Variable(cm.getNom(), this, newChocoMarque));
 					}
+					System.out.println("test erreur");
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, " - "+Journal.doubleSur(newChocoMarque,3,2)+" T de "+cm);
 					this.totalStocksChocoMarque.ajouter(this,newChocoMarque, this.cryptogramme);
 					
