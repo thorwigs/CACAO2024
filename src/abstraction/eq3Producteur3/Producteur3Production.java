@@ -7,26 +7,33 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Production extends Producteur3Plantation { 
-	// prix production/ha.step
-	protected double T_ha_BQ = 28.125/1000 ;						//avec pesticide
+	//tonne produite par hectare lors d'un step
+	protected double T_ha_BQ = 28.125/1000 ;	//avec pesticide
 	protected double T_ha_MQ = 26.5625/1000 ;
 	protected double T_ha_HQ = 25.0/1000 ;
-	protected double T_ha_HQ_BE = 22.5/1000 ;     					//sans pesticide (bio équitable)
-	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>();;
+	protected double T_ha_HQ_BE = 22.5/1000 ;   //sans pesticide (bio équitable)
+	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>(); //variable qui sert a prendre en compte le temps de séchage
 	
-	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
-		prodTemps.put(0, d0);
-		prodTemps.put(1, d1);
+	public void initialiser() {
+		super.initialiser();
+		//On set les productions
+		//@Gabin
+		HashMap<Feve,Double> d01 = new HashMap<Feve,Double>();
+		d01.put(Feve.F_BQ, 3.79);
+		d01.put(Feve.F_MQ, 2.527);		//80% de HQ est non équitable
+		d01.put(Feve.F_MQ_E, 0.63);        //20% de MQ est équitable
+		d01.put(Feve.F_HQ, 1.137);			//60% de HQ est ni bio ni équitable
+		d01.put(Feve.F_HQ_E, 0.379);		//20% de HQ est équitable
+		d01.put(Feve.F_HQ_BE, 0.3789);		//20% de HQ est bio équitable
+		setProdTemps(d01,d01);
 	}
 	
-	
 	/**
+	 * @author Gabin
+	 * @return HashMap<Feve,Double> (tableau des récoltes selon les fèves)
 	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao (et types bio/équitable). 
-	 * Prend en compte les surfaces de plantation et le prix.
-	 * @author galem (Gabin)
+	 * Prend en compte les surfaces de plantation et les tonnes produites par hectare lors d'un step.
 	 */
-	
-	//renvoie la quantité produite au step actuel
 	protected HashMap<Feve,Double> newQuantite() {
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		HashMap<Feve,Double> plant = plantation();
@@ -62,19 +69,50 @@ public class Producteur3Production extends Producteur3Plantation {
 		
 		
 	}	
-	//stockage dans le temps de 2 dictionnaires
+
+	/**
+	 * @author Gabin
+	 * @return HashMap<Integer,HashMap<Feve,Double>> prodTemps (quantités produites par fèves sur ce step et le précédent)
+	 * Stockage dans le temps de 2 dictionnaires.
+	 * Nécessaire pour prendre en compte le temps de séchage.
+	 * Le premier dictionnaire est celui du step t-1 (clé 0), soit la quantité produite 1 step avant (2 semaines avant)
+	 * Le deuxième (clé 1) correspond au step t (actuel), soit la quantité produite à ce step
+	 */
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps() {
-		prodTemps.put(0, prodTemps.get(1));
-		prodTemps.put(1, newQuantite());
+		prodTemps.put(0, prodTemps.get(1)); //step précédent
+		prodTemps.put(1, newQuantite());    //step actuel
 		return prodTemps;
-		
 	}
 	
-	//renvoie la quantité de fèves après séchage, soit 1 step avant (2 semaines plus tard)
-	// la quantité dispo pour la vente.
+	/**
+	 * @author Gabin
+	 * @param HashMap<Feve,Double> d0, d1 (production pour les différents types de fèves au temps 0 et 1
+	 * Initialise la variable prodTemps qui sert a prendre en compte le temps de séchage
+	 */
+	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
+		prodTemps.put(0, d0);
+		prodTemps.put(1, d1);
+	}	
+	
+	/**
+	 * @author Gabin
+	 * @return HashMap<Feve,Double> quantite (quantités produites par fèves)
+	 * Permet de savoir la production que l'on peut effectivement vendre (après le temps de séchage)
+	 */
 	protected HashMap<Feve,Double> quantite(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
 		quantite=prodTemps().get(0);
+		return quantite;
+	}
+	
+	/**Renvoie la quantité de fèves disponibles après séchage au prochain step
+	 * Elle est utile pour l'établissement d'un contrat cadre
+	 * 
+	 * @author Alexis
+	 */
+	protected HashMap<Feve,Double> quantiteFuture(){
+		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
+		quantite = prodTemps.get(1);
 		return quantite;
 	}
 	
