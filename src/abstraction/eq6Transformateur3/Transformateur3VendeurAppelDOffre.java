@@ -1,9 +1,10 @@
-package abstraction.eqXRomu.acteurs;
+package abstraction.eq6Transformateur3;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.TransformateurXVendeurAuxEncheres;
 import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
