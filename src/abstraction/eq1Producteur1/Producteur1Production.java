@@ -58,6 +58,25 @@ public class Producteur1Production extends Producteur1Plantation{
 
 	}
 	/**
+	 * Méthode pour initialiser le stock de fèves pour chaque type de fève.
+	 * @return Un dictionnaire avec chaque fève et sa quantité de stock associée.
+	 */
+	public HashMap<Feve, Double> InitiStock(){
+		/*
+		 * Initialise un dictionnaire feve,double pour facilier la minipulation du stock
+		 * On commence deja par le stock qu'on produit pendant 2 mois
+		 */
+		this.Stocck = new HashMap<Feve, Double>();
+		HashMap<Feve, Double> pro = this.ProdParStep();
+		for (Feve f : Feve.values()) {
+			this.Stocck.put(f, pro.get(f)*4);
+			this.journalPlantation.ajouter("On a initialise nos stocks par:" + this.Stocck.get(f));
+		
+		}
+		return this.Stocck;
+		
+	}
+	/**
 	 * Récupère la quantité d'un produit spécifique en stock.
 	 * @param p Le produit pour lequel la quantité est demandée.
 	 * @param cryptogramme Le code d'identification pour accéder aux informations de stock.

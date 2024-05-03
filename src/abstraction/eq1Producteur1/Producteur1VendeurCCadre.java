@@ -147,6 +147,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		Echeancier ec = contrat.getEcheancier();
 		IProduit produit = contrat.getProduit();
 		//Echeancier res = ec;
+		boolean accepted = false;
 		String type = produit.getType();
 		if (type != "Feve") {
 			journalCC.ajouter("Ce n'est pas une feve");
@@ -172,9 +173,9 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			return null;
 		}
 		if (ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8) {
-			boolean Accepted = true;
+			accepted = true;
 		}
-		else {
+		if (accepted = false){
 			if (ec.getQuantiteTotale()<=stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)) {
 				journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
