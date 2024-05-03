@@ -205,7 +205,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		this.prodAnnee.put(Feve.F_HQ, 0.650*0.02*this.nombreHec);
 		this.prodAnnee.put(Feve.F_HQ_E, 0.0);
 		this.prodAnnee.put(Feve.F_HQ_BE, 0.0);
-		this.prodAnnee.put(Feve.F_MQ_E, 0.0);
+		this.prodAnnee.put(Feve.F_MQ_E,0.0);
 		this.journalPlantation.ajouter("Plantation Success, production par Annee:" + 0.7*0.650*this.nombreHec +"For BQ");
 		this.journalPlantation.ajouter("Plantation Success, production par Annee:" + 0.28*0.650*this.nombreHec +"For MQ");
 		this.journalPlantation.ajouter("Plantation Success, production par Annee:" + 0.02*0.650*this.nombreHec +"For HQ");
