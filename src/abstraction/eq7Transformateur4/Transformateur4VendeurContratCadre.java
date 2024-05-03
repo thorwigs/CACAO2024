@@ -66,6 +66,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
 	}
 
+	
+	
+	
+	
 	//Négociations
 	
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
@@ -201,6 +205,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		}
 	}//négocie le prix en nous garantissant une marge minimale de 5% (on enregistre notre précédente proposition dans prixPrecedent)
 
+	
+	
+	
+	
 	//Après finalisation contrat 
 	
 	public double livrer(IProduit p, double quantite, ExemplaireContratCadre contrat) {
@@ -250,6 +258,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 			super.notificationNouveauContratCadre(contrat);
 		}
 	}
+
+	
+	
+	
 	
 	//Honorer le contrat
 	
@@ -270,7 +282,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		}
 		return res;
 	}
-		
+
+	
+	
+	
+	
 	//Next
 		
 	public void next() { 
