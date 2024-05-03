@@ -253,6 +253,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.stock_a_vendre((Feve) produit, quantite);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		this.quantiteVendueCC = this.quantiteVendueCC + aLivre;
-		return aLivre;
+		return Math.max(aLivre, 0);
 	} 
 }
