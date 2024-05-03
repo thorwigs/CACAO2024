@@ -33,22 +33,39 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	public void initialiser() {
 		super.initialiser();
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
-		agePlant.get(Feve.F_BQ).put(20, surfaceBQ*0.3);
-		agePlant.get(Feve.F_BQ).put(420, surfaceBQ*0.3);
-		agePlant.get(Feve.F_BQ).put(720, surfaceBQ*0.4);
-		agePlant.get(Feve.F_MQ).put(70, surfaceMQ*0.2);
-		agePlant.get(Feve.F_MQ).put(520, surfaceMQ*0.3);
-		agePlant.get(Feve.F_MQ).put(720, surfaceMQ*0.5);
-		agePlant.get(Feve.F_MQ_E).put(570, surfaceMQE*0.1);
-		agePlant.get(Feve.F_MQ_E).put(670, surfaceMQE*0.2);
-		agePlant.get(Feve.F_MQ_E).put(720, surfaceMQE*0.7);
-		agePlant.get(Feve.F_HQ).put(10, surfaceHQ*0.1);
-		agePlant.get(Feve.F_HQ).put(420, surfaceHQ*0.4);
-		agePlant.get(Feve.F_HQ).put(720, surfaceHQ*0.5);
-		agePlant.get(Feve.F_HQ_E).put(620, surfaceHQE*0.7);
-		agePlant.get(Feve.F_HQ_E).put(720, surfaceHQE*0.3);
-		agePlant.get(Feve.F_HQ_BE).put(670, surfaceHQBE*0.1);
-		agePlant.get(Feve.F_HQ_BE).put(720, surfaceHQBE*0.9);	
+		HashMap<Integer,Double> feveBQ = new HashMap<Integer,Double>();
+		feveBQ.put(20, surfaceBQ*0.3);
+		feveBQ.put(420, surfaceBQ*0.3);
+		feveBQ.put(720, surfaceBQ*0.4);
+		agePlant.put(Feve.F_BQ, feveBQ);
+
+		HashMap<Integer,Double> feveMQ = new HashMap<Integer,Double>();
+		feveMQ.put(70, surfaceMQ*0.2);
+		feveMQ.put(520, surfaceMQ*0.3);
+		feveMQ.put(720, surfaceMQ*0.5);
+		agePlant.put(Feve.F_MQ, feveBQ);
+		
+		HashMap<Integer,Double> feveMQE = new HashMap<Integer,Double>();
+		feveMQE.put(570, surfaceMQE*0.1);
+		feveMQE.put(670, surfaceMQE*0.2);
+		feveMQE.put(670, surfaceMQE*0.2);
+		agePlant.put(Feve.F_MQ_E, feveMQE);
+		
+		HashMap<Integer,Double> feveHQ = new HashMap<Integer,Double>();
+		feveHQ.put(10, surfaceHQ*0.1);
+		feveHQ.put(420, surfaceHQ*0.4);
+		feveHQ.put(720, surfaceHQ*0.5);
+		agePlant.put(Feve.F_HQ, feveHQ);
+
+		HashMap<Integer,Double> feveHQE = new HashMap<Integer,Double>();
+		feveHQE.put(620, surfaceHQE*0.7);
+		feveHQE.put(720, surfaceHQE*0.3);
+		agePlant.put(Feve.F_HQ, feveHQE);
+		
+		HashMap<Integer,Double> feveHQBE = new HashMap<Integer,Double>();
+		feveHQBE.put(670, surfaceHQBE*0.1);
+		feveHQBE.put(720, surfaceHQBE*0.9);
+		agePlant.put(Feve.F_HQ, feveHQBE);
 	}
 	
 
