@@ -85,7 +85,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
-			this.journal_negoc.ajouter("Négociation sur qté  a échoué car pas du Chocolat de Marque");
+			this.journal_negoc.ajouter("Négociation sur qté a échoué car pas du Chocolat de Marque");
 			return null;
 		}
 		Echeancier e = contrat.getEcheancier();
@@ -130,10 +130,10 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			this.journal_negoc.ajouter("Négociation sur prix a échoué car chocolat de marque "+choco+ " pas référencé");
 			return 0.;
 		}
-		double prix_limite = (Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1)*0.7- this.getCoutStockage())*contrat.getQuantiteTotale();
+		double prix_limite = (prix(choco)*0.7- this.getCoutStockage())*contrat.getQuantiteTotale();
 		if (prix_limite<0) {
 			System.out.println("prix limite négatif");
-			System.out.println("prix moyen : "+Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1));
+			System.out.println("prix moyen : "+prix(choco));
 			this.journal_negoc.ajouter("Négociation a échoué car nous ne sommes pas en capacité de payer : "+prix_limite);
 			return 0.;
 		}
