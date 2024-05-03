@@ -137,7 +137,6 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 				}
 			}
 			this.variables.get(choc).setValeur(this, x);
-			System.out.println("");
 		}
 	}
 
