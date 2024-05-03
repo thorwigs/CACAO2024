@@ -19,6 +19,15 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQ = 47.57*1000;
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
+	
+	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
+	
+	public void intialiser() {
+		super.initialiser();
+		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
+	}
+
+
 
 ///Gestion de la plantation
 	
@@ -59,7 +68,17 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		}
 		return surfaces;
 	}
-			 
+			
+	/**
+	 * @author Alexis
+	 * @param 
+	 * @return HashMap<Feve,Double> aRemplacer (tableau des surfaces à remplacer par feve)
+	 * Cette methode détermine la quantité de plants trop vieux à remplacer
+	 * Elle s'appuie sur 
+	 */
+	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve, Double> surfaces) {
+		return surfaces;
+	}
 	
 ///Gestion de la main d'oeuvre///
 

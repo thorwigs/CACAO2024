@@ -19,6 +19,9 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+/**
+ * @author Clement F.
+ */
 public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
 	
 	protected int cryptogramme;
@@ -31,9 +34,12 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
 	protected List<ChocolatDeMarque> chocoProduits;
 	protected List<ChocolatDeMarque> chocoBan;
-
+ 
 	
 	
+	/**
+	 * @author Clement F.
+	 */
 	public Distributeur1Acteur() {
 		this.journal= new Journal(this.getNom()+" journal", this);
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
@@ -42,6 +48,9 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.chocoBan = new LinkedList<ChocolatDeMarque>();
 	}
 	
+	/**
+	 * Clement F.
+	 */
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16;
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
@@ -85,10 +94,16 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.journal.ajouter("");
 	}
 
+	/**
+	 * @author Clement F.
+	 */
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ8";
 	}
 	
+	/**
+	 * @author Clement F.
+	 */
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
 	}
@@ -98,6 +113,9 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
+	/**
+	 *@author Clement F.
+	 */
 	public void next() {
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK ETAPE "+Filiere.LA_FILIERE.getEtape()+" =====");
@@ -110,27 +128,42 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 
 	}
 
+	/**
+	 * @author Clement F.
+	 */
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(209, 179, 221); 
 	}
 
+	/**
+	 * @author Clement F.
+	 */
 	public String getDescription() {
 		return "Fidéliser une clientèle avec un commerce durable et équitable dans le haut de gamme";
 	}
 
 	// Renvoie les indicateurs
+	/**
+	 * @author Clement F.
+	 */
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		return res;
 	}
 
 	// Renvoie les parametres
+	/**
+	 *@author Clement F.
+	 */
 	public List<Variable> getParametres() {
 		List<Variable> res=new ArrayList<Variable>();
 		return res;
 	}
 
 	// Renvoie les journaux
+	/**
+	 * @author Clement F.
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal);
@@ -144,21 +177,33 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	// Appelee en debut de simulation pour vous communiquer 
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
+	/**
+	 * @author Clement F.
+	 */
 	public void setCryptogramme(Integer crypto) {
 		this.cryptogramme = crypto;
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
+	/**
+	 * @author Clement F.
+	 */
 	public void notificationFaillite(IActeur acteur) {
 	}
 
 	// Apres chaque operation sur votre compte bancaire, cette
 	// operation est appelee pour vous en informer
+	/**
+	 * @author Clement F.
+	 */
 	public void notificationOperationBancaire(double montant) {
 	}
 	
 	// Renvoie le solde actuel de l'acteur
+	/**
+	 * @author Clement F.
+	 */
 	protected double getSolde() {
 		return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
 	}
@@ -170,16 +215,25 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	////////////////////////////////////////////////////////
 
 	// Renvoie la liste des filieres proposees par l'acteur
+	/**
+	 *@author Clement F.
+	 */
 	public List<String> getNomsFilieresProposees() {
 		ArrayList<String> filieres = new ArrayList<String>();
 		return(filieres);
 	}
 
 	// Renvoie une instance d'une filiere d'apres son nom
+	/**
+	 * @author Clement F.
+	 */
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;
 	}
 		
+	/**
+	 * @author Clement F.
+	 */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) {
 			if (stock_Choco.containsKey(p)) {
@@ -189,6 +243,9 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		return 0.0;
 	}
 	
+	/**
+	 * @author Clement F.
+	 */
 	public List<ChocolatDeMarque> getChocolatsProduits() {	
 		if (this.chocoProduits.size()==0) {
 			Chocolat C_MQ_E = Chocolat.C_MQ_E;
@@ -202,6 +259,9 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		return this.chocoProduits;
 	}  
 	
+	/**
+	 * @author Clement F.
+	 */
 	public List<String> getMarquesChocolat() {
 		LinkedList<String> choc = new LinkedList<String>();
 		choc.add("Chocoflow");
