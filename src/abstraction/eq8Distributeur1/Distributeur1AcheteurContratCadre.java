@@ -167,45 +167,51 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		
 		Echeancier x = contrat.getEcheancier();
-		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72 
-			&&	contrat.getQuantiteTotale()>= 30 ) {
+		int a = Filiere.LA_FILIERE.getEtape()+1;
+		int b = 24 ; 
+		double c = this.prevision(contrat.getProduit(), b) ;	
+		double d = 0 ; 
+		for (int i=0; i<contrat_en_cours.size(); i++) {
+			if (contrat_en_cours.get(i).getProduit().equals(contrat.getProduit())) {
+				d = d + contrat_en_cours.get(i).getQuantiteRestantALivrer();
+			}
+		}
+		double e = this.stock_Choco.get(contrat.getProduit()); 
+		double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
+		System.out.println(c-d-e+100);
+		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72) {
 			
 			if (contrat.getProduit().toString().contains("C_BQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale() > c-d-e+100) {
 			} 
 			if (contrat.getProduit().toString().contains("C_MQ_E")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale() > c-d-e+100) {
 				}
 			if ( contrat.getProduit().toString().contains("C_MQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat())))  {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale() > c-d-e+100)  {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_BE")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale() > c-d-e+100) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_E")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))) {
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale() > c-d-e+100) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))) {
-				} 
-			
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale() > c-d-e+100) {
+				} 			
 		} else {
-			int a = Filiere.LA_FILIERE.getEtape()+1;
-			int b = 24 ; 
-			double c = this.prevision(contrat.getProduit(), b) ;	
-			double d = 0 ; 
-			for (int i=0; i<contrat_en_cours.size(); i++) {
-				if (contrat_en_cours.get(i).getProduit().equals(contrat.getProduit())) {
-					d = d + contrat_en_cours.get(i).getQuantiteRestantALivrer();
-				}
-			}
-			double e = this.stock_Choco.get(contrat.getProduit()); 
-			double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
-			System.out.println(f);
 			if (contrat.getQuantiteTotale() > c-d-e+100) {
 			    x = new Echeancier (a,b,f+100*(1+contrat.getListePrix().size()));
 			} else if (f-100*(1+contrat.getListePrix().size())>0){
 			    x = new Echeancier (a,b,f-100*(1+contrat.getListePrix().size()));
+			} else {
+			    x = new Echeancier (a,b,f);
 			}
 		}
 		return x;
