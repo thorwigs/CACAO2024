@@ -114,13 +114,6 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 * @author Robin, Erwann
 	 */
 	public boolean vend(IProduit produit) {
-		return (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)>0) ; //Valeur à changer
-	}
-	
-	/***
-	 * @author Robin, Vincent
-	 */
-	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		double totalStep = 0;
 		for (ExemplaireContratCadre c : contratsEnCours) {
 			totalStep+=c.getQuantiteALivrerAuStep();
@@ -129,11 +122,14 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		if (totalStep<this.moyProd) {
 			VenteActive = true;
 		}
-		if (VenteActive == false){
-			return null;
-		}else {
-			return contrat.getEcheancier();
-			}
+		return (this.chocosProduits.contains(produit) && VenteActive) ; //Valeur à changer
+	}
+	
+	/***
+	 * @author Robin, Vincent
+	 */
+	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		return contrat.getEcheancier();
 		}
 	
 	/***
