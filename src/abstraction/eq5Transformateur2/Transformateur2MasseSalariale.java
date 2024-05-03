@@ -128,7 +128,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = this.NbSalaries * this.capaciteTransformation;
 
-		if (TonnesTransformees >= CapaciteTransfoTotale) {
+		if (TonnesTransformees*0.7 >= CapaciteTransfoTotale) {// assouplissement de la condition
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/this.capaciteTransformation);
 			this.NbSalaries += embauche;
 			this.JournalMasseSalariale.ajouter("On embauche"+embauche+"personnes");
