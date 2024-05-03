@@ -43,7 +43,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) {
-			if (stock.get(f).getValeur()-restantDu(f)>1200 ) { // au moins 100 tonnes par step pendant 6 mois
+			if (stock.get(f).getValeur()-restantDu(f)>100 ) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
@@ -108,17 +108,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		boolean bio =f.isBio();
 		boolean equitable = f.isEquitable();
 		double prime = 0;
-		/*
-		if(gamme== Gamme.BQ) {
-			throw new IllegalArgumentException("Gamme BQ ne peut pas etre solde en Contrat Cadre.");
-		}
-		if (gamme == Gamme.MQ && !bio && !equitable ) {
-			throw new IllegalArgumentException("Gamme MQ sans label ne se vend pas en Contrat Cadre.");
-		}
-		if (gamme == Gamme.HQ && !bio && !equitable ) {
-			throw new IllegalArgumentException("Gamme HQ sans label ne se vend pas en Contrat Cadre.");
-		}
-		 */
+		
 		if (bio) {
 			prime += 100;
 		}
@@ -165,15 +155,15 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			return null;
 		}
 		int duree = ec.getStepFin()-ec.getStepDebut();
-		if (duree < 10) {
+		if (duree < 0) {
 			journalCC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
-		if (Filiere.LA_FILIERE.getEtape() < 12) {
+		if (Filiere.LA_FILIERE.getEtape() < 0) {
 			journalCC.ajouter("On fait pas de contract pendant les 6ers mois");
 			return null;
 		}
-		if (this.contratsEnCours.size() >=3 ) {
+		if (this.contratsEnCours.size() >=10) {
 			journalCC.ajouter("On fait pas plus que de 3 contracts en meme temps");
 			return null;
 		}
@@ -210,7 +200,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		// TODO Auto-generated method stub
 		List<Double> prix = contrat.getListePrix();
-		if (prix.get(prix.size()-1)>=0.975*prix.get(0)) {
+		if (prix.get(prix.size()-1)>=0.95*prix.get(0)) {
 			journalCC.ajouter("      contrePropose le prix demande : "+contrat.getPrix());
 			return contrat.getPrix();
 		} else {
