@@ -3,6 +3,7 @@ import java.util.*;
 
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
+
 //class pour les décisions de quantité d'achats
 /**
  * @author Mahel
@@ -61,6 +62,10 @@ public class PrévisionAide extends Transformateur3Acteur{
 		
 		}
 		else {
+			/**
+			 * @author Mahel et Cédric
+			 */
+			
 			for(Feve f :stockFeves.keySet()){
 				// HashMap<Feve,Double> steps_avantdernier = historiquesStockFeves.get(historiquesStockFeves.size()-2);
 				HashMap<Feve,Double> steps_dernier = historiquesStockFeves.get(historiquesStockFeves.size()-1);
