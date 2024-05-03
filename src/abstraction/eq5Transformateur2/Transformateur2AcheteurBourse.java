@@ -3,6 +3,7 @@ package abstraction.eq5Transformateur2;
 import java.awt.Color;
 import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -40,27 +41,31 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	 * @Erwann
 	 */
 	public double demande(Feve f, double cours) {
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 
 		//à faire : faire les strat sur le nbr de tonne demandé sur BQ
 		//à faire : faire les strat sur le nbr de tonne demandé sur HQ
 		
 		//Stratégie sur le BQ
 		if (f.getGamme()==Gamme.BQ) {
-			return 50;
-
+			if(bourse.getCours(f).getValeur()*5000<this.getSolde()) { //Valeur a modifier
+				return 5000;
+			}
 		}
 		
 		//Stratégie sur le MQ
 		if (f.getGamme()==Gamme.MQ) {
-			return 50;
+			if(bourse.getCours(f).getValeur()*5000<this.getSolde()) { //Valeur a modifier
+				return 5000;
+			}
 		}
 		
 		//Stratégie sur le HG => pas d'achat de HQ
-		else {
-			return 0;
-		}
+
+		return 0;
+		
 	}
-	
+
 
 	///////////////////////////////////////////////////////////////////////
 	// Notifs de la vente ou de la BlackList + Mise à jour JournalBourse //	
