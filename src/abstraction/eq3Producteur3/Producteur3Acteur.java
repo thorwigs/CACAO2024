@@ -360,8 +360,10 @@ public abstract class Producteur3Acteur implements IActeur {
 		        // Déterminer le salaire en fonction du type de fève
 		        if (f.isEquitable()) {
 		            salaireOuvrier = 3.9*14; // Salaire pour l'equitable (bio ou non)
+		            salaireOuvrier = 3.9 * 15; // Salaire pour l'equitable (bio ou non) (*15 comme c'est 3.9 par jour et le step comporte 15 jours) 
 		        } else {
 		            salaireOuvrier = 2.6*14; // Salaire standard pour les non équitable 
+		            salaireOuvrier = 2.6 * 15; // Salaire standard pour les non équitable 
 		        }
 
 		        // Calculer le coût total pour tous les types de fève

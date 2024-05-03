@@ -47,7 +47,7 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock
 			this.setQuantiteEnStock(f, 0);
-			this.journal_bourse.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
+			this.journal_bourse.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+ "pour "+coursEnEuroParT*stock_inst+" E");
 			ventefevebourse.put(f, stock_inst);
 			return stock_inst;
 		}

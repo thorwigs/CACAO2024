@@ -94,7 +94,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	/**
 	 * @author mammouYoussef
-	 * Nettoie la liste des contrats en cours, en éliminant ceux dont les obligations de livraison ont été entièrement satisfaites
+	 * Nettoie la liste des contrats en cours, en éliminant ceux dont les obligations 
+	 * de livraison ont été entièrement satisfaites
 	 */
 	public void setContratsEnCours() {
 	    LinkedList<ExemplaireContratCadre> contratsAConserver = new LinkedList<>();
@@ -145,7 +146,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		    Feve f = (Feve) contrat.getProduit();
 		    Echeancier echeancierPropose = contrat.getEcheancier();
 		    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
-		    //on estime la quantite disponible est similaire a chaque step en V1
+		    //on estime que la quantite disponible est similaire a chaque step en V1
 		    double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
 
 		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
