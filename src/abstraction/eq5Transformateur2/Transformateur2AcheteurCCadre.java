@@ -89,7 +89,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 							} else {
 								this.contratsEnCours.add(contrat);
 								this.EtapenegoAchat=0;
-								journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+								journalCC.ajouter(Color.MAGENTA, vendeur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 							}
 						} else {
 							journalCC.ajouter("   pas de vendeur");

@@ -26,7 +26,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected int cryptogramme;
 	private double coutStockage;
 	
-	private static final double STOCKINITIAL=1000.0;
+	protected static final double STOCKINITIAL=1000.0;
 	
 	protected List<Feve> lesFeves;
 	protected List<Chocolat> lesChocolats;
@@ -154,6 +154,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.journal.ajouter("Quantité en stock de chocolat de marque : " +stockChocoMarque);
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.journal.ajouter("stocks chocolat marque: "+this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		
 		// Paiment coûts de stockage, le stockage du chocolat de marque n'est pas encore operationnel donc on ne le prend pas en compte.
 		// à rajouter pour choco marque : +this.totalStocksChocoMarque.getValeur(this.cryptogramme))

@@ -26,19 +26,19 @@ public class TransformateurXAcheteurAppelDOffre extends TransformateurXVendeurAp
 
 	public void next() {
 		super.next();
-		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		for (Feve f : this.stockFeves.keySet()) {
-			if (!f.isEquitable() && this.stockFeves.get(f)<95000) { // pas top...
-				int quantite = 5000 + Filiere.random.nextInt((int)(100001-this.stockFeves.get(f))); 
-				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, f, quantite);
-				journalAO.ajouter("   Je lance un appel d'offre de "+quantite+" T de "+f);
-				if (ov!=null) { // on a retenu l'une des offres de vente
-					journalAO.ajouter("   AO finalise : on ajoute "+quantite+" T de "+f+" au stock");
-					stockFeves.put(f, stockFeves.get(f)+quantite);
-					totalStocksFeves.ajouter(this, quantite, cryptogramme);
-				}
-			}
-		}
+//		this.journalAO.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+//		for (Feve f : this.stockFeves.keySet()) {
+//			if (!f.isEquitable() && this.stockFeves.get(f)<95000) { // pas top...
+//				int quantite = 5000 + Filiere.random.nextInt((int)(100001-this.stockFeves.get(f))); 
+//				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, f, quantite);
+//				journalAO.ajouter("   Je lance un appel d'offre de "+quantite+" T de "+f);
+//				if (ov!=null) { // on a retenu l'une des offres de vente
+//					journalAO.ajouter("   AO finalise : on ajoute "+quantite+" T de "+f+" au stock");
+//					stockFeves.put(f, stockFeves.get(f)+quantite);
+//					totalStocksFeves.ajouter(this, quantite, cryptogramme);
+//				}
+//			}
+//		}
 
 		// On archive les contrats termines
 		this.journalAO.ajouter("=================================");
