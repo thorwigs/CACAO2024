@@ -31,17 +31,16 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	 */
 	public void next() {
 		super.next();
-		System.out.println("cc");
 		this.journalCC6.ajouter("=== Partie Vente chocolat ====================");
 		for (ChocolatDeMarque c : chocosProduits) { 
 			if (stockChocoMarque.get(c) - restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stockChocoMarque.get(c)-restantDu(c))/12); 
+				
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-					System.out.println(acheteur);
 					journalCC6.ajouter(Color.BLACK,Color.WHITE,"   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
 					if (contrat == null) {
@@ -116,9 +115,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	 * @author Thomas et Cédric
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		System.out.println(coûtMoyenAchatFeve);
-		System.out.println(coûtMoyenAchatFeve.get(contrat.getProduit()));
-		System.out.println(contrat.getProduit());
+		
 		Chocolat c = ((ChocolatDeMarque) contrat.getProduit()).getChocolat();
 		Feve f = super.Correspond(c);
 		double prix = coûtMoyenAchatFeve.get(f) + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours

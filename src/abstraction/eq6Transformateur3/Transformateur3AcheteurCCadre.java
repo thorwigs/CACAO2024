@@ -75,10 +75,13 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.journalCC6.ajouter("=== Partie Achat fèves ====================");
 		HashMap<Feve, Integer> Decision = super.Decision();
 		for(Feve f : Decision.keySet()) {
-			if(Decision.get(f)>0) {
+			if(Decision.get(f)>10) {
 				this.journalCC6.ajouter("   "+f+" suffisamment de vente pour passer un CC");
 				double parStep = Decision.get(f);
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+				if ( parStep == 0 ) {
+					System.out.println("cc je sais rien on sen fou");
+				}
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 				for(IVendeurContratCadre v : vendeurs) {
 					if (v instanceof Transformateur3Acteur || 
