@@ -9,6 +9,7 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
@@ -52,7 +53,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (VenteActive == true) {
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
-				double parStep = this.stockChocoMarque.get(cm)/(52*2); // On vend la moitié de la quantité totale de notre stock
+				double parStep = this.stockChocoMarque.get(cm).getValeur()/(52*2); // On vend la moitié de la quantité totale de notre stock
 				if (parStep<100) {
 					parStep=100;
 				}
@@ -114,13 +115,6 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 * @author Robin, Erwann
 	 */
 	public boolean vend(IProduit produit) {
-		return (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)>0) ; //Valeur à changer
-	}
-	
-	/***
-	 * @author Robin, Vincent
-	 */
-	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		double totalStep = 0;
 		for (ExemplaireContratCadre c : contratsEnCours) {
 			totalStep+=c.getQuantiteALivrerAuStep();
@@ -129,11 +123,15 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		if (totalStep<this.moyProd) {
 			VenteActive = true;
 		}
-		if (VenteActive == false){
-			return null;
-		}else {
-			return contrat.getEcheancier();
-			}
+		return (this.chocosProduits.contains(produit) && VenteActive) ;
+	}
+	
+	/***
+	 * @author Robin, Vincent
+	 */
+	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		
+		return contrat.getEcheancier();
 		}
 	
 	/***
@@ -157,8 +155,12 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	        return contrat.getPrix(); // ne refait pas de contreproposition
 	    } else {
 	    	EtapenegoVente++;
-	    	double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; //renegocie le prix de 50% de la variation entre le prix proposé au tour précédent et la proposition de l'acheteur 
-	        return contrat.getPrix() + renego;
+	    	if (EtapenegoVente<=contrat.getListePrix().size() ) {
+	    		double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; //renegocie le prix de 50% de la variation entre le prix proposé au tour précédent et la proposition de l'acheteur 
+		        return contrat.getPrix() + renego;
+	    	}else {
+	    		return contrat.getPrix();// aie
+	    	}
 	    }
 	}
 	
@@ -179,7 +181,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockChocoMarque.put((ChocolatDeMarque)produit, this.stockChocoMarque.get((ChocolatDeMarque)produit)-quantite);
+		this.stockChocoMarque.put((ChocolatDeMarque)produit, new Variable("Eq5Stock "+produit, this,this.stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-quantite));
 		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
 		}
