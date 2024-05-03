@@ -17,6 +17,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 /**
@@ -32,6 +33,7 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	protected Variable totalStockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
+	protected HashMap<Chocolat, Variable> variables;
 	protected List<ChocolatDeMarque> chocoProduits;
 	protected List<ChocolatDeMarque> chocoBan;
  
@@ -46,6 +48,11 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.totalStockChoco = new VariablePrivee("Eq8DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
 		this.chocoBan = new LinkedList<ChocolatDeMarque>();
+		
+		this.variables= new HashMap<Chocolat, Variable>();
+		for (Chocolat ch : Chocolat.values()) {
+			this.variables.put(ch,new Variable ("EQ8 stock de : "+ch,this,0));
+		}
 	}
 	
 	/**
@@ -55,6 +62,8 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16;
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
 		this.nombreMarquesParType=new HashMap<Chocolat,Integer>();
+		
+		
 		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
 		
 		for (ChocolatDeMarque cm : chocolats) {
@@ -124,8 +133,17 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		}
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"=================================");
 		this.journal.ajouter("");
-//		this.getSolde()=this.getSolde() - (1350*this.getNombreEmploye() );
-
+		
+		for (Chocolat choc : Chocolat.values() ) {
+			double x = 0;
+			for (ChocolatDeMarque c : chocolats) {
+				if (c.getChocolat().equals(choc)) {
+					x = x + this.stock_Choco.get(c);
+				}
+			}
+			this.variables.get(choc).setValeur(this, x);
+			System.out.println("");
+		}
 	}
 
 	/**
@@ -148,6 +166,9 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	 */
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		for (Chocolat choc : Chocolat.values()) {
+			res.add(this.variables.get(choc));
+		}
 		return res;
 	}
 
