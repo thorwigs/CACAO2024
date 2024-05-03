@@ -170,7 +170,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	}
 	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		double prixPropose = contrat.getQuantiteTotale()*1.1*(coutproduction_tonne_marque_step.get(contrat.getProduit())+ getPrixFèves(contrat.getProduit()));
+		double prixPropose = 0.0;
+		if (coutproduction_tonne_marque_step.isEmpty()){
+			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit())) + (1000*this.nbemployeCDI + 658)*0.15;
+		}
+		else {
+			prixPropose = contrat.getQuantiteTotale()*1.1*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+		}
 		prixPrecedent.put(contrat, prixPropose);
 		return prixPropose;
 	}//prend compte des coûts de production en ajoutant une marge de 10%
