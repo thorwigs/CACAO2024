@@ -169,7 +169,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		
 		// Paiement des coût de la masse salariale
 		double TotauxTransformees = this.TotauxTonnesTransformees();
-		if (TotauxTransformees > 0.0) {
+		if (this.CoutMasseSalariale(TotauxTransformees) > 0.0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût MS", this.CoutMasseSalariale(TotauxTransformees));
 		}
 		// Paiement des coût de transformation
