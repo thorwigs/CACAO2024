@@ -171,7 +171,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		  this.journal.ajouter("Coûts de production : " + calculerCoutsProduction()+ " €");
           this.journal.ajouter("Coûts de stockage : " + calculerCoutsStockage() + " €");
 	      this.journal.ajouter("Coûts de main-d'œuvre : " + coutMaindoeuvre() + " €");
-	      this.journal.ajouter("Donc Total des coûts payés : " + calculerCouts() + " €");
+	      this.journal.ajouter("Donc Total des coûts à payer : " + calculerCouts() + " €");
 		
 		//On paie les couts lies a la production et au stockage @Youssef
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
