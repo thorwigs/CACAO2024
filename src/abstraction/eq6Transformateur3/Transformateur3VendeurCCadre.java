@@ -84,7 +84,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("Chocolat") && stockChoco.get((Chocolat)produit) -restantDu((Chocolat)produit)>200;
