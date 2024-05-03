@@ -9,6 +9,7 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
@@ -52,7 +53,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (VenteActive == true) {
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
-				double parStep = this.stockChocoMarque.get(cm)/(52*2); // On vend la moitié de la quantité totale de notre stock
+				double parStep = this.stockChocoMarque.get(cm).getValeur()/(52*2); // On vend la moitié de la quantité totale de notre stock
 				if (parStep<100) {
 					parStep=100;
 				}
@@ -176,7 +177,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockChocoMarque.put((ChocolatDeMarque)produit, this.stockChocoMarque.get((ChocolatDeMarque)produit)-quantite);
+		this.stockChocoMarque.put((ChocolatDeMarque)produit, new Variable("Eq5Stock "+produit, this,this.stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-quantite));
 		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
 		}

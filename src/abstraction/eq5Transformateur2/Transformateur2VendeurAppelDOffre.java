@@ -11,6 +11,7 @@ import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
@@ -88,7 +89,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			return null;
 		}
 		// On verif qu'on a assez de stock
-		if (offre.getQuantiteT() >= stockChocoMarque.get(cm) ) {
+		if (offre.getQuantiteT() >= stockChocoMarque.get(cm).getValeur() ) {
 			return null;
 		}
 		// Si on n'a jamais fait d'offre --> on se base sur la bourse pour donner un prix
@@ -126,8 +127,8 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			if (prixAO.get(cm)!=null) {
 				double prix = propositionRetenue.getPrixT();
 				double quantite_vendu = propositionRetenue.getQuantiteT();
-				double quantite_initiale = stockChocoMarque.get(cm);
-				stockChocoMarque.put(cm, quantite_initiale - quantite_vendu);  // modif des stocks si la proposition est retenue
+				double quantite_initiale = stockChocoMarque.get(cm).getValeur();
+				stockChocoMarque.put(cm,new Variable("Eq5Stock "+cm, this,quantite_initiale - quantite_vendu));  // modif des stocks si la proposition est retenue
 				prixAO.get(cm).add(prix);
 				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix);
 				if (prixAO.get(cm).size()>10) {
