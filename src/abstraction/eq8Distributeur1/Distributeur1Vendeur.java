@@ -76,7 +76,10 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 		}
 		else {
-			if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
+			if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
+				ListPrix.replace(choco, 0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1));
+			}
+			else if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
 				ListPrix.replace(choco, ListPrix.get(choco)*0.8);
 				//System.out.println(choco);
 				//System.out.println(ListPrix.get(choco));
