@@ -160,7 +160,6 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	    	}else {
 	    		return 0.0;// aie
 	    	}
-	    	
 	    }
 	}
 	
