@@ -138,7 +138,8 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	        return contrat.getPrix(); // ne refait pas de contreproposition
 	    } else {
 	    	EtapenegoVente++;
-	        return contrat.getPrix() * 0.98; // Contreproposition de 2% à la baisse
+	    	double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; 
+	        return contrat.getPrix() + renego;
 	    }
 	}
 	
