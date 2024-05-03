@@ -155,15 +155,15 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			return null;
 		}
 		int duree = ec.getStepFin()-ec.getStepDebut();
-		if (duree < 0) {
+		if (duree < 10) {
 			journalCC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
-		if (Filiere.LA_FILIERE.getEtape() < 0) {
+		if (Filiere.LA_FILIERE.getEtape() < 12) {
 			journalCC.ajouter("On fait pas de contract pendant les 6ers mois");
 			return null;
 		}
-		if (this.contratsEnCours.size() >=10) {
+		if (this.contratsEnCours.size() >=3 ) {
 			journalCC.ajouter("On fait pas plus que de 3 contracts en meme temps");
 			return null;
 		}
