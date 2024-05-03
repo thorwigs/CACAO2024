@@ -25,6 +25,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	protected Journal JournalMasseSalariale;
 	protected double coutAdjuvants;//cout des adjuvants pour 1 tonne de chocolat
 	protected double coutMachines;//cout des machines pour 1 tonne de chocolat
+	protected double moyProd;
+	protected double totalProd;
 	
 	////////////////////////////////////////////
 	// Constructor & Initialization of values //
@@ -47,6 +49,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		capaciteTransformation = 3.7;
 		coutAdjuvants = 1200;
 		coutMachines = 8;
+		moyProd=0;
+		totalProd=0;
 		
 		this.JournalMasseSalariale.ajouter("_____________Initialement_______________________________________");
 		this.JournalMasseSalariale.ajouter("Nombre de salarié :"+NbSalaries);
@@ -69,7 +73,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 * @return le nombre de tonne transformées pour une fève f + met à jour les stocks
 	 */
 	public double TonnesTransformees(Feve f) {
-		double tMaxTransformees = this.getQuantiteEnStock(f, cryptogramme); //Quantite maximale a transformer
+		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.capaciteTransformation*this.NbSalaries); //Quantite maximale a transformer
 		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
 		this.stockFeves.put(f, this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees); //Modifie le stock de feves
@@ -124,8 +128,11 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = this.NbSalaries * this.capaciteTransformation;
 
-		if (TonnesTransformees >= CapaciteTransfoTotale) {
+		if (TonnesTransformees*0.6 >= CapaciteTransfoTotale) {// assouplissement de la condition
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/this.capaciteTransformation);
+			if (embauche> 1000){
+				embauche=1000;
+			}
 			this.NbSalaries += embauche;
 			this.JournalMasseSalariale.ajouter("On embauche"+embauche+"personnes");
 			return embauche;
@@ -170,6 +177,10 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 			Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , TotalCout);
 		}
 		this.JournalMasseSalariale.ajouter("Nbr salariés : "+NbSalaries);
+		
+		this.totalProd+=TotauxTransformees;
+		this.moyProd=this.totalProd/(Filiere.LA_FILIERE.getEtape()+1);
+		this.JournalMasseSalariale.ajouter("La production moyenne de l'acteur est "+moyProd);		
 	}
 
 	/////////////////////////////////////
