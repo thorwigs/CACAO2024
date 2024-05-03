@@ -202,7 +202,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			double e = this.stock_Choco.get(contrat.getProduit()); 
 			double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
 			
-			if (contrat.getQuantiteTotale() > c-d-e+100) {
+			if (contrat.getQuantiteTotale() > c-d-e+100
+				&& f-100*(1+contrat.getListePrix().size())>0
+				&& f+100*(1+contrat.getListePrix().size())>0) {
 			    x = new Echeancier (a,b,f+100*(1+contrat.getListePrix().size()));
 			} else {
 			    x = new Echeancier (a,b,f-100*(1+contrat.getListePrix().size()));
