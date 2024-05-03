@@ -49,37 +49,11 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	
 	public void next() {
 		super.next();
-		this.journal_CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) { 
-			if (this.stockChocoMarque.get(cm)<2*this.getVentePrecedente(cm)) {
-				if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000) {
-					this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
-					double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
-					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
-					List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
-					journal_CC.ajouter(vendeurs.toString());
-					boolean est_contratPasse = false;
-					for (IVendeurContratCadre vendeur : vendeurs ) {
-						journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
-						if (contrat==null) {
-							journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
-						} else {
-							this.contratsEnCours.add(contrat);
-							this.totalCoutAPayer += contrat.getPrix();
-							est_contratPasse=true;
-							journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
-							journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
-							break;
-						}
-					}
-					if (!est_contratPasse) {
-						journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
-					}
-				}
-			}
-			
-		}
+		this.lancerNouveauCC();
+		/*for (ExemplaireContratCadre c : this.contratsEnCours) {
+			receptionner(c.getProduit(), c.getQuantiteALivrerAuStep(), c);
+		}*/
+		
 	}
 	
 	public double restantDu(ChocolatDeMarque cm) {
@@ -163,6 +137,39 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		
 	}
 	
+	public void lancerNouveauCC() {
+		this.journal_CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) { 
+			if (this.stockChocoMarque.get(cm)<2*this.getVentePrecedente(cm)) {
+				if (this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<100000) {
+					this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
+					double parStep = Math.max(200, (20000-this.stockChocoMarque.get(cm)-this.restantDu(cm))/12); // au moins 200
+					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+					List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
+					journal_CC.ajouter(vendeurs.toString());
+					boolean est_contratPasse = false;
+					for (IVendeurContratCadre vendeur : vendeurs ) {
+						journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
+						if (contrat==null) {
+							journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
+						} else {
+							est_contratPasse=true;
+							journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							notificationNouveauContratCadre(contrat);
+							break;
+						}
+					}
+					if (!est_contratPasse) {
+						journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
+					}
+				}
+			}
+			
+		}
+	}
+	
+	
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.journal_CC.ajouter("Nouveau Contrat Cadre : "+contrat.toString());
@@ -172,6 +179,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
+		System.out.println("appel receptionner");
 		this.journal_CC.ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat #"+contrat.getNumero());
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
