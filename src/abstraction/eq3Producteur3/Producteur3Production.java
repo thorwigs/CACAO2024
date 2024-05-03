@@ -29,20 +29,7 @@ public class Producteur3Production extends Producteur3Plantation {
 		d01.put(Feve.F_HQ_BE, 0.3789);		//20% de HQ est bio équitable
 		setProdTemps(d01,d01);
 	}
-	/**
-	  * @author mammouYoussef
-	  * Ajout Journal
-	  */
-	public void next() {
-	    super.next();
-	    this.journal_Production = new Journal(this.getNom()+" journal_Production",this);
-	    HashMap<Feve, Double> productionActuelle = newQuantite();
-	    this.journal_Production.ajouter("Etape=" + Filiere.LA_FILIERE.getEtape() + " : Details de la nouvelle production");
-	    for (Feve f : productionActuelle.keySet()) {
-	        double quantite = productionActuelle.get(f);
-	        this.journal.ajouter("Feve: " + f.name() + ", Quantite produite ce step: " + quantite + " tonnes");
-	    }
-	}
+	
 	/**
 	 * @author Gabin
 	 * @return HashMap<Feve,Double> (tableau des récoltes selon les fèves)
