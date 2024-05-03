@@ -168,7 +168,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		
 		Echeancier x = contrat.getEcheancier();
 		int a = Filiere.LA_FILIERE.getEtape()+1;
-		int b = 24 ; 
+		int b = 24 ;
 		double c = this.prevision(contrat.getProduit(), b) ;	
 		double d = 0 ; 
 		for (int i=0; i<contrat_en_cours.size(); i++) {
@@ -178,8 +178,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		double e = this.stock_Choco.get(contrat.getProduit()); 
 		double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
-		System.out.println(c-d-e+100);
-		if (x.getNbEcheances()>=24 && x.getNbEcheances()<=72) {
+		if (b>=24 && b<=72) {
 			
 			if (contrat.getProduit().toString().contains("C_BQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
@@ -206,6 +205,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				&& contrat.getQuantiteTotale() > c-d-e+100) {
 				} 			
 		} else {
+			b = 24;
 			if (contrat.getQuantiteTotale() > c-d-e+100) {
 			    x = new Echeancier (a,b,f+100*(1+contrat.getListePrix().size()));
 			} else if (f-100*(1+contrat.getListePrix().size())>0){
