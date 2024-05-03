@@ -30,19 +30,6 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
 	}
 	
-	/**
-	  * @author mammouYoussef
-	  * Ajout Journal
-	  */
-	public void next() {
-	    super.next();
-	    this.journal_Plantation.ajouter("Etape=" + Filiere.LA_FILIERE.getEtape() + " : Gestion de la plantation et main d'oeuvre");
-	    HashMap<Feve, Double> plantation = plantation();
-	    for (Feve f : Feve.values()) {
-	        double surface = plantation.get(f);
-	        this.journal.ajouter("Feve: " + f.name() + ", Surface plantee: " + surface + " hectares");
-	    }
-	}
 
 
 ///Gestion de la plantation
