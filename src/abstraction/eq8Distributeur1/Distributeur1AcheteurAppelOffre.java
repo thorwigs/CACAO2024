@@ -81,6 +81,9 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN,"   refus de l'AO : pas assez d'argent sur le compte");
 			return null;
 				 }
+		else if (propositions.get(choisi).getPrixT()>super.prix_a_perte(propositions.get(choisi).getProduit(),super.prix((ChocolatDeMarque)(propositions.get(choisi).getProduit())) )) {
+			return null;
+		}
 		else {
 			return propositions.get(choisi);
 		}
