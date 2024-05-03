@@ -110,8 +110,8 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				}
 				
 				if (produit.getType().equals("ChocolatDeMarque")
-						&& this.stock_Choco.containsKey(produit)
-						&& ! this.chocoBan.contains(produit)) {
+						&& this.stock_Choco.containsKey(produit)){
+	//					&& ! this.chocoBan.contains(produit)) {
 					
 					ChocolatDeMarque choco = (ChocolatDeMarque)produit;
 					if (choco.getMarque()== "Chocoflow") {
