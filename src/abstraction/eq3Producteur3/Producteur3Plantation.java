@@ -24,9 +24,9 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceBQ = 134.775*1000;
 	
 /**
- * @author Arthur
+ * @author Alexis
  * variable qui répertorie l'âge des plants	
- * pour chaque type de fève, il y a un dictionnaire dont les clés sont les steps de fin de vie d'une partie de la plantation
+ * pour chaque type de fève, il y a un dictionnaire dont les clés sont les steps de fin de vie d'une parcelle
  */
 	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
 	
@@ -115,17 +115,19 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * @author Alexis
 	 * @param  agePlant
 	 * @return HashMap<Feve,Double> aRemplacer (tableau des surfaces à remplacer par feve)
-	 * Cette methode détermine la quantité de plants trop vieux à remplacer
+	 * Cette methode détermine la quantité de plants trop vieux à remplacer.
+	 * On regarde si pour chaque plantation d'un type de feve, il y a une parcelle qui est trop vieille,
+	 * ie dont le step de fin de vie correspond au step actuel
 	 */
-	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
-		HashMap<Feve,Double> tropVieux = new HashMap<Feve,Double>();
+	protected void aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
 		for(Feve f: agePlant.keySet()) {
 			LinkedList<Integer> steps = new LinkedList<Integer>();
-			//steps.addAll(f.get().keySet());
-			//for(Integer step: ) {
-			//}
+			steps.addAll(agePlant.get(f).keySet());
+			Collections.sort(steps);
+			if(Filiere.LA_FILIERE.getEtape() == steps.get(0)) {
+				agePlant.get(f).remove(steps.get(0));
+			}
 		}
-		return tropVieux;
 	}
 	
 ///Gestion de la main d'oeuvre///
