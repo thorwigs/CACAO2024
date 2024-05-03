@@ -3,6 +3,7 @@ package abstraction.eq3Producteur3;
 import java.util.HashMap;
 
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur3Plantation extends Producteur3Acteur {
@@ -19,14 +20,28 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQ = 47.57*1000;
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
-	
 	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
+	protected Journal journal_Plantation;
 	
 	public void intialiser() {
 		super.initialiser();
 		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
 	}
-
+	
+	/**
+	  * @author mammouYoussef
+	  * Ajout Journal
+	  */
+	public void next() {
+	    super.next();
+	    this.journal_Plantation = new Journal(this.getNom()+" journal Plantation",this);
+	    this.journal_Plantation.ajouter("Etape=" + Filiere.LA_FILIERE.getEtape() + " : Gestion de la plantation et main d'oeuvre");
+	    HashMap<Feve, Double> plantation = plantation();
+	    for (Feve f : Feve.values()) {
+	        double surface = plantation.get(f);
+	        this.journal.ajouter("Feve: " + f.name() + ", Surface plantee: " + surface + " hectares");
+	    }
+	}
 
 
 ///Gestion de la plantation

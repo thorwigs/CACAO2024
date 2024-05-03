@@ -187,7 +187,7 @@ public abstract class Producteur3Acteur implements IActeur {
 
 	}
 	
-
+/*************************************************************************************************/
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(249, 230, 151); 
@@ -267,7 +267,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 	
-
+/*************************************************************************************************/
 
 	/**
 	 * @author modifications par Arthur
