@@ -35,7 +35,6 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
 	protected HashMap<Chocolat, Variable> variables;
 	protected List<ChocolatDeMarque> chocoProduits;
-//	protected List<ChocolatDeMarque> chocoBan;
  
 	
 	
@@ -47,7 +46,6 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		this.totalStockChoco = new VariablePrivee("Eq8DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
-//		this.chocoBan = new LinkedList<ChocolatDeMarque>();
 		
 		this.variables= new HashMap<Chocolat, Variable>();
 		for (Chocolat ch : Chocolat.values()) {
@@ -74,31 +72,28 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK INITIALE =====");
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
-			if (cm.getChocolat()==Chocolat.C_BQ && cm.getMarque() != "Chocoflow") {
-				stock=96000/ (nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_BQ ) {
+				stock=96000/ (nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1));
 			}
-			if (cm.getChocolat()==Chocolat.C_MQ && cm.getMarque() != "Chocoflow") {
-				stock=60000/ (nombreMarquesParType.getOrDefault(Chocolat.C_MQ, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_MQ ) {
+				stock=60000/ (nombreMarquesParType.getOrDefault(Chocolat.C_MQ, 1));
 			}
 			if (cm.getChocolat()==Chocolat.C_MQ_E) {
 				stock=12000/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1);
 			}
-			if (cm.getChocolat()==Chocolat.C_HQ && cm.getMarque() != "Chocoflow") {
-				stock=48000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_HQ ) {
+				stock=48000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ, 1));
 			}
 			if (cm.getChocolat()==Chocolat.C_HQ_E) {
 				stock=12000/ nombreMarquesParType.getOrDefault(Chocolat.C_HQ_E, 1);
 			}
-			if (cm.getChocolat()==Chocolat.C_HQ_BE && cm.getMarque() != "Chocoflow")  {
-				stock=12000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ_BE, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_HQ_BE )  {
+				stock=12000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ_BE, 1));
 			}
 			this.stock_Choco.put(cm, stock);
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,cm+"->"+this.stock_Choco.get(cm));
 			this.totalStockChoco.ajouter(this, stock, cryptogramme);
 			
-//			if (stock == 0) {
-//				this.chocoBan.add(cm);
-//			}
 		}
 		this.journal.ajouter("");
 	}
@@ -269,13 +264,29 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 	 */
 	public List<ChocolatDeMarque> getChocolatsProduits() {	
 		if (this.chocoProduits.size()==0) {
-			Chocolat C_MQ_E = Chocolat.C_MQ_E;
-			int pourcentageCacao1 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_MQ_E.getGamme()).getValeur());
-			this.chocoProduits.add(new ChocolatDeMarque(C_MQ_E, "Chocoflow", pourcentageCacao1));
+			Chocolat C_BQ = Chocolat.C_BQ;
+			int pourcentageCacao1 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_BQ.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_BQ, "Chocoflow", pourcentageCacao1));
+			
+			Chocolat C_MQ = Chocolat.C_HQ_E;
+			int pourcentageCacao2 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_MQ.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_MQ, "Chocoflow", pourcentageCacao2));
+			
+			Chocolat C_MQ_E = Chocolat.C_HQ_E;
+			int pourcentageCacao3 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_MQ_E.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_MQ_E, "Chocoflow", pourcentageCacao3));
+			
+			Chocolat C_HQ = Chocolat.C_MQ_E;
+			int pourcentageCacao4 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_HQ.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_HQ, "Chocoflow", pourcentageCacao4));
 			
 			Chocolat C_HQ_E = Chocolat.C_HQ_E;
-			int pourcentageCacao2 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_HQ_E.getGamme()).getValeur());
-			this.chocoProduits.add(new ChocolatDeMarque(C_HQ_E, "Chocoflow", pourcentageCacao2));
+			int pourcentageCacao5 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_HQ_E.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_HQ_E, "Chocoflow", pourcentageCacao5));
+			
+			Chocolat C_HQ_BE = Chocolat.C_HQ_E;
+			int pourcentageCacao6 =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+C_HQ_BE.getGamme()).getValeur());
+			this.chocoProduits.add(new ChocolatDeMarque(C_HQ_BE, "Chocoflow", pourcentageCacao6));
 		} 
 		return this.chocoProduits;
 	}  
