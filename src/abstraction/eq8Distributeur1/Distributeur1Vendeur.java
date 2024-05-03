@@ -201,6 +201,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		return x ; 
 	}
 	
+	
 	/**
 	 *@author wiam
 	 */
