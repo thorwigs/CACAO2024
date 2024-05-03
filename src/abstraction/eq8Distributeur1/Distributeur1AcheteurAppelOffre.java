@@ -111,34 +111,45 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				
 				if (produit.getType().equals("ChocolatDeMarque")
 						&& this.stock_Choco.containsKey(produit)){
-	//					&& ! this.chocoBan.contains(produit)) {
+					
+					double fluctuation = 1.0 ; 
+					if (Filiere.LA_FILIERE.getMois()=="decembre") {
+						 fluctuation = 1.10;
+					} else if (Filiere.LA_FILIERE.getMois()=="fevrier" && Filiere.LA_FILIERE.getJour()==1) {
+						fluctuation = 1.07;
+					} else if (Filiere.LA_FILIERE.getMois()=="mai" && Filiere.LA_FILIERE.getJour()==1) {
+						fluctuation = 1.10;
+					} else if ((Filiere.LA_FILIERE.getMois()=="octobre" && Filiere.LA_FILIERE.getJour()==2)) {
+						fluctuation = 1.03;
+					}
+					
 					
 					ChocolatDeMarque choco = (ChocolatDeMarque)produit;
 					if (choco.getMarque()== "Chocoflow") {
-						return ((capaciteDeVente*0.20)/chocoProduits.size())-(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return ((capaciteDeVente*0.20*fluctuation)/chocoProduits.size())-(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
 					if (choco.toString().contains("C_BQ")) {
-						double x = (capaciteDeVente*0.32)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
+						double x = (capaciteDeVente*0.32*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
 					if (choco.toString().contains("C_MQ_E")) {
-						double x = (capaciteDeVente*0.12)/this.nombreMarquesParType.get(choco.getChocolat());
+						double x = (capaciteDeVente*0.12*fluctuation)/this.nombreMarquesParType.get(choco.getChocolat());
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
 					if (choco.toString().contains("C_MQ")) {
-						double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
+						double x = (capaciteDeVente*0.12*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
 					if (choco.toString().contains("C_HQ_BE")) {
-						double x = (capaciteDeVente*0.04)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
+						double x = (capaciteDeVente*0.04*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}	
 					if (choco.toString().contains("C_HQ_E")) {
-						double x = (capaciteDeVente*0.08)/this.nombreMarquesParType.get(choco.getChocolat());
+						double x = (capaciteDeVente*0.08*fluctuation)/this.nombreMarquesParType.get(choco.getChocolat());
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}	
 					if (choco.toString().contains("C_HQ")) {
-						double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
+						double x = (capaciteDeVente*0.12*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
 						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
 				}
