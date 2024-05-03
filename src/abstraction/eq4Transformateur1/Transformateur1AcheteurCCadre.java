@@ -112,9 +112,10 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
+	        		journalCC.ajouter("Fèves haute qualité en vente !!");
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
 	        	if (feve.getGamme() == Gamme.MQ && feve.isBio()) {
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
 	        	}
 	        	
 	        	}
