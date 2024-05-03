@@ -151,6 +151,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	////////////////////////////////////////////
 	//        Next : paiments des coûts       //
 	////////////////////////////////////////////
+	
 	/**
 	 * @Erwann
 	 */
