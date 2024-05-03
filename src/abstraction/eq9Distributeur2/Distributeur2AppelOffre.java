@@ -10,7 +10,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
-public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO {
+public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO { //classe codé par maxime
 	protected Journal journal_AO;
 	public Distributeur2AppelOffre() {
 		super();
@@ -42,16 +42,18 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 
 	public void FaireAppelDOffre() {
 		for (ChocolatDeMarque chocolat : this.stockChocoMarque.keySet()) {
-			if (this.stockChocoMarque.get(chocolat)<=10) {
+			Double quantite = Filiere.LA_FILIERE.getVentes(chocolat, -24)/2;
+			if (this.stockChocoMarque.get(chocolat)<=5 && quantite>2) {
 				
-				Double quantite = Filiere.LA_FILIERE.getVentes(chocolat, -24);
+				
 				OffreVente propRetenue=((SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO")).acheterParAO(this,this.cryptogramme,chocolat,quantite);
 				this.getJournaux().get(2).ajouter("On a plus de "+chocolat+" et on en cherche "+quantite);
 				if (propRetenue != null) {
 					//this.getJournaux().get(2).ajouter("On a réaliser un appel d'offre "+PropositionQuantitePrix.toString());
 					this.getJournaux().get(2).ajouter("L'appel d'offre est réussie et l'option choisie est: "+propRetenue.getQuantiteT() +" tonnes de "+propRetenue.getProduit()+" chez "+propRetenue.getVendeur()+ " pour un prix de "+propRetenue.getPrixT());
 					this.getStockChocoMarque().put((ChocolatDeMarque) propRetenue.getProduit(),propRetenue.getQuantiteT());
-					Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, getDescription(), propRetenue.getPrixT());
+					Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "frais d'approvisionnement", this.coutDacheminement(propRetenue.getPrixT()));
+					this.totalStocksChocoMarque.ajouter(this, propRetenue.getQuantiteT(), cryptogramme);
 				}
 			}
 		}
