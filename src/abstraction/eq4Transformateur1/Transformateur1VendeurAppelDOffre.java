@@ -16,7 +16,7 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 
-public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurAuxEncheres implements IVendeurAO{
+public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCadre implements IVendeurAO{
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
 
@@ -54,23 +54,25 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurAux
 
 
 	public OffreVente proposerVente(AppelDOffre offre) {
+		// Vérification que l'offre est un chocolat de marque
 		IProduit p = offre.getProduit();
 		if (!(p instanceof ChocolatDeMarque)) {
 			return null;
 		}
+		// Vérification que c'est un produit que l'on vend
 		ChocolatDeMarque cm = (ChocolatDeMarque)p;
 		if (!(stockChocoMarque.keySet().contains(cm))) {
 			return null;
 		}
+		// Si pas d'offre auparavant-> on reg la bourse pour donner un prix
 		if (prixAO.get(cm).size()==0) {
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
 			if (cm.getChocolat().getGamme()==Gamme.HQ) {
-				px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
-			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
-				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
+				px = bourse.getCours(Feve.F_HQ).getMax()*2.5;
 			}
 			return new OffreVente(offre, this, cm, px);
+		// Sinon on met un prix 5% plus élevée que la moyenne de nos derniers prix
 		} else {
 			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
 		}
