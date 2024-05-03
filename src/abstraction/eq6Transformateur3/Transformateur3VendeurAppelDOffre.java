@@ -17,7 +17,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3VendeurAppelDOffre extends Transformateur3Produit implements IVendeurAO{
+public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCadre implements IVendeurAO{
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
 
@@ -65,11 +65,11 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3Produit im
 		}
 		if (prixAO.get(cm).size()==0) {
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
+			double px = bourse.getCours(Feve.F_MQ).getMax()*1500.75;
 			if (cm.getChocolat().getGamme()==Gamme.HQ) {
-				px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+				px = bourse.getCours(Feve.F_MQ).getMax()*1500.5;
 			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
-				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
+				px = bourse.getCours(Feve.F_BQ).getMax()*2000.75;
 			}
 			return new OffreVente(offre, this, cm, px);
 		} else {
