@@ -97,9 +97,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals(chocosProduits)) {
-			return null;
-		}
+		
 		if ( contrat.getEcheancier().getQuantiteTotale()< totalStocksChocoMarque.getValeur()){
 			return contrat.getEcheancier();
 		}
