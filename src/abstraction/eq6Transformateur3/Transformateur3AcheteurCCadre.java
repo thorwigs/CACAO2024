@@ -28,82 +28,131 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	protected SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contratsEnCours;
 	protected List<ExemplaireContratCadre> contratsTermines;
-
+	protected HashMap<Feve, Double > coûtMoyenAchatFeve;
+	protected HashMap<Feve, Integer > nbAchatFeve;
 	protected Journal journalCC6;
 
 	public Transformateur3AcheteurCCadre() {
 		super();
-		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
-		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
+		this.contratsEnCours= new LinkedList<ExemplaireContratCadre>();
+		this.contratsTermines= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC6 = new Journal(this.getNom()+" journal CC6", this);
+		this.coûtMoyenAchatFeve = new HashMap<Feve, Double > ();
+		this.nbAchatFeve = new HashMap<Feve, Integer >();
+		
 	}
 
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+		coûtMoyenAchatFeve.put(Feve.F_BQ,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_MQ,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_MQ_E,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_HQ,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_HQ_E,0.0);
+		coûtMoyenAchatFeve.put(Feve.F_HQ_BE,0.0);
+		
+		nbAchatFeve.put(Feve.F_BQ,0);
+		nbAchatFeve.put(Feve.F_MQ,0);
+		nbAchatFeve.put(Feve.F_MQ_E,0);
+		nbAchatFeve.put(Feve.F_HQ,0);
+		nbAchatFeve.put(Feve.F_HQ_E,0);
+		nbAchatFeve.put(Feve.F_HQ_BE,0);
+	
+	
+	
+	
+	
+	
 	}
-
+	/**
+	 * @author Mahel et Thomas
+	 * 
+	 */
 	public void next() {
 		super.next();
-		
 		this.journalCC6.ajouter(Color.BLUE, Color.white,"=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		this.journalCC6.ajouter("=== Partie Achat fèves ====================");
-		/*HashMap<Feve, Integer> Decision = super.Decision();
+		HashMap<Feve, Integer> Decision = super.Decision();
 		for(Feve f : Decision.keySet()) {
-			if(Decision.get(f)>0) {
-				this.journalCC6.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-			}
-		}
-		*/
-				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (stockFeves.get(f)+restantDu(f)<20000) { /////////COND A MODIF////////
-						this.journalCC6.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); /////////COND A MODIF////////
-						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
-						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
-						for(IVendeurContratCadre v : vendeurs) {
-							if (v instanceof Transformateur3Acteur || 
-									v instanceof Transformateur1Acteur ||
-									v instanceof Transformateur2Acteur ||
-									v instanceof Distributeur1Acteur ||
-									v instanceof Distributeur2Acteur
-									){
-								vendeurs.remove(v);
-								break;
-							}
-						}
-						if (vendeurs.size()>0) {
-							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalCC6.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
-							if (contrat==null) {
-								journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} 
-							else {
-								this.contratsEnCours.add(contrat);
-								journalCC6.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+
-										" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()
-										+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
-							}
-						} else {
-							journalCC6.ajouter("   pas de vendeur");
-						}
+			if(Decision.get(f)>10) {
+				this.journalCC6.ajouter("   "+f+" suffisamment de vente pour passer un CC");
+				double parStep = Decision.get(f);
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
+				if ( parStep == 0 ) {
+					System.out.println("cc je sais rien on sen fou");
+				}
+				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
+				for(IVendeurContratCadre v : vendeurs) {
+					if (v instanceof Transformateur3Acteur || 
+							v instanceof Transformateur1Acteur ||
+							v instanceof Transformateur2Acteur ||
+							v instanceof Distributeur1Acteur ||
+							v instanceof Distributeur2Acteur
+							){
+						vendeurs.remove(v);
 					}
 				}
-		// On archive les contrats termines
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if (c.getQuantiteRestantALivrer()==0.0 && c.getMontantRestantARegler()<=0.0) {
-				this.contratsTermines.add(c);
+				if (vendeurs.size()>0) {
+					for(IVendeurContratCadre vendeur : vendeurs) {
+						journalCC6.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+						if (contrat==null) {
+							journalCC6.ajouter(Color.RED, Color.white,"   echec des negociations");
+						} 
+						else {
+							if ( nbAchatFeve.get(f) == 0) {
+								nbAchatFeve.put(f, nbAchatFeve.get(f)+1);
+								coûtMoyenAchatFeve.put(f, (contrat.getPrix()));
+							}
+							else{
+								double m = coûtMoyenAchatFeve.get(f) * nbAchatFeve.get(f);
+								nbAchatFeve.put(f, nbAchatFeve.get(f)+1);
+								coûtMoyenAchatFeve.put(f, (m+ contrat.getPrix())/nbAchatFeve.get(f));
+							}
+	
+							journalCC6.ajouter("liste des contrats en cours");
+							for(ExemplaireContratCadre c : this.contratsEnCours) {
+								journalCC6.ajouter("Contrat numéro : " + c.getNumero());
+							}
+							
+							journalCC6.ajouter("liste des contrats terminés");
+							for(ExemplaireContratCadre c : this.contratsTermines) {
+								journalCC6.ajouter("Contrat numéro : " + c.getNumero());
+							}
+							
+							this.contratsEnCours.add(contrat);
+							journalCC6.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+
+									" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()
+									+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+							break;
+						}
+					
+					}
+				
+					
+				} else {
+					journalCC6.ajouter("   pas de vendeur");
+				}
 			}
+			// On archive les contrats termines
+			for (ExemplaireContratCadre c : this.contratsEnCours) {
+				if (c.getQuantiteRestantALivrer()==0.0 && c.getMontantRestantARegler()<=0.0) {
+					this.contratsTermines.add(c);
+				}
+			}
+			for (ExemplaireContratCadre c : this.contratsTermines) {
+				journalCC6.ajouter("Archivage du contrat "+c);
+				this.contratsEnCours.remove(c);
+			}
+			this.journalCC6.ajouter("Nombre de contrats en cours : "+this.contratsEnCours.size());
+			this.journalCC6.ajouter("Nombre de contrats termines : "+this.contratsTermines.size());
 		}
-		for (ExemplaireContratCadre c : this.contratsTermines) {
-			journalCC6.ajouter("Archivage du contrat "+c);
-			this.contratsEnCours.remove(c);
-		}
-		this.journalCC6.ajouter("Nombre de contrats en cours : "+this.contratsEnCours.size());
-		this.journalCC6.ajouter("Nombre de contrats termines : "+this.contratsTermines.size());		
 	}
-
+			
+	/**
+	 * @author Thomas
+	 */
 	public double restantDu(Feve f) {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -113,7 +162,9 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		}
 		return res;
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public double restantAPayer() {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -121,81 +172,87 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		}
 		return res;
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalCC6);
 		return jx;
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public boolean achete(IProduit produit) {
 		return produit.getType().equals("Feve") 
-				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000; /////////COND A MODIF////////
+				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000;
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) { /////////FCTION A SIMPLIFIER////////
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return null;
 		}
 
-		if (stockFeves.get((Feve)(contrat.getProduit()))+restantDu((Feve)(contrat.getProduit()))+contrat.getEcheancier().getQuantiteTotale()<150000) { /////////COND A MODIF////////
-			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
-					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) { 
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
-			} else { // les volumes sont corrects, la duree et le debut aussi
-				return contrat.getEcheancier();
-			}
-		} else {
-			double marge = 150000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
-			if (marge<1200) {
-				return null;
-			} else {
-				double quantite = 1200 + Filiere.random.nextDouble()*(marge-1200); // un nombre aleatoire entre 1200 et la marge
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
-			}
+		if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<12
+				|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>6) {
+			return contrat.getEcheancier();
+		}
+		else{
+			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12 , contrat.getEcheancier().getQuantiteTotale()/12 );
 		}
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) { /////////FCTION A SIMPLIFIER////////
-		// Il faudrait normalement tenir compte du volume du contrat (plus le volume est important 
-		// plus les prix seront bas) et de l'urgence (si on n'en n'a pas en stock et pas de CC alors 
-		// il devient plus urgent d'en disposer et donc on acceptera davantage un prix eleve)
-		// mais dans cet acteur trivial on ne se base que sur le prix et via des tirages aleatoires.
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)-restantAPayer();
 		double prixSansDecouvert = solde / contrat.getQuantiteTotale();
 		if (prixSansDecouvert<bourse.getCours(Feve.F_BQ).getValeur()) {
 			return 0.0; // nous ne sommes pas en mesure de fournir un prix raisonnable
 		}
-		if (((Feve)contrat.getProduit()).isEquitable()) { // pas de cours en bourse
-			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
-			double alea = Filiere.random.nextInt((int)max);
-			if (contrat.getPrix()<Math.min(alea, prixSansDecouvert)) {
+		if (((Feve)contrat.getProduit()).isEquitable()) {
+			
+			
+			if (contrat.getPrix()<0.8 * prixSansDecouvert) {
 				return contrat.getPrix();
-			} else {
-				return Math.min(prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*(1+(Filiere.random.nextInt(25)/100.0))); // entre 1 et 1.25 le prix de F_MQ
+				}
+			else {
+				return Math.min(0.8*prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*1.25);
 			}
-		} else {
+			
+		}
+		else {
 			double cours = bourse.getCours((Feve)contrat.getProduit()).getValeur();
-			double coursMax = bourse.getCours((Feve)contrat.getProduit()).getMax();
-			int alea = coursMax-cours>1 ? Filiere.random.nextInt((int)(coursMax-cours)) : 0;
-			if (contrat.getPrix()<cours+alea) {
-				return Math.min(prixSansDecouvert, contrat.getPrix());
-			} else {
-				return Math.min(prixSansDecouvert, cours*(1.1-(Filiere.random.nextDouble()/3.0)));
+			if (contrat.getPrix()<cours) {
+				return Math.min(0.8*prixSansDecouvert, contrat.getPrix());
+			}
+			else {
+				return Math.min(0.8* prixSansDecouvert, 1.04*cours);
 			}
 		}
+	
 	}
-
+	/**
+	 * @author Thomas
+	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalCC6.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
-
+	/**
+	 * @author Arthur
+	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero()+ "(avec équipe" + contrat.getVendeur().getNom()+")");
-		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
-		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
+		if(contrat.getAcheteur().getNom().equals("EQ6")) {
+			
+			journalCC6.ajouter("Contrat numéro : " + contrat.getNumero()+ "à la reception");
+			journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero()+ "(avec équipe" + contrat.getVendeur().getNom()+")");
+			stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+			totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
+		}
 	}
 
 }
