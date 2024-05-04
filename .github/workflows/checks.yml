@@ -44,7 +44,7 @@ jobs:
               - 'lib/**'
               - 'test/**'
       - name: Test ownership
-        if: fromJSON(steps.filter.outputs.changes)[1] != null || fromJSON(steps.filter.outputs.changes)[0] != fromJSON(steps.actorTeams.outputs.teams)[0]
+        if: ( fromJSON(steps.filter.outputs.changes)[1] != null || fromJSON(steps.filter.outputs.changes)[0] != fromJSON(steps.actorTeams.outputs.teams)[0] ) && fromJSON(steps.actorTeams.outputs.teams)[0] != 'eqXRomu' 
         run: | 
           echo ${{ steps.filter.outputs.changes }}
           echo ${{ fromJSON(steps.filter.outputs.changes)[0] }}

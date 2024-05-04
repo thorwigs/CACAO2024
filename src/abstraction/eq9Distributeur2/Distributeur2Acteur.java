@@ -2,6 +2,7 @@ package abstraction.eq9Distributeur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
@@ -9,6 +10,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -18,6 +20,8 @@ public abstract class Distributeur2Acteur implements IActeur {
 	protected Journal journal;
 	private int capaciteStockage;
 	protected double coutStockage;
+	
+	
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -61,11 +65,19 @@ public abstract class Distributeur2Acteur implements IActeur {
 		return "Bonjour bonjour";
 	}
 
-	// Renvoie les indicateurs
-	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
-		return res;
+	// transforme le dictionnaire des stocks(double) en dictionnaire des stocks(Variable)
+	protected HashMap<ChocolatDeMarque, Variable> variabilisation(HashMap<ChocolatDeMarque, Double> stockChocoMarque){
+		HashMap<ChocolatDeMarque, Variable> stockChocoIndicateur = new HashMap();
+		for (HashMap.Entry<ChocolatDeMarque, Double> entry : stockChocoMarque.entrySet()) {
+			entry.getKey();
+			Variable quantite = new Variable("Eq9DStockChocoMarque_"+ entry.getKey() , "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, entry.getValue());
+			stockChocoIndicateur.put(entry.getKey(),quantite);
+		}
+		return stockChocoIndicateur;
 	}
+	
+	// Renvoie les indicateurs
+	public abstract List<Variable> getIndicateurs() ;
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
