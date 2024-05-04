@@ -3,11 +3,8 @@ import java.util.*;
 
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
-
 //class pour les décisions de quantité d'achats
-/**
- * @author Mahel
- */
+
 public class PrévisionAide extends Transformateur3Acteur{
 	
 	private ArrayList<HashMap<Feve, Double>> historiquesStockFeves;
@@ -20,17 +17,13 @@ public class PrévisionAide extends Transformateur3Acteur{
 		historiquesStockChoco = new ArrayList<>();
 		historiquesStockChoco.add(stockChoco);
 	}
-	/**
-	 * @author Mahel
-	 */
+	
 	
 	public ArrayList<HashMap<Feve, Double>> gethistoriquesStockFeves() {
 		return historiquesStockFeves;
 	}
 	
-	/**
-	 * @author Mahel
-	 */
+	
 	
 	public ArrayList<HashMap<Chocolat, Double>> historiquesStockChoco(){
 		return historiquesStockChoco;
@@ -47,9 +40,7 @@ public class PrévisionAide extends Transformateur3Acteur{
 		historiquesStockFeves.add(stockFeves);
 		historiquesStockChoco.add(stockChoco);
 	}
-	/**
-	 * @author Mahel
-	 */
+	
 	public HashMap<Feve,Integer> Decision(){
 		HashMap<Feve, Integer> Decision = new HashMap<>();
 		if(historiquesStockFeves.size()<=1) {
@@ -62,18 +53,14 @@ public class PrévisionAide extends Transformateur3Acteur{
 		
 		}
 		else {
-			/**
-			 * @author Mahel et Cédric
-			 */
-			
 			for(Feve f :stockFeves.keySet()){
-				// HashMap<Feve,Double> steps_avantdernier = historiquesStockFeves.get(historiquesStockFeves.size()-2);
+				HashMap<Feve,Double> steps_avantdernier = historiquesStockFeves.get(historiquesStockFeves.size()-2);
 				HashMap<Feve,Double> steps_dernier = historiquesStockFeves.get(historiquesStockFeves.size()-1);
-				double value = (steps_dernier.get(f)-stockFeves.get(f));
+				double value = (steps_dernier.get(f)-stockFeves.get(f))/stockFeves.get(f);
 				if (value <=0) {
 					value = 0;
 				}
-				Decision.put(f, (int) (value));
+				Decision.put(f, (int) (stockFeves.get(f)*value));
 			}
 		}
 		return Decision;
