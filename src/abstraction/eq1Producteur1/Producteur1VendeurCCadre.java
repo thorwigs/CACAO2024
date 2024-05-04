@@ -47,6 +47,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
+				acheteurs.remove(acheteurs.size()-1);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
@@ -146,6 +147,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		journalCC.ajouter("      contreProposition("+contrat.getProduit()+" avec echeancier "+contrat.getEcheancier());
 		Echeancier ec = contrat.getEcheancier();
 		IProduit produit = contrat.getProduit();
+		boolean accepted = false;
 		//Echeancier res = ec;
 		String type = produit.getType();
 		if (type != "Feve") {
@@ -159,22 +161,23 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			return null;
 		}
 		int duree = ec.getStepFin()-ec.getStepDebut();
-		if (duree < 10) {
+		
+		if (duree < 0) {
 			journalCC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
-		if (Filiere.LA_FILIERE.getEtape() < 24) {
+		if (Filiere.LA_FILIERE.getEtape() < 0) {
 			journalCC.ajouter("On fait pas de contract pendant la 1ere annee");
 			return null;
 		}
-		if (this.contratsEnCours.size() <3 ) {
+		if (this.contratsEnCours.size() >= 3 ) {
 			journalCC.ajouter("On fait pas plus que de 3 contracts en meme temps");
 			return null;
 		}
 		if (ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8) {
-			boolean Accepted = true;
+			accepted = true;
 		}
-		else {
+		if (accepted = false) {
 			if (ec.getQuantiteTotale()<=stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)) {
 				journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
