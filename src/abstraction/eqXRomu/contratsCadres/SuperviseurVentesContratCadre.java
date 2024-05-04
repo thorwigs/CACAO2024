@@ -64,6 +64,11 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		List<IActeur> acteurs = Filiere.LA_FILIERE.getActeursSolvables();
 		for (IActeur acteur : acteurs) {
 			if (acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(produit)) {
+				if (produit instanceof ChocolatDeMarque && !Filiere.LA_FILIERE.getMarquesDistributeur().contains(((ChocolatDeMarque)produit).getMarque()) && !Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()).equals(acteur)) {
+					System.err.println(acteur.getNom()+" dit vendre du "+produit+" alors qu'il ne s'agit pas d'une marque distributeur et qu'elle est la proprietee de "+Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()));
+					System.err.println("mise en faillite de "+acteur.getNom());
+					Filiere.LA_FILIERE.getBanque().faireFaillite(acteur, this, cryptos.get(this));
+				}
 				vendeurs.add(((IVendeurContratCadre)acteur));
 			}
 		}
@@ -179,6 +184,11 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (!(acheteur instanceof IDistributeurChocolatDeMarque) && tg) {
 			throw new IllegalArgumentException(" appel de demandeVendeur(...) de SuperViseurVentesContratCadre par l'acheteur "+acheteur.getNom()+" avec tg==true alors que l'acheteur n'est pas un distributeur (seuls les distributeurs peuvent s'engager a vendre en tete de gondole)");
 		}
+		if (produit instanceof ChocolatDeMarque && !Filiere.LA_FILIERE.getMarquesDistributeur().contains(((ChocolatDeMarque)produit).getMarque()) && !Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()).equals(vendeur)) {
+			System.err.println(vendeur.getNom()+" souhaite vendre du "+produit+" alors qu'il ne s'agit pas d'une marque distributeur et qu'elle est la proprietee de "+Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()));
+			Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur, this, cryptogramme);
+		}
+		
 		ContratCadre contrat = null;
 
 		contrat = new ContratCadre(acheteur, vendeur, produit, echeancier, cryptogramme, tg);
@@ -450,9 +460,6 @@ public String surLargeur(String s, int largeur) {
 			s = s+"&nbsp;&nbsp;acheteurs "+getAcheteurs(f);
 			s = surLargeur(s, 80);
 			this.journalQVQF.ajouter(s);
-//			this.journalQVQF.ajouter("produit "+f);
-//			this.journalQVQF.ajouter("&nbsp;&nbsp;&nbsp;vendeurs "+getVendeurs(f));
-//			this.journalQVQF.ajouter("&nbsp;&nbsp;acheteurs "+getAcheteurs(f));
 		}
 	}
 	public void next() {
