@@ -94,7 +94,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	
 	/**
 	 * @author mammouYoussef
-	 * Nettoie la liste des contrats en cours, en éliminant ceux dont les obligations de livraison ont été entièrement satisfaites
+	 * Nettoie la liste des contrats en cours, en éliminant ceux dont les obligations 
+	 * de livraison ont été entièrement satisfaites
 	 */
 	public void setContratsEnCours() {
 	    LinkedList<ExemplaireContratCadre> contratsAConserver = new LinkedList<>();
@@ -145,7 +146,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		    Feve f = (Feve) contrat.getProduit();
 		    Echeancier echeancierPropose = contrat.getEcheancier();
 		    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
-		    //on estime la quantite disponible est similaire a chaque step en V1
+		    //on estime que la quantite disponible est similaire a chaque step en V1
 		    double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
 
 		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
@@ -179,18 +180,18 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    if (!(produit instanceof Feve)) { return 0;}
 	    
 	    Feve feve = (Feve) produit;
-	    double prixBase=0;
+	    double prixBase=coutRevient(feve,contrat.getQuantiteTotale());
 	    //on fixe un prix de base selon la gamme
 	     if (feve.getGamme() == Gamme.HQ) {
-	        prixBase = 3000; // à ajuster selon l'équitable et bio équitable
+	        prixBase = Math.max(3000.0,prixBase); // à ajuster selon l'équitable et bio équitable
 	    } else if (feve.getGamme() == Gamme.MQ) {
-	       prixBase = 1910;
+	       prixBase = Math.max(prixBase, 1910.0);
 	    }
 	  // Ajustements selon équitable et bio
 	      if (feve.isEquitable() && feve.isBio()) {
-	           prixBase = 3400; // Prix pour bio-équitable
+	           prixBase = Math.max(3400.0, prixBase); // Prix pour bio-équitable
 	      } else if (feve.isEquitable()) {
-	           prixBase = 3200; // Prix pour équitable 
+	           prixBase = Math.max(3200.0, prixBase); // Prix pour équitable 
 	      }
 	    return prixBase * 1.2; // Ajouter une marge de profit par exemple de 20% à modifier
 	}
@@ -225,7 +226,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		//CC conclu, on l'affiche dans les journaux et on met a jour les variables pour estimer la quantite disponible de feve
-		this.journal_contrat_cadre.ajouter("Contrat cadre n°"+contrat.getNumero()+" avec "+contrat.getAcheteur().getNom()+" : "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+contrat.getPrix()+" E/T");	
+		this.journal_contrat_cadre.ajouter("Nouveau contrat cadre signé: Contrat N°" + contrat.getNumero() +  ", avec " + contrat.getAcheteur().getNom() +  ", pour " + contrat.getQuantiteTotale() + " tonnes de " + contrat.getProduit() +    " à " + contrat.getPrix() + " €/T");
 		this.contratsEnCours.add(contrat);
 		this.setContratsEnCours();
 	}
