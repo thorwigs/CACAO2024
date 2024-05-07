@@ -1,8 +1,11 @@
 package abstraction.eq3Producteur3;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur3Plantation extends Producteur3Acteur {
@@ -19,6 +22,53 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQ = 47.57*1000;
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
+	
+/**
+ * @author Alexis
+ * variable qui répertorie l'âge des plants	
+ * pour chaque type de fève, il y a un dictionnaire dont les clés sont les steps de fin de vie d'une parcelle
+ */
+	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
+	
+	public void initialiser() {
+		super.initialiser();
+		agePlant = new HashMap<Feve,HashMap<Integer,Double>>();
+		HashMap<Integer,Double> feveBQ = new HashMap<Integer,Double>();
+		feveBQ.put(20, surfaceBQ*0.3);
+		feveBQ.put(420, surfaceBQ*0.3);
+		feveBQ.put(720, surfaceBQ*0.4);
+		agePlant.put(Feve.F_BQ, feveBQ);
+
+		HashMap<Integer,Double> feveMQ = new HashMap<Integer,Double>();
+		feveMQ.put(70, surfaceMQ*0.2);
+		feveMQ.put(520, surfaceMQ*0.3);
+		feveMQ.put(720, surfaceMQ*0.5);
+		agePlant.put(Feve.F_MQ, feveBQ);
+		
+		HashMap<Integer,Double> feveMQE = new HashMap<Integer,Double>();
+		feveMQE.put(570, surfaceMQE*0.1);
+		feveMQE.put(670, surfaceMQE*0.2);
+		feveMQE.put(670, surfaceMQE*0.2);
+		agePlant.put(Feve.F_MQ_E, feveMQE);
+		
+		HashMap<Integer,Double> feveHQ = new HashMap<Integer,Double>();
+		feveHQ.put(10, surfaceHQ*0.1);
+		feveHQ.put(420, surfaceHQ*0.4);
+		feveHQ.put(720, surfaceHQ*0.5);
+		agePlant.put(Feve.F_HQ, feveHQ);
+
+		HashMap<Integer,Double> feveHQE = new HashMap<Integer,Double>();
+		feveHQE.put(620, surfaceHQE*0.7);
+		feveHQE.put(720, surfaceHQE*0.3);
+		agePlant.put(Feve.F_HQ, feveHQE);
+		
+		HashMap<Integer,Double> feveHQBE = new HashMap<Integer,Double>();
+		feveHQBE.put(670, surfaceHQBE*0.1);
+		feveHQBE.put(720, surfaceHQBE*0.9);
+		agePlant.put(Feve.F_HQ, feveHQBE);
+	}
+	
+
 
 ///Gestion de la plantation
 	
@@ -59,7 +109,26 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		}
 		return surfaces;
 	}
-			 
+
+
+	/**
+	 * @author Alexis
+	 * @param  agePlant
+	 * @return HashMap<Feve,Double> aRemplacer (tableau des surfaces à remplacer par feve)
+	 * Cette methode détermine la quantité de plants trop vieux à remplacer.
+	 * On regarde si pour chaque plantation d'un type de feve, il y a une parcelle qui est trop vieille,
+	 * ie dont le step de fin de vie correspond au step actuel
+	 */
+	protected void aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
+		for(Feve f: agePlant.keySet()) {
+			LinkedList<Integer> steps = new LinkedList<Integer>();
+			steps.addAll(agePlant.get(f).keySet());
+			Collections.sort(steps);
+			if(Filiere.LA_FILIERE.getEtape() == steps.get(0)) {
+				agePlant.get(f).remove(steps.get(0));
+			}
+		}
+	}
 	
 ///Gestion de la main d'oeuvre///
 

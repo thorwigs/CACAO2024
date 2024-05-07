@@ -83,7 +83,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    }
 	    for (ExemplaireContratCadre c : this.contratsTermines) {
 	        journalCC.ajouter("Archivage du contrat " + c);
-	        this.contratsEnCours.remove(c);
+	        this.contratsTermines.remove(c);
 	    }
 	    this.journalCC.ajouter("=================================");}
 	    
@@ -112,9 +112,11 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
+	    	    	journalCC.ajouter("La feve proposée : "+feve);
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
 	        	if (feve.getGamme() == Gamme.MQ && feve.isBio()) {
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
+	    	    	journalCC.ajouter("La feve proposée : "+feve);
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
 	        	}
 	        	
 	        	}
@@ -139,35 +141,33 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    
 	    
 	    // Utilisation de la logique de la méthode achete pour déterminer si on achète la fève
-	    if (achete(feve)) {
-	        if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 500) {
-	                // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
-	                return contrat.getEcheancier();
-	            } else {
-	                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
-	                if (marge < 100) {
-	                    return null;
-	                } else {
-	                    double quantite = 100 + Filiere.random.nextDouble() * (marge - 100); // un nombre aléatoire entre 100 et la marge
-	                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
-	                }
-	            }
-	        } else if (feve.getGamme() == Gamme.MQ) {
-	            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 1000) {
-	                // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
-	                return contrat.getEcheancier();
-	            } else {
-	                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
-	                if (marge < 100) {
-	                    return null;
-	                } else {
-	                    double quantite = 100 + Filiere.random.nextDouble() * (marge - 100); // un nombre aléatoire entre 100 et la marge
-	                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
-	                }
-	            }
-	        }
-	    }
+        if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
+            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 5000) {
+                // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
+                return contrat.getEcheancier();
+            } else {
+                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                if (marge < 1000) {
+                    return null;
+                } else {
+                    double quantite = 1000 + Filiere.random.nextDouble() * (marge - 1000); // un nombre aléatoire entre 1000 et la marge
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
+                }
+            }
+        } else if (feve.getGamme() == Gamme.MQ) {
+            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 10000) {
+                // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
+                return contrat.getEcheancier();
+            } else {
+                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                if (marge < 1000) {
+                    return null;
+                } else {
+                    double quantite = 1000 + Filiere.random.nextDouble() * (marge - 1000); // un nombre aléatoire entre 1000 et la marge
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
+                }
+            }
+        }
 	    
 	    // Si on ne souhaite pas acheter la fève ou si aucune condition n'a été satisfaite, retourne null
 	    return null;

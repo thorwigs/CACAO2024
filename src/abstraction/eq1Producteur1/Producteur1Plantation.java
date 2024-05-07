@@ -21,6 +21,9 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	protected HashMap<Feve, Double> prodAnnee;
 	protected HashMap<Feve, Variable> stock;
 	protected HashMap<Feve, Double> Stocck;
+	protected static double PBQ = 0.7; 
+	protected static double PMQ = 0.28;
+	protected static double PHQ = 0.02;
 
 	
 
@@ -36,6 +39,9 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		this.production = new HashMap<Feve, Double>();
 		this.ouvriers = new HashMap<Feve,Double>();
 		this.journalPlantation = new Journal(this.getNom()+"   journal Plantation",this);
+		this.journalPlantation.ajouter("La part de plantation de BQ est:"+PBQ);
+		this.journalPlantation.ajouter("La part de plantation de MQ est:"+PMQ);
+		this.journalPlantation.ajouter("La part de plantation de HQ est:"+PHQ);
 
 	}
 
@@ -51,10 +57,11 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		 */
 		plantation = new HashMap<Feve, Double>();
 
-		plantation.put(Feve.F_BQ,0.7*this.nombreHec );
-		plantation.put(Feve.F_MQ, 0.28*this.nombreHec);
-		plantation.put(Feve.F_HQ, 0.02*this.nombreHec);
+		plantation.put(Feve.F_BQ, PBQ*this.nombreHec );
+		plantation.put(Feve.F_MQ, PMQ*this.nombreHec);
+		plantation.put(Feve.F_HQ, PHQ*this.nombreHec);
 		this.journalPlantation.ajouter("On a reussi planter");
+		
 		return plantation;
 	}
 
@@ -198,7 +205,11 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		this.prodAnnee.put(Feve.F_HQ, 0.650*0.02*this.nombreHec);
 		this.prodAnnee.put(Feve.F_HQ_E, 0.0);
 		this.prodAnnee.put(Feve.F_HQ_BE, 0.0);
-		this.prodAnnee.put(Feve.F_MQ_E, 0.0);
+		this.prodAnnee.put(Feve.F_MQ_E,0.0);
+		this.journalPlantation.ajouter("Plantation Success, production par Annee:" + 0.7*0.650*this.nombreHec +"For BQ");
+		this.journalPlantation.ajouter("Plantation Success, production par Annee:" + 0.28*0.650*this.nombreHec +"For MQ");
+		this.journalPlantation.ajouter("Plantation Success, production par Annee:" + 0.02*0.650*this.nombreHec +"For HQ");
+		
 		return prodAnnee;
 	}
 	/**
@@ -220,6 +231,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 			this.production.put(Feve.F_HQ_E, 0.0);
 			this.production.put(Feve.F_HQ_BE, 0.0);
 			this.production.put(Feve.F_MQ_E, 0.0);
+			this.journalPlantation.ajouter("On a decide d'utiliser des pesticicides dans notre production");
 		}
 		else {
 			this.production.put(Feve.F_BQ,0.82*this.prodAnnee.get(Feve.F_BQ));
@@ -228,7 +240,11 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 			this.production.put(Feve.F_HQ_E, 0.0);
 			this.production.put(Feve.F_HQ_BE, 0.0);
 			this.production.put(Feve.F_MQ_E, 0.0);
+			this.journalPlantation.ajouter("On a decide de ne pas utiliser des pesticicides dans notre production");
 		}
+		this.journalPlantation.ajouter("Plantation Success, Quantite prevue par Annee:" + this.production.get(Feve.F_BQ) +"For BQ");
+		this.journalPlantation.ajouter("Plantation Success, Quantite prevue par Annee:" + this.production.get(Feve.F_MQ) +"For MQ");
+		this.journalPlantation.ajouter("Plantation Success, Quantite prevue par Annee:" + this.production.get(Feve.F_HQ) +"For HQ");
 		return production;
 	}
 
@@ -246,6 +262,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		if (pesticides) {
 
 			this.production.put(Feve.F_BQ,0.9*this.prodAnnee.get(Feve.F_BQ)/24);
+			
 			this.production.put(Feve.F_MQ, 0.85*this.prodAnnee.get(Feve.F_MQ)/24);
 
 			this.production.put(Feve.F_HQ, 0.8*this.prodAnnee.get(Feve.F_HQ)/24);
@@ -263,6 +280,9 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 			this.production.put(Feve.F_HQ_BE, 0.0);
 			this.production.put(Feve.F_MQ_E, 0.0);
 		}
+		this.journalPlantation.ajouter("Harvest Success, production par Step:" + this.production.get(Feve.F_BQ) +"For BQ");
+		this.journalPlantation.ajouter("Harvest Success, production par Step:" + this.production.get(Feve.F_MQ) +"For MQ");
+		this.journalPlantation.ajouter("Harvest Success, production par Step:" + this.production.get(Feve.F_HQ) +"For HQ");
 
 		return production;
 	}
@@ -287,25 +307,15 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	 * Méthode pour initialiser le stock de fèves pour chaque type de fève.
 	 * @return Un dictionnaire avec chaque fève et sa quantité de stock associée.
 	 */
-	public HashMap<Feve, Double> InitiStock(){
-		/*
-		 * Initialise un dictionnaire feve,double pour facilier la minipulation du stock
-		 * On commence deja par le stock qu'on produit pendant 2 mois
-		 */
-		this.Stocck = new HashMap<Feve, Double>();
-		HashMap<Feve, Double> pro = this.ProdParStep();
-		for (Feve f : Feve.values()) {
-			this.Stocck.put(f, pro.get(f)*4);
-		}
-		return this.Stocck;
-	}
+
 	public void next() {
 		super.next();
 		//this.maindoeuvre();
 		//this.recruitWorkers(this.ouvriers);
-		if (Filiere.LA_FILIERE.getEtape() == 12) {
-			this.achat(nombreHecMax-nombreHec);
+		if (Filiere.LA_FILIERE.getEtape()%12 == 0) {
+			this.achat((nombreHecMax-nombreHec)/2);
 		}
+		
 
 	}
 	public List<Journal> getJournaux() {
