@@ -25,7 +25,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	public static final double QUANTITE_MIN_ECHEANCIER = 100.0; // Il ne peut pas etre propose de contrat avec un echeancier de moins de QUANTITE_MIN_ECHEANCIER
 	public static int NB_SUPRVISEURS_CONTRAT_CADRE = 0;
 	private int numero;
-	private Journal journal, journalQVQCM, journalQVQF;
+	private Journal journal, journalNegoF, journalNegoCM, journalQVQCM, journalQVQF;
 	private List<ContratCadre> contratsEnCours;
 	private List<ContratCadre> contratsTermines;
 	private HashMap<IActeur, Integer> cryptos;
@@ -41,9 +41,11 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	public SuperviseurVentesContratCadre() {
 		NB_SUPRVISEURS_CONTRAT_CADRE++;
 		this.numero = NB_SUPRVISEURS_CONTRAT_CADRE;
-		this.journal = new Journal("J. "+this.getNom()     +" Negos ", this);
-		this.journalQVQCM = new Journal("J. "+this.getNom()+" Qui.CM", this); // Qui vend/achete le chocolat de marque
-		this.journalQVQF  = new Journal("J. "+this.getNom()+" Qui.F ", this); // Qui vend/achete les feves
+		this.journal       = new Journal("J. "+this.getNom() +" Gestion ", this); // la gestion des contrats en cours
+		this.journalNegoCM = new Journal("J. "+this.getNom() +" Negos.CM", this); // les negociations de chocolat de marque
+		this.journalNegoF  = new Journal("J. "+this.getNom() +" Negos.F ", this); // les negociations de feves
+		this.journalQVQCM  = new Journal("J. "+this.getNom() +" QuiAV.CM", this); // Qui vend/achete le chocolat de marque
+		this.journalQVQF   = new Journal("J. "+this.getNom() +" QuiAV.F ", this); // Qui vend/achete les feves
 		this.contratsEnCours= new ArrayList<ContratCadre>();
 		this.contratsTermines= new ArrayList<ContratCadre>();
 		this.livraisonsFeves = new HashMap<Feve, HashMap<Integer, Double>> ();
@@ -64,6 +66,11 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		List<IActeur> acteurs = Filiere.LA_FILIERE.getActeursSolvables();
 		for (IActeur acteur : acteurs) {
 			if (acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(produit)) {
+				if (produit instanceof ChocolatDeMarque && !Filiere.LA_FILIERE.getMarquesDistributeur().contains(((ChocolatDeMarque)produit).getMarque()) && !Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()).equals(acteur)) {
+					System.err.println(acteur.getNom()+" dit vendre du "+produit+" alors qu'il ne s'agit pas d'une marque distributeur et qu'elle est la proprietee de "+Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()));
+					System.err.println("mise en faillite de "+acteur.getNom());
+					Filiere.LA_FILIERE.getBanque().faireFaillite(acteur, this, cryptos.get(this));
+				}
 				vendeurs.add(((IVendeurContratCadre)acteur));
 			}
 		}
@@ -94,6 +101,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	 * @return L'exemplaire de contrat cadre conclu en cas d'accord (null si un accord n'a pas pu etre trouve)
 	 */
 	public ExemplaireContratCadre demandeAcheteur(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, IProduit produit, Echeancier echeancier, int cryptogramme, boolean tg) {
+        Journal journal = (produit instanceof ChocolatDeMarque)? journalNegoCM : journalNegoF;
 		if (acheteur==null) {
 			throw new IllegalArgumentException(" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre avec null pour acheteur");
 		}
@@ -148,11 +156,15 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	 * @return L'exemplaire de contrat cadre conclu en cas d'accord (null si un accord n'a pas pu etre trouve)
 	 */
 	public ExemplaireContratCadre demandeVendeur(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, IProduit produit, Echeancier echeancier, int cryptogramme, boolean tg) {
+       Journal journal = (produit instanceof ChocolatDeMarque)? journalNegoCM : journalNegoF;
 		if (acheteur==null) {
 			throw new IllegalArgumentException(" appel de demandeVendeur(...) de SuperViseurVentesContratCadre avec null pour acheteur");
 		}
 		if (vendeur==null) {
 			throw new IllegalArgumentException(" appel de demandeVendeur(...) de SuperViseurVentesContratCadre avec null pour vendeur");
+		}
+		if (!Filiere.LA_FILIERE.getActeursSolvables().contains(vendeur)) {
+			return null; // Le vendeur n'est pas un acteur solvable 
 		}
 		if (produit==null) {
 			throw new IllegalArgumentException(" appel de demandeVendeur(...) de SuperViseurVentesContratCadre avec null pour produit");
@@ -166,7 +178,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (echeancier.getStepDebut()<=Filiere.LA_FILIERE.getEtape()) {
 			if (Filiere.LA_FILIERE.getActeursSolvables().contains(vendeur)) {
 				journal.ajouter("!!! "+acheteur.getNom()+" appel de demandeVendeur(...) de SuperViseurVentesContratCadre avec un echeancier commencant a l'etape "+echeancier.getStepDebut()+" a l'etape "+Filiere.LA_FILIERE.getEtape());
-				Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur, this, cryptogramme);
+				Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur, this, cryptos.get(this));
 			}
 			return null;			
 		}		
@@ -179,6 +191,18 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (!(acheteur instanceof IDistributeurChocolatDeMarque) && tg) {
 			throw new IllegalArgumentException(" appel de demandeVendeur(...) de SuperViseurVentesContratCadre par l'acheteur "+acheteur.getNom()+" avec tg==true alors que l'acheteur n'est pas un distributeur (seuls les distributeurs peuvent s'engager a vendre en tete de gondole)");
 		}
+		if (produit instanceof ChocolatDeMarque && !Filiere.LA_FILIERE.getMarquesDistributeur().contains(((ChocolatDeMarque)produit).getMarque()) && !Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()).equals(vendeur)) {
+			System.err.println(vendeur.getNom()+" souhaite vendre du "+produit+" alors qu'il ne s'agit pas d'une marque distributeur et qu'elle est la proprietee de "+Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()));
+			Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur, this, cryptos.get(this));
+		}
+		if (!vendeur.vend(produit)) {
+			System.err.println(vendeur.getNom()+" veut lancer un contrat cadre de "+produit+" mais sa methode vend("+produit+") retourne false");
+			System.err.println("mis en faillite de "+vendeur);
+			Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur, this, cryptos.get(this));
+		} else {
+		//	System.out.println(vendeur+" lance et vend "+produit);
+		}
+		
 		ContratCadre contrat = null;
 
 		contrat = new ContratCadre(acheteur, vendeur, produit, echeancier, cryptogramme, tg);
@@ -203,6 +227,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	}
 
 	private ExemplaireContratCadre negociations(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, Object produit, Echeancier echeancier, int cryptogramme, boolean tg, ContratCadre contrat, IActeur initiateur) {
+        Journal journal = (produit instanceof ChocolatDeMarque)? journalNegoCM : journalNegoF;
 		int maxNego = 5 + (int)(Filiere.random.nextDouble()*11); // Le nombre maximum de contrepropositions est compris dans [5, 15]
 
 		// NEGOCIATIONS SUR L'ECHEANCIER
@@ -450,9 +475,6 @@ public String surLargeur(String s, int largeur) {
 			s = s+"&nbsp;&nbsp;acheteurs "+getAcheteurs(f);
 			s = surLargeur(s, 80);
 			this.journalQVQF.ajouter(s);
-//			this.journalQVQF.ajouter("produit "+f);
-//			this.journalQVQF.ajouter("&nbsp;&nbsp;&nbsp;vendeurs "+getVendeurs(f));
-//			this.journalQVQF.ajouter("&nbsp;&nbsp;acheteurs "+getAcheteurs(f));
 		}
 	}
 	public void next() {
@@ -595,6 +617,8 @@ public String surLargeur(String s, int largeur) {
 	public List<Journal> getJournaux() {
 		List<Journal> res = new LinkedList<Journal>();
 		res.add(this.journal);
+		res.add(this.journalNegoCM);
+		res.add(this.journalNegoF);
 		res.add(this.journalQVQCM);
 		res.add(this.journalQVQF);
 		return res;

@@ -243,6 +243,18 @@ public class Banque implements IActeur, IAssermente {
 				}
 				this.journalBanque.notifyObservers(); 
 			}
+		} else if (acteur==assermente && cryptogramme.get(acteur)==cryptoAssermente) { // suicide economique
+			this.journalBanque.ajouter(Journal.texteColore(acteur, " Suicide economique de "+acteur.getNom()));
+			this.faillites.put(acteur, true);
+			Filiere.LA_FILIERE.notificationFaillite(acteur);
+			for (IActeur a : this.comptes.keySet()) {
+				this.journalBanque.ajouter(Journal.texteColore(acteur, "- notification de Faillite de "+acteur.getNom())+Journal.texteColore(a, " a "+a.getNom()));
+				a.notificationFaillite(acteur);
+			}
+			this.journalBanque.notifyObservers(); 
+		} else {
+			System.err.println("Appel de faireFaillite par un acteur non assermente");
+			System.err.println(cryptoAssermente+" au lieu de "+cryptogramme.get(assermente));
 		}
 	}
 

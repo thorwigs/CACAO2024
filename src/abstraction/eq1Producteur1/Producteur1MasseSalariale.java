@@ -298,11 +298,13 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	}
 	/*Ecrit par Fatima-ezzahra*/
 	public void amelioration() {
+		if (this.croissanceParStep.size()>4) {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		int annee = Filiere.LA_FILIERE.getAnnee(etape);
 	
 		int enfants = this.getNombreEnfants();
 		int size = this.croissanceParStep.size();
+		
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 
 		if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
@@ -326,6 +328,8 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 		}
+		}
 	}
-
+	
+	
 }

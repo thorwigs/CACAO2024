@@ -42,6 +42,15 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		super.next();
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) {
+			//List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
+			//System.out.println(acheteurs);
+			/*
+			System.out.println(f.toString());
+			System.out.println(this.Stocck.get(f)-restantDu(f)>1200);
+			System.out.println(this.Stocck.get(f)-restantDu(f));
+			System.out.println(stock.get(f).getValeur()-restantDu(f)>1200);
+			System.out.println(stock.get(f).getValeur()-restantDu(f));
+			*/
 			if (stock.get(f).getValeur()-restantDu(f)>1200 ) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
@@ -83,7 +92,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 	/**
 	 * Calcule le prix des fèves en fonction des contrats en cours et terminés.
 	 * @param f Le type de fève.
-	 * @return Le prix des fèves.
+	 * @re)turn Le prix des fèves.
 	 */
 	public double prix(Feve f) {
 		double res = 0;
@@ -163,11 +172,11 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		}
 		int duree = ec.getStepFin()-ec.getStepDebut();
 		
-		if (duree < 0) {
+		if (duree < 10) {
 			journalCC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
-		if (Filiere.LA_FILIERE.getEtape() < 0) {
+		if (Filiere.LA_FILIERE.getEtape() < 12) {
 			journalCC.ajouter("On fait pas de contract pendant la 1ere annee");
 			return null;
 		}
@@ -198,7 +207,8 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0;  
 		}
-		return prix((Feve) contrat.getProduit());
+		return 0;
+		//return prix((Feve) contrat.getProduit());
 
 
 

@@ -37,10 +37,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	public double offre(Feve f, double cours) {
 		// TODO Auto-generated method stub
 
-		if (f.isBio() || f.isEquitable()) {
-			journalBourse.ajouter("On vend pas de bio ni equitable en bourse");
-			return 0;
-		}
+		//if (f.isBio() || f.isEquitable()) {
+			//journalBourse.ajouter("On vend pas de bio ni equitable en bourse");
+			//return 0;
+		//}
 		double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
 
 
@@ -49,8 +49,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 			if (f.getGamme()==Gamme.MQ) {
-				
-				if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
+				if (true) {
+				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 
 					return quantiteEnT;
@@ -61,7 +61,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				}
 			}
 			if (f.getGamme()==Gamme.HQ) {
-				if(cours>= (pourcentageHQ+1)*Seuil*quantiteEnT) {
+				if (true) {
+				//if(cours>= (pourcentageHQ+1)*Seuil*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 
 					return quantiteEnT;
@@ -71,7 +72,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				}
 			}
 			if (f.getGamme()==Gamme.BQ) {
-				if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
+				if (true) {
+				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
 					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 					return quantiteEnT;
