@@ -96,6 +96,7 @@ public class Producteur1Production extends Producteur1Plantation{
 
 		}
 	}
+	
 	/**
 	 * Convertit une partie des fèves de cacao en fèves de cacao biologiques.
 	 * Cela n'est pas encore fait car on fait pas de bio pour l'instant.
@@ -108,7 +109,7 @@ public class Producteur1Production extends Producteur1Plantation{
 			if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
 				this.prodParStep.put(Feve.F_HQ_BE, null);
 			}
-		}
+		} 
 
 	}
 	/**
