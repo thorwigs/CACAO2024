@@ -59,7 +59,6 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	public double getSalaireTotal() {
 		double s =0;
 		for (Ouvrier ouvrier : this.listeOuvrier) {
-			s=s+ouvrier.getSalaire();
 
 		}
 
@@ -140,8 +139,6 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 		// Ajout des nouveaux ouvriers à la nouvelle liste
 		for (int i = 0; i < nombre_à_ajouter; i++) {
-			Ouvrier ouvrier_a_ajouter = new Ouvrier(0, 1.0, salaire, isForme, isEquitable, isEnfant);
-			this.listeOuvrier.add(ouvrier_a_ajouter);
 		}
 
 
@@ -175,7 +172,6 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		}
 
 		// Trier la liste des ouvriers à supprimer par ancienneté
-		Collections.sort(ouvriersASupprimer, (o1, o2) -> Double.compare(o1.getAnciennete(), o2.getAnciennete()));
 
 
 
@@ -184,33 +180,33 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 			Ouvrier ouvrier = ouvriersASupprimer.get(i);
 			this.listeOuvrier.remove(ouvrier);
 			double indemnite =0;
-			double anciennetéEnAnnées = ouvrier.getAnciennete() / 365;
-			double salaire = ouvrier.getSalaire();
+			//double anciennetéEnAnnées = ouvrier.getAnciennete() / 365;
+			//double salaire = ouvrier.getSalaire();
 
-			double indemnité = anciennetéEnAnnées <= 10 ? (salaire * 30 / 4) * anciennetéEnAnnées : (salaire * 30 / 4) * 10 + (salaire * 30 / 3) * (anciennetéEnAnnées - 10);
-			this.indemniteTotal += indemnité;
+		//	double indemnité = anciennetéEnAnnées <= 10 ? (salaire * 30 / 4) * anciennetéEnAnnées : (salaire * 30 / 4) * 10 + (salaire * 30 / 3) * (anciennetéEnAnnées - 10);
+			//this.indemniteTotal += indemnité;
 
-			if (anciennetéEnAnnées <= 10) {
-				indemnite = salaire * 0.30 * anciennetéEnAnnées;
-			} else if (anciennetéEnAnnées <= 15) {
+			//if (anciennetéEnAnnées <= 10) {
+			//	indemnite = salaire * 0.30 * anciennetéEnAnnées;
+			//} else if (anciennetéEnAnnées <= 15) {
 				// Calcul pour les 10 premières années
-				indemnite = salaire * 0.30 * 10;
+			//	indemnite = salaire * 0.30 * 10;
 				// Calcul pour les années entre 10 et 15
-				indemnite += salaire * 0.35 * (anciennetéEnAnnées - 10);
-			} else {
-				// Calcul pour les 10 premières années
-				indemnite = salaire * 0.30 * 10;
+				//indemnite += salaire * 0.35 * (anciennetéEnAnnées - 10);
+			//} else {
+				//// Calcul pour les 10 premières années
+				//in**demnite = salaire * 0.30 * 10;
 				// Calcul pour les 5 années suivantes (10 à 15 ans)
-				indemnite += salaire * 0.35 * 5;
+				//indemnite += salaire * 0.35 * 5;
 				// Calcul pour les années au-delà de 15 ans
-				indemnite += salaire * 0.40 * (anciennetéEnAnnées - 15);
+				//indemnite += salaire * 0.40 * (anciennetéEnAnnées - 15);
 			}
 
-			this.indemniteTotal+=indemnite;
+			//this.indemniteTotal+=indemnite;
 
 
-		}
-		this.journalOuvrier.ajouter("On a licence "+ Math.min(nombreASupprimer, ouvriersASupprimer.size())+ "personnes et on a due paye un total d'indemnite de:"+ this.indemniteTotal);
+		//}
+		//this.journalOuvrier.ajouter("On a licence "+ Math.min(nombreASupprimer, ouvriersASupprimer.size())+ "personnes et on a due paye un total d'indemnite de:"+ this.indemniteTotal);
 
 	}
 
@@ -223,19 +219,19 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	public void UpdateAnciennete() {
 
 
-		for (Ouvrier ouvrier : this.listeOuvrier) {
-			double anciennete_step_precedent=ouvrier.getAnciennete();
-			ouvrier.setAnciennete(anciennete_step_precedent+15.0);
-			if ((ouvrier.getAnciennete()>3650) && (ouvrier.getIsEnfant())) {
-				ouvrier.setIsEnfant(false);
-				ouvrier.setSalaire(1.8);
+		//for (Ouvrier ouvrier : this.listeOuvrier) {
+			//double anciennete_step_precedent=ouvrier.getAnciennete();
+			//ouvrier.setAnciennete(anciennete_step_precedent+15.0);
+			//if ((ouvrier.getAnciennete()>3650) && (ouvrier.getIsEnfant())) {
+			//	ouvrier.setIsEnfant(false);
+			//	ouvrier.setSalaire(1.8);
 				//après 10 ans, un enfant devient adule et son salire devient le salaire minimal d'un adulte
 
 			}	//méthode pour mettre a jour l'anciennete chaque next par 
 			//ajout de 15 jours à chaque ancienneté
 
-		}
-	}
+		//}
+	//}
 	/**
 	 * Procède à une formation pour un certain nombre d'ouvriers.
 	 * @param nbr_à_former Le nombre d'ouvriers à former.
@@ -244,16 +240,16 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		double cout_formation=0;//dépend de l'ancienneté
 		double ancienneteMin =720;// ancienneté au moins de 2 ans pour faire une formation
 		double augmentationRendement=0.5;// le rendement augmente de 0.5
-		for (Ouvrier ouvrier : this.listeOuvrier) {
-			double augmentationSalaire=0.2*ouvrier.getSalaire(); //le salaire augmente de 0.2
-			if (( ouvrier.getAnciennete()>= ancienneteMin) && 
-					(!(ouvrier.getIsForme())) &&
-					(!(ouvrier.getIsEnfant())))
+		//for (Ouvrier ouvrier : this.listeOuvrier) {
+			//double augmentationSalaire=0.2*ouvrier.getSalaire(); //le salaire augmente de 0.2
+			//if (( ouvrier.getAnciennete()>= ancienneteMin) && 
+				//	(!(ouvrier.getIsForme())) &&
+					//(!(ouvrier.getIsEnfant())))
 
 			{
-				ouvrier.setRendement(ouvrier.getRendement()+ augmentationRendement);
-				ouvrier.setSalaire(ouvrier.getSalaire()+augmentationSalaire);
-				ouvrier.setIsForme(true);
+				//ouvrier.setRendement(ouvrier.getRendement()+ augmentationRendement);
+				//ouvrier.setSalaire(ouvrier.getSalaire()+augmentationSalaire);
+				//ouvrier.setIsForme(true);
 				/*
 				int size = ouvrier.soldeParStep.size();
 				double solde = ouvrier.soldeParStep.get(size);
@@ -267,7 +263,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 
-	}
+	
 	/**@author youssef ben abdeljelil*/
 	public List<Journal> getJournaux() {
 		List<Journal> res = super.getJournaux();
@@ -328,3 +324,11 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	}
 
 }
+
+
+/**
+ * Représente un gestionnaire de la masse salariale pour un acteur producteur spécifique dans la filière.
+ * Gère les salaires, les effectifs et les formations du personnel ouvrier.
+ * Code par Youssef en globalite
+
+ */

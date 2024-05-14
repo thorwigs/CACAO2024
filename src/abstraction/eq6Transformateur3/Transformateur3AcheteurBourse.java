@@ -13,7 +13,7 @@ import abstraction.eqXRomu.produits.Gamme;
 
 
 
-public class Transformateur3AcheteurBourse extends Transformateur3VendeurCCadre implements IAcheteurBourse {
+public class Transformateur3AcheteurBourse extends Transformateur3AcheteurCCadre implements IAcheteurBourse {
 	protected Journal journalBourse;
 
 	/**

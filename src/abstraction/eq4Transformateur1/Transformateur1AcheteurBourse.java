@@ -37,7 +37,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	 */
 	public double demande(Feve f, double cours) {
 		double stockCible = Math.max(2*this.demandeCC, 20000);
-		stockCible = stockCible - this.totalStocksChocoMarque.getValeur(this.cryptogramme);
+		stockCible = Math.max(stockCible - this.totalStocksChocoMarque.getValeur(this.cryptogramme), 0);
 		this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de feve");
 		double demandeMin=100;
 		double stockCibleHQ = 0.3 * stockCible;
