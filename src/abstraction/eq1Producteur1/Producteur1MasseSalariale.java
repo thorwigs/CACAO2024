@@ -324,3 +324,11 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	}
 
 }
+
+
+/**
+ * Représente un gestionnaire de la masse salariale pour un acteur producteur spécifique dans la filière.
+ * Gère les salaires, les effectifs et les formations du personnel ouvrier.
+ * Code par Youssef en globalite
+
+ */

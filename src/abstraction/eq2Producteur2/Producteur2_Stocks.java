@@ -278,6 +278,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				}
 			}
 		}
+		lot_to_hashmap();
 		return quantite_prise;
 	}
 	
