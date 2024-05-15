@@ -265,6 +265,8 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 		if(qtetotaleproduite==peutproduireemploye) {
 			nbemployeCDI = nbemployeCDI + 30; //on ne peut pas embaucher plus de 30 personnes par step
 		}
+		this.journalTransfo.ajouter("Notre nombre d'employé" + nbemployeCDI);
+		
 		
 		//TEST :
 		for (Feve f : this.lesFeves) {
@@ -273,14 +275,6 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 		
 		for (ChocolatDeMarque c : this.coutproduction_tonne_marque_step.keySet()) {
 			this.journalTransfo.ajouter("Quantite produite de " + c + " à ce step : "+ this.production_tonne_marque_step.get(c));
-		}
-		
-		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
-		}
-		
-		for (ChocolatDeMarque c : chocolatDistributeur) {
-			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChoco.get(c.getChocolat()));
 		}
 		
 
