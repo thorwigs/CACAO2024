@@ -125,14 +125,16 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		}
 		if (echeancier.getQuantiteTotale()<QUANTITE_MIN_ECHEANCIER) {
 			if (Filiere.LA_FILIERE.getActeursSolvables().contains(acheteur)) {
-				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptogramme);
+				System.err.println("supCC : mise en faillite de "+acheteur.getNom()+" qui met en vente une quentite inferieure aux accords (on ne peut pas creer de contrat de moins de "+QUANTITE_MIN_ECHEANCIER+")");
+				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptos.get(this));
 				journal.ajouter("!!! "+acheteur.getNom()+" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre avec un echeancier d'un volume total de moins de "+QUANTITE_MIN_ECHEANCIER+" T");
 			}
 			return null;
 		}
 		if (echeancier.getStepDebut()<=Filiere.LA_FILIERE.getEtape()) {
 			if (Filiere.LA_FILIERE.getActeursSolvables().contains(acheteur)) {
-				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptogramme);
+				System.err.println("supCC : mise en faillite de "+acheteur.getNom()+" qui fait un contrat avec un debut inferieur a l'etape courante");
+				Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptos.get(this));
 				journal.ajouter("!!! "+acheteur.getNom()+" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre avec un echeancier commencant a l'etape "+echeancier.getStepDebut()+" a l'etape "+Filiere.LA_FILIERE.getEtape());
 			}
 			return null;			
