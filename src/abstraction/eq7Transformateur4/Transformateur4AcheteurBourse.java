@@ -9,7 +9,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 
-//codé par Yanis
+//codé par Yanis et Anaïs
 
 public class Transformateur4AcheteurBourse extends Transformateur4Acteur implements IAcheteurBourse {
 
@@ -24,18 +24,13 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 
 
 	public double demande(Feve f, double cours) { //changer selon conditions et qte d'achat de chaque fève
-		if (f.equals(Feve.F_HQ_BE) && stockFeves.get(f)<=15000) {
-			D = 15000 - stockFeves.get(f);
+		if (f.equals(Feve.F_MQ) && stockFeves.get(f)<=10000) {
+			D = 10000 - stockFeves.get(f);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;
 		}
-		if (f.equals(Feve.F_HQ_E) && stockFeves.get(f)<=15000) {
-			D = 15000 - stockFeves.get(f);
-			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
-			return D;
-		}
-		if (f.equals(Feve.F_HQ) && stockFeves.get(f)<=15000) {
-			D = 15000 - stockFeves.get(f);
+		if (f.equals(Feve.F_HQ) && stockFeves.get(f)<=700) {
+			D = 700 - stockFeves.get(f);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;
 		}
@@ -66,9 +61,8 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	}
 	
 	public void next() {
-		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		super.next();
-		
+		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 	}
 
 	
