@@ -214,6 +214,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 				res.add(this.stockChoco.get(c));
 		}
 		res.add(this.totalStocksChocoMarque);
+		
 		return res;
 	}
 
