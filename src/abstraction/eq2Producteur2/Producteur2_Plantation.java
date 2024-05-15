@@ -22,7 +22,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double nb_hectares_actuel;
 	protected double prix_plantation_hectare;
 	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
-
+s
 	//protected int qualite;
 	protected int pourcentage_HQ;
 	protected int pourcentage_MQ;
