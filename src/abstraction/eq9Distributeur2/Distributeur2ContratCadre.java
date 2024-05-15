@@ -72,7 +72,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		if (produit.getType().equals("ChocolatDeMarque")) {
 			ChocolatDeMarque cm = (ChocolatDeMarque) produit;
 			if (this.stockChocoMarque.get(cm)!=null) {
-				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<500000;
+				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<500000; ///A MODIFIER
 			} else {
 				return this.totalStocksChocoMarque.getValeur(cryptogramme)<100000;
 			}
@@ -99,15 +99,25 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		}
 		
 		for (int i=0; i<e.getNbEcheances(); i++) {
-			if (e.getQuantite(e.getStepDebut()+i)>5000 )  {
-				quantites.add(5000.);
-				modif=true;
-			} else if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
-				quantites.add(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm));
-				modif = true;
+			if (Filiere.LA_FILIERE.getEtape()==0) {
+				if (e.getQuantite(e.getStepDebut()+i)>5000)  {
+					quantites.add(5000.);
+					modif=true;
+				} else if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
+					quantites.add(Math.max(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm), 100.));
+					modif = true;
+				} else {
+					quantites.add(Math.max(e.getQuantite(e.getStepDebut()+i),100));
+				}
 			} else {
-				quantites.add(e.getQuantite(e.getStepDebut()+i));
-			}
+				if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
+					quantites.add(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm));
+					modif = true;
+				} else {
+					quantites.add(e.getQuantite(e.getStepDebut()+i));
+				}
+				
+			}			
 		}
 		if (modif) {
 			Echeancier new_e = new Echeancier(e.getStepDebut(), quantites);
@@ -153,14 +163,14 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	
 	public void lancerNouveauCC() {
 		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) { 
-			if (this.stockChocoMarque.get(cm)<2*this.getVentePrecedente(cm) ) {
+			if (this.stockChocoMarque.get(cm)<2*this.getVentePrecedente(cm)) {
 				this.journal_CC.ajouter("Contrat Cadre pour "+cm+" ?");
 				this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
 				double parStep = 0;
 				if (Filiere.LA_FILIERE.getEtape()==0) {
-					parStep = Math.max(500, 5000-(this.stockChocoMarque.get(cm)-this.restantDu(cm))/12);
+					parStep = Math.max(1000, 5000-(this.stockChocoMarque.get(cm)-this.restantDu(cm))/12);
 				} else {
-					parStep = Math.max(Filiere.LA_FILIERE.getAttractivite(cm)*2000, 2*Filiere.LA_FILIERE.getVentes(cm, Filiere.LA_FILIERE.getEtape()-1)-(this.stockChocoMarque.get(cm)+this.restantDu(cm))/12);
+					parStep = Math.max(Math.max(Filiere.LA_FILIERE.getAttractivite(cm)*2000, 2*(Filiere.LA_FILIERE.getVentes(cm, Filiere.LA_FILIERE.getEtape()-1)-(this.stockChocoMarque.get(cm)+this.restantDu(cm))/12)),100);
 				}
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
