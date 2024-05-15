@@ -86,9 +86,11 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 0.0);
-			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 2000000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			if (f == Feve.F_HQ || f == Feve.F_HQ_BE || f == Feve.F_MQ) {
+			this.stockFeves.put(f, 20000.0);
+			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			}
 		}
 		
 		//le premier stock est celui de chocolat sans marque, le deuxième est celui de chocolat avec marque
