@@ -39,7 +39,7 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 	*/
 	public void initialiser() {
 		super.initialiser();
-		NbSalaries = 100;
+		NbSalaries = 5000;
 		salaire = 2000;
 		coutLicenciement1Salarie = 4*salaire;
 		capaciteTransfo = 3.7;
@@ -59,28 +59,41 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 	}
 	
 	
-	////////////////////////////////////////////
-	//  //
-	////////////////////////////////////////////
-		
-		
-		
-		
+	/////////////////////////////////////////////////////////////////////
+	//  Méthodes pour la mise à jour des stocks et du calcul des couts //
+	/////////////////////////////////////////////////////////////////////
+	/**
+	 * @Erwann
+	 */
 	public void Transformation(Feve f, double tonnes) {
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
 		if (this.stockFeves.containsKey((Feve)f)){
 			this.stockFeves.get((Feve)f).retirer(this, tonnes, this.cryptogramme); //Maj stock de feves 
+			this.totalStocksFeves.retirer(this, tonnes, this.cryptogramme);
 		}
 		if (this.stockChoco.containsKey((Chocolat)c)){
 			this.stockChoco.get((Chocolat) c).ajouter(this, tonnes, this.cryptogramme); //Maj stock choco
+			this.totalStocksChoco.ajouter(this, tonnes, this.cryptogramme);
 		}
 	}
-	
+	/**
+	 * @Erwann
+	 */
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
 		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
 	
+	
+	
+	
+	
+	////////////////////////////////////////////////////
+	//                 Méthode Next                   //
+	////////////////////////////////////////////////////
 	/**
+	 * @apiNote Détermine la capacité de production en fonction des salariés
+	 * @apiNote Détermine si l'on embauche ou l'on licencie
+	 * @apiNote Transforme les feves et paye les coûts
 	 * @Erwann
 	 * @Vincent
 	 * @Victor
@@ -89,13 +102,23 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 		super.next();
 		this.JournalProduction.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		
+		////////////////////////////////////////////////////
+		// Determination de la Capacité de Transformation //
+		////////////////////////////////////////////////////
 		double capaciteTransfoTotal = capaciteTransfo * NbSalaries;
 		double coutMasseSalariale = 0;
 		
-		if (capaciteTransfoTotal < 0.2 * this.totalStocksFeves.getValeur()) {
+		/* Stratégie d'embauche/licenciement : 
+		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 30% de nos stocks.
+		 * 	   On embauche au maximum 2000 salarié par step
+		 * --> On licencie si notre capacité de transformation est 4 fois supérieur à nos stocks.
+		 *     On licencie 10% de notre effectif
+		 */
+		
+		if (capaciteTransfoTotal < 0.3 * this.totalStocksFeves.getValeur()) {
 			int embauche =(int)((0.4 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
-			if (embauche> 1000){
-				embauche=1000;
+			if (embauche> 2000){
+				embauche=2000;
 			}
 			this.NbSalaries += embauche;
 			this.JournalProduction.ajouter("On embauche"+embauche+"personnes");
@@ -111,34 +134,42 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 			this.JournalProduction.ajouter("Aucune embauche, ni licenciement");
 			coutMasseSalariale = NbSalaries * salaire;
 		}
-		this.JournalProduction.ajouter("Nbr salariés : "+NbSalaries);
-		this.JournalProduction.ajouter("cout Masse Salariale : "+coutMasseSalariale);
 		
 		// Paiement des coût de la masse salariale
+		this.JournalProduction.ajouter("Nbr salariés : "+NbSalaries);
+		this.JournalProduction.ajouter("cout Masse Salariale : "+coutMasseSalariale);
 		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût MS", coutMasseSalariale );
 		
-		double NewCapaciteTransfoTotal = capaciteTransfo * NbSalaries;
-		this.JournalProduction.ajouter("Capacité de Transfo Total :"+(NewCapaciteTransfoTotal)+"tonnes");
+		// Recalcul de la Capacité de Transformation après Embauche/Licenciement
+		capaciteTransfoTotal = capaciteTransfo * NbSalaries;
+		this.JournalProduction.ajouter("Capacité de Transformation :"+(capaciteTransfoTotal)+"tonnes");
 		
 		
 		
+		////////////////////////////////////////////////////
+		//           Transformation des Fèves             //
+		////////////////////////////////////////////////////
+		double TransfoTotal = 0;
 		
+		/* Stratégie de transformation :
+		 * --> La capacité de Transformation totale est repartie au prorata des fèves en stock
+		 */
 		
-		
+		// Création d'un HashMap contenant la répartition de chaque fève en stock
 		HashMap<Feve, Double> repartition = new HashMap<Feve, Double>();
 		for (Feve f : lesFeves) {
 			repartition.put(f, this.stockFeves.get((Feve)f).getValeur() / this.totalStocksFeves.getValeur());
 		}
-		double TransfoTotal = 0;
+		
+		// Transformation des feves avec la méthode "Transformation (Feve, tonnes)" qui mert à jour les stocks
 		for (Feve f : lesFeves) {
-			double TonnesTranfo = NewCapaciteTransfoTotal * repartition.get(f);
-			//System.out.println(TonnesTranfo);
+			double TonnesTranfo = capaciteTransfoTotal * repartition.get(f);
 			Transformation(f, TonnesTranfo);
 			TransfoTotal += TonnesTranfo;
 		}
 		this.JournalProduction.ajouter("Tonnes de feves transformées : "+TransfoTotal);
 		
-		
+		// Calcul des cout de Transformation avec la méthode "CoutTransformation(ChocolatDeMarque, tonnes)"
 		double coutTransfoTotal = 0;
 		for (ChocolatDeMarque cm : chocosProduits) {
 			if (cm.getGamme()!= Gamme.HQ) {
@@ -149,10 +180,11 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 		this.JournalProduction.ajouter("Coût de la transformation : "+coutTransfoTotal);
 		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme, "Coût Transformation" , coutTransfoTotal);
 
+
 		
-		
-		
-		
+		////////////////////////////////////////////////////
+		//       Calcul de la moyenne de production       //
+		////////////////////////////////////////////////////
 		this.totalProd += TransfoTotal;
 		this.moyProd = this.totalProd/(Filiere.LA_FILIERE.getEtape()+1);
 		this.JournalProduction.ajouter("Production moyenne de l'acteur : "+moyProd+" tonnes/step");	
