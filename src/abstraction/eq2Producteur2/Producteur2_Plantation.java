@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.IProduit;
 /** Classe permettant de gérer les plantations
  * @author Anthony
  */
- 
+
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	
 	/** Définition des variables
