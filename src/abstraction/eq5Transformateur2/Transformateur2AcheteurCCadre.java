@@ -138,7 +138,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	
 
 	/**
-	 * @author Vincent Erwann
+	 * @author Vincent Erwann Victor
 	 */
 	public boolean achete(IProduit produit) {
 		if (produit.getType().equals("Feve")) {
