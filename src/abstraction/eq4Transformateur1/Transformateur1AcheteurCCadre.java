@@ -68,7 +68,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	                    journalCC.ajouter(Color.RED, Color.WHITE, "   échec des négociations");
 	                } else {
 	                    this.contratsEnCours.add(contrat);
-	                    journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signé");
+	                    journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signé avec l'échéancier : "+contrat.getEcheancier());
 	                }
 	            } else {
 	                journalCC.ajouter("   pas de vendeur");
@@ -113,15 +113,19 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	    	    	journalCC.ajouter("La feve proposée : "+feve);
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * nombreMois;}
+	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC * nombreMois, this.quantiteMiniCC);
+	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
+	        		return reponse;
+	        	}
 	        	if (feve.getGamme() == Gamme.MQ && feve.isBio()) {
-	    	    	journalCC.ajouter("La feve proposée : "+feve);
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * nombreMois;}
+	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC * nombreMois, this.quantiteMiniCC);
+	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
+	        		return reponse;
 	        	}
-	        	
-	        	}
-	    return false;}
+        	}
+	    }
+	    return false;
+	}
 	            
 		
 
