@@ -89,8 +89,8 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 	}
 	/**
-	 * Convertit une partie des fèves de cacao ordinaires en fèves de cacao équitables.
-	 * S'ils respectent les conditions equitables 
+	 * Précise qu' une partie des fèves de cacao ordinaires est équitable.
+	 * S'ils respectent les conditions de la production equitable 
 	 */
 	public void feveToEqui() {
 
@@ -110,26 +110,26 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.stock.get(Feve.F_HQ_E).ajouter(this, pro*h);
 		this.stock.get(Feve.F_HQ).retirer(this, pro*h);
 		this.stock.get(Feve.F_MQ).retirer(this, pro*m);
-		this.journalProduction.ajouter("On a transforme"+ pro + "% of MQ to MQ_E and"+ pro +"% of HQ to HQ_E");
-		this.journalStockage.ajouter("On a transforme"+ pro +"% of MQ to MQ_E and"+pro + " % of HQ to HQ_E");
+		this.journalProduction.ajouter( pro + "% de est MQ to MQ_E, et"+ pro +"% de HQ est HQ_E");
+		this.journalStockage.ajouter( pro + "% de est MQ to MQ_E, et"+ pro +"% de HQ est HQ_E");
 
 	}
 
 	/**
-	 * Convertit une partie des fèves de cacao en fèves de cacao biologiques.
+	 * précise qu' une partie des fèves de cacao est bio si elle respecte 
 	 * Cela n'est pas encore fait car on fait pas de bio pour l'instant.
 	 */
-	public void feveToBio() {
-		if (this.pesticides) {
-			this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
-		}
-		else {
-			if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
-				this.prodParStep.put(Feve.F_HQ_BE, null);
-			}
-		}
+	//public void feveToBio() {
+		//if (this.pesticides) {
+			//this.journalProduction.ajouter("On ne peut pas faire du bio car on a utilise des pesticides");
+		//}
+		//else {
+			//if (this.prodParStep.get(Feve.F_HQ_E) !=0) {
+			//	this.prodParStep.put(Feve.F_HQ_BE, null);
+		//	}
+		//}
 
-	}
+	//}
 	/**
 	 * Gère le stockage des fèves de cacao de haute qualité.
 	 * Initie le transfert de stock en fonction de certaines conditions.
@@ -247,7 +247,7 @@ public class Producteur1Production extends Producteur1Plantation{
 		public void next() {
 			super.next();
 			this.feveToEqui();
-			this.feveToBio();
+			//this.feveToBio();
 
 			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_BQ).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
 			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_MQ).getValeur()+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());

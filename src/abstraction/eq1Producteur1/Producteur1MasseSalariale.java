@@ -351,9 +351,10 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 			if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
 
-
-				this.removeEmploye(0,10);//remove 10 enfants
-
+                int nb = Math.min(enfants, 10);
+				this.removeEmploye(0,nb);//remove 10 enfants
+				this.journalOuvrier.ajouter("On a licencier" + nb +"enfants" );
+        
 
 
 				if (this.salaire.get(1) < 2.5 ) { 

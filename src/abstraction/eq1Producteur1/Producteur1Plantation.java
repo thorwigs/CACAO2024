@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.Feve;
 public class Producteur1Plantation extends Producteur1MasseSalariale implements IPlantation{
 	protected double nombreHec = 3E6;
 	protected double nombreHecMax = 5E6;
-	protected Journal journalPlantation;
+	protected Journal journalPlantation; 
 	protected HashMap<Feve, Double> plantation;
 	protected boolean pesticides = true;
 	protected HashMap<Feve, Double> production;

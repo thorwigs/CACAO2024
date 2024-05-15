@@ -52,7 +52,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 			if (f.getGamme()==Gamme.MQ) {
 				if (true) {
-				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
+					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);				
+					//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 
 					return quantiteEnT;
