@@ -79,7 +79,7 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 
 	@Override
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
-		return this.quantiteEnVente(choco, crypto) * 0.1; //maximum
+		return this.quantiteEnVente(choco, crypto) * 0.099; //maximum
 	}
 
 	@Override
