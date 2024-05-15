@@ -314,6 +314,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+				if (vend(choco)) {
 					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) || (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
@@ -339,12 +340,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}
 				}
+				}
 				
 				
 			//Pour les chocos de marque distributeur, codé par Eliott
 				
 				for(ChocolatDeMarque choco : this.chocolatDistributeur) {
-					
+				if (vend(choco)) {
 						
 					if ((stockChoco.get(choco.getChocolat()) - restantALivrer(choco)>=30000) || (stockChoco.get(choco.getChocolat()) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
@@ -355,6 +357,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						if (acheteurs.size()>0) {
 							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							
 							
 							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
 							
@@ -371,6 +374,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					} else {
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}	
+				}
 				}
 				
 				
