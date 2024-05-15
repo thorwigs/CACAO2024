@@ -13,7 +13,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
-import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.produits.IProduit; 
 
 /** Classe principale de l'acteur
  * @author Quentin, Noémie, Maxime
