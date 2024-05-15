@@ -144,7 +144,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
     
  
     
-    
+    /**@author Haythem*/
     public void addQuantiteOuvrier(Ouvrier ouvrier, int quantite) {
         // Récupère la quantité actuelle ou initialise à 0 si l'ouvrier n'existe pas
         Integer current = masseSalariale.getOrDefault(ouvrier, 0);
@@ -249,7 +249,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
         
         
     
-    
+    /**@author youssef ben abdeljelil*/
     public void removeEmploye(Ouvrier ouvrier,int nombreAsuprrimer) {
     	double moyenne_salaire=0;
     	for (Double salaire :this.salaire) {
