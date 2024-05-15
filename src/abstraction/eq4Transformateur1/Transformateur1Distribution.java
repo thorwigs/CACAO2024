@@ -49,9 +49,11 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
     }
     */
 
-    public Journal getJournal() {
-        return this.journalVD;
-    }
+    public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalVD);
+		return jx;
+	}
 
 	@Override
 	public double prix(ChocolatDeMarque choco) {
@@ -72,6 +74,7 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		if(choco.getGamme()==Gamme.HQ && this.stockChocoMarque.keySet().contains(choco)) {
+			//System.out.println("qauntité en vente : "+this.stockChocoMarque.get(choco).getValeur()+" ; "+this.pourcentageVenteDirecte);
 			return this.stockChocoMarque.get(choco).getValeur() * this.pourcentageVenteDirecte;
 		}
 		return 0;
@@ -87,13 +90,14 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 		if (this.stockChocoMarque!=null && this.stockChocoMarque.keySet().contains(choco)) {
 			this.stockChocoMarque.get(choco).setValeur(this, this.stockChocoMarque.get(choco).getValeur()-quantite);
 			this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
-			this.journalVD.ajouter("vente de "+quantite+" T de "+choco+" pour un prix de "+montant+" !  merci à "+client);
+			this.journalVD.ajouter("vente de "+quantite+" T de "+choco+" pour un prix de "+montant+" !");
 		}
 		
 	}
 
 	@Override
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
+		this.pourcentageVenteDirecte = Math.min(0.75, this.pourcentageVenteDirecte*1.05); // A modifier pour plus de réalisme mais là on est les seuls distributeurs...
 		this.journalVD.ajouter("Plus de chocolat : "+choco+" en rayon");
 	}
 }
