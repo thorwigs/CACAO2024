@@ -28,15 +28,13 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurContratCadre implements IVendeurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
-	protected List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
+	
+
 	protected Journal journalVCC;
 	private HashMap<ExemplaireContratCadre, Double> prixPrecedent;
 
 	public Transformateur4VendeurContratCadre() {
 		super();
-		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
-		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.journalVCC = new Journal(this.getNom()+" journal CC vente", this);
 		this.prixPrecedent = new HashMap<ExemplaireContratCadre,Double>();
 	}
@@ -172,7 +170,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double prixPropose = 0.0;
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit())) + (1000*this.nbemployeCDI + 658)*0.1;
+			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
 		}
 		else {
 			prixPropose = contrat.getQuantiteTotale()*1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
@@ -196,7 +194,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		///////début//////modif 07/05 Pierrick
 		double coutProd = 0.0; //ce truc vaut la même chose que propositionPrix(contrat) mais sans la marge de x%
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			coutProd = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit())) + (1000*this.nbemployeCDI + 658)*0.1;
+			coutProd = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
 		}
 		else {
 			coutProd = qte*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
@@ -224,7 +222,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		else {
 			return pPropose;
 		}
-	}//négocie le prix en nous garantissant une marge minimale de 5% (on enregistre notre précédente proposition dans prixPrecedent)
+	}//négocie le prix en nous garantissant une marge minimale de 2% (on enregistre notre précédente proposition dans prixPrecedent)
 
 	
 	
@@ -314,9 +312,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		
-		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
+
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+				if (vend(choco)) {
+
 					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) || (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
@@ -342,12 +342,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}
 				}
+				}
 				
 				
 			//Pour les chocos de marque distributeur, codé par Eliott
 				
 				for(ChocolatDeMarque choco : this.chocolatDistributeur) {
-					
+				if (vend(choco)) {
 						
 					if ((stockChoco.get(choco.getChocolat()) - restantALivrer(choco)>=30000) || (stockChoco.get(choco.getChocolat()) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
@@ -358,6 +359,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						if (acheteurs.size()>0) {
 							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							
 							
 							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
 							
@@ -374,6 +376,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					} else {
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}	
+				}
 				}
 				
 				
