@@ -81,7 +81,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
 								if (this.BlackListVendeur.containsKey(vendeur)) {
-									this.BlackListVendeur.put(vendeur,this.BlackListVendeur.get(vendeur)+1);
+									this.BlackListVendeur.replace(vendeur,this.BlackListVendeur.get(vendeur)+1);
 								} else {
 									this.BlackListVendeur.put(vendeur, 1);
 								}
@@ -243,13 +243,13 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if (quantiteEnTonnes == 0) {
 			if (this.BlackListVendeur.containsKey(contrat.getVendeur())) {
-				this.BlackListVendeur.put(contrat.getVendeur(),this.BlackListVendeur.get(contrat.getVendeur())+5); // on fait monter le vendeur en blacklist si il ne livre pas
+				this.BlackListVendeur.replace(contrat.getVendeur(),this.BlackListVendeur.get((IVendeurContratCadre)contrat.getVendeur())+5); // on fait monter le vendeur en blacklist si il ne livre pas
 			} else {
 				this.BlackListVendeur.put(contrat.getVendeur(), 5);
 				}
 			}
 		journalCC.ajouter("Réception de : "+quantiteEnTonnes+", tonnes de : "+p+" provenant du contrat : "+contrat.getNumero());
-		stockFeves.put((Feve)p, new Variable("Eq5Stock "+p, this,stockFeves.get((Feve)p).getValeur()+quantiteEnTonnes));
+		stockFeves.get((Feve)p).ajouter(this, quantiteEnTonnes, this.cryptogramme);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
 }
