@@ -95,11 +95,16 @@ public class Producteur1Production extends Producteur1Plantation{
 	public void feveToEqui() {
 
 
-		int nb = this.get_Nombre_Ouvrier_Equitable_Forme()+this.get_Nombre_Ouvrier_Equitable_NonForme();
+		Integer nb = this.get_Nombre_Ouvrier_Equitable_Forme()+this.get_Nombre_Ouvrier_Equitable_NonForme();
 
-		int nbt = this.get_Nombre_Total();
+		Integer nbt = this.get_Nombre_Total()-this.get_Nombre_Enfant();
 
-		double pro = nb/nbt;
+		Double pro = (double) (nb/nbt);
+		System.out.println(nb/nbt);
+		System.out.println(pro);
+		System.out.println(nb);
+		
+		System.out.println(nbt);
 
 		double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
 		double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
@@ -166,151 +171,151 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 	}
 
-		/**
-		 * Gère le stockage des fèves de cacao de qualité moyenne.
-		 * Initie le transfert de stock en fonction de certaines conditions.
-		 */
-		public void Stockage_MQ() {
+	/**
+	 * Gère le stockage des fèves de cacao de qualité moyenne.
+	 * Initie le transfert de stock en fonction de certaines conditions.
+	 */
+	public void Stockage_MQ() {
 
-			if (this.Stock_MQ.size() >= this.degrMQ) {
-				boolean check = true;
-				int j = this.Stock_MQ.size()-this.degrMQ;
-				for (int i = j; i<this.Stock_MQ.size()-1 ;i++) {
-					if (this.Stock_MQ.get(i+1) <= this.Stock_MQ.get(i)) {
-						check = false;
-						break; // Exit the loop if any decrease in stock is found
-					}
-
-
+		if (this.Stock_MQ.size() >= this.degrMQ) {
+			boolean check = true;
+			int j = this.Stock_MQ.size()-this.degrMQ;
+			for (int i = j; i<this.Stock_MQ.size()-1 ;i++) {
+				if (this.Stock_MQ.get(i+1) <= this.Stock_MQ.get(i)) {
+					check = false;
+					break; // Exit the loop if any decrease in stock is found
 				}
-				if (check) {
 
 
-					double mq = this.Stock_MQ.get(j);
-					this.stock.get(Feve.F_MQ).retirer(this, mq);
-					this.stock.get(Feve.F_BQ).ajouter(this, mq);
+			}
+			if (check) {
 
 
-					this.journalStockage.ajouter("On a eu une degradation de stock de MQ vers BQ de la quantite suivante:"+this.Stock_MQ.get(j) );
+				double mq = this.Stock_MQ.get(j);
+				this.stock.get(Feve.F_MQ).retirer(this, mq);
+				this.stock.get(Feve.F_BQ).ajouter(this, mq);
+
+
+				this.journalStockage.ajouter("On a eu une degradation de stock de MQ vers BQ de la quantite suivante:"+this.Stock_MQ.get(j) );
 
 
 
 
-					this.Stock_MQ.remove(j);				
+				this.Stock_MQ.remove(j);				
+			}
+		}
+	}
+	/**
+	 * Gère le stockage des fèves de cacao de basse qualité.
+	 * Initie le transfert de stock en fonction de certaines conditions.
+	 */
+	public void Stockage_BQ() {
+		if (this.Stock_BQ.size() >= this.degrBQ) {
+			boolean check = true;
+			int j = this.Stock_BQ.size() - this.degrBQ;
+			for (int i = j; i < this.Stock_BQ.size()-1; i++) {
+				if (this.Stock_BQ.get(i+1) <= this.Stock_BQ.get(i)) {
+					check = false;
+					break; // Exit the loop if any decrease in stock is found
 				}
+			} 
+
+
+			if (check) {
+
+
+				double bqToRemove = this.Stock_BQ.get(j);
+				this.stock.get(Feve.F_BQ).retirer(this, bqToRemove);
+
+				this.journalStockage.ajouter("On a eu une degradation de stock de BQ de la quantite suivante:"+this.Stock_BQ.get(j) );
+				this.Stock_BQ.remove(j);
+
 			}
 		}
-		/**
-		 * Gère le stockage des fèves de cacao de basse qualité.
-		 * Initie le transfert de stock en fonction de certaines conditions.
-		 */
-		public void Stockage_BQ() {
-			if (this.Stock_BQ.size() >= this.degrBQ) {
-				boolean check = true;
-				int j = this.Stock_BQ.size() - this.degrBQ;
-				for (int i = j; i < this.Stock_BQ.size()-1; i++) {
-					if (this.Stock_BQ.get(i+1) <= this.Stock_BQ.get(i)) {
-						check = false;
-						break; // Exit the loop if any decrease in stock is found
-					}
-				} 
+	}
 
 
-				if (check) {
+	/**
+	 * Récupère une liste d'indicateurs pertinents pour le fonctionnement du producteur.
+	 * Inclut les informations sur le stock.
+	 * @return Une liste d'indicateurs.
+	 */
+	public List<Variable> getIndicateurs() {
+		List<Variable> res = super.getIndicateurs();
+		res.addAll(this.stock.values());		
+		return res;
+	}
+	/**
+	 * Passe à l'étape suivante de la simulation.
+	 * Exécute la production, la transformation et la gestion du stock.
+	 */
+	public void next() {
+		super.next();
+		this.feveToEqui();
+		this.feveToBio();
 
+		this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_BQ).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_MQ).getValeur()+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_MQ_E).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_HQ).getValeur()+ "en stock pour la gamme HQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_HQ_E).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_HQ_BE).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
+		double totalStock = 0;
+		for (Feve f : Feve.values()) {
+			this.stock.get(f).ajouter(this,this.getProd().get(f) );
 
-					double bqToRemove = this.Stock_BQ.get(j);
-					this.stock.get(Feve.F_BQ).retirer(this, bqToRemove);
-
-					this.journalStockage.ajouter("On a eu une degradation de stock de BQ de la quantite suivante:"+this.Stock_BQ.get(j) );
-					this.Stock_BQ.remove(j);
-
-				}
-			}
+			totalStock += this.stock.get(f).getValeur();
 		}
-
-
-		/**
-		 * Récupère une liste d'indicateurs pertinents pour le fonctionnement du producteur.
-		 * Inclut les informations sur le stock.
-		 * @return Une liste d'indicateurs.
-		 */
-		public List<Variable> getIndicateurs() {
-			List<Variable> res = super.getIndicateurs();
-			res.addAll(this.stock.values());		
-			return res;
-		}
-		/**
-		 * Passe à l'étape suivante de la simulation.
-		 * Exécute la production, la transformation et la gestion du stock.
-		 */
-		public void next() {
-			super.next();
-			this.feveToEqui();
-			this.feveToBio();
-
-			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_BQ).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
-			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_MQ).getValeur()+ "en stock pour la gamme MQ en  :"+ Filiere.LA_FILIERE.getEtape());
-			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_MQ_E).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
-			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_HQ).getValeur()+ "en stock pour la gamme HQ en  :"+ Filiere.LA_FILIERE.getEtape());
-			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_HQ_E).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
-			this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_HQ_BE).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
-			double totalStock = 0;
-			for (Feve f : Feve.values()) {
-				this.stock.get(f).ajouter(this,this.getProd().get(f) );
-
-				totalStock += this.stock.get(f).getValeur();
-			}
-			this.journalStockage.ajouter("Stock= "+ totalStock);
-			double coutame = this.AmeliorationStockage() ? 2 : 0;
-			/*
-			 * Le cout de stockage par ton augmentera de 2 PM si on a decide d'ameliorer le stock
-			 * 
-			 */
-			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*(this.getCoutStockage()+0*coutame));
-			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme,"Cout Prod",this.CoutsProd());
-			this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));//+this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme));
-			this.Stock_MQ.add(this.getQuantiteEnStock(Feve.F_MQ, cryptogramme));//+this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme));
-			this.Stock_BQ.add(this.getQuantiteEnStock(Feve.F_BQ, cryptogramme));
-			this.Stockage_HQ();
-
-			this.Stockage_MQ();
-
-			this.Stockage_BQ();
-
-			if (this.AmeliorationStockage() || this.degrHQ > 4 || this.degrMQ > 8 || this.degrBQ > 12) {
-				this.degrHQ += 0;
-				this.degrMQ += 0;
-				this.degrBQ += 0;
-			}
-
-			//System.out.println(this.Stock_MQ);
-
-
-		}
-		public List<Journal> getJournaux() {
-			List<Journal> res = super.getJournaux();
-			res.add(journalProduction);
-			res.add(journalStockage);
-			return res;
-
-		}
+		this.journalStockage.ajouter("Stock= "+ totalStock);
+		double coutame = this.AmeliorationStockage() ? 2 : 0;
 		/*
-		 * Une fonction qui ajoute l'option d'ameliorer les condtions de stockage pour 
-		 * que les feves ne pourraient pas aussi rapidement
-		 * On traveillera sous la condition que si le stock depasse une quantite on aimera le reserver mieux
+		 * Le cout de stockage par ton augmentera de 2 PM si on a decide d'ameliorer le stock
+		 * 
 		 */
-		public boolean AmeliorationStockage() {
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*(this.getCoutStockage()+0*coutame));
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme,"Cout Prod",this.CoutsProd());
+		this.Stock_HQ.add(this.getQuantiteEnStock(Feve.F_HQ, cryptogramme));//+this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme));
+		this.Stock_MQ.add(this.getQuantiteEnStock(Feve.F_MQ, cryptogramme));//+this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme));
+		this.Stock_BQ.add(this.getQuantiteEnStock(Feve.F_BQ, cryptogramme));
+		this.Stockage_HQ();
 
-			double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
-			double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
-			double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
-			boolean ame = stockHQ > 50 && stockMQ > 50 && stockBQ > 100;
-			this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
-			return ame;
+		this.Stockage_MQ();
+
+		this.Stockage_BQ();
+
+		if (this.AmeliorationStockage() || this.degrHQ > 4 || this.degrMQ > 8 || this.degrBQ > 12) {
+			this.degrHQ += 0;
+			this.degrMQ += 0;
+			this.degrBQ += 0;
 		}
 
-
+		//System.out.println(this.Stock_MQ);
 
 
 	}
+	public List<Journal> getJournaux() {
+		List<Journal> res = super.getJournaux();
+		res.add(journalProduction);
+		res.add(journalStockage);
+		return res;
+
+	}
+	/*
+	 * Une fonction qui ajoute l'option d'ameliorer les condtions de stockage pour 
+	 * que les feves ne pourraient pas aussi rapidement
+	 * On traveillera sous la condition que si le stock depasse une quantite on aimera le reserver mieux
+	 */
+	public boolean AmeliorationStockage() {
+
+		double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
+		double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
+		double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
+		boolean ame = stockHQ > 50 && stockMQ > 50 && stockBQ > 100;
+		this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
+		return ame;
+	}
+
+
+
+
+}
