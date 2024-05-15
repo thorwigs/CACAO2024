@@ -65,7 +65,7 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		}
 		ChocolatDeMarque cm = (ChocolatDeMarque)p;
 		
-		if (stockChocoMarque.keySet().contains(cm)) { //Nous ne vendons que nos sur-stocks en faisant attention a ne pas vendre ce que nous devons fournir en CC
+		if ((stockChocoMarque.keySet().contains(cm))  && (stockChocoMarque.get(cm) > restantALivrer(cm)+ 20000)){ //Nous ne vendons que nos sur-stocks en faisant attention a ne pas vendre ce que nous devons fournir en CC
 			if (prixAO.get(cm).size()==0) {
 				BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 				double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
