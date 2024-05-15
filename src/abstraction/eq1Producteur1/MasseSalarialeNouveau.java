@@ -340,36 +340,37 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 
 	}
 	public void amelioration() {
+		if (this.croissanceParStep.size() > 5) {
+			int etape = Filiere.LA_FILIERE.getEtape();
+			int annee = Filiere.LA_FILIERE.getAnnee(etape);
 
-		int etape = Filiere.LA_FILIERE.getEtape();
-		int annee = Filiere.LA_FILIERE.getAnnee(etape);
+			int enfants = this.get_Nombre_Enfant();
+			int size = this.croissanceParStep.size();
+			boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 
-		int enfants = this.get_Nombre_Enfant();
-		int size = this.croissanceParStep.size();
-		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
-
-		if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
-
-
-			this.removeEmploye(0,10);//remove 10 enfants
+			if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
 
 
+				this.removeEmploye(0,10);//remove 10 enfants
 
-			if (this.salaire.get(1) < 2.5 ) { 
-				this.salaire.set(1, this.salaire.get(1)*1.08);
-				this.salaire.set(2, this.salaire.get(2)*1.08);
-				this.salaire.set(3, this.salaire.get(3)*1.08);
-				this.salaire.set(4, this.salaire.get(4)*1.08);
+
+
+				if (this.salaire.get(1) < 2.5 ) { 
+					this.salaire.set(1, this.salaire.get(1)*1.08);
+					this.salaire.set(2, this.salaire.get(2)*1.08);
+					this.salaire.set(3, this.salaire.get(3)*1.08);
+					this.salaire.set(4, this.salaire.get(4)*1.08);
+
+
+				}
+
+				if (this.salaire.get(0) < 2 ) { 
+					this.salaire.set(0, this.salaire.get(0)*1.05);
+
+				}
 
 
 			}
-
-			if (this.salaire.get(0) < 2 ) { 
-				this.salaire.set(0, this.salaire.get(0)*1.05);
-
-			}
-
-
 		}
 	}
 
