@@ -8,7 +8,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-
+ 
 //Toutes les variables de poids de cacao sont en TONNES 
 
 /** Classe permettant de gérer les plantations
