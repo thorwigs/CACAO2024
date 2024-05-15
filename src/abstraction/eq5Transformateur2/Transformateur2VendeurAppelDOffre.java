@@ -99,9 +99,9 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		if (prixAO.get(cm).size()==0) {
 			Gamme gamme = cm.getGamme();
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double prix = bourse.getCours(Feve.F_MQ).getMax()*5.5;
+			double prix = bourse.getCours(Feve.F_MQ).getMax()*3.5;
 			if (gamme == Gamme.BQ) {
-				prix = bourse.getCours(Feve.F_BQ).getMax()*4.5;
+				prix = bourse.getCours(Feve.F_BQ).getMax()*3.0;
 			}
 			return new OffreVente(offre, this, cm, prix);
 		} 
