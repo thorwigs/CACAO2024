@@ -101,7 +101,6 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
         masseSalariale.put(ouvrierNonEquitableNonForme, this.nb_normal);
 		
         //remplissage de la liste anciennete
-        
         for (int i = 0; i < 5; i++) {
             // Créer une nouvelle liste d'entiers pour chaque élément de la liste principale
             ArrayList<Integer> innerList = new ArrayList<>();
@@ -114,7 +113,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
             // Ajouter la liste interne à la liste principale
             anciennete.add(innerList);
         }
-
+        /**@author Haythem*/
         //mettre a jour l'anciennete initiale avec les nombres d'ouvriers appropriés
         this.anciennete.get(0).set(0, this.nb_enfants);
         this.anciennete.get(2).set(0, this.nb_equitable);
@@ -144,7 +143,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
     
  
     
-    /**@author Haythem*/
+   
     public void addQuantiteOuvrier(Ouvrier ouvrier, int quantite) {
         // Récupère la quantité actuelle ou initialise à 0 si l'ouvrier n'existe pas
         Integer current = masseSalariale.getOrDefault(ouvrier, 0);
