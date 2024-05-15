@@ -26,6 +26,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	protected String[] marques;
 	protected Journal journalVente;
 	protected int nombreEmploye;
+	protected HashMap<String,Double> Fidele;
 
 	
 	/**
@@ -37,6 +38,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
 		this.marques = new String[chocolats.size()];
 		this.journalVente= new Journal (this.getNom() + " journal des ventes", this);
+		this.Fidele = new HashMap<String,Double>();
 	}
 	
 	
@@ -49,6 +51,10 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			this.setPrix(choco);
 		}
 		this.setNombreEmploye();
+		this.Fidele.put("EQ4", 0.0);
+		this.Fidele.put("EQ5", 0.0);
+		this.Fidele.put("EQ6", 0.0);
+		this.Fidele.put("EQ7", 0.0);
 	}
 
 	/**
@@ -243,6 +249,13 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		double stockage = 120 * this.totalStockChoco.getValeur(cryptogramme);
 		double salaire = 1350 * this.getNombreEmploye();
 		return stockage + salaire;
+	}
+	
+	public boolean estPlusFideleQue(String equipeA,String equipeB) {
+		if (Fidele.get(equipeA)>Fidele.get(equipeB)) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
