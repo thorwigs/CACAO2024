@@ -16,21 +16,18 @@ import abstraction.eqXRomu.produits.Gamme;
 public abstract class Producteur2VendeurBourse extends Producteur2_Plantation implements IVendeurBourse {
 	
 	private Journal journalBourse;
-	protected double quantiteVendue;
-	protected double etapeBourse;
-	
 	
 	public Producteur2VendeurBourse() {
 		super();
-		this.etapeBourse = 0;
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
+	
 	}
 
 	/** Propose une offre à la bourse
 	 * @author Maxime
 	 */
 	public double offre(Feve f, double cours) {
-		if (f.getGamme()== Gamme.MQ) {
+		if (f.getGamme()==Gamme.MQ) {
 			double offre = this.stock.get(f)*(Math.min(cours, 5000)/5000.0);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+offre+" T de "+f);
 			return offre;
@@ -43,35 +40,14 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 			return 0.0;
 		}
 	}
-	
-	public double getQuantiteVendue() {
-		return this.quantiteVendue;
-	}
-	
-	public void setQuantiteVendue(double n) {
-		this.quantiteVendue = n;
-	}
-	
-	public double getNbTonnesVenduesBourse() {
-		double nb = this.getQuantiteVendue();
-		
-		if (Filiere.LA_FILIERE.getEtape() != this.etapeBourse) {
-			// On remet à 0 la quantité vendue à chaque tour (on souhaite suivre la vente par tour)
-			this.setQuantiteVendue(0);
-			this.etapeBourse = Filiere.LA_FILIERE.getEtape();
-		}
-		return nb;
-	}
-	
 
 	/** Indique dans le journal qu'une vente a eu lieu et retire les quantités voulues du stock
 	 * @author Maxime
 	 */
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		double retire = Math.min(this.stock.get(f), quantiteEnT);
+		double retire = Math.min(this.stock.get(f), quantiteEnT);;
 		this.stock_a_vendre(f, stock.get(f)-retire);
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f));
-		this.setQuantiteVendue(this.getQuantiteVendue() + quantiteEnT);
 		return retire;
 	}
 
@@ -82,11 +58,9 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je suis blackliste pour une duree de "+dureeEnStep+" etapes");
 	}
 	
-	
 	/** Ajoute le journal Bourse à la liste des autres journaux 
 	 * @author Maxime
 	 */
-	
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
 		jx.add(journalBourse);
