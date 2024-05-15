@@ -341,10 +341,10 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public double getHectaresPlantes(IProduit p, int cryptogramme) {
 		if(this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter le nombre d'hectares
 			double somme = 0;
-			for(Feve e : this.getPlantation().keySet()) {
-				if(e == p) {
-					for(Integer annee : this.getPlantation().get(e).keySet()) {
-						somme += this.getPlantation().get(e).get(annee);
+			for(Feve f : this.getPlantation().keySet()) {
+				if(f == p) {
+					for(Integer annee : this.getPlantation().get(f).keySet()) {
+						somme += this.getPlantation().get(f).get(annee);
 					}
 				}
 			}
@@ -352,6 +352,24 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre nombre d'hectares par produit
 		}	
+	}
+	
+	/** Retourne la quantité totale d'hectares plantés
+	 * @param cryptogramme
+	 * @author Quentin
+	 */
+	public double getHectaresTotal(int cryptogramme) {
+		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter le nombre d'hectares total
+			double somme = 0;
+			for(Feve f : this.getPlantation().keySet()) {
+				for(Integer annee : this.getPlantation().get(f).keySet()) {
+					somme += this.getPlantation().get(f).get(annee);
+				}
+			}
+			return somme;
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre le nombre d'hectares total
+		}
 	}
 	
 	/** Ajoute les nouvelles informations sur les plantations au journal des plantations
