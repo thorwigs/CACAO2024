@@ -61,9 +61,9 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	
 	public void next() {
 		super.next();
-		this.journalCC.ajouter("==ACHETEUR=======STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC.ajouter(Color.BLUE, Color.WHITE,"==ACHETEUR=======STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if ((this.stockFeves.get(f).getValeur()<5000) & (f.getGamme()!=Gamme.HQ)) { // Modifier quantité minimale avant achat
+					if ((this.stockFeves.get(f).getValeur()<STOCKINITIAL) & (f.getGamme()!=Gamme.HQ)) { // Modifier quantité minimale avant achat
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
 						double parStep = 27500; // Changer quantité par Step
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep);
@@ -90,7 +90,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 							} else {
 								this.contratsEnCours.add(contrat);
 								this.EtapenegoAchat=0;
-								journalCC.ajouter(Color.MAGENTA, vendeur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+								journalCC.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 							}
 						} else {
 							journalCC.ajouter("   pas de vendeur");
@@ -233,7 +233,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	 * @author Robin, Vincent
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
+		journalCC.ajouter(Color.ORANGE,Color.BLACK,"Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
 
