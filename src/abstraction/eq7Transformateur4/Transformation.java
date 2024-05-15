@@ -18,7 +18,6 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 
 	protected Journal journalTransfo ;
 	protected List<Double> lescouts; //liste qui contiendra certains des couts à faire pour un step, initialiser à une liste vide à chaque début de l'appel next
-	protected List<Double> lesqtproduite; //liste qui contiendra toutes nos qtés de chocolats produits pour ce step
 	
 
 	public Transformation() {
@@ -33,8 +32,8 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 		this.journalTransfo.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "==================");
 		HashMap<ChocolatDeMarque, Double> chocoalivrer = new HashMap<ChocolatDeMarque,Double>(); //critère pour la transformation
 		this.lescouts = new LinkedList<Double>();//on initialise avec une liste vide (supprime les données du step precedent)
-		this.lesqtproduite = new LinkedList<Double>(); //on la reset à 0, permettra de savoir combien on a dépensé pour fabriquer une tonne d'un chocolat
 		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>(); //on la reset à 0, permettra de savoir combien on a dépensé pour fabriquer une tonne d'un chocolat
+		this.production_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();//on la reset à 0, permettre de savoir combien on a produit d'un chocolat ce step
 		double peutproduireemploye = this.tauxproductionemploye*this.nbemployeCDI; //ce qu'on peut produire avec nos employés (en terme de conversion de fève)
 		double peutencoreproduire = peutproduireemploye; //ce qu'on peut encore produire ce step, au départ c'est tout ce que nos employé peuvent faire
 		
@@ -47,9 +46,10 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 				if (contrat.getProduit().equals(c)) {
 					alivrer = alivrer + contrat.getQuantiteALivrerAuStep();
 				}
+			}
 			chocoalivrer.put(c, alivrer);
 			this.coutproduction_tonne_marque_step.put(c, 0.0);//pas oublier l'initialisation de cette Hashmap
-			}
+			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
 		
 		//Pour les chocos de marque distributeurs///////////////////////////////////////////////////////
@@ -62,6 +62,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			}
 			chocoalivrer.put(c, alivrer);
 			this.coutproduction_tonne_marque_step.put(c, 0.0); //initialisation de la hashmap
+			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
 		//remarquons que chocoalivrer contient en clés tout les chocolat de chocolatCocOasis et de chocolatDistributeur
 		
@@ -137,7 +138,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			double payeradjuvant = this.coutadjuvant*(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())-1)*qtutile1; //formule tenant compte du pourcentage d'adjuvant
 			this.lescouts.add(payermachine);
 			this.lescouts.add(payeradjuvant);
-			this.lesqtproduite.add(qtechocoproduit);
+			this.production_tonne_marque_step.replace(c, this.production_tonne_marque_step.get(c)+qtechocoproduit);
 			this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
 			//on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 			//on va tenir compte des cout fixe après à la fin des boucle for
@@ -215,7 +216,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			double payeradjuvant = this.coutadjuvant*(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())-1)*qtutile1; //formule tenant compte du pourcentage d'adjuvant
 			this.lescouts.add(payermachine);
 			this.lescouts.add(payeradjuvant);
-			this.lesqtproduite.add(qtechocoproduit);
+			this.production_tonne_marque_step.replace(c, this.production_tonne_marque_step.get(c)+qtechocoproduit);
 			this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
 			//on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 			//on va tenir compte des cout fixe après à la fin des boucle for
@@ -223,23 +224,17 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 		
 		//////////là on paye//////////
 		double qtetotaleproduite = 0.0;
-		for (double k : lesqtproduite) {
-			qtetotaleproduite = qtetotaleproduite + k;
+		for (ChocolatDeMarque c : this.production_tonne_marque_step.keySet()) {
+			qtetotaleproduite = qtetotaleproduite + this.production_tonne_marque_step.get(c);
 		}
 		double a_payer = 1000*this.nbemployeCDI + 658; //cout des employes et cout fixe des machines par step 
 		double cout_fixe_par_tonne = 0.0; //cout fixe d'1 tonne indépendamment de la qualité de la tonne
 		if (qtetotaleproduite != 0) {
 			cout_fixe_par_tonne = a_payer/qtetotaleproduite;
 		}
-		for (ChocolatDeMarque c : chocolatCocOasis) {
-			if (c.getChocolat().isBio() && c.getChocolat().isEquitable()) {
-				this.coutproduction_tonne_marque_step.replace(c, this.coutproduction_tonne_marque_step.get(c) + cout_fixe_par_tonne);
-			} else {
-				//il s'agit du deuxième choco de marque
-				this.coutproduction_tonne_marque_step.replace(c, this.coutproduction_tonne_marque_step.get(c) + cout_fixe_par_tonne);
-			}
+		for (ChocolatDeMarque c : this.coutproduction_tonne_marque_step.keySet()) {
+			this.coutproduction_tonne_marque_step.replace(c, this.coutproduction_tonne_marque_step.get(c) + cout_fixe_par_tonne);
 		}
-		
 
 		for (double i : lescouts) {
 			a_payer = a_payer + i;
@@ -253,11 +248,18 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			this.journalTransfo.ajouter("stock de fève" + f+ "après ce step est "+ this.stockFeves.get(f));
 		}
 		
+		for (ChocolatDeMarque c : this.coutproduction_tonne_marque_step.keySet()) {
+			this.journalTransfo.ajouter("Quantite produite de " + c + " à ce step : "+ this.production_tonne_marque_step.get(c));
+		}
 		
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
-		this.journalTransfo.ajouter("stock totale est de " + this.totalStocksChocoMarque.getValeur(cryptogramme));
+		
+		for (ChocolatDeMarque c : chocolatDistributeur) {
+			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChoco.get(c.getChocolat()));
+		}
+		
 
 
 	}

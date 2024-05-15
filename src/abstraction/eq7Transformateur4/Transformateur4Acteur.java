@@ -51,8 +51,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected double coutouvrier ; //la valeur a payé chaque step pour 1 employé
 	protected int nbemployeCDI ; //le nombre d'employé qu'on possède, pour l'instant on bosse qu'avec des CDI et ce nombre est fixe
 	protected double tauxproductionemploye ; //le taux qui permet de savoir ce qu'on peut produire avec nos employés
-	protected HashMap<ChocolatDeMarque, Double> coutproduction_tonne_marque_step ; //représente le cout de prod pour 1 tonne de choco_marque pour 1 step, sera réinitialiser à chaque fois dans transformation
-	protected HashMap<Chocolat, Double> coutproduction_tonne_step ; //idem pour les chocos qui n'ont pas de marque
+	protected HashMap<ChocolatDeMarque, Double> coutproduction_tonne_marque_step ;//représente le cout de prod pour 1 tonne de choco_marque pour 1 step, sera réinitialisé à chaque fois dans transformation
+	protected HashMap<ChocolatDeMarque,Double> production_tonne_marque_step ;//représente la quantite produite d'un chocolat à ce step, sera réinitialisé dans transformation
 
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -69,8 +69,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.nbemployeCDI = 4534; //cela nous permet de faire 17000t de chocolat par step
 		this.tauxproductionemploye = 3.75;
 		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
-		this.coutproduction_tonne_step = new HashMap<Chocolat,Double>();
-		
+		this.production_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
 	}
 	
 	//initialisation feves + pourcentage trasnfo : Pierrick, initialisation chocolat : ELiott
@@ -119,8 +118,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 100000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 100000.0, cryptogramme);
+			this.stockChocoMarque.put(c, 45000.0); //le premier element de stockchocomarque correspond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 45000.0, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
 		
@@ -152,7 +151,6 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 
 		
 		
-		// à modifier pour la V2
 
 	}
 	

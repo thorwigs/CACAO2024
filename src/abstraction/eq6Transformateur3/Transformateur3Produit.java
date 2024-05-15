@@ -26,6 +26,23 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 			return Chocolat.C_HQ_BE ;
 	}
 	
+	public Feve Correspond(Chocolat c) {
+		
+		switch(  c ) {
+		
+		case C_HQ_BE : return Feve.F_HQ_BE;
+		case C_HQ_E : return Feve.F_HQ_E ; 
+		case C_HQ : return Feve.F_HQ ;
+		case C_MQ_E : return Feve.F_MQ_E ;
+		case C_MQ : return Feve.F_MQ ;
+		case C_BQ : return Feve.F_BQ ;
+		
+		default : break;
+	}
+		return Feve.F_HQ_BE ;
+		
+	}
+	
 	/**
 	 * @author Mahel
 	 */

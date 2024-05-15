@@ -7,10 +7,13 @@ package abstraction.eq7Transformateur4;
 
 
 
+
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
@@ -28,10 +31,12 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 
 	protected Journal journalVCC;
+	private HashMap<ExemplaireContratCadre, Double> prixPrecedent;
 
 	public Transformateur4VendeurContratCadre() {
 		super();
 		this.journalVCC = new Journal(this.getNom()+" journal CC vente", this);
+		this.prixPrecedent = new HashMap<ExemplaireContratCadre,Double>();
 	}
 	
 	//////////////je me permet de rajouter ça sinon on initialise pas supCC
@@ -59,6 +64,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
 	}
 
+	
+	
+	
+	
 	//Négociations
 	
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
@@ -105,17 +114,120 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				}
 			}
 		}
-		
 	}
 
+	public double getPrixFèves(IProduit p) {
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		ChocolatDeMarque p2 = (ChocolatDeMarque)p ;
+		Feve feve_utilise = Feve.F_HQ_BE; 
+		double prix_F = 0.0 ;
+		
+		if (p2.getChocolat() == Chocolat.C_HQ_BE || p2.getChocolat() == Chocolat.C_HQ_E) { 
+			if (p2.getChocolat() == Chocolat.C_HQ_BE) {
+				feve_utilise = Feve.F_HQ_BE;  
+			}
+			if (p2.getChocolat() == Chocolat.C_HQ_E) {
+				feve_utilise = Feve.F_HQ_E;
+			}
+			
+			double prixtot = 0.0;
+			double qtetot = 0.0;
+			for (ExemplaireContratCadre c : this.contratsEnCours) { //on base le prix des fèves sur la moyenne pondérale des prix de contrat cadre par lesquels on les achète
+				if (c.getProduit().equals(feve_utilise)) {
+					prixtot += c.getPrix();
+					qtetot += c.getQuantiteTotale();
+				}
+			}
+			if (qtetot == 0.0) { //si on a pas de contrat cadre (au début) pour les fèves, on se base sur le cours de la bourse pour des F_HQ
+				prix_F = bourse.getCours(Feve.F_HQ).getValeur();
+			}
+			else {
+				prix_F = prixtot/qtetot;
+			}
+			
+		}
+		
+		else {
+			if (p2.getChocolat() == Chocolat.C_HQ) {
+				feve_utilise = Feve.F_HQ;
+			}
+			if (p2.getChocolat() == Chocolat.C_MQ_E) {
+				feve_utilise = Feve.F_MQ_E;
+			}
+			if (p2.getChocolat() == Chocolat.C_MQ) {
+				feve_utilise = Feve.F_MQ;
+			}
+			if (p2.getChocolat() == Chocolat.C_BQ) {
+				feve_utilise = Feve.F_BQ;
+			}
+			prix_F = bourse.getCours(feve_utilise).getValeur(); //on base le prix des fèves sur le cours de la bourse par laquel on les achète
+		}
+		
+		double prix = prix_F/this.pourcentageTransfo.get(feve_utilise).get(p2.getChocolat());
+		return prix;
+	}
+	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		return contrat.getQuantiteTotale()*5500;
-	}//à modifier selon variation du nb d'employer
-
+		double prixPropose = 0.0;
+		if (coutproduction_tonne_marque_step.isEmpty()){
+			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
+		}
+		else {
+			prixPropose = contrat.getQuantiteTotale()*1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+		}
+		prixPrecedent.put(contrat, prixPropose);
+		return prixPropose;
+	}//prend compte des coûts de production en ajoutant une marge de 10%
+	
+	
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
-	}//à modifier selon notre prix minimal accepté
+		double pPropose = contrat.getPrix();
+		double pPrecedent = 0.0;
+		if (prixPrecedent.get(contrat)==null) {
+			pPrecedent = propositionPrix(contrat);
+		}
+		else {
+			pPrecedent = prixPrecedent.get(contrat);
+		}
+		double qte = contrat.getQuantiteTotale();
+		
+		///////début//////modif 07/05 Pierrick
+		double coutProd = 0.0; //ce truc vaut la même chose que propositionPrix(contrat) mais sans la marge de x%
+		if (coutproduction_tonne_marque_step.isEmpty()){
+			coutProd = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit())) + (1000*this.nbemployeCDI + 658)*0.1;
+		}
+		else {
+			coutProd = qte*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+		}
+		//////fin/////////
+		
+		if (pPropose <  pPrecedent) {
+			if ((pPropose+pPrecedent)/2 >= coutProd*1.02){
+				prixPrecedent.put(contrat, (pPropose+pPrecedent)/2);
+				return (pPropose+pPrecedent)/2;
+			}
+			if ((pPropose+2*pPrecedent)/3 >= coutProd*1.02){
+				prixPrecedent.put(contrat, (pPropose+2*pPrecedent)/3);
+				return (pPropose+2*pPrecedent)/3;
+			}
+			if ((pPropose+3*pPrecedent)/4 >= coutProd*1.02){
+				prixPrecedent.put(contrat, (pPropose+3*pPrecedent)/4);
+				return (pPropose+3*pPrecedent)/4;
+			}
+			else {
+				prixPrecedent.put(contrat, coutProd*1.02);
+				return coutProd*1.02;
+			}
+		}
+		else {
+			return pPropose;
+		}
+	}//négocie le prix en nous garantissant une marge minimale de 5% (on enregistre notre précédente proposition dans prixPrecedent)
 
+	
+	
+	
+	
 	//Après finalisation contrat 
 	
 	public double livrer(IProduit p, double quantite, ExemplaireContratCadre contrat) {
@@ -154,15 +266,6 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				return stockDistrib;
 			}
 		}
-		
-		
-		
-		
-		
-		
-	
-		
-		
 	}//s'inspirer de AcheteurCC
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
@@ -174,6 +277,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 			super.notificationNouveauContratCadre(contrat);
 		}
 	}
+
+	
+	
+	
 	
 	//Honorer le contrat
 	
@@ -194,7 +301,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		}
 		return res;
 	}
-		
+
+	
+	
+	
+	
 	//Next
 		
 	public void next() { 
