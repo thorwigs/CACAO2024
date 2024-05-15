@@ -25,6 +25,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 	private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
 	private SuperviseurVentesAO supAO;
 	protected Journal journalAO;
+	protected HashMap<Integer,OffreVente> choix;
 	
 	/**
 	 * @author Clement E.
@@ -44,6 +45,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		for (ChocolatDeMarque cm : this.stock_Choco.keySet()) {
 			this.prixRetenus.put(cm, new LinkedList<Double>());
 		}
+		this.choix = new HashMap<Integer,OffreVente>(); 
 	}
 
 	/**
@@ -63,19 +65,39 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			return null;
 		}
 		int choisi=-1; // permet de connaître la proposition choisi à la fin, la moins chere, ou renverra -1 si pas d'offre correspondante
-		int parcourir=0; //permet de parcourir la liste des propositions pour trouver la bonne
+/*		int parcourir=0; //permet de parcourir la liste des propositions pour trouver la bonne
 		while(choisi==-1 && parcourir<propositions.size()) {
 			if (propositions.get(0).getOffre().getProduit().equals(propositions.get(parcourir).getProduit())!=true) {
 				parcourir++;
 			}
 			else {
 				choisi=parcourir;
+			}  
+		} */
+		
+		for (int i=0; i<propositions.size();i++) {
+			if(propositions.get(0).getOffre().getProduit().equals(propositions.get(i).getProduit())) {
+				this.choix.put(i,propositions.get(i));
 			}
 		}
-		if (choisi==-1) {
+		
+		if (this.choix.size()==0) {
 			journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN,"   refus de l'AO : produit pas correspondant à la demande");
 			return null;
+		} else if (this.choix.size() == 1){
+			choisi=0;
+		} else if (this.choix.size()>1) {
+			double prix = propositions.get(0).getPrixT()*this.Coefficient.get(propositions.get(0).getVendeur().getNom());
+			int choix = 0;
+			for (int i=1; i<propositions.size();i++) {
+				if (propositions.get(i).getPrixT()*this.Coefficient.get(propositions.get(i).getVendeur().getNom())<prix) {
+					choix = i;
+					prix = propositions.get(i).getPrixT();
+				}
+			}
 		}
+		
+		
 		if ((solde<propositions.get(choisi).getPrixT()*propositions.get(choisi).getQuantiteT()))
 				 {
 			journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN,"   refus de l'AO : pas assez d'argent sur le compte");
