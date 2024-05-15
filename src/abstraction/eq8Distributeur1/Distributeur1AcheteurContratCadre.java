@@ -157,6 +157,29 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	//			&& !this.chocoBan.contains(produit)
 				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a );   
 	}
+	
+	public int coeffQualite(ChocolatDeMarque choc) {
+		int coeff = 1;
+		if (choc.toString().contains("C_BQ")) {
+			coeff = 20;
+		}
+		else if (choc.toString().contains("C_MQ")) {
+			coeff = 10;
+		}
+		else if (choc.toString().contains("C_MQ_E")) {
+			coeff = 5;
+		}
+		else if (choc.toString().contains("C_HQ")) {
+			coeff = 5;
+		}
+		else if (choc.toString().contains("C_HQ_E")) {
+			coeff = 2;
+		}
+		else if (choc.toString().contains("C_HQ_BE")) {
+			coeff = 1;
+		}
+		return coeff;
+	}
 
 	/**
 	 *@author ianis
@@ -176,6 +199,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		int b = 24 ;
 		double c = this.prevision(contrat.getProduit(), b) ;	
 		double d = 0 ; 
+		int coeff = coeffQualite((ChocolatDeMarque)(contrat.getProduit()));
 		for (int i=0; i<contrat_en_cours.size(); i++) {
 			if (contrat_en_cours.get(i).getProduit().equals(contrat.getProduit())) {
 				d = d + contrat_en_cours.get(i).getQuantiteRestantALivrer();
@@ -187,34 +211,34 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			
 			if (contrat.getProduit().toString().contains("C_BQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
-				&& contrat.getQuantiteTotale() > c-d-e+100) {
+				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 			} 
 			if (contrat.getProduit().toString().contains("C_MQ_E")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
-				&& contrat.getQuantiteTotale() > c-d-e+100) {
+				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				}
 			if ( contrat.getProduit().toString().contains("C_MQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
-				&& contrat.getQuantiteTotale() > c-d-e+100)  {
+				&& contrat.getQuantiteTotale() > c-d-e+100*coeff)  {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_BE")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
-				&& contrat.getQuantiteTotale() > c-d-e+100) {
+				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_E")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
-				&& contrat.getQuantiteTotale() > c-d-e+100) {
+				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ")
 				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
-				&& contrat.getQuantiteTotale() > c-d-e+100) {
+				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				} 			
 		} else {
 			b = 24;
-			if (contrat.getQuantiteTotale() > c-d-e+100) {
-			    x = new Echeancier (a,b,f+100*(1+contrat.getListePrix().size()));
+			if (contrat.getQuantiteTotale() > c-d-e+100*coeff) {
+			    x = new Echeancier (a,b,f+100*coeff*(1+contrat.getListePrix().size()));
 			} else if (f-100*(1+contrat.getListePrix().size())>0){
-			    x = new Echeancier (a,b,f-100*(1+contrat.getListePrix().size()));
+			    x = new Echeancier (a,b,f-100*coeff*(1+contrat.getListePrix().size()));
 			} else {
 			    x = new Echeancier (a,b,f);
 			}
