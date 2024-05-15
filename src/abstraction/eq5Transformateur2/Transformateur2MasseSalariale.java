@@ -73,11 +73,13 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 * @Vincent
 	 * @param
 	 * @return le nombre de tonne transformées pour une fève f + met à jour les stocks
+	 * Voir pour modif le choix de la qtté transfo (en fcontion des qtté deja en stock
 	 */
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.capaciteTransformation*this.NbSalaries); //Quantite maximale a transformer
 		double tonnesTransformees =0.6*tMaxTransformees; //On transforme 60% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
+
 		if (this.stockFeves.containsKey((Feve)f)){
 			this.stockFeves.get((Feve)f).retirer(this, tonnesTransformees, this.cryptogramme); //Maj stock de feves 
 		}
