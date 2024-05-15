@@ -1,5 +1,7 @@
 package abstraction.eq1Producteur1;
 
+import abstraction.eqXRomu.filiere.Filiere;
+
 public class Producteur1 extends Producteur1VendeurAuxEncheres {
 	
 	public Producteur1() {
@@ -7,5 +9,6 @@ public class Producteur1 extends Producteur1VendeurAuxEncheres {
 	}
 	public void Next() {
 		super.next();
+		
 	}
 }
