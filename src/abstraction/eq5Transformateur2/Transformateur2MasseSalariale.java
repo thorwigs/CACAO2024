@@ -100,8 +100,6 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 * @Erwann
 	 */
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
-		System.out.println(tonnes*coutMachines);
-		System.out.println(tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants);
 		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
 	/**
