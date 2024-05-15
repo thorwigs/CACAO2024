@@ -112,7 +112,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////
-	// Notifs de si oui ou non la proposition est retenue  + Mise à jour JournalAO //	
+	// Notifs de si oui ou non la proposition est retenue  + Mise à jour JournalAO //
 	/////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * @Erwann
