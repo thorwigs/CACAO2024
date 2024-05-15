@@ -170,6 +170,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			return null;
 		}
 		
+
 		Echeancier x = contrat.getEcheancier();
 		int a = Filiere.LA_FILIERE.getEtape()+1;
 		int b = 24 ;
