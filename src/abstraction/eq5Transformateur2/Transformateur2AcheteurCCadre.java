@@ -81,7 +81,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
 								if (this.BlackListVendeur.containsKey(vendeur)) {
-									this.BlackListVendeur.put(vendeur,this.BlackListVendeur.get(vendeur)+1);
+									this.BlackListVendeur.replace(vendeur,this.BlackListVendeur.get(vendeur)+1);
 								} else {
 									this.BlackListVendeur.put(vendeur, 1);
 								}

@@ -181,7 +181,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 					double nbr_de_marque = chocosProduits.size();
 					stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stockChoco.get(c).getValeur()/nbr_de_marque, this.cryptogramme);
 					stockChoco.get((Chocolat) c).retirer(this, stockChoco.get(c).getValeur()/nbr_de_marque, this.cryptogramme);
-					VariationStockChocoMarque.put(cm, stockChoco.get(c).getValeur()/nbr_de_marque);
+					VariationStockChocoMarque.replace(cm, stockChoco.get(c).getValeur()/nbr_de_marque);
+					totalStocksChocoMarque.ajouter(this, stockChoco.get(c).getValeur(), this.cryptogramme);
 				}
 			}
 		}

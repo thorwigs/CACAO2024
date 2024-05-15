@@ -72,7 +72,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, cm, e, cryptogramme, false);
 					if (contrat==null) {
 						if (this.BlackListAcheteur.containsKey(acheteur)) {
-							this.BlackListAcheteur.put(acheteur,this.BlackListAcheteur.get(acheteur)+1);
+							this.BlackListAcheteur.replace(acheteur,this.BlackListAcheteur.get(acheteur)+1);
 						} else {
 							this.BlackListAcheteur.put(acheteur, 1);
 						}
@@ -184,7 +184,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockChocoMarque.put((ChocolatDeMarque)produit, new Variable("Eq5Stock "+produit, this,this.stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-quantite));
+		this.stockChocoMarque.get((ChocolatDeMarque)produit).ajouter(this, quantite, this.cryptogramme);
 		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
 		}
