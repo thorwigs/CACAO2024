@@ -19,7 +19,7 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 /**
- * @author Oscar_Brian
+ * @author Oscar_Brian 
  */
 public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
@@ -119,7 +119,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
 	        	}
 	        	
-	        	}
+	     	}
 	    return false;}
 	            
 		
