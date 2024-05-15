@@ -38,6 +38,7 @@ public abstract class Producteur3Acteur implements IActeur {
     //creation d'un tableau de variables qui donne les stocks pour chaque type de feve 
     //@alexis
     protected HashMap<Feve, Variable> stockfeve;
+  
     
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
@@ -59,6 +60,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.stockfeve = new HashMap<Feve,Variable>();
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
+
 		//VALEURS INITIALES
 		for (Feve f : Feve.values()) {
 			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
