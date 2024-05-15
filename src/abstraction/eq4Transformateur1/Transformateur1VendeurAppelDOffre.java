@@ -64,7 +64,7 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 			return null;
 		}
 		// Si pas d'offre auparavant-> on reg la bourse pour donner un prix
-		//System.out.println(prixAO.get(cm));
+		//System.out.println(prixAO.get(cm)+" ; "+cm);
 		if (prixAO.get(cm).size()==0) {
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
