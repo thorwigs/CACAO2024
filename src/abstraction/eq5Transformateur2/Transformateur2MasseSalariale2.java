@@ -13,11 +13,11 @@ import abstraction.eqXRomu.produits.Gamme;
 
 public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 	protected int NbSalaries;
-	protected double salaire;//salaire par step
-	protected double coutLicenciement1Salarie;
-	protected double capaciteTransfo;// tonnes transformées par 1 salarié par step
-	protected double coutAdjuvants;//cout des adjuvants pour 1 tonne de chocolat
-	protected double coutMachines;//cout des machines pour 1 tonne de chocolat
+	protected double salaire;// 1salaire / step
+	protected double coutLicenciement1Salarie; 
+	protected double capaciteTransfo;// tonnes transformées par 1 salarié / step
+	protected double coutAdjuvants;// cout des adjuvants pour 1 tonne / step
+	protected double coutMachines;// cout des machines pour 1 tonne / step
 	
 	protected double moyProd;
 	protected double totalProd;
@@ -111,8 +111,8 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 		/* Stratégie d'embauche/licenciement : 
 		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 30% de nos stocks.
 		 * 	   On embauche au maximum 2000 salarié par step
-		 * --> On licencie si notre capacité de transformation est 4 fois supérieur à nos stocks.
-		 *     On licencie 10% de notre effectif
+		 * --> On licencie si notre capacité de transformation est 2 fois supérieur à nos stocks.
+		 *     On licencie 30% de notre effectif
 		 */
 		
 		if (capaciteTransfoTotal < 0.3 * this.totalStocksFeves.getValeur()) {
@@ -124,8 +124,8 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 			this.JournalProduction.ajouter("On embauche"+embauche+"personnes");
 			coutMasseSalariale = NbSalaries * salaire;
 
-		} else if (capaciteTransfoTotal > 4 * this.totalStocksFeves.getValeur()) {
-			int licencié = (int) (0.1 * NbSalaries);
+		} else if (capaciteTransfoTotal > 2 * this.totalStocksFeves.getValeur()) {
+			int licencié = (int) (0.3 * NbSalaries);
 			this.NbSalaries -= licencié;
 			this.JournalProduction.ajouter("On licencie"+licencié+"personnes");
 			coutMasseSalariale = NbSalaries * salaire + licencié * coutLicenciement1Salarie;
