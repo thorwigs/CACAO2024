@@ -231,7 +231,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		return aLivre;
 	}
 	
-	
+
 	
 
 }
