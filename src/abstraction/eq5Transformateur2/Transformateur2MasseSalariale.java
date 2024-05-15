@@ -70,29 +70,24 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	/**
 	 * @Erwann
 	 * @Victor
+	 * @Vincent
 	 * @param
 	 * @return le nombre de tonne transformées pour une fève f + met à jour les stocks
 	 * Voir pour modif le choix de la qtté transfo (en fcontion des qtté deja en stock
 	 */
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.capaciteTransformation*this.NbSalaries); //Quantite maximale a transformer
-		double tonnesTransformees =0.4*tMaxTransformees; //On transforme 40% (peut etre modifie) de ce qu'on peut transformer au maximum
+		double tonnesTransformees =0.6*tMaxTransformees; //On transforme 60% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
-		
-		System.out.println("####################");
-		System.out.println(this.stockFeves.get(f));
-		System.out.println(this.stockChoco.get(c));
-		
-		this.stockFeves.put(f, new Variable("Eq5Stock ", this,this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees)); //Modifie le stock de feves
-		this.stockChoco.put(c, new Variable("Eq5Stock ", this,this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees)); //Modifie le stock de feves
-		
-		System.out.println("####################");
-		System.out.println(tonnesTransformees);
-		System.out.println(this.stockFeves.get(f));
-		System.out.println(this.stockChoco.get(c));
-		
+
+		if (this.stockFeves.containsKey((Feve)f)){
+			this.stockFeves.get((Feve)f).retirer(this, tonnesTransformees, this.cryptogramme); //Maj stock de feves 
+		}
+		if (this.stockChoco.containsKey((Chocolat)c)){
+			this.stockChoco.get((Chocolat) c).ajouter(this, tonnesTransformees, this.cryptogramme); //Maj stock choco
+		}
 		return tonnesTransformees;
-	}
+	}	
 	/**
 	 * @Erwann
 	 */
@@ -141,7 +136,6 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = this.NbSalaries * this.capaciteTransformation;
-
 		if (TonnesTransformees*0.6 >= CapaciteTransfoTotale) {// assouplissement de la condition
 			int embauche = (int) ((TonnesTransformees - CapaciteTransfoTotale)/this.capaciteTransformation);
 			if (embauche> 1000){
