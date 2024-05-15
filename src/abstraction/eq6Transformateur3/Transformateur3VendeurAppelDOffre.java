@@ -18,7 +18,10 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-
+/**
+ * @author Cedric et Arthur
+ * 
+ */	
 
 public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCadre implements IVendeurAO{
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
@@ -28,6 +31,10 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCa
 		super();
 		this.journalAO = new Journal(this.getNom()+" journal A.O.", this);
 	}
+	/**
+	 * @author Cedric et Arthur
+	 * 
+	 */	
 
 	public void initialiser() {
 		super.initialiser();
@@ -36,6 +43,10 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCa
 			this.prixAO.put(cm, new LinkedList<Double>());
 		}		
 	}
+	/**
+	 * @author Cedric et Arthur
+	 * 
+	 */	
 	public double prixMoyen(ChocolatDeMarque cm) {
 		List<Double> prix=prixAO.get(cm);
 		if (prix.size()>0) {
@@ -49,6 +60,10 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCa
 			return 0.0;
 		}
 	}
+	/**
+	 * @author Cedric et Arthur
+	 * 
+	 */	
 
 	public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
@@ -57,7 +72,7 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCa
 	}
 
 	/**
-	 * @author Cedric 
+	 * @author Cedric et Arthur
 	 * 
 	 */	
 
@@ -87,6 +102,10 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCa
 		}
 	}
 
+	/**
+	 * @author Cedric et Arthur 
+	 * 
+	 */	
 	public void notifierVenteAO(OffreVente propositionRetenue) {
 		ChocolatDeMarque cm = (ChocolatDeMarque)(propositionRetenue.getProduit());
 		double px = propositionRetenue.getPrixT();
@@ -98,7 +117,10 @@ public class Transformateur3VendeurAppelDOffre extends Transformateur3VendeurCCa
 		}
 	}
 
-
+	/**
+	 * @author Cedric et Arthur
+	 * 
+	 */	
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
 		ChocolatDeMarque cm = (ChocolatDeMarque)(propositionRefusee.getProduit());
 		double px = propositionRefusee.getPrixT();
