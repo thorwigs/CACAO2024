@@ -48,7 +48,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		salaire = 2000;
 		coutLicenciement1Salarie = 4*salaire;
 		capaciteTransformation = 3.7;
-		coutAdjuvants = 1200;
+		coutAdjuvants = 370;
 		coutMachines = 8;
 		moyProd=0;
 		totalProd=0;
@@ -100,6 +100,8 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 * @Erwann
 	 */
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
+		System.out.println(tonnes*coutMachines);
+		System.out.println(tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants);
 		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
 	}
 	/**
@@ -125,6 +127,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 */
 	/**
 	 * @Erwann
+	 * @Vincent
 	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = this.NbSalaries * this.capaciteTransformation;
