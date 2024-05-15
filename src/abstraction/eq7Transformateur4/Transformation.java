@@ -96,13 +96,13 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			double qtutile1 = 0; //correspond à la qte de fève qu'on va effectivement transformer
 			double stock = this.stockFeves.get(feve_utilise);
 			double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
-			if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)+25000) { 
-				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 25000 pour pouvoir faire des contrats cadre
+			if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)+50000) { 
+				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 25000 pour pouvoir faire des contrats cadre, on se fixe 50000 comme valeur
 				aproduire = aproduire + chocoalivrer.get(c) ;
 			}
 			//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
-			if (this.stockChocoMarque.get(c) < 25000) {
-					aproduire = aproduire + 12500; //12500 parce qu'on ne peut produire que 17000 chaque step, comme ça en deux tour on peut remettre notre stock au dessus de 25000
+			if (this.stockChocoMarque.get(c) < 50000) {
+					aproduire = aproduire + 6260; //6260 parce qu'on ne peut produire que 17000 chaque step, comme ça en 4 tour on peut remettre notre stock au dessus de 25000
 			}
 			//donc si on a pas assez de chocolat, on va nécessairement produire de quoi respecter les contrats mais aussi de quoi relancer des contrats
 			double fevenecessaire = aproduire/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())); //formule conversion entre qte feve et qte choco
@@ -174,13 +174,13 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			double qtutile1 = 0; //correspond à la qte de fève qu'on va effectivement transformer
 			double stock = this.stockFeves.get(feve_utilise);
 			double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
-			if (this.stockChoco.get(c.getChocolat()) < chocoalivrer.get(c)+25000) { 
+			if (this.stockChoco.get(c.getChocolat()) < chocoalivrer.get(c)+50000) { 
 				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 25000 pour pouvoir faire des contrats cadre
 				aproduire = aproduire + chocoalivrer.get(c) ;
 			}
 			//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
-			if (this.stockChoco.get(c.getChocolat()) < 25000) {
-					aproduire = aproduire + 12500; //12500 parce qu'on ne peut produire que 17000 chaque step, comme ça en deux tour on peut remettre notre stock au dessus de 25000
+			if (this.stockChoco.get(c.getChocolat()) < 50000) {
+					aproduire = aproduire + 6260; //6260 parce qu'on ne peut produire que 17000 chaque step, comme ça en 4 tour on peut remettre notre stock au dessus de 25000
 			}
 			//donc si on a pas assez de chocolat, on va nécessairement produire de quoi respecter les contrats mais aussi de quoi relancer des contrats
 			double fevenecessaire = aproduire/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())); //formule conversion entre qte feve et qte choco
@@ -222,16 +222,22 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			//on va tenir compte des cout fixe après à la fin des boucle for
 		}
 		
+		
+		
 		//////////là on paye//////////
 		double qtetotaleproduite = 0.0;
 		for (ChocolatDeMarque c : this.production_tonne_marque_step.keySet()) {
 			qtetotaleproduite = qtetotaleproduite + this.production_tonne_marque_step.get(c);
 		}
+
 		double a_payer = 1000*this.nbemployeCDI + 658; //cout des employes et cout fixe des machines par step 
-		double cout_fixe_par_tonne = 0.0; //cout fixe d'1 tonne indépendamment de la qualité de la tonne
-		if (qtetotaleproduite != 0) {
-			cout_fixe_par_tonne = a_payer/qtetotaleproduite;
-		}
+		//cout fixe d'1 tonne indépendamment de la qualité de la tonne
+		double cout_fixe_par_tonne = 0.0;
+		//ce code ne marche pas trop, si on produit pas assez sur un step on va avoir un cout_fixe_par_tonne trop élevé.
+		//if (qtetotaleproduite != 0) {
+		//	cout_fixe_par_tonne = a_payer/qtetotaleproduite;
+		//}
+		cout_fixe_par_tonne = a_payer/peutproduireemploye;
 		for (ChocolatDeMarque c : this.coutproduction_tonne_marque_step.keySet()) {
 			this.coutproduction_tonne_marque_step.replace(c, this.coutproduction_tonne_marque_step.get(c) + cout_fixe_par_tonne);
 		}
@@ -240,8 +246,27 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			a_payer = a_payer + i;
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtTransformation", a_payer); //on paye tout d'un coup
+		this.journalTransfo.ajouter("On paye ce step " + a_payer);
 		
-
+		
+		//////////Modulation du nbre d'employé////
+		//on veut garder au moins 2000 employé, en prendre plus si on a besoin de plus de main d'oeuvre et en licencier si on en a pas besoin
+		//on les a déjà payer donc on ne traite pas les couts
+		if (qtetotaleproduite<peutproduireemploye*0.25) {
+			// on a produit moins d'un quart de ce qu'on pouvait produire, c'est pas rentable d'avoir autant d'employé
+			int newnbre = (int)(nbemployeCDI*0.75); // ça va tronquer le nbre si c'est pas un entier
+			if (newnbre>2000) {
+				nbemployeCDI = newnbre;
+			} else {
+				nbemployeCDI = 2000;
+			}
+		}//sinon on considère que on a besoin des employés au cas où
+		
+		if(qtetotaleproduite==peutproduireemploye) {
+			nbemployeCDI = nbemployeCDI + 30; //on ne peut pas embaucher plus de 30 personnes par step
+		}
+		this.journalTransfo.ajouter("Notre nombre d'employé" + nbemployeCDI);
+		
 		
 		//TEST :
 		for (Feve f : this.lesFeves) {
@@ -250,14 +275,6 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 		
 		for (ChocolatDeMarque c : this.coutproduction_tonne_marque_step.keySet()) {
 			this.journalTransfo.ajouter("Quantite produite de " + c + " à ce step : "+ this.production_tonne_marque_step.get(c));
-		}
-		
-		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
-		}
-		
-		for (ChocolatDeMarque c : chocolatDistributeur) {
-			this.journalTransfo.ajouter("stock de " + c + " est "+ this.stockChoco.get(c.getChocolat()));
 		}
 		
 
