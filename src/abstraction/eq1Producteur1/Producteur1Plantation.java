@@ -103,7 +103,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		/*
 		 * return nombre d'ouvriers avec un rendement 1 necessaire
 		 */
-		double rendementPresent = this.get_Nombre_Enfant()+this.get_Nombre_Ouvrier_NonEquitable_NonForme()+(this.get_Nombre_Ouvrier_Equitable_Forme()+this.get_Nombre_Ouvrier_NonEquitable_Forme())*1.2+this.get_Nombre_Ouvrier_Equitable_NonForme();
+		double rendementPresent = this.get_Nombre_Enfant()+this.get_Nombre_Ouvrier_NonEquitable_NonForme()+(this.get_Nombre_Ouvrier_Equitable_Forme()*1.5+this.get_Nombre_Ouvrier_NonEquitable_Forme())*1.5+this.get_Nombre_Ouvrier_Equitable_NonForme();
 		if (rendementPresent < this.nombreHec) {
 
 
