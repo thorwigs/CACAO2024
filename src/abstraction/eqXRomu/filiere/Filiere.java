@@ -105,7 +105,7 @@ public class Filiere implements IAssermente {
 				if (marques!=null && marques.size()>0) {
 					if ((a instanceof IDistributeurChocolatDeMarque) && marques.size()>1) {
 						if (!(a instanceof IFabricantChocolatDeMarque)) {
-							throw new IllegalStateException("Le distributeur "+a.getNom()+" a une methode getMarquesChocolat qui retourne une liste de longueur "+marques.size()+" (un distribteur ne peut avoir qu'une marque de chocolat)");
+						 throw new IllegalStateException("Le distributeur "+a.getNom()+" a une methode getMarquesChocolat qui retourne une liste de longueur "+marques.size()+" (un distribteur ne peut avoir qu'une marque de chocolat)");
 						}
 					}
 					for (String m : marques) {
