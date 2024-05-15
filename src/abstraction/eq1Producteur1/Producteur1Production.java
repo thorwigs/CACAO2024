@@ -100,11 +100,11 @@ public class Producteur1Production extends Producteur1Plantation{
 		Integer nbt = this.get_Nombre_Total()-this.get_Nombre_Enfant();
 
 		Double pro = (double) (nb/nbt);
-		System.out.println(nb/nbt);
-		System.out.println(pro);
-		System.out.println(nb);
+		//System.out.println(nb/nbt);
+		//System.out.println(pro);
+		//System.out.println(nb);
 		
-		System.out.println(nbt);
+		//System.out.println(nbt);
 
 		double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
 		double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
