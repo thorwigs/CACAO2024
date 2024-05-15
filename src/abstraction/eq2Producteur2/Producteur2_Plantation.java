@@ -54,7 +54,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	}
-	
+	 
 	/** Getter
 	 * @author Anthony
 	 */
