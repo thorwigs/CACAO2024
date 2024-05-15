@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eq1Producteur1.Producteur1MasseSalariale;
+import abstraction.eq1Producteur1.MasseSalarialeNouveau;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -26,7 +26,6 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
 	
-	protected Producteur1MasseSalariale liste_Ouvrier;
 	protected int cryptogramme;
 	protected Journal journal;
 	//new stuff I added : Abdo

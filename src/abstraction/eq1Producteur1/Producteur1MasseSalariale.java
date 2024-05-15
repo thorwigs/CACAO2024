@@ -332,3 +332,5 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
  * Code par Youssef en globalite
 
  */
+
+
