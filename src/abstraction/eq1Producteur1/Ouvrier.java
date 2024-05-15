@@ -8,62 +8,40 @@ import java.util.Iterator;
  *///////////////////////////////////////YOUSSEF BEN ABDELJELIL//////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////*/
 
-//on va faire une classe Ouvrier qui décrit chaque ouvrier par anciennete,type,rendement,salaire,équitable,formation
+//on va faire une classe Ouvrier qui décrit chaque ouvrier ,type,rendement,salaire,équitable,formation
 public class Ouvrier extends Producteur1Acteur {
-	public double anciennete;
-	public double rendement;
-	public double salaire;
+	public boolean estEnfant;
 	public boolean isEquitable;
 	public boolean isForme;
-	public boolean estEnfant;
 	//constructeur par défaut: nouveau employé non équitable,adulte,salaire minimal,rendement normal=1
 	public Ouvrier() {
-		this.rendement=1;
-		this.anciennete=0;
-		this.salaire=1.8;
 		this.isForme=false;
 		this.isEquitable=false;
 		this.estEnfant=false;	
 	}
 	//constructeur par paramètres
-	public Ouvrier(double anciennete,double rendement,double salaire,boolean isForme,boolean isEquitable,boolean estEnfant) {
+	public Ouvrier(boolean estEnfant,boolean isEquitable,boolean isForme) {
 
-		this.rendement=rendement;
-		this.anciennete=anciennete;
-		this.salaire=salaire;
 		this.isForme = isForme;
 		this.estEnfant=estEnfant;
 		if (estEnfant) {
 			this.isEquitable=false;
+			this.isForme=false;
 
 		}
 		else {
 			this.isEquitable=isEquitable;
+			this.isForme=isForme;
 		}
+		
+		
 		//Un efnant ne peut pas produire de l'équitable
 	}
-	public double getAnciennete() {
-		return anciennete;
-	}
-	public void setAnciennete(double anciennete) {
-		this.anciennete = anciennete;
-	}
-	public double getRendement() {
-		return rendement;
-	}
-	public void setRendement(double rendement) {
-		this.rendement = rendement;
-	}
-	public double getSalaire() {
-		return salaire;
+	
+	
+	
+	
 
-
-	}
-	public void setSalaire(double salaire) {
-		this.salaire=salaire;
-
-
-	}
 	public boolean getIsEquitable() {
 		return this.isEquitable;
 
@@ -91,32 +69,25 @@ public class Ouvrier extends Producteur1Acteur {
 	public boolean equals(Object objet) {
 		return (objet instanceof Ouvrier)&&
 				(((Ouvrier) objet).getIsEquitable()==this.getIsEquitable())&&
-				((((Ouvrier) objet).getAnciennete()==this.getAnciennete()))&&
+				
 				((((Ouvrier) objet).getIsForme()==this.getIsForme()))&&
-				((((Ouvrier) objet).getSalaire()==this.getSalaire()))&&
-				((((Ouvrier) objet).getRendement()==this.getRendement()));
+				((((Ouvrier) objet).getIsEnfant()==this.getIsEnfant()))
+				
+				;
 		//critères d'égalités de travailleurs
 	}
 
 	public String toString() {
 		return "Ouvrier{ " +
-				" anciennete= " + anciennete +
-				" , rendement= " + rendement +
-				" , salaire= " + salaire +
+				
 				" , isEquitable= " + isEquitable +
 				" , isForme= " + isForme +
 				" , isEnfant= " + this.estEnfant +
 				'}';
 	}
 
-	public static class ComparateurAnciennete implements Comparator<Ouvrier> {
-		@Override
-		public int compare(Ouvrier o1, Ouvrier o2) {
-			return Double.compare(o1.anciennete, o2.anciennete);
-		}
-	}
-	//méthode pour baser la comparaison entre deux ouvriers SELON L4ANCIENNETE , 
-	//en effet, lors du licensiemnt, on licensie selon une ancienneté croissante
+	
+	
 
 
 
