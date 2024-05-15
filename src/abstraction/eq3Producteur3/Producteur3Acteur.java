@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -48,7 +49,7 @@ public abstract class Producteur3Acteur implements IActeur {
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     abstract HashMap<Feve,Double> maindoeuvre();
 	protected abstract HashMap<Feve,Double> newQuantite();
-    
+	protected HashMap<Feve, Double> partDeMarcheFeve;
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
@@ -67,6 +68,7 @@ public abstract class Producteur3Acteur implements IActeur {
 			this.ventefevebourse.put(f, 0.2);
 			this.ventefevecadre.put(f, 0.8);
 		}
+		 
 	}
 	
 /*************************************************************************************************/
