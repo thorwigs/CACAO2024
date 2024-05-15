@@ -54,6 +54,7 @@ public class TransformateurXActeur  implements IActeur, IMarqueChocolat, IFabric
 	}
 
 	public void initialiser() {
+
 		this.lesFeves = new LinkedList<Feve>();
 		this.journal.ajouter("Les Feves sont :");
 		for (Feve f : Feve.values()) {
@@ -119,7 +120,7 @@ public class TransformateurXActeur  implements IActeur, IMarqueChocolat, IFabric
 
 
 	public void next() {
-
+		Filiere.LA_FILIERE.getBanque().faireFaillite(this, this, cryptogramme); // Suicide de l'acteur
 		this.journal.ajouter("=== STOCKS === ");
 		for (Feve f : this.lesFeves) {
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(f+"", 15)+" = "+this.stockFeves.get(f));

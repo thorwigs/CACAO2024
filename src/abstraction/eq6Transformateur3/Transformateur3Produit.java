@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	
 	/**
-	 * @author Mahel
+	 * @author Mahel 
 	 */
 	public Chocolat Correspond(Feve f) {
 		switch( f ) {
@@ -86,7 +86,7 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	
 	/**
 	 * 
-	 * @author Mahel
+	 * @author Mahel et Arthur
 	 */
 	public void TransformationFeve(Feve f) {
 		double feve_en_stock = this.stockFeves.get(f);
