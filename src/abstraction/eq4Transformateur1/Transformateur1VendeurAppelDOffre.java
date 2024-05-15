@@ -49,15 +49,12 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 		}
 	}
 
-	public List<Journal> getJournaux() {
-		List<Journal> jx=super.getJournaux();
-		jx.add(journalAO);
-		return jx;
-	}
 
 
 	public OffreVente proposerVente(AppelDOffre offre) {
 		// Vérification que l'offre est un chocolat de marque
+		if (offre == null) {
+	        return null;}
 		IProduit p = offre.getProduit();
 		if (!(p instanceof ChocolatDeMarque)) {
 			return null;
@@ -76,6 +73,7 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 				px = bourse.getCours(Feve.F_HQ).getMax()*2.5;
 			}
 			return new OffreVente(offre, this, cm, px);
+			
 		// Sinon on met un prix 5% plus élevée que la moyenne de nos derniers prix
 		} else {
 			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
@@ -104,5 +102,9 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
 	}
-
+	public List<Journal> getJournaux() {
+		List<Journal> jx=super.getJournaux();
+		jx.add(journalAO);
+		return jx;
+	}
 }
