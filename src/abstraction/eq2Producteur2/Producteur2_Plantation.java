@@ -20,6 +20,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	/** Définition des variables
 	 * @author Anthony
 	 */
+	private static final int START_YEARS = 2024;
+	
 	protected double nb_hectares_max;
 	protected double nb_hectares_actuel;
 	protected double prix_plantation_hectare;
@@ -36,17 +38,13 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 
 	protected double rend_no_pest_HQ = 0.72;
 	protected HashMap <Feve, HashMap<Integer, Double>> plantation;
+	protected int annee_actuelle = 2024;
 	
 	protected Journal journalPlantation;
 	
 	/** Constructeur de classe
 	 * @author Anthony
 	 */
-	
-	public void init_simu_feve() { //initialise la HashMap pour débuter la simulation
-		
-	}
-	
 	public Producteur2_Plantation() {
 
 		this.nb_hectares_actuel=5000000.0;
@@ -54,6 +52,50 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	}
+	
+	/** Initialisation
+	 * @author Anthony
+	 */
+	public void initialiser() {
+		super.initialiser();
+		this.setPourcentage_HQ(2);
+		this.setPourcentage_MQ(38);
+		this.setPourcentage_BQ(60);	
+	}
+	
+	/** Initialise la HashMap des hectares pour débuter la simulation
+	 * @author Anthony
+	 */
+	public void init_simu_feve() {
+		
+		//création de la HashMap à l'intérieur de plantation pour Feve BQ
+        HashMap<Integer, Double> feve_BQ = new HashMap<>();
+
+        for(int i  = 0; i < 40; i++) {
+
+            feve_BQ.put(Producteur2_Plantation.START_YEARS + i,(nb_hectares_actuel / 40) * getPourcentage_BQ());
+        }
+        plantation.put(Feve.F_BQ,feve_BQ);
+
+
+        //création de la HashMap à l'intérieur de plantation pour feve HQ
+        HashMap<Integer, Double> feve_HQ = new HashMap<>();
+
+        for(int i  = 0; i < 40; i++) {
+
+            feve_HQ.put(Producteur2_Plantation.START_YEARS + i,(nb_hectares_actuel / 40) * getPourcentage_HQ());
+        }
+        plantation.put(Feve.F_HQ,feve_HQ);
+
+        //
+        HashMap<Integer, Double> feve_MQ = new HashMap<>();
+
+        for(int i  = 0; i < 40; i++) {
+
+            feve_MQ.put(Producteur2_Plantation.START_YEARS + i,(nb_hectares_actuel / 40) * getPourcentage_MQ());
+        }
+        plantation.put(Feve.F_MQ,feve_MQ);
+    }
 	 
 	/** Getter
 	 * @author Anthony
@@ -165,17 +207,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	public void setPlantation(HashMap <Feve, HashMap<Integer, Double>> plantation) {
 		this.plantation = plantation;
-	}
-	
-	/** Initialisation
-	 * @author Anthony
-	 */
-	public void initialiser() {
-		super.initialiser();
-		this.setPourcentage_HQ(2);
-		this.setPourcentage_MQ(38);
-		this.setPourcentage_BQ(60);
-		
 	}
 	
 	/** Méthode pour obtenir les journaux
@@ -372,10 +403,23 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		}
 	}
 	
+	/** Supprime les hectares qui ont dépassé leur âge limite de 40 ans
+	 * @author Quentin
+	 */
+	public void suppressionVieuxHectares() {
+		for(Feve f : this.getPlantation().keySet()) {
+			for(Integer annee : this.getPlantation().get(f).keySet()) {
+				if(this.annee_actuelle == this.getPlantation().get(f).get(annee)) {
+					this.getPlantation().get(f).remove(annee);
+				}
+			}
+		}
+	}
+	
 	/** Ajoute les nouvelles informations sur les plantations au journal des plantations
 	 * @author Anthony
-	 */
-	public void ajout_plantation_journal() {
+	*/
+	public void ajout_plantation_journal(){
 		this.journalPlantation.ajouter(" ");
 		this.journalPlantation.ajouter("------------ ETAPE " + Filiere.LA_FILIERE.getEtape() + " ---------------");
 		this.journalPlantation.ajouter("Cout de la plantation : " + cout_plantation());
@@ -411,6 +455,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		ajout_plantation_journal();
 		perte_plantation(); //Perte quotidienne d'arbres
 		maj_pourcentage();
+		
+		if(Producteur2_Plantation.START_YEARS + (int)Filiere.LA_FILIERE.getEtape()/24 != this.annee_actuelle) {
+			suppressionVieuxHectares();
+			this.annee_actuelle += (int)Filiere.LA_FILIERE.getEtape()/24;
+		}
 
 		//On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
