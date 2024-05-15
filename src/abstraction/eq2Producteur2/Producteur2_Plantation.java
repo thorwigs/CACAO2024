@@ -81,7 +81,7 @@ s
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 	}
-	
+	 
 	/** Getter
 	 * @author Anthony
 	 */
