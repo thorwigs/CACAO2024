@@ -64,9 +64,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 					return quantiteEnT;
 
 				}
-				else {
-					return 0;
-				}
+				
 			}
 			if (f.getGamme()==Gamme.HQ) {
 				if (true) {
@@ -75,9 +73,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 					return quantiteEnT;
 				}
-				else {
-					return 0;
-				}
+			
 			}
 			if (f.getGamme()==Gamme.BQ) {
 				if (true) {
@@ -86,9 +82,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 					return quantiteEnT;
 				}
-				else {
-					return 0;
-				}
+				
 			}
 		}
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);

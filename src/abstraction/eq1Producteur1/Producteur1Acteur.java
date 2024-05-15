@@ -118,7 +118,6 @@ public class Producteur1Acteur implements IActeur {
 	
 	public void CroissanceEconomique() {
 		this.croissanceParStep = new ArrayList<Double>();
-		this.croissanceParStep.add(0.0);	
 		
 		for (int i = 0; i < this.soldeParStep.size()-1; i++) {
 			double crois = (this.soldeParStep.get(i+1)-this.soldeParStep.get(i))/this.soldeParStep.get(i);
