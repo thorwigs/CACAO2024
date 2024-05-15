@@ -224,7 +224,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		else {
 			return pPropose;
 		}
-	}//négocie le prix en nous garantissant une marge minimale de 5% (on enregistre notre précédente proposition dans prixPrecedent)
+	}//négocie le prix en nous garantissant une marge minimale de 2% (on enregistre notre précédente proposition dans prixPrecedent)
 
 	
 	
