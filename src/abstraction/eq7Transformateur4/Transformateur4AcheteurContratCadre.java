@@ -43,11 +43,15 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	
 	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
 		return (produit.getType().equals("Feve"))
-				&& (((Feve)produit).getGamme() == Feve.F_HQ.getGamme()) 
-				&& (stockFeves.get(produit)+restantDu((Feve)produit)< 150000 );
-	
+				&& (((Feve)produit).equals(Feve.F_HQ) || ((Feve)produit).equals(Feve.F_HQ_BE))
+				&& (stockFeves.get((Feve)produit)+restantDu((Feve)produit)< 15000 );
 		//à modifier selon nécessité de chaque type de fève
 	}
+	
+	
+	
+	
+	
 	
 	//Négociations
 	
@@ -65,7 +69,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 				return contrat.getEcheancier();
 			}
 		} else {
-			double marge = 150000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
+			double marge = 15000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
 			if (marge<1200) {
 				return null;
 			} else {
@@ -108,6 +112,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		}
 	}
 	
+	
+	
+	
+	
+	
 	//Après finalisation contrat 
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
@@ -120,6 +129,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);		
 	}
+	
+	
+	
+	
+	
 	
 	//Honorer les contrats
 	
@@ -140,6 +154,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		}
 		return res;
 	}
+	
+	
+	
+	
+	
 	
 	//Next
 	
