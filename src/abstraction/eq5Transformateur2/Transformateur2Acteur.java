@@ -208,16 +208,12 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : lesFeves) {
-				res.add(stockFeves.get(f));
+				res.add(this.stockFeves.get(f));
 		}
 		for (Chocolat c : lesChocolats) {
-				res.add(stockChoco.get(c));
+				res.add(this.stockChoco.get(c));
 		}
-		/*
-		for (ChocolatDeMarque cm : chocosProduits) {
-				res.add(stockChocoMarque.get(cm));
-		}
-		*/
+		res.add(this.totalStocksChocoMarque);
 		return res;
 	}
 
