@@ -531,4 +531,12 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0;
 	}
+	
+	public double getAttractivite(ChocolatDeMarque cm) {
+		return attractiviteChocolat.keySet().contains(cm) ? attractiviteChocolat.get(cm) : 0.0;
+	}
+	
+	public double getAttractivite(ChocolatDeMarque cm, IDistributeurChocolatDeMarque dis) {
+		return attractiviteDistributeur.keySet().contains(cm) ? (attractiviteDistributeur.get(cm).keySet().contains(dis) ?  attractiviteDistributeur.get(cm).get(dis): 0.0) : 0.0;
+	}
 }
