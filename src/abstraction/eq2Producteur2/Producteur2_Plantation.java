@@ -7,6 +7,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 
 //Toutes les variables de poids de cacao sont en TONNES 
 
@@ -33,7 +34,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
 	protected double rend_no_pest_HQ = 0.72;
-	protected HashMap <Feve, HashMap< Double, Double> > plantation;
+	protected HashMap <Feve, HashMap<Integer, Double>> plantation;
 	
 	protected Journal journalPlantation;
 	
@@ -144,6 +145,20 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	public void setNb_nouveau_hectares(double nb_nouveau_hectares) {
 		this.nb_nouveaux_hectares = nb_nouveau_hectares;
+	}
+	
+	/** Getter
+	 * @author Quentin
+	 */
+	public HashMap <Feve, HashMap<Integer, Double>> getPlantation(){
+		return this.plantation;
+	}
+	
+	/** Setter
+	 * @author Quentin
+	 */
+	public void setPlantation(HashMap <Feve, HashMap<Integer, Double>> plantation) {
+		this.plantation = plantation;
 	}
 	
 	/** Initialisation
@@ -312,6 +327,25 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 				this.setPourcentage_HQ(pourcentage_equitable);
 			}
 		}
+	}
+	
+	/** Retourne le nombre d'hectares pour un type de produit (un type de fève)
+	 * @author Quentin
+	*/
+	public double getHectaresPlantes(IProduit p, int cryptogramme) {
+		if(this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter le nombre d'hectares
+			double somme = 0;
+			for(Feve e : this.getPlantation().keySet()) {
+				if(e == p) {
+					for(Integer annee : this.getPlantation().get(e).keySet()) {
+						somme += this.getPlantation().get(e).get(annee);
+					}
+				}
+			}
+			return somme;
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre nombre d'hectares par produit
+		}	
 	}
 	
 	/** Ajoute les nouvelles informations sur les plantations au journal des plantations
