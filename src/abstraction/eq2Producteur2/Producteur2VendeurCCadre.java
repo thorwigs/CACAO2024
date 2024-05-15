@@ -30,6 +30,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	protected double quantiteVendueCC;
+	protected int etapeCC;
+	protected double prix_contrat;
 
 	public Producteur2VendeurCCadre() {
 		super();
@@ -40,6 +43,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	
 	public void initialiser() {
 		super.initialiser();
+		this.etapeCC = 0;
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	
@@ -64,6 +68,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 						journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 					} else {
 						this.contratsEnCours.add(contrat);
+						this.prix_contrat = contrat.getPrix();
 						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
 					}
 				} else {
@@ -82,6 +87,12 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 			this.contratsEnCours.remove(c);
 		}
 		this.journalCC.ajouter("=================================");
+		
+		for (Feve f : Feve.values()) {
+			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+		}
+		this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC());
+		this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
 	}
 
 
@@ -139,7 +150,17 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	public boolean vend(IProduit produit) {
 		return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200;
 	}
-
+	
+	public double getNbTonnesVenduesCC() {
+		double nb = this.quantiteVendueCC;
+		
+		if (Filiere.LA_FILIERE.getEtape() != this.etapeCC) {
+			// On remet à 0 la quantité vendue à chaque tour (on souhaite suivre la vente par tour)
+			this.quantiteVendueCC = 0 ;
+			this.etapeCC = Filiere.LA_FILIERE.getEtape();
+		}
+		return nb;
+	}
 
 	/** contre proposition du vendeur
 	 * @author Maxime
@@ -236,7 +257,11 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		double stockActuel = stock.get(produit);
 		double aLivre = Math.min(quantite, stockActuel);
 		this.stock_a_vendre((Feve) produit, quantite);
+		/*for (Feve f : Feve.values()) {
+			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+		}*/
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
+		this.quantiteVendueCC = this.quantiteVendueCC + aLivre;
 		return aLivre;
 	} 
 }

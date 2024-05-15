@@ -36,24 +36,24 @@ public class TransformateurXVendeurAuxEncheres extends TransformateurXAcheteurCC
 
 	public void next() {
 		super.next();
-		this.journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
-			if (this.stockChocoMarque.get(cm)>5000) { // on ne lance pas une enchere pour moins de 5000 T
-				int quantite = 5000 + Filiere.random.nextInt((int)(this.stockChocoMarque.get(cm)-4990)); // il faudrait aussi tenir compte des contrats cadres en cours afin de ne pas vendre ce qu'on s'est engage a livrer
-				Enchere enchere = supEncheres.vendreAuxEncheres(this, cryptogramme, cm, quantite);
-				journalEncheres.ajouter("   Je lance une enchere de "+quantite+" T de "+cm);
-				if (enchere!=null) { // on a retenu l'une des encheres faites
-					journalEncheres.ajouter("   Enchere finalisee : on retire "+quantite+" T de "+cm+" du stock");
-					stockChocoMarque.put(cm, stockChocoMarque.get(cm)-quantite);
-					totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
-					prixRetenus.get(cm).add(enchere.getPrixTonne());
-					if (prixRetenus.get(cm).size()>10) {
-						prixRetenus.get(cm).remove(0); // on ne garde que les dix derniers prix
-						journalEncheres.ajouter("   Les derniers prix pour "+cm+" sont "+prixRetenus.get(cm));
-					}
-				}
-			}
-		}
+//		this.journalEncheres.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+//		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
+//			if (this.stockChocoMarque.get(cm)>5000) { // on ne lance pas une enchere pour moins de 5000 T
+//				int quantite = 5000 + Filiere.random.nextInt((int)(this.stockChocoMarque.get(cm)-4990)); // il faudrait aussi tenir compte des contrats cadres en cours afin de ne pas vendre ce qu'on s'est engage a livrer
+//				Enchere enchere = supEncheres.vendreAuxEncheres(this, cryptogramme, cm, quantite);
+//				journalEncheres.ajouter("   Je lance une enchere de "+quantite+" T de "+cm);
+//				if (enchere!=null) { // on a retenu l'une des encheres faites
+//					journalEncheres.ajouter("   Enchere finalisee : on retire "+quantite+" T de "+cm+" du stock");
+//					stockChocoMarque.put(cm, stockChocoMarque.get(cm)-quantite);
+//					totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
+//					prixRetenus.get(cm).add(enchere.getPrixTonne());
+//					if (prixRetenus.get(cm).size()>10) {
+//						prixRetenus.get(cm).remove(0); // on ne garde que les dix derniers prix
+//						journalEncheres.ajouter("   Les derniers prix pour "+cm+" sont "+prixRetenus.get(cm));
+//					}
+//				}
+//			}
+//		}
 
 		// On archive les contrats termines
 		this.journalEncheres.ajouter("=================================");

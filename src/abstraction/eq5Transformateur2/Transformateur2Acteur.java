@@ -26,14 +26,15 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected int cryptogramme;
 	private double coutStockage;
 	
-	private static final double STOCKINITIAL=1000.0;
+
+	protected static final double STOCKINITIAL = 50000.0;
 	
 	protected List<Feve> lesFeves;
 	protected List<Chocolat> lesChocolats;
 	protected List<ChocolatDeMarque>chocosProduits;
-	protected HashMap<Feve, Double> stockFeves;
-	protected HashMap<Chocolat, Double> stockChoco;
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected HashMap<Feve, Variable> stockFeves;
+	protected HashMap<Chocolat, Variable> stockChoco;
+	protected HashMap<ChocolatDeMarque, Variable> stockChocoMarque;
 	protected HashMap<ChocolatDeMarque, Double> VariationStockChocoMarque; // pour le calcul des coûts de transfo
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // dictionnaire de dictionnaire [feve : [Type chocolat : % cacao ]]
 	protected List<ChocolatDeMarque> chocolatsFusion;
@@ -52,13 +53,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.totalStocksFeves = new VariablePrivee("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq5TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq5TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
-	}
-	
-	/**
-	 * @Robin 
-	 * @Erwann
-	 */
-	public void initialiser() {
+		
 		this.lesFeves = new LinkedList<Feve>();
 		this.journal.ajouter("Les Feves sont :");
 		for (Feve f : Feve.values()) {
@@ -67,13 +62,11 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 			this.journal.ajouter("   - "+f);
 			}
 		}
-		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
-		this.stockFeves=new HashMap<Feve,Double>();
+		this.stockFeves=new HashMap<Feve,Variable>();
 		for (Feve f : this.lesFeves) {
 			if (f.getGamme()!=Gamme.HQ) {
-				this.stockFeves.put(f, STOCKINITIAL);
-				this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
+				this.stockFeves.put(f, new Variable("Eq5Stock "+f, this, STOCKINITIAL));
 				this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+f+" au stock total de fèves // stock total : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 			}
 		}
@@ -86,12 +79,25 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 				this.journal.ajouter("   - "+c);
 			}
 		}
-		this.stockChoco=new HashMap<Chocolat,Double>();
+		this.stockChoco=new HashMap<Chocolat,Variable>();
 		for (Chocolat c : this.lesChocolats) {
-			this.stockChoco.put(c, STOCKINITIAL);
-			this.totalStocksChoco.ajouter(this, STOCKINITIAL, this.cryptogramme);
+			this.stockChoco.put(c, new Variable("Eq5Stock "+c, this, STOCKINITIAL));
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+c+" au stock total de Chocolat // stock total : "+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
+		
+	}
+	
+	/**
+	 * @Robin 
+	 * @Erwann
+	 */
+	public void initialiser() {
+		
+		this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
+		
+		this.totalStocksChoco.ajouter(this, STOCKINITIAL, this.cryptogramme);
+
+
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.journal.ajouter("Les Chocolats de marque sont :");
 		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
@@ -100,12 +106,14 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 				this.journal.ajouter("   - "+cm);
 			}
 		}
-		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Double>();
+		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Variable>();
 		for (ChocolatDeMarque cm : this.chocosProduits) {
-			this.stockChocoMarque.put(cm, STOCKINITIAL);
+			this.stockChocoMarque.put(cm, new Variable("Eq5Stock "+cm, this, STOCKINITIAL));
 			this.totalStocksChocoMarque.ajouter(this, STOCKINITIAL, this.cryptogramme);
 			this.journal.ajouter("ajout de "+STOCKINITIAL+" tonnes de : "+cm+" au stock total de Chocolat de marque // stock total : "+this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		}
+		
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
 		this.VariationStockChocoMarque = new HashMap<ChocolatDeMarque,Double>();
 		for (ChocolatDeMarque cm : this.chocosProduits) {
@@ -149,11 +157,18 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.journal.ajouter(" ===ETAPE = " + Filiere.LA_FILIERE.getEtape()+ " A L'ANNEE " + Filiere.LA_FILIERE.getAnnee()+" ===");
 		this.journal.ajouter("=====STOCKS=====");
 		this.journal.ajouter("prix stockage chez producteur : "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		this.journal.ajouter("Quantité en stock de feves : "+stockFeves);
-		this.journal.ajouter("Quantité en stock de Chocolat : "+stockChoco);
-		this.journal.ajouter("Quantité en stock de chocolat de marque : " +stockChocoMarque);
+		for (Feve f : lesFeves) {
+		this.journal.ajouter("Quantité en stock de feves " +f+ ": "+stockFeves.get(f).getValeur());
+		}
+		for (Chocolat c : lesChocolats) {
+		this.journal.ajouter("Quantité en stock de Chocolat " +c+ ": "+stockChoco.get(c).getValeur());
+		}
+		for (ChocolatDeMarque cm : chocosProduits) {
+		this.journal.ajouter("Quantité en stock de chocolat de marque " +cm+ ": " +stockChocoMarque.get(cm).getValeur());
+		}
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.journal.ajouter("stocks chocolat marque: "+this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		
 		// Paiment coûts de stockage, le stockage du chocolat de marque n'est pas encore operationnel donc on ne le prend pas en compte.
 		// à rajouter pour choco marque : +this.totalStocksChocoMarque.getValeur(this.cryptogramme))
@@ -164,12 +179,12 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 			for (ChocolatDeMarque cm : chocosProduits) {
 				if(c.getGamme() == cm.getGamme()) {
 					double nbr_de_marque = chocosProduits.size();
-					double stock_initial = stockChocoMarque.get(cm);
-					stockChocoMarque.put(cm,stock_initial + stockChoco.get(c)/nbr_de_marque);
-					VariationStockChocoMarque.put(cm, stockChoco.get(c)/nbr_de_marque);
+					double stock_initial = stockChocoMarque.get(cm).getValeur();
+					stockChocoMarque.put(cm,new Variable("Eq5Stock "+cm, this, stock_initial + stockChoco.get(c).getValeur()/nbr_de_marque));
+					VariationStockChocoMarque.put(cm, stockChoco.get(c).getValeur()/nbr_de_marque);
 				}
 			}
-			stockChoco.put(c,0.0);
+			stockChoco.put(c,new Variable("Eq5Stock "+c, this,0.0));
 		}
 		//Regarder quantite a chaque step (a virer dans la version finale)
 		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_BQ, cryptogramme)+" t de feves BQ");
@@ -192,6 +207,17 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		for (Feve f : lesFeves) {
+				res.add(stockFeves.get(f));
+		}
+		for (Chocolat c : lesChocolats) {
+				res.add(stockChoco.get(c));
+		}
+		/*
+		for (ChocolatDeMarque cm : chocosProduits) {
+				res.add(stockChocoMarque.get(cm));
+		}
+		*/
 		return res;
 	}
 
@@ -257,19 +283,19 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			if (p.getType().equals("Feve")) {
 				if (this.stockFeves.keySet().contains(p)) {
-					return this.stockFeves.get(p);
+					return this.stockFeves.get(p).getValeur();
 				} else {
 					return 0.0;
 				}
 			} else if (p.getType().equals("Chocolat")) {
 				if (this.stockChoco.keySet().contains(p)) {
-					return this.stockChoco.get(p);
+					return this.stockChoco.get(p).getValeur();
 				} else {
 					return 0.0;
 				}
 			} else {
 				if (this.stockChocoMarque.keySet().contains(p)) {
-					return this.stockChocoMarque.get(p);
+					return this.stockChocoMarque.get(p).getValeur();
 				} else {
 					return 0.0;
 				}

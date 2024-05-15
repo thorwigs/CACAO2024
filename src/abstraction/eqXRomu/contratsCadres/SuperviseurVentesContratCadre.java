@@ -25,7 +25,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	public static final double QUANTITE_MIN_ECHEANCIER = 100.0; // Il ne peut pas etre propose de contrat avec un echeancier de moins de QUANTITE_MIN_ECHEANCIER
 	public static int NB_SUPRVISEURS_CONTRAT_CADRE = 0;
 	private int numero;
-	private Journal journal;
+	private Journal journal, journalQVQCM, journalQVQF;
 	private List<ContratCadre> contratsEnCours;
 	private List<ContratCadre> contratsTermines;
 	private HashMap<IActeur, Integer> cryptos;
@@ -41,7 +41,9 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	public SuperviseurVentesContratCadre() {
 		NB_SUPRVISEURS_CONTRAT_CADRE++;
 		this.numero = NB_SUPRVISEURS_CONTRAT_CADRE;
-		this.journal = new Journal("Journal "+this.getNom(), this);
+		this.journal = new Journal("J. "+this.getNom()     +" Negos ", this);
+		this.journalQVQCM = new Journal("J. "+this.getNom()+" Qui.CM", this); // Qui vend/achete le chocolat de marque
+		this.journalQVQF  = new Journal("J. "+this.getNom()+" Qui.F ", this); // Qui vend/achete les feves
 		this.contratsEnCours= new ArrayList<ContratCadre>();
 		this.contratsTermines= new ArrayList<ContratCadre>();
 		this.livraisonsFeves = new HashMap<Feve, HashMap<Integer, Double>> ();
@@ -419,14 +421,38 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 			this.contratsTermines.add(cc);
 		}
 	}
-
+public String surLargeur(String s, int largeur) {
+	String t = s.replace("&nbsp;", " ");
+	int caracteresAAjouter = largeur - t.length();
+	for (int i=0; i<caracteresAAjouter; i++) {
+		s=s+"&nbsp;";
+	}
+	return s;
+}
 	public void quiVendQuoi() {
-		this.journal.ajouter("== Qui vend quoi ===");
+		this.journalQVQCM.ajouter("== Qui vend/achete les chocolats de marque. Etape "+Filiere.LA_FILIERE.getEtape()+"===");
 		List<ChocolatDeMarque> c = Filiere.LA_FILIERE.getChocolatsProduits();
 		for (ChocolatDeMarque cm : c) {
-			this.journal.ajouter("produit "+cm);
-			this.journal.ajouter("&nbsp;&nbsp;&nbsp;vendeurs "+getVendeurs(cm));
-			this.journal.ajouter("&nbsp;&nbsp;acheteurs "+getAcheteurs(cm));
+			String s = "produit "+cm;
+			s = surLargeur(s,30);
+			s = s+"&nbsp;&nbsp;&nbsp;vendeurs "+getVendeurs(cm);
+			s = surLargeur(s, 60);
+			s = s+"&nbsp;&nbsp;acheteurs "+getAcheteurs(cm);
+			s = surLargeur(s, 90);
+			this.journalQVQCM.ajouter(s);
+		}
+		this.journalQVQF.ajouter("== Qui vend/achete les feves. Etape "+Filiere.LA_FILIERE.getEtape()+"===");
+		for (Feve f : Feve.values()) {
+			String s = "produit "+f;
+			s = surLargeur(s,20);
+			s = s+"&nbsp;&nbsp;&nbsp;vendeurs "+getVendeurs(f);
+			s = surLargeur(s, 50);
+			s = s+"&nbsp;&nbsp;acheteurs "+getAcheteurs(f);
+			s = surLargeur(s, 80);
+			this.journalQVQF.ajouter(s);
+//			this.journalQVQF.ajouter("produit "+f);
+//			this.journalQVQF.ajouter("&nbsp;&nbsp;&nbsp;vendeurs "+getVendeurs(f));
+//			this.journalQVQF.ajouter("&nbsp;&nbsp;acheteurs "+getAcheteurs(f));
 		}
 	}
 	public void next() {
@@ -569,6 +595,8 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	public List<Journal> getJournaux() {
 		List<Journal> res = new LinkedList<Journal>();
 		res.add(this.journal);
+		res.add(this.journalQVQCM);
+		res.add(this.journalQVQF);
 		return res;
 	}
 

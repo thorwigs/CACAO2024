@@ -16,6 +16,8 @@ import abstraction.eqXRomu.general.Journal;
 import java.awt.Color;
 import java.awt.Color;
 
+//codé par Anaïs
+
 public class Transformateur4AcheteurContratCadre extends Transformateur4AcheteurBourse implements IAcheteurContratCadre{
 	
 	private SuperviseurVentesContratCadre supCC;

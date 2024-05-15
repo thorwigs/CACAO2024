@@ -27,6 +27,8 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 			}
 	
 	public void next() {
+		
+//Pierrick
 		super.next();
 		this.journalTransfo.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "==================");
 		HashMap<ChocolatDeMarque, Double> chocoalivrer = new HashMap<ChocolatDeMarque,Double>(); //critère pour la transformation des chocos de marque
@@ -40,6 +42,8 @@ public class Transformation extends Transformateur4VendeurAuxEncheres{
 		//Pour les chocos de marque //////////////////////////////////////////////////////////
 		
 		//on fixe le critère : ce qu'on doit produire comme choco de marque
+		
+//Pierrick
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			if (c.getChocolat().isBio() && c.getChocolat().isEquitable()) {
 				double alivrer = 0.0;
