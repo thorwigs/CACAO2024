@@ -282,8 +282,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	public List<ChocolatDeMarque> getChocolatsProduits() {
 
 		if (this.chocosProduits.size()==0) {
-			Chocolat cmc = Chocolat.C_MQ_E;
-			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
+			Chocolat cmce = Chocolat.C_MQ_E;
+			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmce.getGamme()).getValeur());
+			this.chocosProduits.add(new ChocolatDeMarque(cmce, "CacaoMagic", pourcentageCacao));
+			
+			Chocolat cmc = Chocolat.C_MQ;
+			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
 			this.chocosProduits.add(new ChocolatDeMarque(cmc, "CacaoMagic", pourcentageCacao));
 			
 			Chocolat chc = Chocolat.C_HQ_BE;
@@ -292,6 +296,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		}
 		return this.chocosProduits;
 	}
+	
 /**
 * @author Yannig
 */
