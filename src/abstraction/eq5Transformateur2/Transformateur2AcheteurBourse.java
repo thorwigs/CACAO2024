@@ -42,6 +42,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		//Stratégie sur le BQ
 		if (f.getGamme()==Gamme.BQ) {
 			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
+				this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
 				return STOCKINITIAL - stockFeves.get(f).getValeur();
 			}
 			else {
@@ -54,6 +55,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		if (f.getGamme()==Gamme.MQ) {
 
 			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
+				this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
 				return STOCKINITIAL - stockFeves.get(f).getValeur();
 			}
 			else {
@@ -84,13 +86,13 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, new Variable("Eq5Stock "+f, this,this.stockFeves.get(f).getValeur()+quantiteEnT));
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+" au prix de "+quantiteEnT*coursEnEuroParT);
+		this.journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+" au prix de "+quantiteEnT*coursEnEuroParT);
 	}
 	/**
 	 * @Erwann
 	 */
 	public void notificationBlackList(int dureeEnStep) {
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" ## BLACKLIST ## pendant "+dureeEnStep+" etapes");
+		this.journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" ## BLACKLIST ## pendant "+dureeEnStep+" etapes");
 	}
 	/**
 	 * @Erwann
