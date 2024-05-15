@@ -65,6 +65,8 @@ public abstract class Distributeur2Acteur implements IActeur {
 		return "Bonjour bonjour";
 	}
 
+	//Le code suivant à été mis en commentaire car on ne souhaite plus mettre les chocolats de marque en indicateurs mais simplement les différentes catégories de chocolat!
+	/*
 	// transforme le dictionnaire des stocks(double) en dictionnaire des stocks(Variable)
 	protected HashMap<ChocolatDeMarque, Variable> variabilisation(HashMap<ChocolatDeMarque, Double> stockChocoMarque){
 		HashMap<ChocolatDeMarque, Variable> stockChocoIndicateur = new HashMap();
@@ -74,6 +76,44 @@ public abstract class Distributeur2Acteur implements IActeur {
 			stockChocoIndicateur.put(entry.getKey(),quantite);
 		}
 		return stockChocoIndicateur;
+	}
+	
+	protected HashMap<ChocolatDeMarque, Variable> iniT(){
+		HashMap<ChocolatDeMarque, Variable> stockChocoIndicateur = new HashMap();
+		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			Variable quantite = new Variable("Eq9DStockChocoMarque_"+cm.getNom() ,this);
+			stockChocoIndicateur.put(cm,quantite);
+		}
+		return stockChocoIndicateur;
+	}
+	*/
+	protected abstract HashMap<ChocolatDeMarque, Double> stockParType(String type);
+	
+	protected void MiseAJour(ArrayList<Variable> indicateurs){
+		 for (Variable type : indicateurs) {
+			 HashMap<ChocolatDeMarque, Double> stockParType = stockParType(type.getNom().substring(10));
+			 double stockType = 0;
+			 for(double quantite : stockParType.values()) {
+				 stockType+=quantite;
+			 }
+			 type.setValeur(this, stockType);
+		 }
+		
+		
+	};
+	
+	
+	protected ArrayList<Variable> init(){
+		ArrayList<Variable> indicateurs = new ArrayList<Variable>();
+		
+		Variable BQ = new Variable("Eq9DStock_BQ", "<html>Quantite totale de chocolat de Basse qualité en stock</html>",this, 0.0,Double.MAX_VALUE, 0); indicateurs.add(BQ);
+		Variable MQ = new Variable("Eq9DStock_MQ", "<html>Quantite totale de chocolat de Moyenne qualité en stock</html>",this, 0.0,Double.MAX_VALUE, 0); indicateurs.add(MQ);
+		Variable MQ_E = new Variable("Eq9DStock_MQ_E", "<html>Quantite totale de chocolat de Moyenne qualité équitable en stock</html>",this, 0.0,Double.MAX_VALUE, 0); indicateurs.add(MQ_E);
+		Variable HQ = new Variable("Eq9DStock_HQ", "<html>Quantite totale de chocolat de Haute qualité en stock</html>",this, 0.0,Double.MAX_VALUE, 0);  indicateurs.add(HQ);
+		Variable HQ_E = new Variable("Eq9DStock_HQ_E", "<html>Quantite totale de chocolat de Haute qualité équitable en stock</html>",this, 0.0,Double.MAX_VALUE, 0);  indicateurs.add(HQ_E);
+		Variable HQ_BE = new Variable("Eq9DStock_HQ_BE", "<html>Quantite totale de chocolat de Haute qualité bio-équitable en stock</html>",this, 0.0,Double.MAX_VALUE, 0);  indicateurs.add(HQ_BE);
+		
+		return indicateurs;
 	}
 	
 	// Renvoie les indicateurs
