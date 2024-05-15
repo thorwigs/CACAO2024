@@ -26,6 +26,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	protected int nombreMois = 3;
 	
 	public Transformateur1AcheteurCCadre() {
 		super();
@@ -113,10 +114,10 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
 	    	    	journalCC.ajouter("La feve proposée : "+feve);
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * nombreMois;}
 	        	if (feve.getGamme() == Gamme.MQ && feve.isBio()) {
 	    	    	journalCC.ajouter("La feve proposée : "+feve);
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
+	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * nombreMois;}
 	        	}
 	        	
 	        	}
@@ -146,7 +147,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
                 // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
                 return contrat.getEcheancier();
             } else {
-                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                double marge = this.demandeCC * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
                 if (marge < 1000) {
                     return null;
                 } else {
@@ -159,7 +160,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
                 // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
                 return contrat.getEcheancier();
             } else {
-                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                double marge = this.demandeCC * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
                 if (marge < 1000) {
                     return null;
                 } else {
