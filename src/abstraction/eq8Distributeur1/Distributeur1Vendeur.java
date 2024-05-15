@@ -251,6 +251,13 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		return stockage + salaire;
 	}
 	
+	public boolean estPlusFideleQue(String equipeA,String equipeB) {
+		if (Fidele.get(equipeA)>Fidele.get(equipeB)) {
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * @author wiam 
 	 */
