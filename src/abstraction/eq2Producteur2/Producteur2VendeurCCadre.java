@@ -156,7 +156,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	}
 	
 	public double getNbTonnesVenduesCC() {
-		return quantiteVendueCC;
+		return quantiteVendueCC ;
 	}
 
 	/** contre proposition du vendeur
