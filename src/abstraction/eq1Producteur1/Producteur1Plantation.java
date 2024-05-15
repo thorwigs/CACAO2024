@@ -11,7 +11,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 /**@author Abderrahmane Er-rahmaouy */
-public class Producteur1Plantation extends MasseSalarialeNouveau implements IPlantation{
+public class Producteur1Plantation extends Producteur1MasseSalariale implements IPlantation{
 	protected double nombreHec = 3E6;
 	protected double nombreHecMax = 5E6;
 	protected Journal journalPlantation;

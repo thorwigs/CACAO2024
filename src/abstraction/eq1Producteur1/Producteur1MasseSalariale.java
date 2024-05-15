@@ -20,7 +20,7 @@ import abstraction.eqXRomu.produits.Feve;
 /**@author youssef ben abdeljelil*/
 
 
-public class MasseSalarialeNouveau extends Producteur1Acteur {
+public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 	double cout_formation_par_ouvrier=0.0;
 	int ordre=0;
@@ -51,7 +51,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 	protected Ouvrier ouvrierNonEquitableNonForme;
 
 
-	public MasseSalarialeNouveau() {
+	public Producteur1MasseSalariale() {
 		this.journalOuvrier = new Journal(this.getNom()+"   journal Ouvrier",this);//initialisation journal
 		this.nb_enfants = 150;
 		this.nb_normal = 100;
