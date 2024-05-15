@@ -168,7 +168,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 					}
 					
 					
-					if (stockFeves.get(f)+restantDu(f)< Math.min(1000, alivrer + 1000 ) ) { 
+					if (stockFeves.get(f)+restantDu(f)< Math.min(1000, alivrer + 1000 - restantDu(f) ) ) { 
 						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
