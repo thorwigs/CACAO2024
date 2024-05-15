@@ -22,39 +22,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	}
 	
 
-<<<<<<< HEAD
-	   public double demande(Feve f, double cours) {
-           if (f.getGamme()== Feve.F_MQ.getGamme()) {
-           double demande_initial_MQ=100;
-           double cours_bas=10.0;
-                   if (cours<cours_bas) {
-                   journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on achète  "+"?"+"T de fèves de moyenne qualité");
-                   return demande_initial_MQ*5.0;        
-           }
-                   if (this.stockFeves.get(f) <= 100) {
-                           D =20;
-                           journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
-                           return D;
-           }
-                   else {
-                           return 0;
-                           
-           }
 
-           }
-   
-           else if (f.getGamme() == Feve.F_HQ.getGamme()) {
-                   double demande_initial_HQ=200;
-                   double cours_bas_HQ=50.0;
-                   if (cours<cours_bas_HQ) {
-                           journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on achète  "+"?"+"T de fèves de haute qualité");
-                           return demande_initial_HQ*4.0;
-                   }
-           
-           }
-           return cours;
-   }
-=======
 	public double demande(Feve f, double cours) { //changer selon conditions et qte d'achat de chaque fève
 		if (f.equals(Feve.F_HQ_BE) && stockFeves.get(f)<=15000) {
 			D = 15000 - stockFeves.get(f);
@@ -75,7 +43,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 			return 0;
 		}
 	}
->>>>>>> branch 'main' of https://github.com/Pierrick289/CACAO2024
+
 	
 	
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
