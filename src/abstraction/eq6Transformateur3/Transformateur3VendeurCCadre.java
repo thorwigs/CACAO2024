@@ -42,13 +42,14 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 					journalCC6.ajouter(Color.BLACK,Color.WHITE,"   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+					
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
 					if (contrat == null) {
 						journalCC6.ajouter(Color.RED, Color.BLACK,"   echec des negociations");
 					}
 					else {
 						this.contratsEnCours.add(contrat);
-						journalCC6.ajouter(Color.GREEN, Color.BLACK, "   contrat signe");
+						journalCC6.ajouter(Color.GREEN, Color.BLACK, "   contrat signe : " +"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 					}
 				} else {
 					journalCC6.ajouter("   pas d'acheteur");
@@ -64,7 +65,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 		for (ExemplaireContratCadre c : this.contratsTermines) {
 			this.contratsEnCours.remove(c);
 		}
-		this.journalCC6.ajouter("=== Partie réception Fèves ====================");
+		
 	}
 	/**
 	 * @author Thomas
@@ -91,7 +92,18 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	 */
 	public boolean vend(IProduit produit) {
 		
-		return (this.chocosProduits.contains(produit) && this.getQuantiteEnStock(produit, cryptogramme)- restantDu((ChocolatDeMarque)produit)>200) ;
+		if(! (produit instanceof  ChocolatDeMarque)){
+			return false;
+		}
+		ChocolatDeMarque c = (ChocolatDeMarque) produit;
+		for(ChocolatDeMarque cshark : this.chocosProduits) {
+			if(cshark.equals(c)) {
+				if( this.stockChocoMarque.get(cshark) - restantDu( cshark )> 200  ) {
+					return true;
+				}
+			}
+		}
+		return false ;
 		
 	}
 	/**
@@ -150,7 +162,8 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 		}
 		else {
 	
-			this.journalCC6.ajouter("Nouveau contrat de ventes " + contrat.getNumero());
+			this.journalCC6.ajouter(Color.CYAN,Color.BLACK,"Nouveau contrat initié par un distributeur : " );	
+			this.journalCC6.ajouter("#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 			this.contratsEnCours.add(contrat);
 		}
 	}
@@ -158,6 +171,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	 * @author Arthur
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+		this.journalCC6.ajouter("=== Partie livraison chocolat ====================");
 		this.journalCC6.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
 		this.stockChocoMarque.put((ChocolatDeMarque)produit, this.stockChocoMarque.get((ChocolatDeMarque)produit)-quantite);
 		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
