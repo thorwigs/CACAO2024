@@ -262,6 +262,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		}*/
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		this.quantiteVendueCC = this.quantiteVendueCC + aLivre;
-		return aLivre;
+		return Math.max(aLivre, 0);
 	} 
 }
