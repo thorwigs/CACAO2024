@@ -158,9 +158,9 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 				this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
 				double parStep = 0;
 				if (Filiere.LA_FILIERE.getEtape()==0) {
-					parStep = Math.max(500, 4000-(this.stockChocoMarque.get(cm)-this.restantDu(cm))/12);
+					parStep = Math.max(500, 5000-(this.stockChocoMarque.get(cm)-this.restantDu(cm))/12);
 				} else {
-					parStep = Math.max(0, 2*Filiere.LA_FILIERE.getVentes(cm, Filiere.LA_FILIERE.getEtape()-1)-(this.stockChocoMarque.get(cm)+this.restantDu(cm))/12);
+					parStep = Math.max(Filiere.LA_FILIERE.getAttractivite(cm)*2000, 2*Filiere.LA_FILIERE.getVentes(cm, Filiere.LA_FILIERE.getEtape()-1)-(this.stockChocoMarque.get(cm)+this.restantDu(cm))/12);
 				}
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);

@@ -140,5 +140,15 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;
 	}
+	
+	///////////////
+	
+	public double getMoyAttract () {
+		double moy = 0. ;
+		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			moy += Filiere.LA_FILIERE.getAttractivite(cm);
+		}
+		return moy/Filiere.LA_FILIERE.getChocolatsProduits().size();
+	}
 
 }
