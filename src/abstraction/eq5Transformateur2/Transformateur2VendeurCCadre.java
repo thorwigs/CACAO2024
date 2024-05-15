@@ -38,7 +38,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public void next() {
 		super.next();
-		this.journalCC.ajouter("===VENDEUR=========STEP"+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC.ajouter(Color.PINK,Color.BLACK,"===VENDEUR=========STEP"+Filiere.LA_FILIERE.getEtape()+" ====================");
 		double totalStep=0;
 		for (ExemplaireContratCadre c : contratsEnCours) {
 			if (this.chocosProduits.contains(c.getProduit())){
@@ -81,7 +81,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 					} else {
 						this.contratsEnCours.add(contrat);
 						this.EtapenegoVente=0;
-						journalCC.ajouter(Color.MAGENTA, acheteur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+						journalCC.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 					}
 				} else {
 					journalCC.ajouter("   pas de vendeur");
@@ -172,7 +172,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if (contrat.getVendeur().equals(this)) {
-			this.journalCC.ajouter("Nouveau contrat vendeur accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
+			this.journalCC.ajouter(Color.BLACK,Color.ORANGE,"Nouveau contrat vendeur accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 			this.contratsEnCours.add(contrat);
 		} else {
 			super.notificationNouveauContratCadre(contrat);
