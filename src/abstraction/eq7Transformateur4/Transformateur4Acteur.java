@@ -115,9 +115,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
-		this.stockChoco.put(Chocolat.C_MQ, 10000.0);
-		this.totalStocksChoco.ajouter(this, 10000.0, this.cryptogramme);
-		this.journal.ajouter("ajout de 10000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.stockChoco.put(Chocolat.C_MQ, 45000.0);
+		this.totalStocksChoco.ajouter(this, 45000.0, this.cryptogramme);
+		this.journal.ajouter("ajout de 45000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 	
 
 

@@ -194,7 +194,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		///////début//////modif 07/05 Pierrick
 		double coutProd = 0.0; //ce truc vaut la même chose que propositionPrix(contrat) mais sans la marge de x%
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			coutProd = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit())) + (1000*this.nbemployeCDI + 658)*0.1;
+			coutProd = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
 		}
 		else {
 			coutProd = qte*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
