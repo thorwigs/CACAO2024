@@ -22,6 +22,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQ = 47.57*1000;
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
+	private HashMap<Feve, Double> surfacePlantation;
 	
 /**
  * @author Alexis
@@ -48,7 +49,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		HashMap<Integer,Double> feveMQE = new HashMap<Integer,Double>();
 		feveMQE.put(570, surfaceMQE*0.1);
 		feveMQE.put(670, surfaceMQE*0.2);
-		feveMQE.put(670, surfaceMQE*0.2);
+		feveMQE.put(670, surfaceMQE*0.7);
 		agePlant.put(Feve.F_MQ_E, feveMQE);
 		
 		HashMap<Integer,Double> feveHQ = new HashMap<Integer,Double>();
@@ -66,6 +67,14 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		feveHQBE.put(670, surfaceHQBE*0.1);
 		feveHQBE.put(720, surfaceHQBE*0.9);
 		agePlant.put(Feve.F_HQ, feveHQBE);
+		
+		surfacePlantation.put(Feve.F_BQ, surfaceBQ);
+		surfacePlantation.put(Feve.F_MQ, surfaceMQ);
+		surfacePlantation.put(Feve.F_MQ_E, surfaceMQE);
+		surfacePlantation.put(Feve.F_HQ, surfaceHQ);
+		surfacePlantation.put(Feve.F_HQ_E, surfaceHQ);
+		surfacePlantation.put(Feve.F_HQ_BE, surfaceHQBE);
+		
 	}
 	
 
@@ -105,6 +114,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit (en tonnes)
 				supp += 100; 
 			}
+			supp += aRemplacer(agePlant).get(f)*surfacePlantation.get(f);
 			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f (en ha)
 		}
 		return surfaces;
@@ -114,20 +124,25 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	/**
 	 * @author Alexis
 	 * @param  agePlant
-	 * @return HashMap<Feve,Double> aRemplacer (tableau des surfaces à remplacer par feve)
+	 * @return HashMap<Feve,Double> replace (tableau des surfaces à remplacer par feve)
 	 * Cette methode détermine la quantité de plants trop vieux à remplacer.
 	 * On regarde si pour chaque plantation d'un type de feve, il y a une parcelle qui est trop vieille,
 	 * ie dont le step de fin de vie correspond au step actuel
 	 */
-	protected void aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
+	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
+		HashMap<Feve, Double> replace = new HashMap<Feve, Double>();
 		for(Feve f: agePlant.keySet()) {
 			LinkedList<Integer> steps = new LinkedList<Integer>();
 			steps.addAll(agePlant.get(f).keySet());
 			Collections.sort(steps);
-			if(Filiere.LA_FILIERE.getEtape() == steps.get(0)) {
-				agePlant.get(f).remove(steps.get(0));
+			for(int step: steps) {
+				if(Filiere.LA_FILIERE.getEtape() == step) {
+					replace.put(f, agePlant.get(f).get(step));
+					agePlant.get(f).remove(step);
+				}
 			}
 		}
+		return replace;
 	}
 	
 ///Gestion de la main d'oeuvre///
