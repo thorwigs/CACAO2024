@@ -180,18 +180,18 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    if (!(produit instanceof Feve)) { return 0;}
 	    
 	    Feve feve = (Feve) produit;
-	    double prixBase=0;
+	    double prixBase=coutRevient(feve,contrat.getQuantiteTotale());
 	    //on fixe un prix de base selon la gamme
 	     if (feve.getGamme() == Gamme.HQ) {
-	        prixBase = 3000; // à ajuster selon l'équitable et bio équitable
+	        prixBase = Math.max(3000.0,prixBase); // à ajuster selon l'équitable et bio équitable
 	    } else if (feve.getGamme() == Gamme.MQ) {
-	       prixBase = 1910;
+	       prixBase = Math.max(prixBase, 1910.0);
 	    }
 	  // Ajustements selon équitable et bio
 	      if (feve.isEquitable() && feve.isBio()) {
-	           prixBase = 3400; // Prix pour bio-équitable
+	           prixBase = Math.max(3400.0, prixBase); // Prix pour bio-équitable
 	      } else if (feve.isEquitable()) {
-	           prixBase = 3200; // Prix pour équitable 
+	           prixBase = Math.max(3200.0, prixBase); // Prix pour équitable 
 	      }
 	    return prixBase * 1.2; // Ajouter une marge de profit par exemple de 20% à modifier
 	}
