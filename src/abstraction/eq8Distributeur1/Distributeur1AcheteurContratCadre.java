@@ -28,6 +28,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	protected List<ExemplaireContratCadre> contrat_en_cours;
 	protected List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
+	protected  int test;
+	protected List<ExemplaireContratCadre> choix;
 	
 
 	/**
@@ -38,6 +40,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
 		this.contrat_term= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC= new Journal (this.getNom() + "journal CC", this);
+		this.test=0;
+		this.choix=new LinkedList<ExemplaireContratCadre>();
 	}
 	
 
@@ -226,17 +230,20 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 //			|| this.chocoBan.contains(produit)) {
 			return 0.0; 
 		}
-		
-		if (contrat.getPrix() <= this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*0.80) {
-				return contrat.getPrix();
+
+		if (this.test==0) {
+			this.choix.add(contrat);
+			return 0.0;
 		}
-		
+		if (contrat.getPrix() <= this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*0.80 && this.test == 1) {
+			return contrat.getPrix();		
+		}
+				
 		else {
 			return this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*(0.80+(0.15*contrat.getListePrix().size())/supCC.MAX_PRIX_NEGO);
 		}
 	}
 
-	
 	/**
 	 *@author ianis
 	 */
@@ -275,6 +282,18 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		return d ; 
 	}
 	
+	public ExemplaireContratCadre ChoisirCC(List<ExemplaireContratCadre> liste) {
+		double prix = liste.get(0).getPrix();
+		int choix = 0;
+		for (int i=1; i<liste.size();i++) {
+			if (liste.get(i).getPrix()<prix) {
+				choix = i;
+				prix = liste.get(i).getPrix();
+			}
+		}
+		return liste.get(choix);
+	}
+	
 	/**
 	 * @author ianis
 	 */
@@ -299,7 +318,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		
 		for (ChocolatDeMarque choc : chocolats) {
 			if (this.achete(choc)) {
-				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter");
+				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter pour le chocolat : "+choc);
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
@@ -308,11 +327,33 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 				IVendeurContratCadre vendeur = null;		
 				if (vendeurs.size()==1) {
 					vendeur=vendeurs.get(0);
+					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Debut des négotatiations avec l'unique vendeur : "+ vendeur+ "pour le chocolat : "+choc);
 				} else if (vendeurs.size()>1) {
-					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size())); // a améliorer dans la V2
+					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Essaie de tous les contrats cadre possible");
+					for (int i=0;i<vendeurs.size();i++) {
+						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
+						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"C'est le "+i+"ème vendeur");
+						int a = Filiere.LA_FILIERE.getEtape()+1;
+						int b = 24 ; 
+						double c = this.prevision(choc, b) ;	
+						double d = 0 ; 
+						for (int j=0; j<contrat_en_cours.size(); j++) {
+							if (contrat_en_cours.get(j).getProduit().equals(choc)) {
+								d = d + contrat_en_cours.get(j).getQuantiteRestantALivrer();
+							}
+						}
+						double e = this.stock_Choco.get(choc); 
+						double f = (c-d-e)/(b*this.nombreMarquesParType.get(choc.getChocolat()));
+					    Echeancier x = new Echeancier (a,b,f+1000);
+						supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
+					}
+					
+					ExemplaireContratCadre cc = this.ChoisirCC(this.choix);
+					vendeur = cc.getVendeur();				
 				}
 				
 				if (vendeur!=null) {
+					this.test=1;
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
 					int a = Filiere.LA_FILIERE.getEtape()+1;
 					int b = 24 ; 
@@ -327,12 +368,15 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					double f = (c-d-e)/(b*this.nombreMarquesParType.get(choc.getChocolat()));
 				    Echeancier x = new Echeancier (a,b,f+1000);
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
-					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"-->aboutit au contrat "+cc);
+					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"-->aboutit au contrat "+cc);  
 					if (cc != null ) {
 						Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Livraison", 0.05*cc.getPrix());
 						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"l'accord du contrat cadre est : Quantitée totale de "+cc.getQuantiteTotale()+" pour un prix par Step de "+cc.getPrix() );
-					}
-				}	
+						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"" );	
+					} 
+				}
+				this.choix=new LinkedList<ExemplaireContratCadre>();
+				this.test=0;
 			}
 		}
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
