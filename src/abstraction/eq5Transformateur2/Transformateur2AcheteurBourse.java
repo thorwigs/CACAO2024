@@ -7,6 +7,7 @@ import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
@@ -15,7 +16,7 @@ import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre implements IAcheteurBourse {
 	protected Journal journalBourse;
 	private double achatMaxParStep;
-	
+
 
 	////////////////////////////////////////////
 	// Constructeur --> met à jour le journal //
@@ -40,8 +41,8 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 
 		//Stratégie sur le BQ
 		if (f.getGamme()==Gamme.BQ) {
-			if (stockFeves.get(f) <= STOCKINITIAL) {
-				return STOCKINITIAL - stockFeves.get(f);
+			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
+				return STOCKINITIAL - stockFeves.get(f).getValeur();
 			}
 			else {
 				return 0;
@@ -52,8 +53,8 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		//Stratégie sur le MQ
 		if (f.getGamme()==Gamme.MQ) {
 
-			if (stockFeves.get(f) <= STOCKINITIAL) {
-				return STOCKINITIAL - stockFeves.get(f);
+			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
+				return STOCKINITIAL - stockFeves.get(f).getValeur();
 			}
 			else {
 				return 0;
@@ -81,9 +82,9 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	 * @Erwann
 	 */
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
+		this.stockFeves.put(f, new Variable("Eq5Stock "+f, this,this.stockFeves.get(f).getValeur()+quantiteEnT));
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+"");
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : on a acheté "+quantiteEnT+" T de "+f+" au prix de "+quantiteEnT*coursEnEuroParT);
 	}
 	/**
 	 * @Erwann

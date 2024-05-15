@@ -13,6 +13,7 @@ import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
@@ -62,7 +63,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 		super.next();
 		this.journalCC.ajouter("==ACHETEUR=======STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if ((this.stockFeves.get(f)<1200) & (f.getGamme()!=Gamme.HQ)) { // Modifier quantité minimale avant achat
+					if ((this.stockFeves.get(f).getValeur()<5000) & (f.getGamme()!=Gamme.HQ)) { // Modifier quantité minimale avant achat
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
 						double parStep = 27500; // Changer quantité par Step
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep);
@@ -246,7 +247,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 				}
 			}
 		journalCC.ajouter("Réception de : "+quantiteEnTonnes+", tonnes de : "+p+" provenant du contrat : "+contrat.getNumero());
-		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
+		stockFeves.put((Feve)p, new Variable("Eq5Stock "+p, this,stockFeves.get((Feve)p).getValeur()+quantiteEnTonnes));
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
 }
