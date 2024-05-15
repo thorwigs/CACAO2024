@@ -14,7 +14,8 @@ import presentation.FenetrePrincipale;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.beans.*;
+//import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -620,4 +621,13 @@ public class Filiere implements IAssermente {
 	public void setCryptos(HashMap<IActeur, Integer> cryptos) {
 		this.cryptos = cryptos;
 	}
+	
+	public double getAttractivite(ChocolatDeMarque cm) {
+		return this.clientsFinaux.get(0).getAttractivite(cm);
+	}
+	
+	public double getAttractivite(ChocolatDeMarque cm, IDistributeurChocolatDeMarque dis) {
+		return this.clientsFinaux.get(0).getAttractivite(cm, dis);
+	}
+
 }
