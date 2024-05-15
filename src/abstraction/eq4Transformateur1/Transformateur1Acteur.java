@@ -22,6 +22,8 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
 	
+	protected int quantiteMiniCC = 1200;
+	
 	protected int cryptogramme;
 	protected Journal journal;
 	private double coutStockage;
