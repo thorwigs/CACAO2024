@@ -11,9 +11,9 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurBourse extends Producteur1Production implements  IVendeurBourse {
-	public double  prixSeuilHQ ;
-	public double  prixSeuilBQ ;
-	public double  prixSeuilMQ ;
+	public double  pourcentageHQ=0.02 ;
+	public double  pourcentageBQ=0.02 ;
+	public double  pourcentageMQ=0.02 ;
 	private Journal journalBourse;
 	/**
 	 * Constructeur de la classe Producteur1VendeurBourse.
@@ -45,10 +45,12 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 		if (quantiteEnT!=0) { 
+			double Seuil = getCoutUnitaireProduction(f);
 
 
 			if (f.getGamme()==Gamme.MQ) {
-				if(cours>=prixSeuilMQ) {
+				
+				if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 
 					return quantiteEnT;
@@ -59,7 +61,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				}
 			}
 			if (f.getGamme()==Gamme.HQ) {
-				if(cours>=prixSeuilHQ) {
+				if(cours>= (pourcentageHQ+1)*Seuil*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 
 					return quantiteEnT;
@@ -69,7 +71,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				}
 			}
 			if (f.getGamme()==Gamme.BQ) {
-				if(cours>=prixSeuilBQ) {
+				if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
 					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 					return quantiteEnT;
@@ -101,7 +103,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f).getValeur((Integer)cryptogramme));
 		super.notificationOperationBancaire(retire*coursEnEuroParT);
 		super.getSolde();
-		String s = this.stock.get(f).toString();
+		
 
 		return retire;
 	}

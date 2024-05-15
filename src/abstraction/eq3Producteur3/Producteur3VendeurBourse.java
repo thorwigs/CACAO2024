@@ -23,8 +23,12 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 			return this.getQuantiteEnStock(f,this.cryptogramme);
 		}
 		else {
-			//pas de vente en bourse MQ et HQ pour le moment
-			return 0;
+			if ((getQuantiteEnStock(f,cryptogramme) - ventefeve.get(f).getValeur() > 10)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
+				return this.getQuantiteEnStock(f, cryptogramme);
+			}
+			else {
+				return 0;
+			}
 		}
 	}
 
@@ -47,7 +51,7 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock
 			this.setQuantiteEnStock(f, 0);
-			this.journal_bourse.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
+			this.journal_bourse.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+ "pour "+coursEnEuroParT*stock_inst+" E");
 			ventefevebourse.put(f, stock_inst);
 			return stock_inst;
 		}
