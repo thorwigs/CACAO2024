@@ -53,6 +53,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	
 	public void next() {
 		super.next();
+		
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
@@ -76,7 +77,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 				}
 			}
 		}
-		
+				
 		// On archive les contrats termines
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0) {
@@ -92,7 +93,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 		}
 		this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC());
-		//this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
+	}
+	
+	public void setQuantiteVendueCC(double q) {
+		this.quantiteVendueCC = q;
 	}
 
 
@@ -151,15 +155,12 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200;
 	}
 	
+	public void reinit_quantite_vendue() {
+		this.quantiteVendueCC = 0;
+	}
+	
 	public double getNbTonnesVenduesCC() {
-		double nb = this.quantiteVendueCC;
-		
-		if (Filiere.LA_FILIERE.getEtape() != this.etapeCC) {
-			// On remet à 0 la quantité vendue à chaque tour (on souhaite suivre la vente par tour)
-			this.quantiteVendueCC = 0 ;
-			this.etapeCC = Filiere.LA_FILIERE.getEtape();
-		}
-		return nb;
+		return quantiteVendueCC;
 	}
 
 	/** contre proposition du vendeur
@@ -265,7 +266,13 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 		}*/
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		this.quantiteVendueCC = this.quantiteVendueCC + aLivre;
+		if (this.etapeCC == Filiere.LA_FILIERE.getEtape()) {
+			this.quantiteVendueCC = this.quantiteVendueCC + aLivre;
+		}
+		else {
+			this.etapeCC = Filiere.LA_FILIERE.getEtape();
+			this.quantiteVendueCC = aLivre;
+		}
 		return Math.max(aLivre, 0);
 	} 
 }

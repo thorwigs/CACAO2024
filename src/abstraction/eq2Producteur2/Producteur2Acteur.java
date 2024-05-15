@@ -38,8 +38,9 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract double get_prod_pest_MQ();
 	public abstract double get_prod_pest_HQ();
 	
-	//protected abstract double getNbTonnesVenduesBourse();
+	protected abstract double getNbTonnesVenduesBourse();
 	protected abstract double getNbTonnesVenduesCC();
+	public abstract void reinit_quantite_vendue();
 	protected abstract double prix(Feve f);
 	
 	/** Constructeur de classe
@@ -171,8 +172,9 @@ public abstract class Producteur2Acteur implements IActeur {
 			solde.remove(0);
 		}
 		
-		//this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC())
-		//this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse())
+		this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC());
+		this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
+		//this.reinit_quantite_vendue();
 	}
 	
 	public Color getColor() { //NE PAS MODIFIER
@@ -303,7 +305,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	 */
 	public double getCoutTotalParStep() {
 		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
-		return somme ;
+		return somme;
 	}
 	
 	/** Débite de notre compte l'argent utilisé à chaque étape 
@@ -326,4 +328,3 @@ public abstract class Producteur2Acteur implements IActeur {
 		}		
 	}
 }
-
