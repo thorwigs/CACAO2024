@@ -179,12 +179,12 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 			for (ChocolatDeMarque cm : chocosProduits) {
 				if(c.getGamme() == cm.getGamme()) {
 					double nbr_de_marque = chocosProduits.size();
-					double stock_initial = stockChocoMarque.get(cm).getValeur();
-					stockChocoMarque.put(cm,new Variable("Eq5Stock "+cm, this, stock_initial + stockChoco.get(c).getValeur()/nbr_de_marque));
-					VariationStockChocoMarque.put(cm, stockChoco.get(c).getValeur()/nbr_de_marque);
+					stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stockChoco.get(c).getValeur()/nbr_de_marque, this.cryptogramme);
+					stockChoco.get((Chocolat) c).retirer(this, stockChoco.get(c).getValeur()/nbr_de_marque, this.cryptogramme);
+					VariationStockChocoMarque.replace(cm, stockChoco.get(c).getValeur()/nbr_de_marque);
+					totalStocksChocoMarque.ajouter(this, stockChoco.get(c).getValeur(), this.cryptogramme);
 				}
 			}
-			stockChoco.put(c,new Variable("Eq5Stock "+c, this,0.0));
 		}
 		//Regarder quantite a chaque step (a virer dans la version finale)
 		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_BQ, cryptogramme)+" t de feves BQ");
@@ -208,16 +208,13 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : lesFeves) {
-				res.add(stockFeves.get(f));
+				res.add(this.stockFeves.get(f));
 		}
 		for (Chocolat c : lesChocolats) {
-				res.add(stockChoco.get(c));
+				res.add(this.stockChoco.get(c));
 		}
-		/*
-		for (ChocolatDeMarque cm : chocosProduits) {
-				res.add(stockChocoMarque.get(cm));
-		}
-		*/
+		res.add(this.totalStocksChocoMarque);
+		
 		return res;
 	}
 
