@@ -173,7 +173,7 @@ public class Producteur1Plantation extends MasseSalarialeNouveau implements IPla
 		else if(this.getSolde() < cout) {
 			this.journalPlantation.ajouter("On peut pas acheter la quantite demande car on n'a pas l'argent");
 		}
-		else {
+		else if (cout > 0){
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Cout d'acheter des hectares",cout );
 			this.setHec(this.nombreHec + hec);
 		}
