@@ -170,6 +170,8 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, choc, x);
 				journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"   Je lance un appel d'offre de "+x+" T de "+choc);
 				if (ov!=null) {
+					double quantiteFidele = super.Fidele.get(ov.getVendeur().getNom()) + x;
+					super.Fidele.replace(ov.getVendeur().getNom(), quantiteFidele);
 					journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"   AO finalise : on ajoute "+x+" T de "+choc+" au stock");
 					stock_Choco.put(choc,this.getQuantiteEnStock(choc,cryptogramme)+ x);
 					totalStockChoco.ajouter(this, x, cryptogramme);
