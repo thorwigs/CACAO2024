@@ -48,7 +48,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		salaire = 2000;
 		coutLicenciement1Salarie = 4*salaire;
 		capaciteTransformation = 3.7;
-		coutAdjuvants = 1200;
+		coutAdjuvants = 370;
 		coutMachines = 8;
 		moyProd=0;
 		totalProd=0;
@@ -75,11 +75,11 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 */
 	public double TonnesTransformees(Feve f) {
 		double tMaxTransformees = Math.min(this.getQuantiteEnStock(f, cryptogramme),this.capaciteTransformation*this.NbSalaries); //Quantite maximale a transformer
-		double tonnesTransformees =0.9*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
+		double tonnesTransformees =0.4*tMaxTransformees; //On transforme 90% (peut etre modifie) de ce qu'on peut transformer au maximum
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
 		this.stockFeves.put(f, new Variable("Eq5Stock ", this,this.getQuantiteEnStock(f,cryptogramme)-tonnesTransformees)); //Modifie le stock de feves
 		this.stockChoco.put(c, new Variable("Eq5Stock ", this,this.getQuantiteEnStock(c,cryptogramme)+tonnesTransformees)); //Modifie le stock de feves
-		return tonnesTransformees; 
+		return tonnesTransformees;
 	}
 	/**
 	 * @Erwann
@@ -125,6 +125,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 	 */
 	/**
 	 * @Erwann
+	 * @Vincent
 	 */
 	public int EmbaucheLicenciement(double TonnesTransformees) {
 		double CapaciteTransfoTotale = this.NbSalaries * this.capaciteTransformation;
