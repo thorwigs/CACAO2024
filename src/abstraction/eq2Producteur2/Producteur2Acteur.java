@@ -303,7 +303,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	 */
 	public double getCoutTotalParStep() {
 		double somme = this.cout_total_stock() + this.cout_humain_par_step() + this.cout_plantation();
-		return somme;
+		return somme ;
 	}
 	
 	/** Débite de notre compte l'argent utilisé à chaque étape 
