@@ -2,11 +2,12 @@
 
 import java.util.HashMap;
 import java.util.List;
-
+ 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 
 //Toutes les variables de poids de cacao sont en TONNES 
 
@@ -32,9 +33,10 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
-	protected double rend_no_pest_HQ = 0.72; 
-	protected HashMap <Feve, HashMap<Integer, Double> > plantation = new HashMap<>();	
-	protected double start_years = 2024.0;
+
+	protected double rend_no_pest_HQ = 0.72;
+	protected HashMap <Feve, HashMap<Integer, Double>> plantation;
+	
 	protected Journal journalPlantation;
 	
 	/** Constructeur de classe
@@ -43,38 +45,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	
 	public void init_simu_feve() { //initialise la HashMap pour débuter la simulation
 		
-		//création de la HashMap à l'intérieur de plantation pour Feve BQ
-        HashMap<Double, Double> feve_BQ = new HashMap<>();
-        
-        for(int i  = 0; i < 40; i++) {
-        	
-        	feve_BQ.put(start_years + i,(nb_hectares_actuel / 40) * getPourcentage_BQ());
-        }
-        plantation.put(Feve.F_BQ,feve_BQ);
-        
-        
-        //création de la HashMap à l'intérieur de plantation pour feve HQ
-        HashMap<Double, Double> feve_HQ = new HashMap<>();
-        
-        for(int i  = 0; i < 40; i++) {
-        	
-        	feve_BQ.put(start_years + i,(nb_hectares_actuel / 40) * getPourcentage_HQ());
-        }
-        plantation.put(Feve.F_BQ,feve_HQ);
-        
-        //
-        HashMap<Double, Double> feve_MQ = new HashMap<>();
-        
-        for(int i  = 0; i < 40; i++) {
-        	
-        	feve_BQ.put(start_years + i,(nb_hectares_actuel / 40) * getPourcentage_MQ());
-        }
-        plantation.put(Feve.F_BQ,feve_MQ);
 	}
 	
-	
-
-
 	public Producteur2_Plantation() {
 
 		this.nb_hectares_actuel=5000000.0;
@@ -179,6 +151,20 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	public void setNb_nouveau_hectares(double nb_nouveau_hectares) {
 		this.nb_nouveaux_hectares = nb_nouveau_hectares;
+	}
+	
+	/** Getter
+	 * @author Quentin
+	 */
+	public HashMap <Feve, HashMap<Integer, Double>> getPlantation(){
+		return this.plantation;
+	}
+	
+	/** Setter
+	 * @author Quentin
+	 */
+	public void setPlantation(HashMap <Feve, HashMap<Integer, Double>> plantation) {
+		this.plantation = plantation;
 	}
 	
 	/** Initialisation
@@ -346,6 +332,43 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 				this.setPourcentage_MQ(getPourcentage_MQ()-diff);
 				this.setPourcentage_HQ(pourcentage_equitable);
 			}
+		}
+	}
+	
+	/** Retourne le nombre d'hectares pour un type de produit (un type de fève)
+	 * @author Quentin
+	*/
+	public double getHectaresPlantes(IProduit p, int cryptogramme) {
+		if(this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter le nombre d'hectares
+			double somme = 0;
+			for(Feve f : this.getPlantation().keySet()) {
+				if(f == p) {
+					for(Integer annee : this.getPlantation().get(f).keySet()) {
+						somme += this.getPlantation().get(f).get(annee);
+					}
+				}
+			}
+			return somme;
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre nombre d'hectares par produit
+		}	
+	}
+	
+	/** Retourne la quantité totale d'hectares plantés
+	 * @param cryptogramme
+	 * @author Quentin
+	 */
+	public double getHectaresTotal(int cryptogramme) {
+		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter le nombre d'hectares total
+			double somme = 0;
+			for(Feve f : this.getPlantation().keySet()) {
+				for(Integer annee : this.getPlantation().get(f).keySet()) {
+					somme += this.getPlantation().get(f).get(annee);
+				}
+			}
+			return somme;
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre le nombre d'hectares total
 		}
 	}
 	
