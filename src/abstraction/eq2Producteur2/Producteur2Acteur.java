@@ -38,7 +38,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	public abstract double get_prod_pest_MQ();
 	public abstract double get_prod_pest_HQ();
 	
-	protected abstract double getNbTonnesVenduesBourse();
+	//protected abstract double getNbTonnesVenduesBourse();
 	protected abstract double getNbTonnesVenduesCC();
 	protected abstract double prix(Feve f);
 	

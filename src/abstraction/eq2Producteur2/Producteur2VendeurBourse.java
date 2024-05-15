@@ -16,11 +16,9 @@ import abstraction.eqXRomu.produits.Gamme;
 public abstract class Producteur2VendeurBourse extends Producteur2_Plantation implements IVendeurBourse {
 	
 	private Journal journalBourse;
-	
 	public Producteur2VendeurBourse() {
 		super();
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
-	
 	}
 
 	/** Propose une offre à la bourse
