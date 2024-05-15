@@ -78,6 +78,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			}  
 		} */
 		
+		
 		int choisi=-1; // permet de connaître la proposition choisi à la fin, la moins chere, ou renverra -1 si pas d'offre correspondante
 		for (int i=0; i<propositions.size();i++) {
 			if(propositions.get(0).getOffre().getProduit().equals(propositions.get(i).getProduit())) {
