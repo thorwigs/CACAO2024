@@ -95,9 +95,9 @@ public class Producteur1Production extends Producteur1Plantation{
 	public void feveToEqui() {
 
 
-		int nb = this.GetNombreOuvrierEquitable();
-		int nbe = this.getNombreEnfants();
-		int nbt = this.GetNombreOuvrierEquitable()+ this.GetNombreOuvrierNonEquitable()+this.getNombreOuvrierFormés();
+		int nb = this.get_Nombre_Ouvrier_Equitable_Forme()+this.get_Nombre_Ouvrier_Equitable_NonForme();
+		
+		int nbt = this.get_Nombre_Total();
 
 		double pro = nb/nbt;
 
