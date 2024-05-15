@@ -91,16 +91,12 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	public void TransformationFeve(Feve f) {
 		double feve_en_stock = this.stockFeves.get(f);
 		double choco_en_stock = this.stockChoco.get(this.Correspond(f));						
-		if(feve_en_stock >0 && feve_en_stock<=80) {                                               
-			Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Cout de production",feve_en_stock*(0.5*1200+8+2*1000*0.27+370));
+		if(feve_en_stock >0 ) {                                               
+			Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Cout de production",feve_en_stock*(0.5*1200+8+2*1000*0.27));
 			this.stockChoco.put(this.Correspond(f),choco_en_stock + feve_en_stock/4.2);
 			this.stockFeves.put(f,0.0);
 		}
-		else if(feve_en_stock >0 && feve_en_stock>80) {
-			Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Cout de production",80*(0.5*1200+8+2*1000*0.27+370));
-			this.stockChoco.put(this.Correspond(f),choco_en_stock + 80/4.2);
-			this.stockFeves.put(f,feve_en_stock - 80);
-		}
+		
 	}
 	
 	/**
