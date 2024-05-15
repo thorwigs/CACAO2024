@@ -2,7 +2,7 @@
 
 import java.util.HashMap;
 import java.util.List;
- 
+
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
