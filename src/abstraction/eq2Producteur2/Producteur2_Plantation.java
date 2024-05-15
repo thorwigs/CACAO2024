@@ -7,8 +7,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
-
-//Toutes les variables de poids de cacao sont en TONNES 
+import abstraction.eqXRomu.produits.IProduit;
 
 /** Classe permettant de gérer les plantations
  * @author Anthony
@@ -44,7 +43,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void init_simu_feve() { //initialise la HashMap pour débuter la simulation
 		
 		//création de la HashMap à l'intérieur de plantation pour Feve BQ
-        HashMap<Integer, D> feve_BQ = new HashMap<>();
+        HashMap<Integer, Double> feve_BQ = new HashMap<>();
         
         for(int i  = 0; i < 40; i++) {
         	
