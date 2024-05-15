@@ -86,9 +86,15 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 2000000.0);
-			this.totalStocksFeves.ajouter(this, 2000000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 2000000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			if (f == Feve.F_HQ || f == Feve.F_HQ_BE || f == Feve.F_MQ) {
+			this.stockFeves.put(f, 20000.0);
+			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			} else {
+			this.stockFeves.put(f, 0.0);
+			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 0 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			}
 		}
 		
 		//le premier stock est celui de chocolat sans marque, le deuxième est celui de chocolat avec marque
@@ -109,9 +115,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
-		this.stockChoco.put(Chocolat.C_MQ, 10000.0);
-		this.totalStocksChoco.ajouter(this, 10000.0, this.cryptogramme);
-		this.journal.ajouter("ajout de 10000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.stockChoco.put(Chocolat.C_MQ, 45000.0);
+		this.totalStocksChoco.ajouter(this, 45000.0, this.cryptogramme);
+		this.journal.ajouter("ajout de 45000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 	
 
 
@@ -172,7 +178,11 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	
 	//codé par Pierrick
 	public void next() {
+
 		this.journal.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "===============");
+		
+		
+		
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
 	
