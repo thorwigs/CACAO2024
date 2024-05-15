@@ -110,12 +110,10 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		float T = 0;
-		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
-			T += stockChocoMarque.get(c);
-		}
+		double stockdispo = this.stockChocoMarque.get((ChocolatDeMarque) contrat.getProduit());
 		
-		if ( contrat.getEcheancier().getQuantiteTotale()< T){
+		
+		if ( contrat.getEcheancier().getQuantiteTotale() < stockdispo ){
 			return contrat.getEcheancier();
 		}
 		else {
