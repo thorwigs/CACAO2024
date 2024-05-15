@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eq1Producteur1.Producteur1MasseSalariale;
+
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -25,8 +25,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
-	
-	protected Producteur1MasseSalariale liste_Ouvrier;
+
 	protected int cryptogramme;
 	protected Journal journal;
 	//new stuff I added : Abdo
@@ -119,6 +118,7 @@ public class Producteur1Acteur implements IActeur {
 	
 	public void CroissanceEconomique() {
 		this.croissanceParStep = new ArrayList<Double>();
+		
 		for (int i = 0; i < this.soldeParStep.size()-1; i++) {
 			double crois = (this.soldeParStep.get(i+1)-this.soldeParStep.get(i))/this.soldeParStep.get(i);
 			
