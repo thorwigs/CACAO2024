@@ -203,6 +203,7 @@ public class Transformateur2MasseSalariale extends Transformateur2Acteur {
 		jx.add(JournalMasseSalariale);
 		return jx;
 	}
+	
 }
 
 
