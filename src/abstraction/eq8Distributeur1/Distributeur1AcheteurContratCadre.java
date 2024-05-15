@@ -371,6 +371,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					ExemplaireContratCadre cc = supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"-->aboutit au contrat "+cc);  
 					if (cc != null ) {
+						double quantiteFidele = super.Fidele.get(cc.getVendeur().getNom()) + cc.getQuantiteTotale();
+						super.Fidele.replace(cc.getVendeur().getNom(), quantiteFidele);
 						Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Livraison", 0.05*cc.getPrix());
 						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"l'accord du contrat cadre est : Quantitée totale de "+cc.getQuantiteTotale()+" pour un prix par Step de "+cc.getPrix() );
 						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"" );	
