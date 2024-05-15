@@ -48,7 +48,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 						(((Feve)produit).getGamme() == Feve.F_HQ_BE.getGamme())
 					)
 				
-				&& (stockFeves.get(produit)+restantDu((Feve)produit)< 150000 );
+				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 150000 );
 	
 		//à modifier selon nécessité de chaque type de fève
 	}
