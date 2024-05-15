@@ -78,22 +78,9 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 			} else {
 				return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
 			}
-		}
-		
-		if (!(stockChocoMarque.keySet().contains(cm))) {
-			return null;
-		}
-		if (prixAO.get(cm).size()==0) {
-			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
-			if (cm.getChocolat().getGamme()==Gamme.HQ) {
-				px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
-			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
-				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
-			}
-			return new OffreVente(offre, this, cm, px);
 		} else {
-			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
+			return null;
+			
 		}
 	}
 
