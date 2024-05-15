@@ -89,16 +89,9 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 */
 	protected HashMap<Feve, Double> plantation() {
 		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
-	//on recupere les surfaces du step precedent (pour l'instant valeurs arbitraires)
-		h.put(Feve.F_HQ, surfaceHQ);
-		h.put(Feve.F_HQ_BE, surfaceHQBE);
-		h.put(Feve.F_HQ_E, surfaceHQE);
-		h.put(Feve.F_MQ, surfaceMQ);
-		h.put(Feve.F_MQ_E, surfaceMQE);
-		h.put(Feve.F_BQ, surfaceBQ);
 	//on augmente la surface 
-		achatPlantation(h);
-		return h;
+		surfacePlantation = achatPlantation(surfacePlantation);
+		return surfacePlantation;
 	}
 
 	/**

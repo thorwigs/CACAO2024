@@ -24,15 +24,15 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		//vendre par bourse ce qui n'est pas vendue par contrat cadre (a faire)
 		//vend toute la production BQ en bourse
 		//verifie si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
-		this.journal_bourse.ajouter("quantiteAV"+quantiteAV(f,cours));
-		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
+		double stock = getQuantiteEnStock(f,cryptogramme);
+		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,stock)<=cours)) {
 			//mettre la quantite de stock BQ (on pourra mettre plus et ajuster selon la demande)
 			//plus on demande, plus on vend (attention a l'offre et a la demande) (souvent on vend < 5% de ce qu'on veut vendre mais attention on vend plus mais ca fait baisser le cours)
-			return quantiteAV(f,cours);
+			return quantiteAV(f,cours,stock);
 		}
 		else {
-			if (coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours) {
-				return quantiteAV(f,cours);
+			if (coutRevient(f,stock)<=cours) {
+				return quantiteAV(f,cours,stock);
 			}
 			else {
 				return 0;
@@ -47,8 +47,7 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 	 * Renvoie la quantite que l'on va proposer a la vente de maniere a vendre nos stocks et pas moins (represente une etude du marche)
 	 * La formule mathematique se base sur le fonctionnement du systeme
 	 */
-	private double quantiteAV(Feve f, double cours) {
-		double stock = getQuantiteEnStock(f,cryptogramme);
+	private double quantiteAV(Feve f, double cours, double stock) {
 		double autresAV = ((Producteur1VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ1")).offre(f,cours)+((Producteur2VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ2")).offre(f,cours);
 		double dem = ((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4")).demande(f,cours)+((Transformateur2AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ5")).demande(f,cours)+((Transformateur3AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ6")).demande(f,cours)+((Transformateur4AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ7")).demande(f,cours);
 		this.journal_bourse.ajouter("eq4"+((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4")).demande(f,cours));
