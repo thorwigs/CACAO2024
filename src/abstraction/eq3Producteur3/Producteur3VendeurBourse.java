@@ -1,8 +1,15 @@
 package abstraction.eq3Producteur3;
 
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
+import abstraction.eq1Producteur1.Producteur1VendeurBourse;
+import abstraction.eq2Producteur2.Producteur2VendeurBourse;
+import abstraction.eq4Transformateur1.Transformateur1AcheteurBourse;
+import abstraction.eq5Transformateur2.Transformateur2AcheteurBourse;
+import abstraction.eq6Transformateur3.Transformateur3AcheteurBourse;
+import abstraction.eq7Transformateur4.Transformateur4AcheteurBourse;
 
 public class Producteur3VendeurBourse extends Producteur3Production implements IVendeurBourse {
 	
@@ -17,21 +24,50 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		//vendre par bourse ce qui n'est pas vendue par contrat cadre (a faire)
 		//vend toute la production BQ en bourse
 		//verifie si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
+		this.journal_bourse.ajouter("quantiteAV"+quantiteAV(f,cours));
 		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
 			//mettre la quantite de stock BQ (on pourra mettre plus et ajuster selon la demande)
 			//plus on demande, plus on vend (attention a l'offre et a la demande) (souvent on vend < 5% de ce qu'on veut vendre mais attention on vend plus mais ca fait baisser le cours)
-			return this.getQuantiteEnStock(f,this.cryptogramme);
+			return quantiteAV(f,cours);
 		}
 		else {
-			if ((getQuantiteEnStock(f,cryptogramme) - ventefeve.get(f).getValeur() > 10)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
-				return this.getQuantiteEnStock(f, cryptogramme);
+			if (coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours) {
+				return quantiteAV(f,cours);
 			}
 			else {
 				return 0;
 			}
 		}
 	}
-
+	
+	/**
+	 * @author Arthur
+	 * @param Feve f, double cours (un type de feve et son prix a la tonne a la bourse)
+	 * return double (quantite a proposer de vendre)
+	 * Renvoie la quantite que l'on va proposer a la vente de maniere a vendre nos stocks et pas moins (represente une etude du marche)
+	 * La formule mathematique se base sur le fonctionnement du systeme
+	 */
+	private double quantiteAV(Feve f, double cours) {
+		double stock = getQuantiteEnStock(f,cryptogramme);
+		double autresAV = ((Producteur1VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ1")).offre(f,cours)+((Producteur2VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ2")).offre(f,cours);
+		double dem = ((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4")).demande(f,cours)+((Transformateur2AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ5")).demande(f,cours)+((Transformateur3AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ6")).demande(f,cours)+((Transformateur4AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ7")).demande(f,cours);
+		this.journal_bourse.ajouter("eq4"+((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4")).demande(f,cours));
+		this.journal_bourse.ajouter("eq5"+((Transformateur2AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ5")).demande(f,cours));
+		this.journal_bourse.ajouter("eq6"+((Transformateur3AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ6")).demande(f,cours));
+		this.journal_bourse.ajouter("eq7"+((Transformateur4AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ7")).demande(f,cours));
+		this.journal_bourse.ajouter("dem"+dem);
+		if (dem >= autresAV+stock) {
+			return stock;
+		}
+		else if (dem == 0) {
+			return 0;
+		} else if (stock < dem) {
+			return stock/dem*autresAV/(1-stock/dem);
+		} else {
+			return 9*autresAV;
+		}
+	}
+	
 	/**
 	 * @author Arthur
 	 * @param Feve f, double quantiteEnT, double coursEnEuroParT (données de la vente)
