@@ -95,12 +95,17 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 
 
 		masseSalariale.put(enfant, this.nb_enfants);
+
 		masseSalariale.put(ouvrierEquitableNonForme, this.nb_equitable);
 		masseSalariale.put(ouvrierEquitableForme, 0); // 
 		masseSalariale.put(ouvrierNonEquitableForme, 0);
 		masseSalariale.put(ouvrierNonEquitableNonForme, this.nb_normal);
 
-		//remplissage de la liste anciennete
+		masseSalariale.put(ouvrierEquitableNonForme, this.nb_equitable);
+		masseSalariale.put(ouvrierEquitableForme, 0); // 
+		masseSalariale.put(ouvrierNonEquitableForme, 0);
+		masseSalariale.put(ouvrierNonEquitableNonForme, this.nb_normal);
+
 
 		for (int i = 0; i < 5; i++) {
 			// Créer une nouvelle liste d'entiers pour chaque élément de la liste principale
@@ -119,7 +124,9 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 		this.anciennete.get(0).set(0, this.nb_enfants);
 		this.anciennete.get(2).set(0, this.nb_equitable);
 		this.anciennete.get(4).set(0, this.nb_normal);
+
 	}
+
 
 	public HashMap<Ouvrier,Integer> getMasseSalariale() {
 		return this.masseSalariale;
@@ -127,7 +134,13 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 
 	public Integer get_Nombre_Enfant() { 
 		return masseSalariale.get(enfant); 
+
 	}
+
+
+
+
+
 
 	public Integer get_Nombre_Ouvrier_Equitable_Forme() { 
 		return masseSalariale.get(ouvrierEquitableForme); 
@@ -136,6 +149,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 	public Integer get_Nombre_Ouvrier_Equitable_NonForme() { 
 		return masseSalariale.get(ouvrierEquitableNonForme); 
 	}
+
 
 	public Integer get_Nombre_Ouvrier_NonEquitable_Forme() { 
 		return masseSalariale.get(ouvrierNonEquitableForme); 
@@ -198,11 +212,21 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 			//correspond à l'anciennete de chaque type d'ouvrier
 			total+=this.anciennete.get(i).get(244)*salaire.get(i)*0.15;
 
+
 		}
-
-
 		return total;
 	}
+
+
+
+
+
+
+	/**@author youssef ben abdeljelil*/
+
+
+
+
 
 	public void updateAnciennete() {
 		ordre =0;
@@ -257,7 +281,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 
 
 
-	public void removeEmploye(Ouvrier ouvrier,int nombreAsuprrimer) {
+	public void removeeEmploye(Ouvrier ouvrier,int nombreAsuprrimer) {
 		double moyenne_salaire=0;
 		for (Double salaire :this.salaire) {
 			moyenne_salaire+=salaire;
@@ -306,7 +330,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 	}	
 	public void removeEmploye(int type_to_remove,int nombreAsuprrimer) {
 
-		removeEmploye(this.types_ouvriers.get(type_to_remove), nombreAsuprrimer);
+		removeeEmploye(this.types_ouvriers.get(type_to_remove), nombreAsuprrimer);
 	}
 
 	public List<Journal> getJournaux() {
@@ -442,7 +466,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 
 		this.amelioration();
 	}
-	
+
 
 
 
