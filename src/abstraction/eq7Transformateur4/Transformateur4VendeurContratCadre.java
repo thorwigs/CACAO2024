@@ -222,7 +222,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		else {
 			return pPropose;
 		}
-	}//négocie le prix en nous garantissant une marge minimale de 5% (on enregistre notre précédente proposition dans prixPrecedent)
+	}//négocie le prix en nous garantissant une marge minimale de 2% (on enregistre notre précédente proposition dans prixPrecedent)
 
 	
 	
@@ -313,8 +313,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
+
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 				if (vend(choco)) {
+
 					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) || (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
