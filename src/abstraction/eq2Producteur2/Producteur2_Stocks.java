@@ -310,6 +310,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		if (quantite + this.getStockTotal(cryptogramme) < SEUIL) {
 			this.ajout_stock(type_feve, quantite);
 		}
+		lot_to_hashmap();
 	}
 	
 	/** Ajoute les nouvelles informations sur le stock au journal du stock

@@ -1,5 +1,6 @@
  package abstraction.eq2Producteur2;
 
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -32,6 +33,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
 	protected double rend_no_pest_HQ = 0.72;
+	protected HashMap <Feve, HashMap< Double, Double> > plantation;
 	
 	protected Journal journalPlantation;
 	
