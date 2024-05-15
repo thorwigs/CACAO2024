@@ -41,7 +41,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	
 	protected abstract double getNbTonnesVenduesBourse();
 	protected abstract double getNbTonnesVenduesCC();
-	public abstract void reinit_quantite_vendue();
 	protected abstract double prix(Feve f);
 	
 	/** Constructeur de classe

@@ -155,10 +155,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200;
 	}
 	
-	public void reinit_quantite_vendue() {
-		this.quantiteVendueCC = 0;
-	}
-	
 	public double getNbTonnesVenduesCC() {
 		return quantiteVendueCC;
 	}
