@@ -53,7 +53,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			*/
 			if (stock.get(f).getValeur()-restantDu(f)>1200 ) { // au moins 100 tonnes par step pendant 6 mois
 				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
-				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
+				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/2); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
 				//acheteurs.remove(acheteurs.size()-1);

@@ -24,6 +24,7 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 	
 	double cout_formation_par_ouvrier=0.0;
 	int ordre=0;
+	boolean retire_enfant=false;
 	double indemnite_licensiement; 
 	protected Journal journalOuvrier;
 	protected HashMap<Ouvrier, Integer> masseSalariale; // map ayant pour cle un type douvrier et valeur le nombre
@@ -317,13 +318,16 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 	
 		int enfants = this.get_Nombre_Enfant();
 		int size = this.croissanceParStep.size();
+	
 		boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 
-		if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
+		if ((annee!=2024)&& (annee % 4 == 0) && croissant && retire_enfant==false   ) {
+		
+			
 
 
-			this.removeEmploye(0,10);//remove 10 enfants
-
+			this.removeEmploye(0,(int)(0.1*enfants));//remove 10 enfants
+			retire_enfant=true;
 
 
 			if (this.salaire.get(1) < 2.5 ) { 
@@ -342,6 +346,8 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
 
 
 		}
+		
+		
 	}
     
     public void formation (int nbr_à_former,boolean equitable) {
@@ -410,7 +416,10 @@ public class MasseSalarialeNouveau extends Producteur1Acteur {
     
     public void next() {
     	super.next();
-
+    	if (retire_enfant==true && Filiere.LA_FILIERE.getEtape()%25==0 ) {
+    		
+			retire_enfant=false;
+		}
     	
     	
 		double Labor = this.getSalaireTotal();
