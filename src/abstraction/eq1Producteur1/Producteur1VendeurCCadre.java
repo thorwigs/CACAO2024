@@ -57,7 +57,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
 				//acheteurs.remove(acheteurs.size()-1);
-				//System.out.println(acheteurs);
+				System.out.println(acheteurs);
 				//System.out.println(Filiere.LA_FILIERE.getMarquesChocolat());
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
