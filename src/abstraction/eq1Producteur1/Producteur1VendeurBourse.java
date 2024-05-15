@@ -3,6 +3,7 @@ package abstraction.eq1Producteur1;
 
 import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
@@ -15,6 +16,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	public double  pourcentageBQ=0.02 ;
 	public double  pourcentageMQ=0.02 ;
 	private Journal journalBourse;
+	//protected 
 	/**
 	 * Constructeur de la classe Producteur1VendeurBourse.
 	 */
@@ -128,11 +130,15 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
 		return res;
-
-
-
-
-
+	}
+	public void updatePlant() {
+		
+	}
+	public void next() {
+		super.next();
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		bourse.getCours(Feve.F_BQ).getValeur();
+		
 	}
 
 }
