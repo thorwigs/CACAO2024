@@ -50,9 +50,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	protected Ouvrier ouvrierNonEquitableForme;
 	protected Ouvrier ouvrierNonEquitableNonForme;
 
-/**
- * @author haythem
- */
+	/**
+	 * @author haythem
+	 */
 	public Producteur1MasseSalariale() {
 		this.journalOuvrier = new Journal(this.getNom()+"   journal Ouvrier",this);//initialisation journal
 		this.nb_enfants = 150;
@@ -137,7 +137,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		return this.masseSalariale;
 	}
 
-	
+
 	public Integer get_Nombre_Enfant() { 
 		return masseSalariale.get(enfant); 
 
@@ -164,11 +164,11 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	}
 
 
-/**
- * @author haythem
- * @param ouvrier de type Ouvrier
- * @param quantite quantite à ajouter
- */
+	/**
+	 * @author haythem
+	 * @param ouvrier de type Ouvrier
+	 * @param quantite quantite à ajouter
+	 */
 	public void addQuantiteOuvrier(Ouvrier ouvrier, int quantite) {
 		// Récupère la quantité actuelle ou initialise à 0 si l'ouvrier n'existe pas
 		Integer current = masseSalariale.getOrDefault(ouvrier, 0);
@@ -203,7 +203,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 	}
-	
+
 	/**
 	 * 
 	 * @return salaire total en tenant compte de l'anciennete >10 ans correspond 
@@ -331,7 +331,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 			// Calcul de l'indemnité pour les employés supprimés à cet index
 			indemnite_licensiement += (int)(supprimes * pourcentageIndemnite * this.salaire.get(indice_type_ouvrier)); 
-			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemnite_licensiement",indemnite_licensiement );
+			if (indemnite_licensiement>0){
+				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemnite_licensiement",indemnite_licensiement );
+			}
 
 			anciennete_a_modifer.set(index, anciennete_a_modifer.get(index)-supprimes);
 
@@ -354,7 +356,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		return res;
 
 	}
-	
+
 	/**
 	 * @author fatima
 	 */
