@@ -27,7 +27,7 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 	private HashMap<IActeur, Integer> cryptos;
 	private Banque laBanque;
 	private List<IVendeurAO> vendeurs; 
-
+	private HashMap<Integer, Double> volumesCM, volumesC, volumesF;
 	private List<VenteAO> ventes;
 	private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
 
@@ -50,6 +50,9 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 		}
 		this.laBanque = Filiere.LA_FILIERE.getBanque();
 		aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph.");
+		this.volumesC=new HashMap<Integer, Double>();
+		this.volumesCM=new HashMap<Integer, Double>();
+		this.volumesF=new HashMap<Integer, Double>();
 	}
 
 	/**
@@ -135,6 +138,19 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 						p.getVendeur().notifierPropositionNonRetenueAO(p);
 					}
 				}
+				if (retenue!=null) {
+					int step = Filiere.LA_FILIERE.getEtape();
+					if (retenue.getProduit().getType().equals("ChocolatDeMarque")) {
+						double before =  (volumesCM.keySet().contains(step)) ? volumesCM.get(step) : 0.0;
+						volumesCM.put(step, before+retenue.getQuantiteT());
+					} else if (retenue.getProduit().getType().equals("Feve")) {
+						double before =  (volumesF.keySet().contains(step)) ? volumesF.get(step) : 0.0;
+						volumesF.put(step, before+retenue.getQuantiteT());
+					} else {
+						double before =  (volumesC.keySet().contains(step)) ? volumesC.get(step) : 0.0;
+						volumesC.put(step, before+retenue.getQuantiteT());
+					}
+				}
 				return retenue;
 			} else {
 				journal.ajouter( Journal.texteColore(acheteur, acheteur.getNom()+" n'obtient aucune proposition de vente acceptable"));
@@ -155,6 +171,15 @@ public class SuperviseurVentesAO implements IActeur, IAssermente {
 					aEcrire.println( vente.toCSV() );
 				}
 				aEcrire.close();
+				aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"AO_volumes.csv")));
+				aEcrire.println("STEP;FEVE;CHOCOLAT;CHOCOLAT_DE_MARQUE");
+				int step = Filiere.LA_FILIERE.getEtape();
+				for (int i = 0; i<=step;i++) {						
+					aEcrire.println( i+";"+(volumesF.keySet().contains(i)?volumesF.get(i):"0.0")+";" +(volumesC.keySet().contains(i)?volumesC.get(i):"0.0")+";"+(volumesCM.keySet().contains(i)?volumesCM.get(i):"0.0")+";" );
+				}
+				aEcrire.close();
+				
+				
 			}
 			catch (IOException e) {
 				throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
