@@ -92,7 +92,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
 		}
 		this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC());
-		this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
+		//this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
 	}
 
 
@@ -170,7 +170,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		Echeancier ec = contrat.getEcheancier();
 		IProduit produit = contrat.getProduit();
 		Echeancier res = ec;
-		System.out.println("stock  de feve : "+ stock.get((Feve)produit));
 		if (stock.get((Feve)produit) == 0) {
 			//planter
 		}

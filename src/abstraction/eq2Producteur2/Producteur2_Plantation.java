@@ -7,13 +7,14 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 
 //Toutes les variables de poids de cacao sont en TONNES 
 
 /** Classe permettant de gérer les plantations
  * @author Anthony
  */
-
+ 
 public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale {
 	
 	/** Définition des variables
@@ -32,16 +33,22 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_BQ = 0.9;
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
+
 	protected double rend_no_pest_HQ = 0.72;
 	protected HashMap <Feve, HashMap<Integer, Double> > plantation;
 	protected int annee_actuelle;
 	protected static int DUREE_DE_VIE_ARBRE = 40;
-	
+
 	protected Journal journalPlantation;
 	
 	/** Constructeur de classe
 	 * @author Anthony
 	 */
+	
+	public void init_simu_feve() { //initialise la HashMap pour débuter la simulation
+		
+	}
+	
 	public Producteur2_Plantation() {
 		this.nb_hectares_actuel=5000000.0;
 		this.nb_hectares_max=5000000.0*2;
@@ -153,6 +160,20 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	}
 	public void setCurrentYear(int annee) {
 		this.annee_actuelle = annee;
+	}
+	
+	/** Getter
+	 * @author Quentin
+	 */
+	public HashMap <Feve, HashMap<Integer, Double>> getPlantation(){
+		return this.plantation;
+	}
+	
+	/** Setter
+	 * @author Quentin
+	 */
+	public void setPlantation(HashMap <Feve, HashMap<Integer, Double>> plantation) {
+		this.plantation = plantation;
 	}
 	
 	/** Initialisation
@@ -333,6 +354,25 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 				this.setPourcentage_HQ(pourcentage_equitable);
 			}
 		}
+	}
+	
+	/** Retourne le nombre d'hectares pour un type de produit (un type de fève)
+	 * @author Quentin
+	*/
+	public double getHectaresPlantes(IProduit p, int cryptogramme) {
+		if(this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter le nombre d'hectares
+			double somme = 0;
+			for(Feve e : this.getPlantation().keySet()) {
+				if(e == p) {
+					for(Integer annee : this.getPlantation().get(e).keySet()) {
+						somme += this.getPlantation().get(e).get(annee);
+					}
+				}
+			}
+			return somme;
+		} else {
+			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre nombre d'hectares par produit
+		}	
 	}
 	
 	/** Ajoute les nouvelles informations sur les plantations au journal des plantations
