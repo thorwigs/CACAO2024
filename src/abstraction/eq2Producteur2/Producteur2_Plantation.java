@@ -33,13 +33,17 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
 	protected double rend_no_pest_HQ = 0.72;
-	protected HashMap <Feve, HashMap< Double, Double> > plantation;
-	
+	protected HashMap <Feve, HashMap< Double, Double> > plantation;	
 	protected Journal journalPlantation;
 	
 	/** Constructeur de classe
 	 * @author Anthony
 	 */
+	
+	public void init_simu_feve() { //initialise la HashMap pour débuter la simulation
+		
+	}
+	
 	public Producteur2_Plantation() {
 
 		this.nb_hectares_actuel=5000000.0;
