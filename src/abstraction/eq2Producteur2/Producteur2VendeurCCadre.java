@@ -170,6 +170,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		Echeancier ec = contrat.getEcheancier();
 		IProduit produit = contrat.getProduit();
 		Echeancier res = ec;
+		System.out.println("stock  de feve : "+ stock.get((Feve)produit));
+		if (stock.get((Feve)produit) == 0) {
+			//planter
+		}
 		boolean acceptable = produit.getType().equals("Feve")
 				&& ec.getQuantiteTotale()>=1200  // au moins 100 tonnes par step pendant 6 mois
 				&& ec.getStepFin()-ec.getStepDebut()>=11   // duree totale d'au moins 12 etapes
@@ -181,6 +185,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 							journalCC.ajouter("      ce n'est pas une feve : je retourne null");
 						} else {
 							journalCC.ajouter("      je n'ai que "+(stock.get((Feve)produit)-restantDu((Feve)produit))+" de disponible (moins de 1200) : je retourne null");
+							
 						}
 						return null;
 					}
