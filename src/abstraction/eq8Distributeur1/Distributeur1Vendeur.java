@@ -55,23 +55,39 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	 * @author wiam
 	 */
 	public void setPrix(ChocolatDeMarque choco) {
-		if (choco.getChocolat()==Chocolat.C_BQ) {
-			ListPrix.put(choco, (double) 2900);
+		if (Filiere.LA_FILIERE.getEtape()<1) {
+			if ((choco.getChocolat()==Chocolat.C_BQ)) {
+				ListPrix.put(choco, (double) 2900);
+			}
+			if (choco.getChocolat()==Chocolat.C_MQ) {
+				ListPrix.put(choco, (double) 6000);
+			}
+			if (choco.getChocolat()==Chocolat.C_MQ_E) {
+				ListPrix.put(choco, (double) 10000);
+			}
+			if (choco.getChocolat()==Chocolat.C_HQ) {
+				ListPrix.put(choco, (double) 15000);
+			}
+			if (choco.getChocolat()==Chocolat.C_HQ_E) {
+				ListPrix.put(choco, (double) 22000);
+			}
+			if (choco.getChocolat()==Chocolat.C_HQ_BE) {
+				ListPrix.put(choco, (double) 30000);
+			}
 		}
-		if (choco.getChocolat()==Chocolat.C_MQ) {
-			ListPrix.put(choco, (double) 6000);
-		}
-		if (choco.getChocolat()==Chocolat.C_MQ_E) {
-			ListPrix.put(choco, (double) 10000);
-		}
-		if (choco.getChocolat()==Chocolat.C_HQ) {
-			ListPrix.put(choco, (double) 15000);
-		}
-		if (choco.getChocolat()==Chocolat.C_HQ_E) {
-			ListPrix.put(choco, (double) 22000);
-		}
-		if (choco.getChocolat()==Chocolat.C_HQ_BE) {
-			ListPrix.put(choco, (double) 30000);
+		else {
+			if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
+				ListPrix.replace(choco, 0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1));
+			}
+			else if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
+				ListPrix.replace(choco, ListPrix.get(choco)*0.8);
+			}
+			else if ((Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-1)-Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2))/Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2)>0.02) {
+				ListPrix.replace(choco, ListPrix.get(choco)*1.02);
+			}
+			else if ((Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-1)-Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2))/Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-2)<0.02) {
+				ListPrix.replace(choco, ListPrix.get(choco)*0.98);
+			}
 		}
 	}
 	
@@ -108,7 +124,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		} 
 		else {
 			if (choco.getMarque()== "Chocoflow") {
-				return Math.abs(Math.min((capaciteDeVente*0.20)/chocoProduits.size(), this.getQuantiteEnStock(choco,crypto)));
+				return Math.abs(Math.min((capaciteDeVente*0.20)/this.chocoProduits.size(), this.getQuantiteEnStock(choco,crypto)));
 			}
 			if (choco.toString().contains("C_BQ")) {
 				double x = (capaciteDeVente*0.32)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
@@ -185,6 +201,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		return x ; 
 	}
 	
+	
 	/**
 	 *@author wiam
 	 */
@@ -240,6 +257,9 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
 		this.setNombreEmploye();
+		for (int i=0;i<this.ListPrix.size(); i++) {
+			this.setPrix(chocolats.get(i));
+		}
 		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Fixe", this.Cout_Fixe());
 
 	}

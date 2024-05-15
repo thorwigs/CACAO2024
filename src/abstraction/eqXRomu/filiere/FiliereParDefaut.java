@@ -81,6 +81,15 @@ public class FiliereParDefaut extends Filiere {
 		}
 		this.cf = new ClientFinal(7200000.0 , repartitionInitiale, DISTRIBUTIONS_ANNUELLES);
 		this.ajouterActeur(cf);
+		this.ajouterActeur(new Romu());
+		this.superviseurCC=new SuperviseurVentesContratCadre();
+		this.ajouterActeur(this.superviseurCC);
+		this.bourse=new BourseCacao();
+		this.ajouterActeur(this.bourse);
+		this.superviseurAO=new SuperviseurVentesAuxEncheres();
+		this.ajouterActeur(this.superviseurAO);
+		this.superviseurOA=new SuperviseurVentesAO();
+		this.ajouterActeur(this.superviseurOA);
 		this.ajouterActeur(new Producteur1());
 		this.ajouterActeur(new Producteur2());
 		this.ajouterActeur(new Producteur3());
@@ -92,17 +101,6 @@ public class FiliereParDefaut extends Filiere {
 		this.ajouterActeur(new TransformateurX());
 		this.ajouterActeur(new Distributeur1());
 		this.ajouterActeur(new Distributeur2());
-//		this.ajouterActeur(new DistributeurX());
-		this.ajouterActeur(new Romu());
-		this.superviseurCC=new SuperviseurVentesContratCadre();
-		this.ajouterActeur(this.superviseurCC);
-		this.bourse=new BourseCacao();
-		this.ajouterActeur(this.bourse);
-		this.superviseurAO=new SuperviseurVentesAuxEncheres();
-		this.ajouterActeur(this.superviseurAO);
-		this.superviseurOA=new SuperviseurVentesAO();
-		this.ajouterActeur(this.superviseurOA);
-
 	}
 	/**
 	 * Redefinition afin d'interdire l'acces direct a certains superviseurs/acteurs.

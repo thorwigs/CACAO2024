@@ -19,7 +19,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre implements IVendeurContratCadre{
+public class Transformateur3VendeurCCadre extends Transformateur3Produit implements IVendeurContratCadre{
 
 	public Transformateur3VendeurCCadre() {
 		super();
@@ -36,11 +36,12 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 			if (stockChocoMarque.get(c) - restantDu(c)>200) { 
 				this.journalCC6.ajouter("   "+c+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stockChocoMarque.get(c)-restantDu(c))/12); 
+				
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-					journalCC6.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+					journalCC6.ajouter(Color.BLACK,Color.WHITE,"   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
 					if (contrat == null) {
 						journalCC6.ajouter(Color.RED, Color.BLACK,"   echec des negociations");
@@ -86,7 +87,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	}
 
 	/**
-	 * @author Thomas
+	 * @author Arthur
 	 */
 	public boolean vend(IProduit produit) {
 		
@@ -97,10 +98,12 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Thomas
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals(chocosProduits)) {
-			return null;
+		float T = 0;
+		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
+			T += stockChocoMarque.get(c);
 		}
-		if ( contrat.getEcheancier().getQuantiteTotale()< totalStocksChocoMarque.getValeur()){
+		
+		if ( contrat.getEcheancier().getQuantiteTotale()< T){
 			return contrat.getEcheancier();
 		}
 		else {
@@ -112,18 +115,10 @@ public class Transformateur3VendeurCCadre extends Transformateur3AcheteurCCadre 
 	 * @author Thomas et Cédric
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		double somme  = 0; 
-		int p = 0;
-		double prix = 0;
-		for (ExemplaireContratCadre contratCC : contratsEnCours) {
-			if (((Feve) contrat.getProduit()).equals((Feve) contratCC.getProduit())) {
-				somme += contratCC.getPrix();
-				p += 1;
-			
-			} 
-		}
-		double moyenne = somme/p;
-		prix = moyenne + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
+		
+		Chocolat c = ((ChocolatDeMarque) contrat.getProduit()).getChocolat();
+		Feve f = super.Correspond(c);
+		double prix = coûtMoyenAchatFeve.get(f) + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
 		
 		return 1.03 * prix; //  un petit +3% pour maximiser le prfofit
 		
