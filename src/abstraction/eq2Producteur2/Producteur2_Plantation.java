@@ -33,7 +33,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected double rend_pest_MQ = 0.85;
 	protected double rend_pest_HQ = 0.80;
 	protected double rend_no_pest_HQ = 0.72;
-	protected HashMap <Feve, HashMap< Double, Double> > plantation;
+	protected HashMap <Feve, HashMap<Integer, Double> > plantation;
+	protected int annee_actuelle;
+	protected static int DUREE_DE_VIE_ARBRE = 40;
 	
 	protected Journal journalPlantation;
 	
@@ -41,12 +43,13 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public Producteur2_Plantation() {
-
 		this.nb_hectares_actuel=5000000.0;
 		this.nb_hectares_max=5000000.0*2;
 		this.prix_plantation_hectare=500.0;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
+		this.annee_actuelle = 0;
 	}
+	
 	
 	/** Getter
 	 * @author Anthony
@@ -145,6 +148,12 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void setNb_nouveau_hectares(double nb_nouveau_hectares) {
 		this.nb_nouveaux_hectares = nb_nouveau_hectares;
 	}
+	public int getCurrentYear() {
+		return annee_actuelle;
+	}
+	public void setCurrentYear(int annee) {
+		this.annee_actuelle = annee;
+	}
 	
 	/** Initialisation
 	 * @author Anthony
@@ -170,27 +179,39 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @param nb_hectares
 	 * @author Anthony
 	 */
-	public void planter(double nb_hectares) {
-		long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
+	public void planter(double nb_hectares, Feve qualite) {
+		/*long nb_hectares_possible =	this.getNb_employes() + this.getNb_employes_equitable() + 2/3*this.getNb_employes_enfants();
 		
 		//Si on a assez de terrain mais pas assez d'employes pour gérer la plantation
 		if (nb_hectares_possible < this.getNb_hectares_actuel()) {
 			this.embauche((int)(this.getNb_hectares_actuel() - nb_hectares_possible),"adulte");
 		}
-		
+		*/
 		//Si on a assez de personnel mais pas assez de terrain
-		else {
-			if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
-				this.journal.ajouter("on ne peut pas acheter plus de terrain.");
-				return;
+		if (getNb_hectares_actuel() + nb_hectares > getNb_hectares_max()) { //achat impossible
+			this.journal.ajouter("on ne peut pas acheter plus de terrain.");
+			return;
+		}
+		else { 
+			int annee = Filiere.LA_FILIERE.getEtape()/24;
+			if (this.getCurrentYear() == annee) {
+				// on n'a pas encore changé d'année
+				double nouveau_nb_hectares = nb_hectares + plantation.get(qualite).get(annee+this.DUREE_DE_VIE_ARBRE);
+				plantation.get(qualite).put(annee+this.DUREE_DE_VIE_ARBRE, nouveau_nb_hectares);
 			}
-			else { 
-		 		setNb_hectares_actuel(getNb_hectares_actuel() + nb_hectares);
-				// On embauche le même nombre de personnes que d'hectares car 1 hectare = 1 employé
-				// 90% des personnes embauchées sont embauchées en tant qu'employé non-équitable
-				int nb_employes = (int)(nb_hectares*0.9);
-				this.embauche((int) nb_employes, "adulte");
-				this.embauche((int) nb_hectares - nb_employes, "adulte équitable");
+			else {
+				// on a changé d'année
+				plantation.get(qualite).put(annee+this.DUREE_DE_VIE_ARBRE, nb_hectares);
+				this.setCurrentYear(annee);
+			}
+			//setNb_hectares_actuel(getNb_hectares_actuel() + nb_hectares);
+			// On embauche le même nombre de personnes que d'hectares car 1 hectare = 1 employé
+			
+			if (qualite == Feve.F_HQ_E || qualite == Feve.F_MQ_E || qualite == Feve.F_HQ_BE) {
+				this.embauche((int) nb_hectares, "adulte équitable");
+			}
+			else {
+				this.embauche((int) nb_hectares, "adulte");
 			}
 		}
 	}
@@ -290,7 +311,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		double pourcentage_perte = 0.00104;
 		double perte_un_next = pourcentage_perte * getNb_hectares_actuel();
 		setNb_hectares_actuel(getNb_hectares_actuel() - perte_un_next);
-		this.planter(perte_un_next);
+		//this.planter(perte_un_next);
 	}
 	
 	/** Met à jour les pourcentages de BQ, MQ et HQ en fonction des catégories d'employés
@@ -357,11 +378,11 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		//On décide si on achète de nouveaux hectares
 		if (getStockTotal(this.cryptogramme) <= 0.0) {
 			if (nb_hectares_actuel * 1.02 > nb_hectares_max) {
-				planter(nb_hectares_max - nb_hectares_actuel);
+				//planter(nb_hectares_max - nb_hectares_actuel);
 				setNb_nouveau_hectares(nb_hectares_max - nb_hectares_actuel);
 			}
 			else {
-				planter(nb_hectares_actuel * 0.02); //On replante 2% de la plantation actuelle
+				//planter(nb_hectares_actuel * 0.02); //On replante 2% de la plantation actuelle
 				setNb_nouveau_hectares(nb_hectares_actuel * 0.02);
 			}
 		}
