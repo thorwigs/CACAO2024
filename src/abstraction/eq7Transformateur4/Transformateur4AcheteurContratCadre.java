@@ -9,6 +9,8 @@ import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.filiere.*;
@@ -21,8 +23,9 @@ import java.awt.Color;
 public class Transformateur4AcheteurContratCadre extends Transformateur4AcheteurBourse implements IAcheteurContratCadre{
 	
 	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
+	protected List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsTermines;
+
 	protected Journal journalACC;
 
 	public Transformateur4AcheteurContratCadre() {
@@ -30,6 +33,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.journalACC = new Journal(this.getNom()+" journal CC achat", this);
+
 	}
 	
 	public void initialiser() {
@@ -37,9 +41,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	
-	public boolean achete(IProduit produit) {
-		return produit.getType().equals("Feve")
-				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000; 
+	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
+		return (produit.getType().equals("Feve"))
+				&& (((Feve)produit).getGamme() == Feve.F_HQ.getGamme()) 
+				&& (stockFeves.get(produit)+restantDu((Feve)produit)< 150000 );
+	
 		//à modifier selon nécessité de chaque type de fève
 	}
 	
@@ -140,8 +146,25 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	public void next() { 	//à modifier selon nb de fèves qu'on veut
 		super.next();
 		this.journalACC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (stockFeves.get(f)+restantDu(f)<1000000000) { 
+		
+		
+		List<Feve> fInteresse = new LinkedList<Feve>();
+		fInteresse.add(Feve.F_HQ_BE);
+		fInteresse.add(Feve.F_HQ);
+				for (Feve f : fInteresse) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve	
+					double alivrer = 0.0; //quantité à livrer de fèves
+					for (ChocolatDeMarque c : chocolatCocOasis) { //on ne regarde que les chocolats CocOasis car on ne fait pas de choco distributeurs HQ ou HQ_BE
+						if ( (f.getGamme() == c.getGamme()) && (f.isBio() == c.isBio()) && (f.isEquitable() == c.isEquitable()) ){
+							for (ExemplaireContratCadre contrat : this.contratsEnCours) {
+								if (contrat.getProduit().equals(c)) {
+									alivrer = alivrer + contrat.getQuantiteRestantALivrer()/(this.pourcentageTransfo.get(f).get(c.getChocolat()));
+									}
+							}
+						}
+					}
+					
+					
+					if (stockFeves.get(f)+restantDu(f)< Math.min(1000, alivrer + 1000 ) ) { 
 						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
 						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
@@ -161,6 +184,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 						}
 					}
 				}
+	
+					
+					
+				
+	
 		// On archive les contrats terminés  (pas à modifier)
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0 && c.getMontantRestantARegler()<=0.0) {

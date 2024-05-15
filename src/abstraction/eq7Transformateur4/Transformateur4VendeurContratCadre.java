@@ -25,14 +25,12 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurContratCadre implements IVendeurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
-	protected List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
+	
+
 	protected Journal journalVCC;
 
 	public Transformateur4VendeurContratCadre() {
 		super();
-		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
-		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.journalVCC = new Journal(this.getNom()+" journal CC vente", this);
 	}
 	
@@ -202,7 +200,6 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public void next() { 
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		
 		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve

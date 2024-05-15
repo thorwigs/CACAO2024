@@ -87,8 +87,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 2000000.0);
-			this.totalStocksFeves.ajouter(this, 2000000.0, this.cryptogramme);
+			this.stockFeves.put(f, 0.0);
+			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 2000000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		
@@ -174,7 +174,11 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	
 	//codé par Pierrick
 	public void next() {
+
 		this.journal.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "===============");
+		
+		
+		
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
 	
