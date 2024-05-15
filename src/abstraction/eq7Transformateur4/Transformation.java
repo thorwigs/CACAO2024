@@ -230,10 +230,13 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			qtetotaleproduite = qtetotaleproduite + this.production_tonne_marque_step.get(c);
 		}
 		double a_payer = 1000*this.nbemployeCDI + 658; //cout des employes et cout fixe des machines par step 
-		double cout_fixe_par_tonne = 0.0; //cout fixe d'1 tonne indépendamment de la qualité de la tonne
-		if (qtetotaleproduite != 0) {
-			cout_fixe_par_tonne = a_payer/qtetotaleproduite;
-		}
+		//cout fixe d'1 tonne indépendamment de la qualité de la tonne
+		double cout_fixe_par_tonne = 0.0;
+		//ce code ne marche pas trop, si on produit pas assez sur un step on va avoir un cout_fixe_par_tonne trop élevé.
+		//if (qtetotaleproduite != 0) {
+		//	cout_fixe_par_tonne = a_payer/qtetotaleproduite;
+		//}
+		cout_fixe_par_tonne = a_payer/peutproduireemploye;
 		for (ChocolatDeMarque c : this.coutproduction_tonne_marque_step.keySet()) {
 			this.coutproduction_tonne_marque_step.replace(c, this.coutproduction_tonne_marque_step.get(c) + cout_fixe_par_tonne);
 		}
