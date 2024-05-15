@@ -50,10 +50,21 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 			case C_MQ_E:return 18000;
 			case C_MQ :return 16000;
 			case C_BQ : return 12000;
+			case C_HQ : return 20000;
 			default:
-				return 0.0;}}
-		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1);
-	}
+				return 0;}}
+		if (Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1) > 100000  ) {
+		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1);}
+		switch (choco.getChocolat()) {
+		case C_HQ_BE: return 26000;
+		case C_HQ_E: return 22000;
+		case C_MQ_E:return 18000;
+		case C_MQ :return 16000;
+		case C_BQ : return 12000;
+		case C_HQ : return 20000;
+		default:
+			return 0;}}
+	
 
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
@@ -66,7 +77,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-		return this.quantiteEnVente(choco, crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG;
+		return this.quantiteEnVente(choco, crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG*0.99;
 	}
 
 	@Override
