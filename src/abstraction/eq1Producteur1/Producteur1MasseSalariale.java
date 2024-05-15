@@ -52,10 +52,11 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 	/**
-	 * Calcule le salaire total de tous les ouvriers.
+	 * Calcule le salaire total de tous les ouvriers. 
 	 * @return Le salaire total.
 	 */
-	/**@author Haythem*/
+	
+	/**@author Haythemm*/
 	public double getSalaireTotal() {
 		double s =0;
 		for (Ouvrier ouvrier : this.listeOuvrier) {
