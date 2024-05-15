@@ -26,6 +26,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	protected int nombreMois = 3;
 	
 	public Transformateur1AcheteurCCadre() {
 		super();
@@ -67,7 +68,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	                    journalCC.ajouter(Color.RED, Color.WHITE, "   échec des négociations");
 	                } else {
 	                    this.contratsEnCours.add(contrat);
-	                    journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signé");
+	                    journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signé avec l'échéancier : "+contrat.getEcheancier());
 	                }
 	            } else {
 	                journalCC.ajouter("   pas de vendeur");
@@ -112,15 +113,19 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	    	    	journalCC.ajouter("La feve proposée : "+feve);
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
+	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC * nombreMois, this.quantiteMiniCC);
+	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
+	        		return reponse;
+	        	}
 	        	if (feve.getGamme() == Gamme.MQ && feve.isBio()) {
-	    	    	journalCC.ajouter("La feve proposée : "+feve);
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) <= this.demandeCC * 2;}
+	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC * nombreMois, this.quantiteMiniCC);
+	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
+	        		return reponse;
 	        	}
-	        	
-	        	}
-	    return false;}
+        	}
+	    }
+	    return false;
+	}
 	            
 		
 
@@ -146,7 +151,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
                 // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
                 return contrat.getEcheancier();
             } else {
-                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                double marge = this.demandeCC * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
                 if (marge < 1000) {
                     return null;
                 } else {
@@ -159,7 +164,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
                 // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
                 return contrat.getEcheancier();
             } else {
-                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                double marge = this.demandeCC * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
                 if (marge < 1000) {
                     return null;
                 } else {
@@ -226,5 +231,4 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	}
 }
 	
-
 
