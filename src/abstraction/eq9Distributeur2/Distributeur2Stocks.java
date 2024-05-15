@@ -20,6 +20,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	protected List<ChocolatDeMarque> chocolatsVillors;
 	private List<ChocolatDeMarque>chocosProduits;
 	protected Variable totalStocksChocoMarque;  
+	protected Variable totalCorrect;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected ArrayList<Variable> indicateurs=init();
 	
@@ -28,6 +29,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		
 		this.totalStocksChocoMarque = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
+		this.totalCorrect = new VariablePrivee("Eq9DTotalStocksCorrect", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
 		/*for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			this.stockChocoIndicateur.put(cm,new Variable("Eq9DStockChocoMarque_"+ cm , "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0));
 		}*/
@@ -47,10 +49,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
 			this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);}
 		
-		//for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
-			//System.out.println(cm.getNom());
-			//stockChocoIndicateur.put(cm,new Variable(cm.getNom(),this));
-		//}
+		MiseAJour(indicateurs);
 		}
 	
 	public void next() {
@@ -59,6 +58,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 			this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getQuantiteEnStock(cm,this.cryptogramme));}
 		
 		MiseAJour(indicateurs);
+		this.totalCorrect.setValeur(this, this.getTotalStock(cryptogramme),cryptogramme);
 	}
 	
 	
@@ -66,7 +66,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	public List<Variable> getIndicateurs(){
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(totalStocksChocoMarque);
-		
+		res.add(totalCorrect);
 		res.addAll(indicateurs);
 		
 		return res;}
