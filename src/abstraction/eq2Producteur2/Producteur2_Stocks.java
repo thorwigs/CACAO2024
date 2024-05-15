@@ -28,7 +28,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	private static final double DELAI_BQ_JETE = 12;
 		
 	private List<Producteur2_Lot> lst_stock_total;
-	protected Journal journalStocks; 
+	protected Journal journalStocks;
 	
 	protected abstract void trop_d_employes();
 	
