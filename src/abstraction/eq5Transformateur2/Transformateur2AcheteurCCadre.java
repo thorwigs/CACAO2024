@@ -141,9 +141,11 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	 * @author Vincent Erwann
 	 */
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("F_MQ") || produit.getType().equals("F_MQ_E") || produit.getType().equals("F_BQ");
+		if (produit.getType().equals("Feve")) {
+			return ((Feve)produit)==Feve.F_MQ || ((Feve)produit)==Feve.F_MQ_E || ((Feve)produit)==Feve.F_BQ;
+		}
+	return false;
 	}
-
 	/***
 	 * @author Robin et Vincent
 	 */
