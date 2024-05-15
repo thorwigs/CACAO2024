@@ -43,7 +43,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	
 	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
 		return (produit.getType().equals("Feve"))
-				&& (((Feve)produit).getGamme() == Feve.F_HQ.getGamme()) 
+				&& (
+						(((Feve)produit).getGamme() == Feve.F_HQ.getGamme()) ||
+						(((Feve)produit).getGamme() == Feve.F_HQ_BE.getGamme())
+					)
+				
 				&& (stockFeves.get(produit)+restantDu((Feve)produit)< 150000 );
 	
 		//à modifier selon nécessité de chaque type de fève
