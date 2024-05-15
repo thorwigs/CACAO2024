@@ -79,9 +79,6 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 				this.journalCC6.ajouter("   "+f+" suffisamment de vente pour passer un CC");
 				double parStep = Decision.get(f);
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
-				if ( parStep == 0 ) {
-					System.out.println("cc je sais rien on sen fou");
-				}
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 				for(IVendeurContratCadre v : vendeurs) {
 					if (v instanceof Transformateur3Acteur || 
@@ -247,7 +244,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur().getNom().equals("EQ6")) {
-			
+			this.journalCC6.ajouter("=== Partie réception Fèves ====================");
 			journalCC6.ajouter("Contrat numéro : " + contrat.getNumero()+ "à la reception");
 			journalCC6.ajouter("Reception de "+quantiteEnTonnes+" T de "+p+" du contrat "+contrat.getNumero()+ "(avec équipe" + contrat.getVendeur().getNom()+")");
 			stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);

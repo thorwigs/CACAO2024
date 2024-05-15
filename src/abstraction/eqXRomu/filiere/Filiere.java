@@ -14,7 +14,8 @@ import presentation.FenetrePrincipale;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.beans.*;
+//import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -103,7 +104,9 @@ public class Filiere implements IAssermente {
 				List<String> marques = ((IMarqueChocolat)a).getMarquesChocolat();
 				if (marques!=null && marques.size()>0) {
 					if ((a instanceof IDistributeurChocolatDeMarque) && marques.size()>1) {
-						throw new IllegalStateException("Le distributeur "+a.getNom()+" a une methode getMarquesChocolat qui retourne une liste de longueur "+marques.size()+" (un distribteur ne peut avoir qu'une marque de chocolat)");
+						if (!(a instanceof IFabricantChocolatDeMarque)) {
+						 throw new IllegalStateException("Le distributeur "+a.getNom()+" a une methode getMarquesChocolat qui retourne une liste de longueur "+marques.size()+" (un distribteur ne peut avoir qu'une marque de chocolat)");
+						}
 					}
 					for (String m : marques) {
 						if (this.marquesDeposees.get(m)!=null) {
@@ -620,4 +623,13 @@ public class Filiere implements IAssermente {
 	public void setCryptos(HashMap<IActeur, Integer> cryptos) {
 		this.cryptos = cryptos;
 	}
+	
+	public double getAttractivite(ChocolatDeMarque cm) {
+		return this.clientsFinaux.get(0).getAttractivite(cm);
+	}
+	
+	public double getAttractivite(ChocolatDeMarque cm, IDistributeurChocolatDeMarque dis) {
+		return this.clientsFinaux.get(0).getAttractivite(cm, dis);
+	}
+
 }
