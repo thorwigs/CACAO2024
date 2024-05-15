@@ -308,10 +308,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 	
 	public ExemplaireContratCadre ChoisirCC(List<ExemplaireContratCadre> liste) {
-		double prix = liste.get(0).getPrix();
+		double prix = liste.get(0).getPrix()*this.Coefficient.get(liste.get(0).getVendeur().getNom());
 		int choix = 0;
 		for (int i=1; i<liste.size();i++) {
-			if (liste.get(i).getPrix()<prix) {
+			if (liste.get(i).getPrix()*this.Coefficient.get(liste.get(i).getVendeur().getNom())<prix) {
 				choix = i;
 				prix = liste.get(i).getPrix();
 			}
