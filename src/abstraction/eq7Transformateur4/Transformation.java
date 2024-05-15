@@ -229,6 +229,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 		for (ChocolatDeMarque c : this.production_tonne_marque_step.keySet()) {
 			qtetotaleproduite = qtetotaleproduite + this.production_tonne_marque_step.get(c);
 		}
+
 		double a_payer = 1000*this.nbemployeCDI + 658; //cout des employes et cout fixe des machines par step 
 		//cout fixe d'1 tonne indépendamment de la qualité de la tonne
 		double cout_fixe_par_tonne = 0.0;
@@ -245,8 +246,25 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			a_payer = a_payer + i;
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtTransformation", a_payer); //on paye tout d'un coup
+		this.journalTransfo.ajouter("On paye ce step " + a_payer);
 		
-
+		
+		//////////Modulation du nbre d'employé////
+		//on veut garder au moins 2000 employé, en prendre plus si on a besoin de plus de main d'oeuvre et en licencier si on en a pas besoin
+		//on les a déjà payer donc on ne traite pas les couts
+		if (qtetotaleproduite<peutproduireemploye*0.25) {
+			// on a produit moins d'un quart de ce qu'on pouvait produire, c'est pas rentable d'avoir autant d'employé
+			int newnbre = (int)(nbemployeCDI*0.75); // ça va tronquer le nbre si c'est pas un entier
+			if (newnbre>2000) {
+				nbemployeCDI = newnbre;
+			} else {
+				nbemployeCDI = 2000;
+			}
+		}//sinon on considère que on a besoin des employés au cas où
+		
+		if(qtetotaleproduite==peutproduireemploye) {
+			nbemployeCDI = nbemployeCDI + 30; //on ne peut pas embaucher plus de 30 personnes par step
+		}
 		
 		//TEST :
 		for (Feve f : this.lesFeves) {
