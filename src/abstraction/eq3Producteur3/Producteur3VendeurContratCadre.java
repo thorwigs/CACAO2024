@@ -59,7 +59,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
     }
 	
 	/**
-	 * @author mammouYoussef
+	 * @author mammouYoussef (modification par Arthur)
 	 * Fonction qui lance des CC selon la feve et notre capacite et fournir
 	 */
 	public void proposerContrats() {
@@ -75,10 +75,12 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    	//pour tous les acheteurs de chaque feves on propose un echeancier de 10 step
 	        List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
 	        for (IAcheteurContratCadre acheteur : acheteurs) {
-		        double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
-		        if (quantiteDisponible*10 > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+	        	int dureeStep = 10; //duree du CC en step
+		        LinkedList<Double> quantiteDispo = quantiteDisponibleFutur(f,Filiere.LA_FILIERE.getEtape(),dureeStep+Filiere.LA_FILIERE.getEtape());
+		        double quantiteDisponible = quantiteDispo.stream().reduce(Double::sum).get();
+		        if (quantiteDisponible > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
                     //on propose de livrer a chaque step la quantite qui nous reste apres livraison des autres CC
-		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 11, quantiteDisponible); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
+		        	Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, quantiteDispo); // Crée un échéancier avec des livraisons réparties sur 10 étapes (à modifier)
                     contr = superviseur.demandeVendeur(acheteur, this, f, echeancier, this.cryptogramme, false); // Démarre la négociation
                     if (contr != null) {
                     	//la fonction notificationNouveauContratCadre n'étant pas appellée, on fait son travail ici
@@ -110,23 +112,23 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 
 	/**
 	 * @author mammouYoussef (et modification Arthur et Alexis pour quantiteFuture)
-	 * @param Feve f (feve a laquelle on s'interesse)
+	 * @param Feve f,int step (feve a laquelle on s'interesse et step d'etude)
 	 * @return double quantiteDisponible (quantite qu'on l'on peut disposer pour les CC pas encore négociés)
 	 * Calcule et retourne la quantité disponible d'une fève spécifique pour de nouveaux contrats, en prenant en compte les engagements existants
-	 * On regarde ici la quantité disponible au tour suivant pour anticiper (et surtout car les nouvelles livraisons commencent au tour d'après)
+	 * Le calcul se fait a un step donné afin de prendre en compte la saisonnalité des plantations notamment
 	 */
-	 private double quantiteDisponiblePourNouveauContrat(Feve f) {
-	        double quantiteDisponible = 0.0; // Valeur par défaut
+	 private double quantiteDisponiblePourNouveauContrat(Feve f, int step) {		 	
+		 	double quantiteDisponible = 0.0; // Valeur par défaut
 	        if (quantiteFuture().containsKey(f)) {
 	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après
-	            quantiteDisponible = quantiteFuture().get(f);
+	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step);
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
 	            if (contrat.getProduit().equals(f)) {
 	            	//il faut ensuite enlever ce que l'on doit livrer pour avoir la quantite disponible pour d'autres CC
 	                //On prend la quantité a livrer au tour d'après pour prendre en compte la première livraison
-	            	quantiteDisponible -= contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1);
+	            	quantiteDisponible -= contrat.getEcheancier().getQuantite(step);
 	            }
 	        }
 	        if (quantiteDisponible < 0) {
@@ -135,6 +137,20 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	        }
 	        return quantiteDisponible;
 	    }
+	 
+	 /**
+	  * @author Arthur
+	  * @param Feve f, int stepFin (feve a laquelle on s'interesse et step de fin du CC)
+	  * @return quantiteDispo (dictionnaire qui associe a chaque step la quantite dispo pour CC)
+	  * Fonction qui sert a savoir la quantite dispo pour CC dans le futur afin de faire des CC sans avoir de probleme avec la saisonnalité
+	  */
+	 private LinkedList<Double> quantiteDisponibleFutur(Feve f, int stepDebut, int stepFin) {
+		 LinkedList<Double> quantiteDispo = new LinkedList<Double>();
+		 for (int step = stepDebut; step <= stepFin; step++) {
+			 quantiteDispo.add(quantiteDisponiblePourNouveauContrat(f,step));
+		 }
+		 return quantiteDispo;
+	 }
 	 
 	 /**
 	  * @author mammouYoussef (et modification Arthur)
@@ -147,17 +163,18 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		    Echeancier echeancierPropose = contrat.getEcheancier();
 		    Echeancier nouvelEcheancier = new Echeancier(echeancierPropose.getStepDebut());
 		    //on estime que la quantite disponible est similaire a chaque step en V1
-		    double quantiteDisponible = quantiteDisponiblePourNouveauContrat(f);
+		    LinkedList<Double> quantiteDisponible = quantiteDisponibleFutur(f,echeancierPropose.getStepDebut(),echeancierPropose.getStepFin());
 
 		    for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
+		    	int i = step - echeancierPropose.getStepDebut();
 		        double quantiteDemandee = echeancierPropose.getQuantite(step);
 
-		        if (quantiteDisponible >= quantiteDemandee) {
+		        if (quantiteDisponible.get(i) >= quantiteDemandee) {
 		        	//si on peut fournir ce qui est demande, on le fait
 		            nouvelEcheancier.ajouter(quantiteDemandee);
 		        } else {
 		        	//sinon on propose de fournir ce que l'on peut
-		            nouvelEcheancier.ajouter(quantiteDisponible);
+		            nouvelEcheancier.ajouter(quantiteDisponible.get(i));
 		        }
 		    }
 		    if (nouvelEcheancier.getQuantiteTotale()>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
