@@ -229,6 +229,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		double aLivre = Math.min(quantite, stockActuel);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		stockChocoMarque.get((ChocolatDeMarque)produit).setValeur(this, stockActuel-aLivre);
+		this.totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme)-aLivre, this.cryptogramme);
 		return aLivre;
 	}
 	

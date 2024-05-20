@@ -20,7 +20,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 
-public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale implements IAcheteurContratCadre {
+public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale2 implements IAcheteurContratCadre {
 	protected SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contratsEnCours;
 	protected List<ExemplaireContratCadre> contratsTermines;
@@ -61,9 +61,9 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	
 	public void next() {
 		super.next();
-		this.journalCC.ajouter("==ACHETEUR=======STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCC.ajouter(Color.BLUE, Color.WHITE,"==ACHETEUR=======STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if ((this.stockFeves.get(f).getValeur()<5000) & (f.getGamme()!=Gamme.HQ)) { // Modifier quantité minimale avant achat
+					if ((this.stockFeves.get(f).getValeur()<STOCKINITIAL) & (f.getGamme()!=Gamme.HQ)) { // Modifier quantité minimale avant achat
 						this.journalCC.ajouter("   "+f+" suffisamment peu en stock pour passer un CC");
 						double parStep = 27500; // Changer quantité par Step
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 78, parStep);
@@ -81,7 +81,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
 							if (contrat==null) {
 								if (this.BlackListVendeur.containsKey(vendeur)) {
-									this.BlackListVendeur.put(vendeur,this.BlackListVendeur.get(vendeur)+1);
+									this.BlackListVendeur.replace(vendeur,this.BlackListVendeur.get(vendeur)+1);
 								} else {
 									this.BlackListVendeur.put(vendeur, 1);
 								}
@@ -90,7 +90,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 							} else {
 								this.contratsEnCours.add(contrat);
 								this.EtapenegoAchat=0;
-								journalCC.ajouter(Color.MAGENTA, vendeur.getColor(), "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
+								journalCC.ajouter(Color.GREEN, Color.WHITE, "   contrat signe : #"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());
 							}
 						} else {
 							journalCC.ajouter("   pas de vendeur");
@@ -141,9 +141,11 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	 * @author Vincent Erwann
 	 */
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("F_MQ") || produit.getType().equals("F_MQ_E") || produit.getType().equals("F_BQ");
+		if (produit.getType().equals("Feve")) {
+			return ((Feve)produit)==Feve.F_MQ || ((Feve)produit)==Feve.F_MQ_E || ((Feve)produit)==Feve.F_BQ;
+		}
+	return false;
 	}
-
 	/***
 	 * @author Robin et Vincent
 	 */
@@ -231,7 +233,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	 * @author Robin, Vincent
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
+		journalCC.ajouter(Color.ORANGE,Color.BLACK,"Nouveau contrat accepté : "+"#"+contrat.getNumero()+" | Acheteur : "+contrat.getAcheteur()+" | Vendeur : "+contrat.getVendeur()+" | Produit : "+contrat.getProduit()+" | Quantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 		this.contratsEnCours.add(contrat);
 	}
 
@@ -241,13 +243,13 @@ public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if (quantiteEnTonnes == 0) {
 			if (this.BlackListVendeur.containsKey(contrat.getVendeur())) {
-				this.BlackListVendeur.put(contrat.getVendeur(),this.BlackListVendeur.get(contrat.getVendeur())+5); // on fait monter le vendeur en blacklist si il ne livre pas
+				this.BlackListVendeur.replace(contrat.getVendeur(),this.BlackListVendeur.get((IVendeurContratCadre)contrat.getVendeur())+5); // on fait monter le vendeur en blacklist si il ne livre pas
 			} else {
 				this.BlackListVendeur.put(contrat.getVendeur(), 5);
 				}
 			}
 		journalCC.ajouter("Réception de : "+quantiteEnTonnes+", tonnes de : "+p+" provenant du contrat : "+contrat.getNumero());
-		stockFeves.put((Feve)p, new Variable("Eq5Stock "+p, this,stockFeves.get((Feve)p).getValeur()+quantiteEnTonnes));
+		stockFeves.get((Feve)p).ajouter(this, quantiteEnTonnes, this.cryptogramme);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 	}
 }
