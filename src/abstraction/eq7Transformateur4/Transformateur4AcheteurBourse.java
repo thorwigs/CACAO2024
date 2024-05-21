@@ -24,7 +24,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 
 
 	public double demande(Feve f, double cours) { //changer selon conditions et qte d'achat de chaque fève
-		if (f.equals(Feve.F_MQ) && stockFeves.get(f)<=10000) {
+		if (f.equals(Feve.F_MQ) && stockFeves.get(f) <=10000) {
 			D = 10000 - stockFeves.get(f);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;

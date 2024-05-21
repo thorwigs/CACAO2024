@@ -27,6 +27,8 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurContratCadre implements IVendeurContratCadre {
+	
+	
 	private SuperviseurVentesContratCadre supCC;
 	
 
@@ -293,6 +295,16 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		}
 		return res;
 	}
+	
+	public double restantALivrerDeType (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if ((c.getProduit() instanceof ChocolatDeMarque) && ((ChocolatDeMarque)c.getProduit()).getChocolat() == choco) {
+				res+=c.getQuantiteRestantALivrer();
+			}
+		}
+		return res;
+	}
 
 	public double restantPayeARecevoir() {
 		double res=0;
@@ -302,10 +314,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		return res;
 	}
 
-	
-	
-	
-	
+
 	//Next
 		
 	public void next() { 

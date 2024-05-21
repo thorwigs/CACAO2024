@@ -196,7 +196,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 			this.journal.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
 		
-
+		
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
