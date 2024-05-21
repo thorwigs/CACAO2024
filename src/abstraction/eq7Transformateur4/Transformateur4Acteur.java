@@ -38,7 +38,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; //idem pour les chocolat de marques, donc on aura un seul choco, le HQ de stockChoco une fois qu'on lui aura apposé la marque Mirage
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
 	
-	private List<ChocolatDeMarque>chocosProduits; //liste de tout les chocolat qu'on peut produire, mais qu'on ne va pas forcement produire
+	protected List<ChocolatDeMarque>chocosProduits; //liste de tout les chocolat qu'on peut produire, mais qu'on ne va pas forcement produire
 	protected List<ChocolatDeMarque> chocolatCocOasis;//liste de tout les chocolats que nous produisons sous notre nom
 	protected List<ChocolatDeMarque> chocolatDistributeur; //liste de tout les chocolats sous les noms distributeurs
 	
@@ -87,13 +87,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
 			if (f == Feve.F_HQ || f == Feve.F_HQ_BE || f == Feve.F_MQ) {
-			this.stockFeves.put(f, 20000.0);
-			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+				this.stockFeves.put(f, 20000.0);
+				this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
+				this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			} else {
-			this.stockFeves.put(f, 0.0);
-			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 0 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+				this.stockFeves.put(f, 0.0);
+				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
+				this.journal.ajouter("ajout de 0 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			}
 		}
 		
@@ -115,10 +115,10 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
-		this.stockChoco.put(Chocolat.C_MQ, 100000.0);
-		this.totalStocksChoco.ajouter(this, 100000.0, this.cryptogramme);
-		this.journal.ajouter("ajout de 100000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
-	
+
+		this.stockChoco.put(Chocolat.C_MQ, 45000.0);
+		this.totalStocksChoco.ajouter(this, 45000.0, this.cryptogramme);
+		this.journal.ajouter("ajout de 45000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 
 
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
