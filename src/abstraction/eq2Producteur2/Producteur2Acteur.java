@@ -33,11 +33,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	protected ArrayList<Double> solde;
 	protected Variable tonnes_venduesCC;
 	protected Variable tonnes_venduesBourse;
-
-
-	public abstract double get_prod_pest_BQ();
-	public abstract double get_prod_pest_MQ();
-	public abstract double get_prod_pest_HQ();
 	
 	protected abstract double getNbTonnesVenduesBourse();
 	protected abstract double getNbTonnesVenduesCC();
@@ -64,7 +59,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		this.lot_to_hashmap();
 		
-		prodParStep.put(Feve.F_HQ_BE, 0.0);
 		prodParStep.put(Feve.F_HQ_E, 0.0);
 		prodParStep.put(Feve.F_HQ, 0.0);
 		prodParStep.put(Feve.F_MQ_E, 0.0);
@@ -81,10 +75,12 @@ public abstract class Producteur2Acteur implements IActeur {
 			else if(f == Feve.F_HQ_E) {
 				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
 			}
-			else {
+			else if (f != Feve.F_HQ_BE){
 				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
 			}
-			this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
+			if (f != Feve.F_HQ_BE){
+				this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
+			}
 		}
 		
 		
@@ -95,6 +91,12 @@ public abstract class Producteur2Acteur implements IActeur {
 	 */
 	public abstract void init_stock(Feve type_feve, double quantite);
 	public abstract void lot_to_hashmap();
+	
+	public void initialiser() {
+		solde.add(this.getSolde()); //initialisation solde initial
+		// les initialisations sont faites dans le constructeur
+	}
+	
 	
 	/** getBenefice
 	 * 
@@ -109,12 +111,7 @@ public abstract class Producteur2Acteur implements IActeur {
 			return solde.get(n-1)-solde.get(n-2);
 		}
 	}
-	
-	public void initialiser() {
-		solde.add(this.getSolde()); //initialisation solde initial
-		// les initialisations sont faites dans le constructeur
-	}
-	
+
 	public double getCoursBourse(Feve f) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		Variable cours = bourse.getCours(f);
@@ -161,11 +158,12 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.journal_prix.ajouter("prix de la bourse feve BQ : " + this.getCoursBourse(Feve.F_BQ));
 		this.journal_prix.ajouter("prix d'achat lors d'un contrat cadre feve BQ: " + this.prix(Feve.F_BQ));	
 		
-		/*for (Feve f : Feve.values()) {
-			this.stock_variable.get(f).setValeur(this, this.stock.get(f));
-			this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
-		}*/
-		
+		for (Feve f : Feve.values()) {
+			if (f != Feve.F_HQ_BE) {
+				this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+				this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
+			}
+		}
 		solde.add(this.getSolde());
 		
 		if (solde.size() > 2) {
@@ -174,7 +172,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		this.tonnes_venduesCC.setValeur(this, this.getNbTonnesVenduesCC());
 		this.tonnes_venduesBourse.setValeur(this, this.getNbTonnesVenduesBourse());
-		//this.reinit_quantite_vendue();
 	}
 	
 	public Color getColor() { //NE PAS MODIFIER
@@ -197,10 +194,14 @@ public abstract class Producteur2Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		
 		for (Feve f: Feve.values()) {
-			res.add(this.prod_step.get(f));
+			if (f != Feve.F_HQ_BE) {
+				res.add(this.prod_step.get(f));
+			}
 		}
 		for (Feve f: Feve.values()) {
-			res.add(this.stock_variable.get(f));
+			if (f != Feve.F_HQ_BE) {
+				res.add(this.stock_variable.get(f));
+			}
 		}
 		
 		res.add(this.tonnes_venduesCC);

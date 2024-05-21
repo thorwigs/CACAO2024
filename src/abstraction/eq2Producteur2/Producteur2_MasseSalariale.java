@@ -3,6 +3,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.Feve;
 
 /** Classe gérant les ressources humaines
  * @author Noémie
@@ -22,6 +23,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private double salaire_adulte_equitable;
 	
 	protected Journal journalRH;
+	
 	
 	
 	/** Constructeur
@@ -227,7 +229,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 				double nb_ade_max=0.2*this.getNb_Employes_total();
 				this.embauche(Math.min((int) nb_ade,(int) nb_ade_max), "adulte équitable");
 			}
-			else {
+			else if (this.getPourcentage_equitable() < 20) {
 				int nb_enf = getNb_employes_enfants();
 				
 				// le nombre d'employés qui changent de catégorie est égal à 2% des enfants
@@ -243,6 +245,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		}
 	}
 	
+	
 
 	/** Méthode next qui appelle stratégie et met à jour le journal RH 
 	 * @author Noémie
@@ -250,6 +253,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	public void next() {
 		super.next();
 		this.strategie();
+		
 		this.journalRH.ajouter("\n-------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " --------------------");
 		this.journalRH.ajouter("nombre d'employes dans la plantation " + this.getNb_Employes_total());
 		this.journalRH.ajouter("pourcentage d'enfants " + this.getPourcentage_enfants());
