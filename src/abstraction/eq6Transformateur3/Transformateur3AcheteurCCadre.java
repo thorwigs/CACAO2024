@@ -15,6 +15,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eq4Transformateur1.*;
@@ -182,8 +183,15 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	 * @author Thomas
 	 */
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("Feve") 
-				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000;
+		if( ! produit.getType().equals("Feve")) {
+			return false;
+		}
+		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
+			if(Correspond(c.getChocolat())==produit) {
+				return stockChocoMarque.get(produit)+restantDu((Feve)produit)<50000;
+			}
+		}
+		return false;
 	}
 	/**
 	 * @author Thomas
