@@ -73,6 +73,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 					journalCoC.ajouter("   pas d'acheteur");
 				}
 			}
+			System.out.println("size= "+this.contratsEnCours.size());
 
 		}
 	}
@@ -241,7 +242,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		// TODO Auto-generated method stub
 		double stockActuel = stock.get(produit).getValeur((Integer)cryptogramme);
 		double aLivre = Math.min(quantite, stockActuel);
-		journalCoC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
+		journalCoC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero()+"avec "+contrat.getAcheteur());
 		stock.get(produit).setValeur(this, aLivre, (Integer)cryptogramme);
 		return aLivre;
 
