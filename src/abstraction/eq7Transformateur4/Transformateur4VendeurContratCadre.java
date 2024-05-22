@@ -356,7 +356,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 									journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 								} else {
 									this.contratsEnCours.add(contrat);
-									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getMontantRestantARegler() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
 								}
 							}
 							//IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
