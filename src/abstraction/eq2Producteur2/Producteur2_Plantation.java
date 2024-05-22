@@ -401,6 +401,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.journalPlantation.ajouter(" .      " + prod_HQ + " tonnes de fèves de haute qualité");
 	}
 	
+	/** Méthode permettant de savoir quand il faut embaucher et planter en fonction de la quantité de stock restante
+	 * @author Noémie
+	 */
 	public void besoin_embauche() {
 		double stock_BQ = this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme);
 		double stock_MQ = this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme);

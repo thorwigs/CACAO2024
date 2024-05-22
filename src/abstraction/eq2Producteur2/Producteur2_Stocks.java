@@ -223,10 +223,9 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				lot.setType_feve(Feve.F_BQ);
 			}
 			else if(lot.getType_feve() == Feve.F_BQ && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_BQ_JETE)) {
-				//this.retire_lot(lot); ne fonctionne pas, je ne sais pas pourquoi
-				lot.setQuantite(0);
-				}
+				this.retire_lot(lot);
 			}
+		}
 	}
 	
 	
