@@ -464,6 +464,7 @@ public abstract class Producteur3Acteur implements IActeur {
 			 return 0.0;
 		 } else {
 			 double accu = 0.0;
+			 double quantiteDemQ = quantiteDem;
 			 //On veut destocker step par step
 			 LinkedList<Integer> steps = new LinkedList<Integer>();
 			 steps.addAll(stockGammeStep.get(f).keySet());
@@ -471,11 +472,12 @@ public abstract class Producteur3Acteur implements IActeur {
 			 for (Integer step : steps) {
 				 double stockStep = stockGammeStep.get(f).get(step);
 				 //On ajoute les couts de revient en proportion de la quantite demandee
-				 if (stockStep > quantiteDem) {
-					 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
+				 if (stockStep > quantiteDemQ) {
+					 accu += quantiteDemQ/stockStep * coutGammeStep.get(f).get(step);
+					 break;
 				 } else {
 					 accu += coutGammeStep.get(f).get(step);
-					 quantiteDem -= stockStep;
+					 quantiteDemQ -= stockStep;
 				 }
 			 }
 			 return accu/quantiteDem;
