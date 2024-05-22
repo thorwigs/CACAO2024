@@ -252,7 +252,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")) {
-//			|| this.chocoBan.contains(produit)) {
 			return 0.0; 
 		}
 		
