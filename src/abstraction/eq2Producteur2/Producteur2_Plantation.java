@@ -434,9 +434,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	/**Cette fonction next sert à implémenter notre stratégie.
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
 	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
-	 * @author Noémie
+	 * @author Noémie, Quentin
 	 */
-	public void next() {
+	public void next(){
 		super.next();
 		production_cacao();
 		for (Feve f : Feve.values()) {
