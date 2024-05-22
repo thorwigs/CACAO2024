@@ -81,6 +81,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		for (Feve f : Feve.values()) {
 			this.lesFeves.add(f);
 			this.journal.ajouter("   - "+f);
+			
+			
+		this.journal.ajouter("" +Filiere.LA_FILIERE.getMarquesDistributeur());
 		}
 		  
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks

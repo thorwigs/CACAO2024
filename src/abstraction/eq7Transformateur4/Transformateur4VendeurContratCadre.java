@@ -305,6 +305,16 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		}
 		return res;
 	}
+	
+	public double ALivrerDeTypeAuStep (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if ((c.getProduit() instanceof ChocolatDeMarque) && ((ChocolatDeMarque)c.getProduit()).getChocolat() == choco) {
+				res+=c.getQuantiteALivrerAuStep();
+			}
+		} 
+		return res;
+	}
 
 	public double restantPayeARecevoir() {
 		double res=0;
