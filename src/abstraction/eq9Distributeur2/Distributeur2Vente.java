@@ -1,6 +1,8 @@
 package abstraction.eq9Distributeur2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -53,7 +55,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 			case C_HQ : return 20000;
 			default:
 				return 0;}}
-		if (Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1) > 100000  ) {
+		if (Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1) > 3000  ) {
 		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1);}
 		switch (choco.getChocolat()) {
 		case C_HQ_BE: return 26000;
@@ -73,11 +75,54 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		return this.getQuantiteEnStock(choco,crypto)*0.9;
 		
 	}
+	public double quantiteEnVenteG(int crypto) {
+		double somme= 0; 
+		
+		for (ChocolatDeMarque chocolat : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			somme += this.quantiteEnVente(chocolat, crypto);
+		}
+		return somme; 
+	}
+	// Retourne un hashmap des quantités à mettre en tête de gondole
+	// Commence par mettre tout le stock du produit le plus attractif 
+	// Continue avec les produits plus attractifs juqu'à atteindre la quantité max de chocolat à mettre en TG
+	public HashMap <ChocolatDeMarque, Double > quantiteEnVenteTGG(int crypto) {
+		HashMap <ChocolatDeMarque, Double > res = new HashMap<ChocolatDeMarque,Double>();
+		double QuantiteReste = this.quantiteEnVenteG(crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG;
+		List<ChocolatDeMarque> chocos = new ArrayList<ChocolatDeMarque>(); 
+		chocos = Filiere.LA_FILIERE.getChocolatsProduits();
+		double attractivite = 0; 
+		ChocolatDeMarque chocolatTG = null; 
+		double quantiteTG = 0;
+		while( QuantiteReste>0) {
+			for (ChocolatDeMarque choco : chocos) {
+				if (Filiere.LA_FILIERE.getAttractivite(choco)>attractivite) {
+					attractivite = Filiere.LA_FILIERE.getAttractivite(choco);
+					chocolatTG = choco; }}
+				quantiteTG = Math.min(QuantiteReste, this.quantiteEnVente(chocolatTG,crypto));
+				
+				res.put(chocolatTG,quantiteTG);
+			
+				chocos.remove(chocolatTG);
+				
+				attractivite=0;
+				QuantiteReste = QuantiteReste - quantiteTG; }
+		for (ChocolatDeMarque choco : Filiere.LA_FILIERE.getChocolatsProduits()) {
+		if (res.containsKey(choco) == false) {
+			res.put(choco, 0.0);}
+		}
+		return res;
+				
+				}
+				
+			
 
 	@Override
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-		return this.quantiteEnVente(choco, crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG;
+
+		return this.quantiteEnVenteTGG(crypto).get(choco);
+
 	}
 
 	@Override
