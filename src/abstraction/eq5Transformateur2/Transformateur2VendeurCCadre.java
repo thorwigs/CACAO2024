@@ -15,8 +15,6 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eq5Transformateur2.Transformateur2MasseSalariale2;
-
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	private HashMap<IAcheteurContratCadre, Integer> BlackListAcheteur;
@@ -200,7 +198,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockChocoMarque.get((ChocolatDeMarque)produit).ajouter(this, quantite, this.cryptogramme);
+		this.stockChocoMarque.get((ChocolatDeMarque)produit).retirer(this, quantite, this.cryptogramme);
 		this.totalStocksChocoMarque.retirer(this, quantite, this.cryptogramme);
 		return quantite;
 		}

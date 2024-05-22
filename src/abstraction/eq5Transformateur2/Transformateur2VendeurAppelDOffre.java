@@ -92,7 +92,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			return null;
 		}
 		// On verif qu'on a assez de stock
-		if (offre.getQuantiteT() >= stockChocoMarque.get(cm).getValeur() ) {
+		if (offre.getQuantiteT() >= this.stockChocoMarque.get(cm).getValeur(this.cryptogramme) ) {
 			journalAO.ajouter(Color.WHITE, Color.red," Pas assez de stock pour l'AO sur "+cm);
 			return null;
 		}
@@ -140,7 +140,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 				stockChocoMarque.get(cm).retirer(this, quantite_vendu, this.cryptogramme); // modif des stocks si la proposition est retenue
 				totalStocksChocoMarque.retirer(this, quantite_vendu, this.cryptogramme);
 				prixAO.get(cm).add(prix*1.05);  // on fait comme si on avait accepte avec 5% de hausse afin que lors des prochains echanges on fasse une offre + onéreuse
-				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix+ " à l'acheuteur : "+propositionRetenue.getOffre().getAcheteur());
+				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix+ " à l'acheteur : "+propositionRetenue.getOffre().getAcheteur());
 				if (prixAO.get(cm).size()>10) {
 					prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 				}
@@ -156,7 +156,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		double quantite = propositionRefusee.getQuantiteT();
 		if (prixAO.get(cm)!=null) {
 			prixAO.get(cm).add(prix*0.85); // on fait comme si on avait accepte avec 15% de baisse afin que lors des prochains echanges on fasse une meilleure offre
-			journalAO.ajouter(Color.RED, Color.white,"   Echec de vente par AO de "+quantite+" tonnes de "+cm+" au prix de  "+prix+" à l'acheuteur : "+propositionRefusee.getOffre().getAcheteur());
+			journalAO.ajouter(Color.RED, Color.white,"   Echec de vente par AO de "+quantite+" tonnes de "+cm+" au prix de  "+prix+" à l'acheteur : "+propositionRefusee.getOffre().getAcheteur());
 			if (prixAO.get(cm).size()>10) {
 				prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 			}
