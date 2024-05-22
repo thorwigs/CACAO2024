@@ -389,7 +389,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Essaie de tous les contrats cadre possible");
 					for (int i=0;i<vendeurs.size();i++) {
 						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Demande au superviseur de debuter les negociations pour un contrat cadre de "+choc+" avec le vendeur "+vendeur);
-						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"C'est le "+i+"ème vendeur");
+						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Avec le "+i+"ème vendeur");
 						int a = Filiere.LA_FILIERE.getEtape()+1;
 						int b = 24 ; 
 						double c = this.prevision(choc, b) ;	
