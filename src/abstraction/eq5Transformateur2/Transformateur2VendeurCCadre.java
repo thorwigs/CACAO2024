@@ -37,17 +37,8 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	public void next() {
 		super.next();
 		this.journalCC.ajouter(Color.PINK,Color.BLACK,"===VENDEUR=========STEP"+Filiere.LA_FILIERE.getEtape()+" ====================");
-		double totalStep=0;
-		for (ExemplaireContratCadre c : contratsEnCours) {
-			if (this.chocosProduits.contains(c.getProduit())){
-				totalStep+=c.getQuantiteALivrerAuStep();
-			}
-		}
-		boolean VenteActive = false;
-		if (totalStep<this.moyProd) {
-			VenteActive = true;
-		}
-		this.journalCC.ajouter(this.moyProd+"  prod-total    "+totalStep);
+		boolean VenteActive=this.VenteActive();
+		//this.journalCC.ajouter(this.moyProd+"  prod - total    "+totalStep);
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (VenteActive == true) {
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
@@ -113,7 +104,12 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 * @author Robin, Erwann
 	 */
 	public boolean vend(IProduit produit) {
-		return (this.chocosProduits.contains(produit)) ;
+		boolean VenteActive = this.VenteActive();
+		if (VenteActive==true) {
+			return (this.chocosProduits.contains(produit)) ;
+		}else {
+			return false;
+		}
 	}
 	
 	/***
@@ -202,4 +198,20 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		this.totalStocksChocoMarque.retirer(this, quantite, this.cryptogramme);
 		return quantite;
 		}
+	/**
+	 * @author robin
+	 */
+	public boolean VenteActive() {
+		double totalStep=0;
+		for (ExemplaireContratCadre c : contratsEnCours) {
+			if (this.chocosProduits.contains(c.getProduit())){
+				totalStep+=c.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape());
+			}
+		}
+		boolean VenteActive = false;
+		if (totalStep<this.moyProd) {
+			VenteActive = true;
+		}
+		return VenteActive;
+	}
 }
