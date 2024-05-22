@@ -53,6 +53,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	
 	public void next() {
 		super.next();
+		System.out.println(" ------------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " ------------- ");
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200 && f != Feve.F_MQ_E) { // au moins 100 tonnes par step pendant 6 mois
