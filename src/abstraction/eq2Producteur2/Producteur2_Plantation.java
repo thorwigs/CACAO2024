@@ -428,7 +428,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
 	 * @author Noémie, Quentin
 	 */
-	public void next() {
+	public void next(){
 		super.next();
 		production_cacao();
 		for (Feve f : Feve.values()) {
