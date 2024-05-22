@@ -88,7 +88,6 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * Le dictionnaire plantation a pour cle Feve et pour valeur la variable surfaceXQ associee du step precedent + les eventuelles extensions.
 	 */
 	protected HashMap<Feve, Double> plantation() {
-		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
 	//on augmente la surface 
 		surfacePlantation = achatPlantation(surfacePlantation);
 		return surfacePlantation;
@@ -112,10 +111,18 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 				supp += 100; 
 			}
 			if(aRemplacer(agePlant).get(f) != null) {
+				if(f == Feve.F_HQ_E || f == Feve.F_HQ_BE || f == Feve.F_MQ_E) {
+					supp += aRemplacer(agePlant).get(f)+10; // on tend à accroitre nos plantations de bio et d'équitable
+				}
+				else if(f == Feve.F_HQ || f == Feve.F_MQ) {
+					supp += aRemplacer(agePlant).get(f)-10; // on diminue nos plantations conventionnelles
+				}
+				else {
 					supp += aRemplacer(agePlant).get(f);
-					agePlantPrec.put(f, aRemplacer(agePlant).get(f));
-					agePlant.get(f).remove(Filiere.LA_FILIERE.getEtape());
-					agePlant.get(f).put(Filiere.LA_FILIERE.getEtape()+720, agePlantPrec.get(f));
+				}
+				agePlantPrec.put(f, aRemplacer(agePlant).get(f));
+				agePlant.get(f).remove(Filiere.LA_FILIERE.getEtape());
+				agePlant.get(f).put(Filiere.LA_FILIERE.getEtape()+720, agePlantPrec.get(f));
 				}
 			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f (en ha)
 		}
