@@ -297,7 +297,11 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		return coef;
 	}
 
-	
+	public void augmentationCapaciteRayons() {
+		if (this.getSolde()/10>1000000000) {
+			this.capaciteDeVente=this.capaciteDeVente*1.025;
+		}
+	}
 	/**
 	 * @author wiam 
 	 */
@@ -310,6 +314,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
 		this.MiseAJourCoefficient(this.Coefficient);
+		this.augmentationCapaciteRayons();
 		this.setNombreEmploye();
 		for (int i=0;i<this.ListPrix.size(); i++) {
 			this.setPrix(chocolats.get(i));
