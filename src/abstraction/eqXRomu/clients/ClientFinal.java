@@ -313,8 +313,16 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 				double enVente = this.quantiteEnVente.get(dist).get(choco);
 				double quantiteAchetee = Math.max(0.0, Math.min(quantiteDesiree, enVente));
 				quantiteAchetee = quantiteAchetee<0.05 ? 0.0 : quantiteAchetee; // En dessous de 50kg la quantite demandee devient 0.0 
-				souhait.get(dist).put(step, quantiteDesiree);
-				obtenu.get(dist).put(step, quantiteAchetee);
+				double qd=0;
+				if (souhait.get(dist).keySet().contains(step)) {
+					qd = souhait.get(dist).get(step);
+				}
+				souhait.get(dist).put(step, qd+quantiteDesiree);
+				double qo=0;
+				if (obtenu.get(dist).keySet().contains(step)) {
+					qo = obtenu.get(dist).get(step);
+				}
+				obtenu.get(dist).put(step, qo+quantiteAchetee);
 				JournalDistribution.ajouter("&nbsp;&nbsp;&nbsp;&nbsp;pour "+Journal.texteColore(dist, dist.getNom()+" d'attractivite "+Journal.doubleSur(this.attractiviteDistributeur.get(choco).get(dist), 4)+" (avec prix="+Journal.doubleSur(pri, 4) +") la quantite desiree est "+Journal.doubleSur(quantiteDesiree,4)+" et quantite en vente ="+Journal.doubleSur(enVente, 4)+" -> quantitee achetee "+Journal.doubleSur(quantiteAchetee, 4)));
 				if (quantiteAchetee>0.0) {
 					totalVentes+=quantiteAchetee;
