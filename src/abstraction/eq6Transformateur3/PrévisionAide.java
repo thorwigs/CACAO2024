@@ -95,12 +95,12 @@ public class PrévisionAide extends Transformateur3Acteur{
 	public HashMap<Feve,Integer> Decision(){
 		HashMap<Feve, Integer> Decision = new HashMap<>();
 		for(ChocolatDeMarque c :stockChocoMarque.keySet()) {
-			if(stockChocoMarque.get(c)<=10000) {
+			if(stockChocoMarque.get(c)<=50000) {
 				if(Decision.get(Correspond(c.getChocolat()))!=null) {
 				Decision.put(Correspond(c.getChocolat()),(int) (Decision.get(Correspond(c.getChocolat()))+10000-stockChocoMarque.get(c)) );
 				}
 				else {
-					Decision.put(Correspond(c.getChocolat()),(int) (10000-stockChocoMarque.get(c))) ;
+					Decision.put(Correspond(c.getChocolat()),(int) (50000-stockChocoMarque.get(c))) ;
 				}
 			}
 		}
