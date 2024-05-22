@@ -36,24 +36,26 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 	 *  70% pour les fèves de moyenne qualité (MQ)
 	 */
 	public double demande(Feve f, double cours) {
-		double stockCible = Math.max(2*this.demandeCC, 20000);
-		stockCible = stockCible - this.totalStocksChocoMarque.getValeur(this.cryptogramme);
-		this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de feve");
-		double demandeMin=100;
-		double stockCibleHQ = 0.3 * stockCible;
-	    double stockCibleMQ = 0.7 * stockCible;
-	    if (f == Feve.F_HQ_BE) {
-	        if (this.stockFeves.get(f).getValeur() < stockCibleHQ) {
-	        	double demandeHQ = Math.max(stockCibleHQ - this.stockFeves.get(f).getValeur(), demandeMin);
-	    		this.journalAchatBourse.ajouter("- La demande en HQ_BE est de "+demandeHQ+"T de fève");
-	            return demandeHQ;}}
-	    else if (f == Feve.F_MQ) {
-	        if (this.stockFeves.get(f).getValeur() < stockCibleMQ) {
-	        	double demandeMQ = Math.max(stockCibleMQ - this.stockFeves.get(f).getValeur(), demandeMin);
-	    		this.journalAchatBourse.ajouter("- La demande en MQ_E est de "+demandeMQ+"T de fève");
-	            return demandeMQ;
-	        }
-	    }
+		if(this.listePourcentageMarque.keySet().contains(f.getGamme())) {
+			double stockCible = Math.max(2*this.demandeCC, this.stockCibleMini*this.listePourcentageMarque.get(f.getGamme()));
+			stockCible = Math.max(stockCible - this.totalStocksChocoMarque.getValeur(this.cryptogramme), 0);
+			this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de feve");
+			double demandeMin=100;
+			double stockCibleHQ = 0.3 * stockCible;
+		    double stockCibleMQ = 0.7 * stockCible;
+		    if (f == Feve.F_HQ_BE) {
+		        if (this.stockFeves.get(f).getValeur() < stockCibleHQ) {
+		        	double demandeHQ = Math.max(stockCibleHQ - this.stockFeves.get(f).getValeur(), demandeMin);
+		    		this.journalAchatBourse.ajouter("- La demande en HQ_BE est de "+demandeHQ+"T de fèves "+f);
+		            return demandeHQ;}}
+		    else if (f == Feve.F_MQ) {
+		        if (this.stockFeves.get(f).getValeur() < stockCibleMQ) {
+		        	double demandeMQ = Math.max(stockCibleMQ - this.stockFeves.get(f).getValeur(), demandeMin);
+		    		this.journalAchatBourse.ajouter("- La demande en MQ_E est de "+demandeMQ+"T de fèves "+f);
+		            return demandeMQ;
+		        }
+		    }
+		}
 		return 0;
 	}
 

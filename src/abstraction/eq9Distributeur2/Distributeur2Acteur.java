@@ -2,6 +2,7 @@ package abstraction.eq9Distributeur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
@@ -9,6 +10,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -18,9 +20,13 @@ public abstract class Distributeur2Acteur implements IActeur {
 	protected Journal journal;
 	private int capaciteStockage;
 	protected double coutStockage;
+	protected Journal journal_vente;
+	
+	
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
+		this.journal_vente = new Journal(this.getNom()+" journal des ventes", this);
 		this.capaciteStockage = Integer.MAX_VALUE;
 		
 	}
@@ -61,11 +67,59 @@ public abstract class Distributeur2Acteur implements IActeur {
 		return "Bonjour bonjour";
 	}
 
-	// Renvoie les indicateurs
-	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
-		return res;
+	//Le code suivant à été mis en commentaire car on ne souhaite plus mettre les chocolats de marque en indicateurs mais simplement les différentes catégories de chocolat!
+	/*
+	// transforme le dictionnaire des stocks(double) en dictionnaire des stocks(Variable)
+	protected HashMap<ChocolatDeMarque, Variable> variabilisation(HashMap<ChocolatDeMarque, Double> stockChocoMarque){
+		HashMap<ChocolatDeMarque, Variable> stockChocoIndicateur = new HashMap();
+		for (HashMap.Entry<ChocolatDeMarque, Double> entry : stockChocoMarque.entrySet()) {
+			entry.getKey();
+			Variable quantite = new Variable("Eq9DStockChocoMarque_"+ entry.getKey() , "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, entry.getValue());
+			stockChocoIndicateur.put(entry.getKey(),quantite);
+		}
+		return stockChocoIndicateur;
 	}
+	
+	protected HashMap<ChocolatDeMarque, Variable> iniT(){
+		HashMap<ChocolatDeMarque, Variable> stockChocoIndicateur = new HashMap();
+		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			Variable quantite = new Variable("Eq9DStockChocoMarque_"+cm.getNom() ,this);
+			stockChocoIndicateur.put(cm,quantite);
+		}
+		return stockChocoIndicateur;
+	}
+	*/
+	protected abstract HashMap<ChocolatDeMarque, Double> stockParType(String type);
+	
+	protected void MiseAJour(ArrayList<Variable> indicateurs){
+		 for (Variable type : indicateurs) {
+			 HashMap<ChocolatDeMarque, Double> stockParType = stockParType(type.getNom().substring(10));
+			 double stockType = 0;
+			 for(double quantite : stockParType.values()) {
+				 stockType+=quantite;
+			 }
+			 type.setValeur(this, stockType);
+		 }
+		
+		
+	};
+	
+	
+	protected ArrayList<Variable> init(){
+		ArrayList<Variable> indicateurs = new ArrayList<Variable>();
+		
+		Variable BQ = new Variable("Eq9DStock_BQ", "<html>Quantite totale de chocolat de Basse qualité en stock</html>",this, 0.0,Double.MAX_VALUE, 0); indicateurs.add(BQ);
+		Variable MQ = new Variable("Eq9DStock_MQ", "<html>Quantite totale de chocolat de Moyenne qualité en stock</html>",this, 0.0,Double.MAX_VALUE, 0); indicateurs.add(MQ);
+		Variable MQ_E = new Variable("Eq9DStock_MQ_E", "<html>Quantite totale de chocolat de Moyenne qualité équitable en stock</html>",this, 0.0,Double.MAX_VALUE, 0); indicateurs.add(MQ_E);
+		Variable HQ = new Variable("Eq9DStock_HQ", "<html>Quantite totale de chocolat de Haute qualité en stock</html>",this, 0.0,Double.MAX_VALUE, 0);  indicateurs.add(HQ);
+		Variable HQ_E = new Variable("Eq9DStock_HQ_E", "<html>Quantite totale de chocolat de Haute qualité équitable en stock</html>",this, 0.0,Double.MAX_VALUE, 0);  indicateurs.add(HQ_E);
+		Variable HQ_BE = new Variable("Eq9DStock_HQ_BE", "<html>Quantite totale de chocolat de Haute qualité bio-équitable en stock</html>",this, 0.0,Double.MAX_VALUE, 0);  indicateurs.add(HQ_BE);
+		
+		return indicateurs;
+	}
+	
+	// Renvoie les indicateurs
+	public abstract List<Variable> getIndicateurs() ;
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
@@ -77,6 +131,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal);
+		res.add(this.journal_vente);
 		return res;
 	}
 
@@ -127,6 +182,16 @@ public abstract class Distributeur2Acteur implements IActeur {
 	// Renvoie une instance d'une filiere d'apres son nom
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;
+	}
+	
+	///////////////
+	
+	public double getMoyAttract () {
+		double moy = 0. ;
+		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			moy += Filiere.LA_FILIERE.getAttractivite(cm);
+		}
+		return moy/Filiere.LA_FILIERE.getChocolatsProduits().size();
 	}
 
 }

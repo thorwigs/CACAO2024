@@ -1,10 +1,48 @@
 package abstraction.eq3Producteur3;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
+import java.util.LinkedList;
+import java.lang.Math;
+
+import abstraction.eq1Producteur1.Producteur1VendeurBourse;
+import abstraction.eq2Producteur2.Producteur2VendeurBourse;
+import abstraction.eq4Transformateur1.Transformateur1AcheteurBourse;
+import abstraction.eq5Transformateur2.Transformateur2AcheteurBourse;
+import abstraction.eq6Transformateur3.Transformateur3AcheteurBourse;
+import abstraction.eq7Transformateur4.Transformateur4AcheteurBourse;
+
 public class Producteur3VendeurBourse extends Producteur3Production implements IVendeurBourse {
+	
+	BourseCacao superviseur;
+	LinkedList<IVendeurBourse> vendeurs;
+	LinkedList<IAcheteurBourse> acheteurs;
+	
+	protected void deleteAcheteurs(IAcheteurBourse acheteur) {
+		acheteurs.remove(acheteur);
+	}
+	protected void deleteVendeurs(IVendeurBourse vendeur) {
+		vendeurs.remove(vendeur);
+	}
+	
+	public void initialiser() {
+		super.initialiser();	
+		superviseur = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");
+		vendeurs = new LinkedList<IVendeurBourse>();
+		acheteurs = new LinkedList<IAcheteurBourse>();
+		vendeurs.add((Producteur1VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ1"));
+		vendeurs.add((Producteur2VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ2"));
+		acheteurs.add((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4"));
+		acheteurs.add((Transformateur2AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ5"));
+		acheteurs.add((Transformateur3AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ6"));
+		acheteurs.add((Transformateur4AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ7"));
+	}
 	
 	
 	/**
@@ -17,17 +55,57 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		//vendre par bourse ce qui n'est pas vendue par contrat cadre (a faire)
 		//vend toute la production BQ en bourse
 		//verifie si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
-		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,getQuantiteEnStock(f,cryptogramme))<=cours)) {
+		double stock = getQuantiteEnStock(f,cryptogramme);
+		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,stock)<=cours)) {
 			//mettre la quantite de stock BQ (on pourra mettre plus et ajuster selon la demande)
 			//plus on demande, plus on vend (attention a l'offre et a la demande) (souvent on vend < 5% de ce qu'on veut vendre mais attention on vend plus mais ca fait baisser le cours)
-			return this.getQuantiteEnStock(f,this.cryptogramme);
+			return quantiteAV(f,cours,stock);
 		}
 		else {
-			//pas de vente en bourse MQ et HQ pour le moment
-			return 0;
+			if (coutRevient(f,stock)<=cours) {
+				return quantiteAV(f,cours,stock);
+			}
+			else {
+				return 0;
+			}
 		}
 	}
-
+	
+	/**
+	 * @author Arthur
+	 * @param Feve f, double cours (un type de feve et son prix a la tonne a la bourse)
+	 * return double (quantite a proposer de vendre)
+	 * Renvoie la quantite que l'on va proposer a la vente de maniere a vendre nos stocks et pas moins (represente une etude du marche)
+	 * La formule mathematique se base sur le fonctionnement du systeme
+	 */
+	private double quantiteAV(Feve f, double cours, double stock) {
+		double autresAV = 0;
+		double dem = 0;
+		for (IVendeurBourse vendeur : vendeurs) {
+			if (!(superviseur.getVendeursBlackListes().contains(vendeur))) {
+				autresAV += vendeur.offre(f, cours);
+			}
+		}
+		for (IAcheteurBourse acheteur : acheteurs) {
+			if (!(superviseur.getAcheteursBlackListes().contains(acheteur))) {
+				dem += acheteur.demande(f, cours);
+			}
+		}
+		
+		if (dem >= autresAV+stock) {
+			return stock;
+		}
+		else if (dem == 0) {
+			return 0;
+		} else if (autresAV == 0) {
+			return Math.min(stock,dem);
+		} else if (stock < dem) {
+			return stock/dem*autresAV/(1-stock/dem);
+		} else {
+			return 9*autresAV;
+		}
+	}
+	
 	/**
 	 * @author Arthur
 	 * @param Feve f, double quantiteEnT, double coursEnEuroParT (données de la vente)
@@ -47,7 +125,7 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock
 			this.setQuantiteEnStock(f, 0);
-			this.journal_bourse.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+" pour "+coursEnEuroParT*stock_inst+" E");
+			this.journal_bourse.ajouter("Bourse: Vente de "+stock_inst+" T de feves "+f.getGamme()+ "pour "+coursEnEuroParT*stock_inst+" E");
 			ventefevebourse.put(f, stock_inst);
 			return stock_inst;
 		}

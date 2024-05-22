@@ -26,6 +26,9 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	protected String[] marques;
 	protected Journal journalVente;
 	protected int nombreEmploye;
+	protected HashMap<String,Double> Fidele;
+	protected HashMap<String,Double> Coefficient;
+	protected LinkedList<String> equipe;
 
 	
 	/**
@@ -37,6 +40,9 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
 		this.marques = new String[chocolats.size()];
 		this.journalVente= new Journal (this.getNom() + " journal des ventes", this);
+		this.Fidele = new HashMap<String,Double>();
+		this.Coefficient = new HashMap<String,Double>();
+		this.equipe = new LinkedList<String>();
 	}
 	
 	
@@ -49,6 +55,18 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			this.setPrix(choco);
 		}
 		this.setNombreEmploye();
+		this.Fidele.put("EQ4", 0.0);
+		this.Fidele.put("EQ5", 0.0);
+		this.Fidele.put("EQ6", 0.0);
+		this.Fidele.put("EQ7", 0.0);
+		this.Coefficient.put("EQ4", 1.0);
+		this.Coefficient.put("EQ5", 1.0);
+		this.Coefficient.put("EQ6", 1.0);
+		this.Coefficient.put("EQ7", 1.0);
+		this.equipe.add("EQ4");
+		this.equipe.add("EQ5");
+		this.equipe.add("EQ6");
+		this.equipe.add("EQ7");
 	}
 
 	/**
@@ -74,10 +92,28 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			if (choco.getChocolat()==Chocolat.C_HQ_BE) {
 				ListPrix.put(choco, (double) 30000);
 			}
-		}
+		} 
 		else {
-			if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
-				ListPrix.replace(choco, 0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1));
+			if ((choco.toString().contains("C_BQ")) && (ListPrix.get(choco)<=1500)) {
+				ListPrix.replace(choco, 1500.0);
+			}
+			else if ((choco.toString().contains("C_MQ")) && (ListPrix.get(choco)<=3500)) {
+				ListPrix.replace(choco, 3500.0);
+			}
+			else if ((choco.toString().contains("C_MQ_E")) && (ListPrix.get(choco)<=6000)) {
+				ListPrix.replace(choco, 6000.0);
+			}
+			else if ((choco.toString().contains("C_HQ")) && (ListPrix.get(choco)<=9000)) {
+				ListPrix.replace(choco, 9000.0);
+			}
+			else if ((choco.toString().contains("C_HQ_E")) && (ListPrix.get(choco)<=13500)) {
+				ListPrix.replace(choco, 13500.0);
+			}
+			else if ((choco.toString().contains("C_HQ_BE")) && (ListPrix.get(choco)<=17000)) {
+				ListPrix.replace(choco, 17000.0);
+			}
+			else if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
+				ListPrix.replace(choco, Math.max(7000,0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)));
 			}
 			else if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
 				ListPrix.replace(choco, ListPrix.get(choco)*0.8);
@@ -128,27 +164,27 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 			if (choco.toString().contains("C_BQ")) {
 				double x = (capaciteDeVente*0.32)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			if (choco.toString().contains("C_MQ_E")) {
 				double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			if (choco.toString().contains("C_MQ")) {
 				double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));	
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);	
 			}
 			if (choco.toString().contains("C_HQ_BE")) {
 				double x = (capaciteDeVente*0.04)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			if (choco.toString().contains("C_HQ_E")) {
 				double x = (capaciteDeVente*0.08)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			if (choco.toString().contains("C_HQ")) {
 				double x = (capaciteDeVente*0.12)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-				return Math.abs(Math.min(x , this.getQuantiteEnStock(choco,crypto)));
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 		}
 		return 0.0;
@@ -211,7 +247,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
 			totalStockChoco.retirer(this, quantite, cryptogramme);
 			}
-		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+" pour "+montant+" d'euros ");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
 		
 	}
 
@@ -245,6 +281,45 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		return stockage + salaire;
 	}
 	
+	public boolean estPlusFideleQue(String equipeA,String equipeB) {
+		if (Fidele.get(equipeA)>Fidele.get(equipeB)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public HashMap<String,Double> MiseAJourCoefficient(HashMap<String,Double> coef){
+		HashMap<String,Integer> x = new HashMap<String,Integer>();
+		x.put("EQ4",0);
+		x.put("EQ5",0);
+		x.put("EQ6",0);
+		x.put("EQ7",0);
+		for (String nom1 : this.equipe) {
+			for (String nom2 : this.equipe) {
+				if (!nom1.equals(nom2) && this.Fidele.get(nom1)>this.Fidele.get(nom2)) {
+						x.replace(nom1, x.get(nom1)+1);
+				}
+			}
+		}
+		for (String nom : this.equipe) {
+			if (x.get(nom)==3) {
+				coef.replace(nom, 1.0);
+			} else if (x.get(nom)==2) {
+				coef.replace(nom, 1.05);
+			} else if (x.get(nom)==1) {
+				coef.replace(nom, 1.1);
+			} else {
+				coef.replace(nom, 1.15);
+			}
+		}
+		return coef;
+	}
+
+	public void augmentationCapaciteRayons() {
+		if (this.getSolde()/10>1000000000) {
+			this.capaciteDeVente=this.capaciteDeVente*1.025;
+		}
+	}
 	/**
 	 * @author wiam 
 	 */
@@ -256,6 +331,11 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
+		for (ChocolatDeMarque choco : chocolats) {
+			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+this.prix(choco));
+		}
+		this.MiseAJourCoefficient(this.Coefficient);
+		this.augmentationCapaciteRayons();
 		this.setNombreEmploye();
 		for (int i=0;i<this.ListPrix.size(); i++) {
 			this.setPrix(chocolats.get(i));

@@ -1,5 +1,6 @@
 package abstraction.eq9Distributeur2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,17 +17,25 @@ import abstraction.eqXRomu.produits.IProduit;
 
 // Classe codée par Margot Lourenço Da Silva( pour la mise à jour du journal voir next dans la classe Distributeur2Acteur
 public abstract class Distributeur2Stocks extends Distributeur2Acteur{
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected List<ChocolatDeMarque> chocolatsVillors;
-	protected Variable totalStocksChocoMarque;  
 	private List<ChocolatDeMarque>chocosProduits;
+	//protected Variable totalStocksChocoMarque;  
+	protected Variable totalStocks;
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected ArrayList<Variable> indicateurs=init();
+	
 	
 	public Distributeur2Stocks() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		
-		this.totalStocksChocoMarque = new VariablePrivee("Eq9DStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
-
+		//this.totalStocksChocoMarque = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
+		this.totalStocks = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
+		/*for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			this.stockChocoIndicateur.put(cm,new Variable("Eq9DStockChocoMarque_"+ cm , "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0));
+		}*/
+		
 	}
+	
 	
 	public void initialiser() {
 		super.initialiser();
@@ -38,20 +47,53 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 			quantite= Filiere.LA_FILIERE.getVentes(cm, -24);			
 			this.stockChocoMarque.put(cm, quantite);
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
-			this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);}
+			//this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);
+			}
 		
+		MiseAJour(indicateurs);
 		}
+	
 	public void next() {
 		super.next();
 		for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getQuantiteEnStock(cm,this.cryptogramme));}
-		}
 		
-
+		MiseAJour(indicateurs);
+		this.totalStocks.setValeur(this, this.getTotalStock(cryptogramme),cryptogramme);
+	}
+	
+	
+	
+	public List<Variable> getIndicateurs(){
+		List<Variable> res = new ArrayList<Variable>();
+		res.add(totalStocks);
+		res.addAll(indicateurs);
+		
+		return res;}
+	
+	
+	protected HashMap<ChocolatDeMarque, Double> stockParType(String type){
+		int n=type.length();
+		HashMap<ChocolatDeMarque, Double> stockType = new HashMap<ChocolatDeMarque, Double>();
+		for (ChocolatDeMarque cm : stockChocoMarque.keySet()) {
+			
+			if (cm.getNom().substring(2,2+n).equals(type)) {
+				if(type.equals("MQ")||type.equals("HQ")) {
+					if (!cm.isBio()&&!cm.isEquitable()) {
+						stockType.put(cm, stockChocoMarque.get(cm));
+					}
+				}
+				else{stockType.put(cm, stockChocoMarque.get(cm));}
+			}
+		}
+		return stockType;
+		
+	}
 
 	public HashMap<ChocolatDeMarque, Double> getStockChocoMarque() {
 		return this.stockChocoMarque;
 	}
+	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {//modifié par maxime car il y avait deux fonctions différentes réalisant la même tache
 		if(this.cryptogramme==cryptogramme) {
 		return this.stockChocoMarque.get(p);}

@@ -19,13 +19,14 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 /**
- * @author Oscar_Brian
+ * @author Oscar_Brian 
  */
 public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	protected int nombreMois = 3;
 	
 	public Transformateur1AcheteurCCadre() {
 		super();
@@ -56,7 +57,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    for (Feve f : stockFeves.keySet()) {
 	        if (achete(f)) {
 	            this.journalCC.ajouter("   " + f + " suffisamment peu en stock/contrat pour passer un CC");
-	            double parStep = Math.max(100, (21200 - stockFeves.get(f).getValeur() - restantDu(f)) / 12); // au moins 100
+	            double parStep = Math.max(100, (this.stockCibleMini*this.listePourcentageMarque.get(f.getGamme()) *1.1 + stockFeves.get(f).getValeur() - restantDu(f)) / 12); // au moins 100
 	            Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
 	            List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 	            if (!vendeurs.isEmpty()) {
@@ -67,7 +68,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	                    journalCC.ajouter(Color.RED, Color.WHITE, "   échec des négociations");
 	                } else {
 	                    this.contratsEnCours.add(contrat);
-	                    journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signé");
+	                    journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signé avec l'échéancier : "+contrat.getEcheancier());
 	                }
 	            } else {
 	                journalCC.ajouter("   pas de vendeur");
@@ -83,7 +84,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    }
 	    for (ExemplaireContratCadre c : this.contratsTermines) {
 	        journalCC.ajouter("Archivage du contrat " + c);
-	        this.contratsEnCours.remove(c);
+	        this.contratsTermines.remove(c);
 	    }
 	    this.journalCC.ajouter("=================================");}
 	    
@@ -112,13 +113,19 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
+	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC * nombreMois, this.quantiteMiniCC);
+	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
+	        		return reponse;
+	        	}
 	        	if (feve.getGamme() == Gamme.MQ && feve.isBio()) {
-	        		return stockFeves.get(feve).getValeur() + restantDu(feve) < this.demandeCC * 2;}
+	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC * nombreMois, this.quantiteMiniCC);
+	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
+	        		return reponse;
 	        	}
-	        	
-	        	}
-	    return false;}
+        	}
+	    }
+	    return false;
+	}
 	            
 		
 
@@ -139,35 +146,33 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    
 	    
 	    // Utilisation de la logique de la méthode achete pour déterminer si on achète la fève
-	    if (achete(feve)) {
-	        if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 500) {
-	                // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
-	                return contrat.getEcheancier();
-	            } else {
-	                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
-	                if (marge < 100) {
-	                    return null;
-	                } else {
-	                    double quantite = 100 + Filiere.random.nextDouble() * (marge - 100); // un nombre aléatoire entre 100 et la marge
-	                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
-	                }
-	            }
-	        } else if (feve.getGamme() == Gamme.MQ) {
-	            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 1000) {
-	                // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
-	                return contrat.getEcheancier();
-	            } else {
-	                double marge = this.demandeCC * 2 - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
-	                if (marge < 100) {
-	                    return null;
-	                } else {
-	                    double quantite = 100 + Filiere.random.nextDouble() * (marge - 100); // un nombre aléatoire entre 100 et la marge
-	                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
-	                }
-	            }
-	        }
-	    }
+        if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
+            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 5000) {
+                // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
+                return contrat.getEcheancier();
+            } else {
+                double marge = this.demandeCC * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                if (marge < 1000) {
+                    return null;
+                } else {
+                    double quantite = 1000 + Filiere.random.nextDouble() * (marge - 1000); // un nombre aléatoire entre 1000 et la marge
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
+                }
+            }
+        } else if (feve.getGamme() == Gamme.MQ) {
+            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 10000) {
+                // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
+                return contrat.getEcheancier();
+            } else {
+                double marge = this.demandeCC * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
+                if (marge < 1000) {
+                    return null;
+                } else {
+                    double quantite = 1000 + Filiere.random.nextDouble() * (marge - 1000); // un nombre aléatoire entre 1000 et la marge
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
+                }
+            }
+        }
 	    
 	    // Si on ne souhaite pas acheter la fève ou si aucune condition n'a été satisfaite, retourne null
 	    return null;
@@ -226,5 +231,4 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	}
 }
 	
-
 

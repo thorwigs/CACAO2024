@@ -9,6 +9,8 @@ import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.filiere.*;
@@ -21,8 +23,9 @@ import java.awt.Color;
 public class Transformateur4AcheteurContratCadre extends Transformateur4AcheteurBourse implements IAcheteurContratCadre{
 	
 	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
+	protected List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsTermines;
+
 	protected Journal journalACC;
 
 	public Transformateur4AcheteurContratCadre() {
@@ -30,6 +33,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.journalACC = new Journal(this.getNom()+" journal CC achat", this);
+
 	}
 	
 	public void initialiser() {
@@ -37,11 +41,20 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 	}
 	
-	public boolean achete(IProduit produit) {
-		return produit.getType().equals("Feve")
-				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000; 
-		//à modifier selon nécessité de chaque type de fève
+	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
+		return (produit.getType().equals("Feve"))
+				&& (
+						(((Feve)produit).equals(Feve.F_HQ)) ||
+						(((Feve)produit).equals(Feve.F_HQ_BE))
+					)
+				
+				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 150000 );
 	}
+	
+	
+	
+	
+	
 	
 	//Négociations
 	
@@ -59,7 +72,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 				return contrat.getEcheancier();
 			}
 		} else {
-			double marge = 150000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
+			double marge = 15000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
 			if (marge<1200) {
 				return null;
 			} else {
@@ -102,6 +115,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		}
 	}
 	
+	
+	
+	
+	
+	
 	//Après finalisation contrat 
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
@@ -114,6 +132,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		stockFeves.put((Feve)p, stockFeves.get((Feve)p)+quantiteEnTonnes);
 		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);		
 	}
+	
+	
+	
+	
+	
 	
 	//Honorer les contrats
 	
@@ -135,32 +158,62 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		return res;
 	}
 	
+	
+	
+	
+	
+	
 	//Next
 	
 	public void next() { 	//à modifier selon nb de fèves qu'on veut
 		super.next();
 		this.journalACC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-				for (Feve f : stockFeves.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-					if (stockFeves.get(f)+restantDu(f)<30000) { 
+		
+		
+		List<Feve> fInteresse = new LinkedList<Feve>();
+		fInteresse.add(Feve.F_HQ_BE);
+		fInteresse.add(Feve.F_HQ);
+				for (Feve f : fInteresse) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve	
+					double alivrer = 0.0; //quantité à livrer de fèves
+					for (ChocolatDeMarque c : chocolatCocOasis) { //on ne regarde que les chocolats CocOasis car on ne fait pas de choco distributeurs HQ ou HQ_BE
+						if ( (f.getGamme() == c.getGamme()) && (f.isBio() == c.isBio()) && (f.isEquitable() == c.isEquitable()) ){
+							for (ExemplaireContratCadre contrat : this.contratsEnCours) {
+								if (contrat.getProduit().equals(c)) {
+									alivrer = alivrer + contrat.getQuantiteRestantALivrer()/(this.pourcentageTransfo.get(f).get(c.getChocolat()));
+									}
+							}
+						}
+					}
+					
+					
+					if (stockFeves.get(f)+restantDu(f)< Math.min(10000, alivrer + 10000 - restantDu(f) ) ) { 
 						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
+						double parStep = Math.max(900, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 900
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
-							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalACC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
-							if (contrat==null) {
-								journalACC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
-								this.contratsEnCours.add(contrat);
-								journalACC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							for (IVendeurContratCadre vendeur : vendeurs) {
+								journalACC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+								ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+								if (contrat==null) {
+									journalACC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								} else {
+									this.contratsEnCours.add(contrat);
+									journalACC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								}
 							}
+							//IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+							
 						} else {
 							journalACC.ajouter("   pas de vendeur");
 						}
 					}
 				}
+	
+					
+					
+				
+	
 		// On archive les contrats terminés  (pas à modifier)
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0 && c.getMontantRestantARegler()<=0.0) {

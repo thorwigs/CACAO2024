@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eq1Producteur1.Producteur1MasseSalariale;
+
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -25,8 +25,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
-	
-	protected Producteur1MasseSalariale liste_Ouvrier;
+
 	protected int cryptogramme;
 	protected Journal journal;
 	//new stuff I added : Abdo
@@ -35,7 +34,6 @@ public class Producteur1Acteur implements IActeur {
 	private double coutUnitaireProductionBQ = 1.0;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
-	//This /|\
 	protected HashMap<Feve, Double> prodParStep;
 	protected HashMap<Feve, Double> stockIni;
 
@@ -50,6 +48,23 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_enfants;
 	protected int nb_normal;
 	protected int nb_equitable;
+	
+	
+	public double getCoutUnitaireProduction(Feve f) {
+		if(f.getGamme()== Gamme.HQ) {
+			return this.coutUnitaireProductionHQ;
+		}
+		else if (f.getGamme()== Gamme.MQ) {
+			return this.coutUnitaireProductionMQ;
+		}
+		else if (f.getGamme()== Gamme.BQ) {
+			return this.coutUnitaireProductionBQ;
+		}
+		else {
+			return 0;
+		}
+		
+	}
 
 
 	
@@ -60,7 +75,7 @@ public class Producteur1Acteur implements IActeur {
 		this.journal=new Journal(this.getNom()+"   journal",this);
 		this.soldeParStep = new ArrayList<Double>();
 		
-		
+
 	}
 	
 		
@@ -95,7 +110,7 @@ public class Producteur1Acteur implements IActeur {
 		this.soldeInitiale = this.getSolde();
 		this.soldeParStep.add(this.soldeInitiale);
 		this.croissanceParStep = new ArrayList<Double>();
-		//soldeParStep.add(this.getSolde());
+	
 	}
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ1";
@@ -103,8 +118,9 @@ public class Producteur1Acteur implements IActeur {
 	
 	public void CroissanceEconomique() {
 		this.croissanceParStep = new ArrayList<Double>();
+		
 		for (int i = 0; i < this.soldeParStep.size()-1; i++) {
-			double crois = (this.soldeParStep.get(i+1)-this.soldeParStep.get(i))/this.soldeParStep.get(i-1);
+			double crois = (this.soldeParStep.get(i+1)-this.soldeParStep.get(i))/this.soldeParStep.get(i);
 			
 			this.croissanceParStep.add(crois);
 			
@@ -124,28 +140,28 @@ public class Producteur1Acteur implements IActeur {
 
 	public void next() {
 		
+       int etape = Filiere.LA_FILIERE.getEtape();
+		this.journal.ajouter("Etape= "+etape);
 
-		this.getJournaux().get(0).ajouter("Etape= "+Filiere.LA_FILIERE.getEtape());
-
-		
-		/*  I added this above there is no diff in between the two functions I just think the first is more professional/|\
-		this.journal.ajouter("etape= "+Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("prix stockage= "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
-		*/
 		
 		
-		double diffSolde = this.getSolde()-this.soldeInitiale;
-		this.getJournaux().get(0).ajouter("Le solde a l'etape " + Filiere.LA_FILIERE.getEtape() + "est augemente de :"+ this.getSolde());
-		this.soldeParStep.add(this.getSolde());
-		int i = this.soldeParStep.size();
 		
-		this.getJournaux().get(0).ajouter("La croissance economique est :"+(this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
-		this.croissanceParStep.add((this.soldeParStep.get(i-1)-this.soldeParStep.get(i-2))/this.soldeParStep.get(i-2));
-		this.getJournaux().get(0).ajouter("Les nouveaux salaire sont:"+ this.labourNormal);
+		
 	
-		this.getJournaux().get(0).ajouter("Le cout de production total a l'etape " + Filiere.LA_FILIERE.getEtape() + "est "+ this.CoutsProd());
-
+		this.journal.ajouter("Le solde a l'etape " + etape + "est  :"+ this.getSolde());
+		this.soldeParStep.add(this.getSolde());
+		this.CroissanceEconomique();
+		
+		if (etape>1) {
+		this.journal.ajouter("La croissance economique est :"+this.croissanceParStep.get(etape-2));
+		}
+		
+		this.journal.ajouter("Les nouveaux salaire sont:"+ this.labourNormal);
+	
+		this.journal.ajouter("Le cout de production total a l'etape " + etape+ "est "+ this.CoutsProd());
 	}
+
+	
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(243, 165, 175); 
@@ -261,6 +277,7 @@ public class Producteur1Acteur implements IActeur {
 	@Override
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0.0;
+		
 	}
 	
 	

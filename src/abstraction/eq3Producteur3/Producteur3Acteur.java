@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -22,7 +25,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
-	protected Journal journal_bourse;
+	protected Journal journal_bourse; 
 	protected Journal journal_contrat_cadre;
 	private HashMap<IProduit,Integer> stocks;
 	//passable en parametre/indicateurs
@@ -38,17 +41,20 @@ public abstract class Producteur3Acteur implements IActeur {
     //creation d'un tableau de variables qui donne les stocks pour chaque type de feve 
     //@alexis
     protected HashMap<Feve, Variable> stockfeve;
+  
     
     protected HashMap<Feve, Double> ventefevebourse;
     protected HashMap<Feve, Double> ventefevecadre;
     protected HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
     protected HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
+    abstract void deleteAcheteurs(IAcheteurBourse acheteur);
+    abstract void deleteVendeurs(IVendeurBourse vendeur);
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     abstract HashMap<Feve,Double> maindoeuvre();
 	protected abstract HashMap<Feve,Double> newQuantite();
-    
+	protected HashMap<Feve, Double> partDeMarcheFeve;
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
@@ -59,6 +65,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.stockfeve = new HashMap<Feve,Variable>();
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
+
 		//VALEURS INITIALES
 		for (Feve f : Feve.values()) {
 			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
@@ -67,6 +74,7 @@ public abstract class Producteur3Acteur implements IActeur {
 			this.ventefevebourse.put(f, 0.2);
 			this.ventefevecadre.put(f, 0.8);
 		}
+		 
 	}
 	
 /*************************************************************************************************/
@@ -164,22 +172,25 @@ public abstract class Producteur3Acteur implements IActeur {
 		//On prend en compte les peremptions (ATTENTION A EXECUTER APRES majGammeStep() @Arthur
 		peremption();
 		/**
-		 * Implémentation des journaux gagne en clarté
-		 * @author Gabin
+		 * Journal des opérations réalisées et des transactions
+		 * @author Gabin (modification youssef)
 		 */
-		this.journal.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
-		this.journal_bourse.ajouter("etape="+Filiere.LA_FILIERE.getEtape());		
-		this.journal_contrat_cadre.ajouter("etape="+Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("cout de stockage: "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
+		  this.journal.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() + " - Détails des opérations de production, stockage et coûts associés.");
+		  this.journal.ajouter("Coûts de production : " + calculerCoutsProduction()+ " €");
+          this.journal.ajouter("Coûts de stockage : " + calculerCoutsStockage() + " €");
+	      this.journal.ajouter("Coûts de main-d'œuvre : " + coutMaindoeuvre() + " €");
+	      this.journal.ajouter("Donc Total des coûts à payer : " + calculerCouts() + " €");
 		
 		//On paie les couts lies a la production et au stockage @Youssef
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Production&Stockage", calculerCouts());
 		
-		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis
+		//MaJ des quantites produites pour chaque type de feve: quantite() donne ce qui est produit et pret a la vente, @alexis 
 		for (Feve f : Feve.values()) {
 			this.prodfeve.get(f).setValeur(this, quantite().get(f));
 			this.ventefeve.get(f).setValeur(this, ventefevecadre.get(f)+ventefevebourse.get(f));
 			this.stockfeve.get(f).setValeur(this, this.getQuantiteEnStock(f, cryptogramme)) ;
+		//Détail des transactions pour chaque type de fève, @Youssef
+		    this.journal.ajouter("Feve " + f.name() + ": Prod=" + quantite().get(f) + "t, VenteCadre=" + ventefevecadre.get(f) + "t, VenteBourse=" + ventefevebourse.get(f) + "t, Stock=" + this.getQuantiteEnStock(f, cryptogramme) + "t");
 		}
 
 	}
@@ -234,7 +245,12 @@ public abstract class Producteur3Acteur implements IActeur {
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
 	public void notificationFaillite(IActeur acteur) {
-		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());	
+		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());
+		if (acteur instanceof IVendeurBourse) {
+			deleteVendeurs((IVendeurBourse)acteur);
+		} else if (acteur instanceof IAcheteurBourse) {
+			deleteAcheteurs((IAcheteurBourse)acteur);
+		}
 	}
 
 	// Apres chaque operation sur votre compte bancaire, cette
@@ -301,7 +317,7 @@ public abstract class Producteur3Acteur implements IActeur {
 	 * @return double coutStockage
 	 * Calcule les couts de stockage
 	 */
-	 protected double calculerCoutsStockage () {
+	 protected double calculerCoutsStockage() {
 	      double coutStockage = 0;
 	      double cout=Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
 	      for (Integer quantite : stocks.values()) {
@@ -359,9 +375,11 @@ public abstract class Producteur3Acteur implements IActeur {
 
 		        // Déterminer le salaire en fonction du type de fève
 		        if (f.isEquitable()) {
-		            salaireOuvrier = 3.9; // Salaire pour l'equitable (bio ou non)
+		            salaireOuvrier = 3.9*14; // Salaire pour l'equitable (bio ou non)
+		            salaireOuvrier = 3.9 * 15; // Salaire pour l'equitable (bio ou non) (*15 comme c'est 3.9 par jour et le step comporte 15 jours) 
 		        } else {
-		            salaireOuvrier = 2.6; // Salaire standard pour les non équitable 
+		            salaireOuvrier = 2.6*14; // Salaire standard pour les non équitable 
+		            salaireOuvrier = 2.6 * 15; // Salaire standard pour les non équitable 
 		        }
 
 		        // Calculer le coût total pour tous les types de fève
@@ -404,9 +422,9 @@ public abstract class Producteur3Acteur implements IActeur {
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
 		 //on ajoute les couts du step
 			 if (f.isEquitable()) {
-				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9);
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9*14);
 			 } else {
-				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6);
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6*14);
 			 }
 		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts
 			LinkedList<Integer> steps = new LinkedList<Integer>();

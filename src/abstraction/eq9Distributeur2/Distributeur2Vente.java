@@ -1,7 +1,10 @@
 package abstraction.eq9Distributeur2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
@@ -39,21 +42,32 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		}
 	}
 	
-// Classe codée par Margot Lourenço Da Silva 
+// Codé par Margot Lourenço Da Silva 
 	@Override
 	public double prix(ChocolatDeMarque choco) {
 		// TODO Auto-generated method stub
 		if( Filiere.LA_FILIERE.getEtape() < 1) {
 			switch (choco.getChocolat()) {
 			case C_HQ_BE: return 26000;
-			case C_HQ_E: return 22000;
-			case C_MQ_E:return 18000;
-			case C_MQ :return 16000;
-			case C_BQ : return 12000;
+			case C_HQ_E: return 21000;
+			case C_MQ_E:return 9000;
+			case C_MQ :return 5900;
+			case C_BQ : return 2800;
+			case C_HQ : return 14000;
 			default:
-				return 0.0;}}
-		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1);
-	}
+				return 0;}}
+		if (Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1) > 3000  ) {
+		return Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1);}
+		switch (choco.getChocolat()) {
+		case C_HQ_BE: return 26000;
+		case C_HQ_E: return 22000;
+		case C_MQ_E:return 18000;
+		case C_MQ :return 16000;
+		case C_BQ : return 12000;
+		case C_HQ : return 20000;
+		default:
+			return 0;}}
+	
 
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
@@ -62,11 +76,53 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		return this.getQuantiteEnStock(choco,crypto)*0.9;
 		
 	}
+	public double quantiteEnVenteG(int crypto) {
+		double somme= 0; 
+		
+		for (ChocolatDeMarque chocolat : Filiere.LA_FILIERE.getChocolatsProduits()) {
+			somme += this.quantiteEnVente(chocolat, crypto);
+		}
+		return somme; 
+	}
+	// Retourne un hashmap des quantités à mettre en tête de gondole
+	// Commence par mettre tout le stock du produit le plus attractif 
+	// Continue avec les produits plus attractifs juqu'à atteindre la quantité max de chocolat à mettre en TG
+	public HashMap <ChocolatDeMarque, Double > quantiteEnVenteTGG(int crypto) {
+		HashMap <ChocolatDeMarque, Double > res = new HashMap<ChocolatDeMarque,Double>();
+		double QuantiteReste = this.quantiteEnVenteG(crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG;
+		List<ChocolatDeMarque> chocos = new ArrayList<ChocolatDeMarque>(); 
+		chocos = Filiere.LA_FILIERE.getChocolatsProduits();
+		double attractivite = 0; 
+		ChocolatDeMarque chocolatTG = null; 
+		double quantiteTG = 0;
+		while( QuantiteReste>0) {
+			for (ChocolatDeMarque choco : chocos) {
+				if (Filiere.LA_FILIERE.getAttractivite(choco)>attractivite) {
+					attractivite = Filiere.LA_FILIERE.getAttractivite(choco);
+					chocolatTG = choco; }}
+				quantiteTG = Math.min(QuantiteReste, this.quantiteEnVente(chocolatTG,crypto));
+				
+				res.put(chocolatTG,quantiteTG);
+			
+				chocos.remove(chocolatTG);
+				
+				attractivite=0;
+				QuantiteReste = QuantiteReste - quantiteTG; }
+		for (ChocolatDeMarque choco : Filiere.LA_FILIERE.getChocolatsProduits()) {
+		if (res.containsKey(choco) == false) {
+			res.put(choco, 0.0);}
+		}
+		return res;
+				
+				}
+				
+			
 
 	@Override
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-		return this.quantiteEnVente(choco, crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG;
+
+		return this.quantiteEnVenteTGG(crypto).get(choco);
 	}
 
 	@Override
@@ -74,7 +130,8 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		// TODO Auto-generated method stub
 		if (this.stockChocoMarque!=null && this.stockChocoMarque.keySet().contains(choco)) {
 			this.stockChocoMarque.put(choco, this.stockChocoMarque.get(choco)-quantite);
-			this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
+			this.journal_vente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+" pour "+montant+" d'euros ");
+			//this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
 			// ajout de Maureen pour avoir accès aux ventes précédentes
 			this.totalVentes.put(choco, this.totalVentes.get(choco)+quantite); 
 			if (this.stepActuel != Filiere.LA_FILIERE.getEtape()) {
@@ -88,10 +145,9 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 
 	@Override
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
-		// TODO Auto-generated method stub
-	if (this.getQuantiteEnStock(choco, crypto)==0.0) {
-		journal.ajouter("plus de chocolat"+choco+"");
-	}
+		if (this.getQuantiteEnStock(choco, crypto)==0.0) {
+			this.journal_vente.ajouter("plus de chocolat"+choco+"");
+			}
 		
 	}
 

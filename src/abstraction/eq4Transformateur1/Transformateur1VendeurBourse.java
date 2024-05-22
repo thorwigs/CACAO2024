@@ -5,7 +5,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformateur1VendeurBourse extends Transformateur1AcheteurCCadre implements IVendeurBourse{
+public class Transformateur1VendeurBourse extends Transformateur1Distribution implements IVendeurBourse{
 	private Journal journalBourse;
 	@Override
 	public double offre(Feve f, double cours) {
@@ -22,8 +22,6 @@ public class Transformateur1VendeurBourse extends Transformateur1AcheteurCCadre 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
 		// TODO Auto-generated method stub
-		
-		
 	}
 
 }
