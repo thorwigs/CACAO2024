@@ -237,21 +237,17 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		itQ += 1;
-		this.journal_bourse.ajouter("itQ="+itQ);
 	    IProduit produit = contrat.getProduit();
 	    if (!(produit instanceof Feve)) {
 	        return 0; }
 	    double prixPropose = contrat.getPrix();
 	    double prixMinimal= prixNego/1.2;
-	    this.journal_bourse.ajouter("prixMinimal"+prixMinimal);
 	    // Si le prix proposé est supérieur au prixMinimal, accepter le prix proposé
 	    if (prixPropose > prixMinimal) {
 	        return prixPropose;
 	    } else {
 
 	        // Sinon, retourner un prix qui tend vers prixMinimal au cours de la négociation
-	    	double test = prixMinimal*1.2 - itQ*prixMinimal*0.2/15;
-	    	this.journal_bourse.ajouter("testprix="+ test);
 	        return prixMinimal*1.2 - itQ*prixMinimal*0.2/15;
 	    }
 	}
