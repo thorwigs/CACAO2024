@@ -149,7 +149,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		// Initialisation des valeurs
 		this.NbSalaries = 5000;
-		this.salaire = 2000;
+		this.salaire = 1000;
 		this.coutLicenciement1Salarie = 4*salaire;
 		this.capaciteTransfo = 3.7;
 		
