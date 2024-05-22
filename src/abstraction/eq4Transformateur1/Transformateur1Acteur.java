@@ -26,6 +26,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	
 	protected int quantiteMiniCC = 1200;
 	protected int stockCibleMini = 40000;
+	protected int nbSalaries = (int) (this.stockCibleMini / 3.75);
 	protected HashMap<Gamme, Double> listePourcentageMarque;
 	
 	protected int cryptogramme;
@@ -188,7 +189,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", couts);
 		}
 		
-		coutMainDOeuvre = 1000*0.27*nbTonnesProduites;
+		
+		double nbInterim = Math.max(0, nbTonnesProduites/0.27-this.nbSalaries);
+		coutMainDOeuvre = 2*1000*nbInterim + this.nbSalaries*1000;
 		if (coutMainDOeuvre > 0.0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Main d'oeuvre", coutMainDOeuvre);
 		}
