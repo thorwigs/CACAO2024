@@ -117,7 +117,7 @@ public abstract class Producteur3Production extends Producteur3Plantation {
 	/**Renvoie la quantité de fèves disponibles après séchage au prochain step
 	 * Elle est utile pour l'établissement d'un contrat cadre
 	 * 
-	 * @author Alexis
+	 * @author Alexis (royalties Gabin : j'ai tout plagia)
 	 */
 	protected HashMap<Feve,Double> quantiteFuture(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
