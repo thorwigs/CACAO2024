@@ -49,8 +49,6 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 					)
 				
 				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 150000 );
-	
-
 	}
 	
 	

@@ -44,8 +44,6 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		this.stockFeves.put(f, this.stockFeves.get(f)+quantiteEnT);
 		this.totalStocksFeves.ajouter(this, quantiteEnT, cryptogramme);
-		
-		
 		this.journalBourse.ajouter("- achat de "+quantiteEnT+"T de fèves "+f);
 	}
 
@@ -64,8 +62,4 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 		super.next();
 		this.journalBourse.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 	}
-
-	
-
-
 }
