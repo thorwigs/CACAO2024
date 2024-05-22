@@ -176,9 +176,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double prixPropose = 0.0;
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			prixPropose = this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) ;
+			prixPropose = 1.07*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
 		} else {
-			prixPropose = 1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+			prixPropose = 1.07*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
 		}
 		prixPrecedent.put(contrat, prixPropose);
 		return prixPropose;
@@ -207,21 +207,21 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		//////fin/////////
 		
 		if (pPropose <  pPrecedent) {
-			if ((pPropose+pPrecedent)/2 >= coutProd*1.02){
+			if ((pPropose+pPrecedent)/2 >= coutProd*1.05){
 				prixPrecedent.put(contrat, (pPropose+pPrecedent)/2);
 				return (pPropose+pPrecedent)/2;
 			}
-			if ((pPropose+2*pPrecedent)/3 >= coutProd*1.02){
+			if ((pPropose+2*pPrecedent)/3 >= coutProd*1.05){
 				prixPrecedent.put(contrat, (pPropose+2*pPrecedent)/3);
 				return (pPropose+2*pPrecedent)/3;
 			}
-			if ((pPropose+3*pPrecedent)/4 >= coutProd*1.02){
+			if ((pPropose+3*pPrecedent)/4 >= coutProd*1.05){
 				prixPrecedent.put(contrat, (pPropose+3*pPrecedent)/4);
 				return (pPropose+3*pPrecedent)/4;
 			}
 			else {
-				prixPrecedent.put(contrat, coutProd*1.02);
-				return coutProd*1.02;
+				prixPrecedent.put(contrat, coutProd*1.05);
+				return coutProd*1.05;
 			}
 		}
 		else {
