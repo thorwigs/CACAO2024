@@ -85,38 +85,38 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		//si ce sont des mirages , codé par Anaïs et Pierrick
 		if ( ((ChocolatDeMarque)contrat.getProduit()).getMarque() == "Mirage") {
 			if (stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()))-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
-			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
-			} else { // les volumes sont corrects, la duree et le debut aussi
-				return contrat.getEcheancier();
-			}
-		} else {
-			double marge = - 25000 + stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit())) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
-			if (marge<100) {
-				return null;
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
+				} else { // les volumes sont corrects, la duree et le debut aussi
+					return contrat.getEcheancier();
+				}
 			} else {
-				double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
+				double marge = - 25000 + stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit())) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
+				if (marge<100) {
+					return null;
+				} else {
+					double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 				}
 			}
 			
 		//si ce ne sont pas des Mirage; codé par Eliott
 		} else {		
 			if (stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() )-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
-			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
-			} else { // les volumes sont corrects, la duree et le debut aussi
-				return contrat.getEcheancier();
-			}
-		} else {
-			double marge = - 25000 + stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() ) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
-			if (marge<100) {
-				return null;
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
+				} else { // les volumes sont corrects, la duree et le debut aussi
+					return contrat.getEcheancier();
+				}
 			} else {
-				double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
+				double marge = - 25000 + stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() ) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
+				if (marge<100) {
+					return null;
+				} else {
+					double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 				}
 			}
 		}
@@ -334,7 +334,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		
-		this.journalVCC.ajouter("===== phase de demande ======== ");
+		this.journalVCC.ajouter("===== phase de demande chocolat Mirage ======== ");
 		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 
@@ -369,11 +369,12 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisante pour passer un contrat cadre");
 					}
 				}
-				journalVCC.ajouter(" === fin de phase de demande =========");
+				
 				
 				}
 				
-				
+				journalVCC.ajouter(" === fin de phase de demande chocolat Mirage =========");
+				this.journalVCC.ajouter("===== phase de demande chocolat Distributeur ======== ");
 			//Pour les chocos de marque distributeur, codé par Eliott
 				
 				for(ChocolatDeMarque choco : this.chocolatDistributeur) {
@@ -420,8 +421,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}	
 				}
-				}
 				
+				}
+				journalVCC.ajouter(" === fin de phase de demande chocolat Distributeur =========");
 				
 		// On archive les contrats terminés  (pas à modifier)
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
