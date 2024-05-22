@@ -82,8 +82,6 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 			this.lesFeves.add(f);
 			this.journal.ajouter("   - "+f);
 			
-			
-		this.journal.ajouter("" +Filiere.LA_FILIERE.getMarquesDistributeur());
 		}
 		  
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
@@ -112,7 +110,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//grâce à ceci on pourra accéder aux différents chocolats marque distributeur (ici 2)
 		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
 		for (String marque : marquesDistributeurs) {
-			this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+			if ((marque == "Chocoflow") || (marque == "Ecacaodor")) {
+				this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+			}	
 		}
 		
 		
@@ -184,8 +184,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 
 		this.journal.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "===============");
 		
-		
-		
+	
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
 	
@@ -194,7 +193,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
 		this.journal.ajouter("" + this.getMarquesChocolat());
-		this.journal.ajouter("" + this.getChocolatsProduits());
+	
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journal.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
@@ -289,11 +288,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
 			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 			for (String marque : marquesDistributeurs) {
-				this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, marque, 80)); //Pour les marques distributeurs on ne propose pour l'instant que du chocolat moyenne gamme
+				if ((marque == "Chocoflow") || (marque == "Ecacaodor")) {
+					this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+				}	
 			}
 			
 		}
-		this.journal.ajouter(" " + chocosProduits);
+		this.journal.ajouter(" choco produits" + chocosProduits);
 		return this.chocosProduits;
 	}
 
