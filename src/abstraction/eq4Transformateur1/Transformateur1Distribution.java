@@ -10,20 +10,44 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Gamme;
 
-/**
- * @author yannig_charonnat
- */
-
 public class Transformateur1Distribution extends Transformateur1AcheteurCCadre implements IDistributeurChocolatDeMarque {
     
+    private Transformateur1Acteur transformateur;
     private double pourcentageVenteDirecte;
+    private HashMap<ChocolatDeMarque, Variable> ventesDirectes;
     private Journal journalVD;
 
     public Transformateur1Distribution() {
     	super();
         this.pourcentageVenteDirecte = 0.15;
+        //this.ventesDirectes = new HashMap<>();
         this.journalVD = new Journal("Ventes Directes", this);
+        
+        /*
+        List<ChocolatDeMarque> chocosProduits = this.getChocolatsProduits();
+        for (ChocolatDeMarque choco : chocosProduits) {
+            if (choco.getMarque().equals("LeaderKakao")) {
+                this.ventesDirectes.put(choco, new Variable("Ventes directes de " + choco.getNom(), this));
+            }
+        }
+        */
     }
+
+    /*
+    public void vendreDirectement(ChocolatDeMarque choco, double quantite) {
+        if (this.ventesDirectes.containsKey(choco) && quantite > 0) {
+            double stock = this.getQuantiteEnStock(choco, this.cryptogramme);
+            double quantiteVendue = Math.min(stock * this.pourcentageVenteDirecte, quantite);
+            this.ventesDirectes.get(choco).ajouter(this, quantiteVendue);
+            this.stockChocoMarque.get(choco).retirer(this, quantiteVendue);
+            this.journal.ajouter("Vente directe de " + quantiteVendue + " tonnes de " + choco.getNom());
+        }
+    }
+
+    public HashMap<ChocolatDeMarque, Variable> getVentesDirectes() {
+        return this.ventesDirectes;
+    }
+    */
 
     public List<Journal> getJournaux() {
 		List<Journal> jx=super.getJournaux();
@@ -44,14 +68,13 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 				}
 			}
 		}
-		if (nbPrix != 0) {
-			return prixMoyen/nbPrix * 1.1;
-		} return PRIX_DEFAUT * 1.1;
+		return prixMoyen/nbPrix * 1.1;
 	}
 
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		if(choco.getGamme()==Gamme.HQ && this.stockChocoMarque.keySet().contains(choco)) {
+			//System.out.println("qauntité en vente : "+this.stockChocoMarque.get(choco).getValeur()+" ; "+this.pourcentageVenteDirecte);
 			return this.stockChocoMarque.get(choco).getValeur() * this.pourcentageVenteDirecte;
 		}
 		return 0;

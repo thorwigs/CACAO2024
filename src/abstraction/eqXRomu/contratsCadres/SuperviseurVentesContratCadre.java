@@ -32,8 +32,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
 	private HashMap<Feve, HashMap<Integer, Double>> livraisonsFeves;
 
-	private HashMap<IActeur, HashMap<Integer, Double>> chocolatALivrerStep, chocolatALivrerTotale; // pour chaque vendeur et chaque step la quantite qu'il doit livre au prochain step.
-	
 	public static final int MAX_MEME_VENDEUR_PAR_STEP = 15; 
 	// Au cours d'un meme step un acheteur peut negocier au plus MAX_MEME_VENDEUR_PAR_STEP
 	// fois avec le meme vendeur. Si l'acheteur demande a negocier avec le vendeur v alors qu'il a 
@@ -54,8 +52,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		for (Feve f : Feve.values()) {
 			this.livraisonsFeves.put(f,  new HashMap<Integer, Double>());
 		}
-		this.chocolatALivrerStep = new HashMap<IActeur, HashMap<Integer,Double>>();
-		this.chocolatALivrerTotale = new HashMap<IActeur, HashMap<Integer,Double>>();
 	}
 	public String getNom() {
 		return "Sup."+(this.numero>1?this.numero+"":"")+"CCadre";
@@ -63,12 +59,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 
 	public void initialiser() {
 		aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph.");
-		for (IActeur ac : Filiere.LA_FILIERE.getActeurs()) {
-			if (ac instanceof IVendeurContratCadre) {
-				this.chocolatALivrerStep.put(ac,  new HashMap<Integer, Double>());
-				this.chocolatALivrerTotale.put(ac,  new HashMap<Integer, Double>());
-			}
-		}
 	}
 
 	public List<IVendeurContratCadre> getVendeurs(IProduit produit) {
@@ -333,46 +323,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		}		
 	}
 
-	public void memoriserLesLivraisonsAuProchainStep() {
-		for (IActeur ac : this.chocolatALivrerStep.keySet()) {
-			double al =0.0;
-			double alt =0.0;
-			for (ContratCadre cc : this.contratsEnCours) {
-				if (cc.getVendeur().equals(ac)) {// && cc.getProduit().getType().equals("ChocolatDeMarque")) {
-					al+=cc.getQuantiteALivrerAuStep();
-					alt+=cc.getQuantiteRestantALivrer();
-				}
-			}
-			this.chocolatALivrerStep.get(ac).put(Filiere.LA_FILIERE.getEtape(), al);
-			this.chocolatALivrerTotale.get(ac).put(Filiere.LA_FILIERE.getEtape(), alt);
-		}
-		if (this.aff.getValeur()!=0.0) {
-			List<IActeur> vendeurs=new ArrayList<IActeur>();
-			for (IActeur ac : this.chocolatALivrerStep.keySet()) {
-				vendeurs.add(ac);
-			}
-			String entete="STEP;";
-			for (IActeur ac : vendeurs) {
-				entete+=ac.getNom()+"AuStep;"+ac.getNom()+"Total;";
-			}
-			try {
-				PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CC_a_livrer.csv")));
-				aEcrire.println(entete);//"STEP;VENDEUR;ACHETEUR;PRODUIT;PRIX;TG;QUANTITE;STEPDEBUT;STEPFIN");
-				for (int i=1; i<Filiere.LA_FILIERE.getEtape(); i++) {
-					String ligne="";
-					ligne+=i+";";
-					for (IActeur ac : vendeurs) {
-						ligne+=this.chocolatALivrerStep.get(ac).get(i)+";"+this.chocolatALivrerTotale.get(ac).get(i)+";"; //+"AuStep;"+ac.getNom()+"Total;";
-					}
-					aEcrire.println( ligne );
-				}
-				aEcrire.close();
-			}
-			catch (IOException e) {
-				throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
-			}
-		}
-	}
 	public void gererLesEcheancesDesContratsEnCours() {
 		this.journal.ajouter("Step "+Filiere.LA_FILIERE.getEtape()+" GESTION DES ECHEANCES DES CONTRATS EN COURS ========");
 		HashMap<IVendeurContratCadre, HashMap<IProduit,Double>> engageALivrer = new HashMap<IVendeurContratCadre, HashMap<IProduit,Double>>();
@@ -531,7 +481,6 @@ public String surLargeur(String s, int largeur) {
 	}
 	public void next() {
 		quiVendQuoi();
-		memoriserLesLivraisonsAuProchainStep();
 		recapitulerContratsEnCours();
 		gererLesEcheancesDesContratsEnCours();
 		archiverContrats();

@@ -29,7 +29,7 @@ public class Producteur1Production extends Producteur1Plantation{
 	protected int degrHQ = 4;
 	protected int degrMQ = 8;
 	protected int degrBQ = 12;
-	private static boolean amelio = false;
+
 	//protected HashMap<Feve, Variable> stockag;
 	/**
 	 * Constructeur pour la classe Producteur1Production.
@@ -99,19 +99,24 @@ public class Producteur1Production extends Producteur1Plantation{
 
 		Integer nbt = this.get_Nombre_Total()-this.get_Nombre_Enfant();
 
-
+		Double pro = (double) (nb/nbt);
+		//System.out.println(nb/nbt);
+		//System.out.println(pro);
+		//System.out.println(nb);
+		
+		//System.out.println(nbt);
 
 		double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
 		double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
 		//this.Stocck.put(Feve.F_MQ_E, 0.5*m);
 		//this.Stocck.put(Feve.F_HQ, 0.5*h);
 
-		this.stock.get(Feve.F_MQ_E).ajouter(this, ((double)nb/nbt)*m);
-		this.stock.get(Feve.F_HQ_E).ajouter(this, ((double)nb/nbt)*h);
-		this.stock.get(Feve.F_HQ).retirer(this, ((double)nb/nbt)*h);
-		this.stock.get(Feve.F_MQ).retirer(this, ((double)nb/nbt)*m);
-		this.journalProduction.ajouter("On a transforme"+ ((double)nb/nbt) + "% of MQ to MQ_E and"+ ((double)nb/nbt) +"% of HQ to HQ_E");
-		this.journalStockage.ajouter("On a transforme"+ ((double)nb/nbt) +"% of MQ to MQ_E and"+((double)nb/nbt) + " % of HQ to HQ_E");
+		this.stock.get(Feve.F_MQ_E).ajouter(this, pro*m);
+		this.stock.get(Feve.F_HQ_E).ajouter(this, pro*h);
+		this.stock.get(Feve.F_HQ).retirer(this, pro*h);
+		this.stock.get(Feve.F_MQ).retirer(this, pro*m);
+		this.journalProduction.ajouter("On a transforme"+ pro + "% of MQ to MQ_E and"+ pro +"% of HQ to HQ_E");
+		this.journalStockage.ajouter("On a transforme"+ pro +"% of MQ to MQ_E and"+pro + " % of HQ to HQ_E");
 
 	}
 
@@ -301,17 +306,13 @@ public class Producteur1Production extends Producteur1Plantation{
 	 * On traveillera sous la condition que si le stock depasse une quantite on aimera le reserver mieux
 	 */
 	public boolean AmeliorationStockage() {
-		if (amelio == false) {
-			double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
-			double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
-			double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
-			boolean ame = stockHQ > 50 && stockMQ > 50 && stockBQ > 100;
-			this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
-			return ame;
-		}
-		else {
-			return false;
-		}
+
+		double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
+		double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
+		double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
+		boolean ame = stockHQ > 50 && stockMQ > 50 && stockBQ > 100;
+		this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
+		return ame;
 	}
 
 

@@ -12,7 +12,6 @@ import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
@@ -33,9 +32,9 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 	public void initialiser() {
 		super.initialiser();
 		this.prixAO = new HashMap<ChocolatDeMarque, List<Double>>();
-		for (ChocolatDeMarque cm : this.chocosProduits) {
+		for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 			this.prixAO.put(cm, new LinkedList<Double>());
-		}			
+		}		
 	}
 	
 	public double prixMoyen(ChocolatDeMarque cm) {
@@ -66,46 +65,36 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		}
 		ChocolatDeMarque cm = (ChocolatDeMarque)p;
 		
-		if (cm.isEquitable()) { //On ne fait pas de ventes en AO pour des chocolats équitables
-			return null;
+		if (stockChocoMarque.keySet().contains(cm)) { //Nous ne vendons que nos sur-stocks en faisant attention a ne pas vendre ce que nous devons fournir en CC
+			if (prixAO.get(cm).size()==0) {
+				BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+				double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
+				if (cm.getChocolat().getGamme()==Gamme.HQ) {
+					px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+				} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
+					px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
+				}
+				return new OffreVente(offre, this, cm, px);
+			} else {
+				return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
+			}
 		}
 		
-		if ((this.chocolatCocOasis.contains(cm))  && (stockChocoMarque.get(cm) > restantALivrer(cm)+ 20000)) { //Nous ne vendons que nos sur-stocks en faisant attention a ne pas vendre ce que nous devons fournir en CC
-			if (prixAO.get(cm).size()==0) {
-				BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-				double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
-				if (cm.getChocolat().getGamme()==Gamme.HQ) {
-					px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
-				} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
-					px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
-				}
-				return new OffreVente(offre, this, cm, px);
-			} else {
-				return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
+		if (!(stockChocoMarque.keySet().contains(cm))) {
+			return null;
+		}
+		if (prixAO.get(cm).size()==0) {
+			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+			double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
+			if (cm.getChocolat().getGamme()==Gamme.HQ) {
+				px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+			} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
+				px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
 			}
-			
-		} else if ((this.chocolatDistributeur.contains(cm))  && (stockChoco.get(cm.getChocolat()) > restantALivrer(cm)+ 20000)){
-		
-			if (prixAO.get(cm).size()==0) {
-				BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-				double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
-				if (cm.getChocolat().getGamme()==Gamme.HQ) {
-					px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
-				} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
-					px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
-				}
-				return new OffreVente(offre, this, cm, px);
-			} else {
-				return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
-			}
-
+			return new OffreVente(offre, this, cm, px);
 		} else {
-			if (this.getChocolatsProduits().contains(cm)) {
-				journalAO.ajouter("Chocolat " + cm + " en trop faible stock pour satisfaire un AO");
-			}
-			return null;
+			return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
 		}
-		
 	}
 
 	public void notifierVenteAO(OffreVente propositionRetenue) {
@@ -113,7 +102,7 @@ public class Transformateur4VendeurAppelDOffre extends Transformation implements
 		double px = propositionRetenue.getPrixT();
 		double quantite = propositionRetenue.getQuantiteT();
 		prixAO.get(cm).add(px); // on fait comme si on avait accepte avec 5% d'augmentation afin que lors des prochains echanges on accepte des prix un peu plus eleves
-		journalAO.ajouter("   Vente par AO de "+quantite+" T de "+cm+" au prix de  "+px + " à " + propositionRetenue.getOffre().getAcheteur());
+		journalAO.ajouter("   Vente par AO de "+quantite+" T de "+cm+" au prix de  "+px);
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}

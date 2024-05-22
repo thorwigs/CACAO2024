@@ -220,24 +220,6 @@ public class BourseCacao implements IActeur, IAssermente {
 			}
 		}
 	}
-	public List<IVendeurBourse> getVendeursBlackListes() {
-		List<IVendeurBourse> res = new LinkedList<IVendeurBourse>();
-		for (IActeur a : Filiere.LA_FILIERE.getActeurs()) {
-			if (a instanceof IVendeurBourse && this.blackListV.get((IVendeurBourse)a)!=0) {
-				res.add((IVendeurBourse)a);
-			}
-		}
-		return res;
-	}
-	public List<IAcheteurBourse> getAcheteursBlackListes() {
-		List<IAcheteurBourse> res = new LinkedList<IAcheteurBourse>();
-		for (IActeur a : Filiere.LA_FILIERE.getActeurs()) {
-			if (a instanceof IAcheteurBourse && this.blackListA.get((IAcheteurBourse)a)!=0) {
-				res.add((IAcheteurBourse)a);
-			}
-		}
-		return res;
-	}
 
 	public void next() {
 		int etape=Filiere.LA_FILIERE.getEtape();

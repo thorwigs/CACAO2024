@@ -24,7 +24,12 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 
 	/**@author Youssef Ben Abdeljelil */
 	//prix minimal pour chaque type de fève 
-	
+	private double prix_seuil_BQ;
+	private double prix_seuil_MQ;
+	private double prix_seuil_MQ_E;
+	private double prix_seuil_HQ;
+	private double prix_seuil_HQ_BE;
+	private double prix_seuil_HQ_E;
 	private double seuil_minimAO=100;	// quantité minimale à vendre pour un appel d'offre, cette 
 	//quantité est à négliger si les revenus dépassent 
 	//celle de la bourse
@@ -35,7 +40,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 
 	protected ArrayList<Feve> a_ne_pas_vendre=new ArrayList<Feve>();//feve a ne pas vendre pour les AO
 	protected ArrayList<IAcheteurAO> black_list_Acheteur_AO=new ArrayList<IAcheteurAO>();//black list pour les acheteurs
-	protected HashMap <IAcheteurAO,Double> score_to_black_list; //dictionnaire pour chaque transfo et son score dans la liste noire
+	protected HashMap <IAcheteurAO,Double> score_to_black_list; //dictionnaire pour chaque transfo et son scoredans la liste noire
 
 	public static int score_seuil_blacklist=1000;//score a partir duquel un achteur est ajouté au blacklist
 	private Journal journalAO;
@@ -90,18 +95,15 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	 * @return L'offre de vente proposée.
 	 */
 	public OffreVente proposerVente(AppelDOffre offre) {
-		
 
 		// TODO Auto-generated method stub
 		IAcheteurAO acheteur_AO=offre.getAcheteur();
 		IProduit produit_AO=offre.getProduit();
-
+		BourseCacao bourse =(BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 
 		if (!(produit_AO instanceof Feve)) 
 		{
 			return null;
-
-
 
 		}
 
@@ -111,8 +113,6 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 
 
 		if (!(prix_defaut_feve.keySet().contains(feve_AO))) {
-			journalAO.ajouter(" test 2");
-
 
 			return null;
 		}
