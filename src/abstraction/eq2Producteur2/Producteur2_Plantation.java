@@ -379,7 +379,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		for(Feve f : this.getPlantation().keySet()) {
 			for(Integer annee : this.getPlantation().get(f).keySet()) {
 				if(this.annee_actuelle == annee) {
-					//this.plantation.get(f).remove(annee);
+					this.plantation.get(f).remove(annee);
 				}
 			}
 		}
