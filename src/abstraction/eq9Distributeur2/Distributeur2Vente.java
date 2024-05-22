@@ -41,18 +41,18 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		}
 	}
 	
-// Classe codée par Margot Lourenço Da Silva 
+// Codé par Margot Lourenço Da Silva 
 	@Override
 	public double prix(ChocolatDeMarque choco) {
 		// TODO Auto-generated method stub
 		if( Filiere.LA_FILIERE.getEtape() < 1) {
 			switch (choco.getChocolat()) {
 			case C_HQ_BE: return 26000;
-			case C_HQ_E: return 22000;
-			case C_MQ_E:return 18000;
-			case C_MQ :return 16000;
-			case C_BQ : return 12000;
-			case C_HQ : return 20000;
+			case C_HQ_E: return 21000;
+			case C_MQ_E:return 9000;
+			case C_MQ :return 5900;
+			case C_BQ : return 2800;
+			case C_HQ : return 14000;
 			default:
 				return 0;}}
 		if (Filiere.LA_FILIERE.prixMoyen(choco,Filiere.LA_FILIERE.getEtape()-1) > 3000  ) {
