@@ -122,7 +122,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	}
 
 	/**
-	 * @author Thomas et Cédric
+	 * @author Thomas et Cédric et Arthur
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		
