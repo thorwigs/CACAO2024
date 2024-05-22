@@ -53,13 +53,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 
 		for (ChocolatDeMarque c : this.chocolatCocOasis) {
 			//System.out.println("   ---"+c+" "+(produit.getType().equals("ChocolatDeMarque"))+" "+((produit.getType().equals("ChocolatDeMarque"))?(c.equals((ChocolatDeMarque)produit)):"...")+" "+((produit.getType().equals("ChocolatDeMarque")&&(c.equals((ChocolatDeMarque)produit)))?(stockChocoMarque.get(produit)>25000):"..."));
-			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>25000) ) {
+			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>4500) ) {
 				//System.out.println(" on vend "+produit);
 				return true;
 			}
 		}
 		for (ChocolatDeMarque c : this.chocolatDistributeur) {
-			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 25000 )) {
+			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 4500 )) {
 				//System.out.println(" on vend "+produit);
 				return true;
 			}
@@ -183,7 +183,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 
 		}
 		//System.out.println("prix tonne fève"+getPrixFèves(contrat.getProduit()));
-		System.out.println("prix propose est "+prixPropose);
+		//System.out.println("prix propose est "+prixPropose);
 		prixPrecedent.put(contrat, prixPropose);
 		return prixPropose;
 	}//prend compte des coûts de production en ajoutant une marge de 7%

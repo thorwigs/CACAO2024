@@ -66,7 +66,8 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		
 		this.coutadjuvant = 1200;
 		this.coutmachine = 8.0;
-		this.nbemployeCDI = 4534; //cela nous permet de faire 17000t de chocolat par step
+		//this.nbemployeCDI = 4534; //cela nous permet de faire 17000t de chocolat par step
+		this.nbemployeCDI = 3000;
 		this.tauxproductionemploye = 3.75;
 		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
 		this.production_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();
@@ -88,9 +89,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
 			if (f == Feve.F_HQ || f == Feve.F_HQ_BE || f == Feve.F_MQ) {
-				this.stockFeves.put(f, 0.0);
-				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
-				this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+				this.stockFeves.put(f, 11000.0);
+				this.totalStocksFeves.ajouter(this, 11000.0, this.cryptogramme);
+				this.journal.ajouter("ajout de 11000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			} else {
 				this.stockFeves.put(f, 0.0);
 				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
@@ -119,16 +120,16 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
 
-		this.stockChoco.put(Chocolat.C_MQ, 49000.0);
-		this.totalStocksChoco.ajouter(this, 49000.0, this.cryptogramme);
-		this.journal.ajouter("ajout de 49000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.stockChoco.put(Chocolat.C_MQ, 7000.0);
+		this.totalStocksChoco.ajouter(this, 7000.0, this.cryptogramme);
+		this.journal.ajouter("ajout de 7000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 
 
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 49000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 49000.0, cryptogramme);
+			this.stockChocoMarque.put(c, 5000.0); //le premier element de stockchocomarque correspond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 5000.0, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
 		
