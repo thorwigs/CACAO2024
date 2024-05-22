@@ -11,6 +11,9 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.filiere.Banque;
+import abstraction.eq8Distributeur1.*;
+import abstraction.eq9Distributeur2.*;
 
 
 public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre implements IAcheteurBourse {
@@ -29,6 +32,7 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
 	}
 
+
 	
 	/////////////	
 	// Demande //
@@ -40,13 +44,19 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	public double demande(Feve f, double cours) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		//Stratégie sur le BQ
-		if (f.getGamme()==Gamme.BQ) {
-			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
-				this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
-				return STOCKINITIAL - stockFeves.get(f).getValeur();
-			}
-			else {
-				return 0;
+		if ((Filiere.LA_FILIERE.getBanque().aFaitFaillite(Filiere.LA_FILIERE.getDistributeurs().get(0)))
+			|| (Filiere.LA_FILIERE.getBanque().aFaitFaillite(Filiere.LA_FILIERE.getDistributeurs().get(1)))) {
+			return 0;
+		}
+		else {
+			if (f.getGamme()==Gamme.BQ) {
+				if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
+					this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
+					return STOCKINITIAL - stockFeves.get(f).getValeur();
+				}
+				else {
+					return 0;
+				}
 			}
 		}
 		
