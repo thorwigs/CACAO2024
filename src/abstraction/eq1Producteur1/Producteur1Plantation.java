@@ -56,10 +56,15 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		 * Retourne un dictionnaire où chaque clé est une Feve et chaque valeur est la surface associée de cette feve.
 		 */
 		plantation = new HashMap<Feve, Double>();
-
+		Math.min(PBQ*this.nombreHec, PBQ*this.get_Nombre_Total());
+		plantation.put(Feve.F_BQ,Math.min(PBQ*this.nombreHec, PBQ*this.get_Nombre_Total()) );
+		plantation.put(Feve.F_MQ,Math.min(PMQ*this.nombreHec, PMQ*this.get_Nombre_Total()));
+		plantation.put(Feve.F_HQ, Math.min(PHQ*this.nombreHec, PHQ*this.get_Nombre_Total()));
+		/*
 		plantation.put(Feve.F_BQ, PBQ*this.nombreHec );
 		plantation.put(Feve.F_MQ, PMQ*this.nombreHec);
 		plantation.put(Feve.F_HQ, PHQ*this.nombreHec);
+		*/
 		this.journalPlantation.ajouter("On a reussi planter");
 		
 		return plantation;
@@ -190,9 +195,9 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		 * return la production annuel
 		 */
 		this.prodAnnee = new HashMap<Feve, Double>();
-		this.prodAnnee.put(Feve.F_BQ,0.7*0.650*this.nombreHec);
-		this.prodAnnee.put(Feve.F_MQ, 0.650*0.28*this.nombreHec);
-		this.prodAnnee.put(Feve.F_HQ, 0.650*0.02*this.nombreHec);
+		this.prodAnnee.put(Feve.F_BQ,Math.min(PBQ*0.650*this.nombreHec, PBQ*0.650*this.get_Nombre_Total()));//0.7*0.650*this.nombreHec);
+		this.prodAnnee.put(Feve.F_MQ, Math.min(PMQ*0.650*this.nombreHec, PMQ*0.650*this.get_Nombre_Total()));
+		this.prodAnnee.put(Feve.F_HQ, Math.min(PHQ*0.650*this.nombreHec, PHQ*0.650*this.get_Nombre_Total()));
 		this.prodAnnee.put(Feve.F_HQ_E, 0.0);
 		this.prodAnnee.put(Feve.F_HQ_BE, 0.0);
 		this.prodAnnee.put(Feve.F_MQ_E,0.0);
