@@ -51,30 +51,31 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 			if (f.getGamme()==Gamme.MQ) {
-				if (true) {
-					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);				
-					//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
+			
+							
+					if(cours>= (pourcentageMQ+quantiteEnT)*Seuil) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-
+					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);	
 					return quantiteEnT;
 
 				}
 				
 			}
 			if (f.getGamme()==Gamme.HQ) {
-				if (true) {
-				//if(cours>= (pourcentageHQ+1)*Seuil*quantiteEnT) {
+				
+				if(cours>= (pourcentageHQ+quantiteEnT)*Seuil) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-
+					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);	
 					return quantiteEnT;
 				}
 			
 			}
 			if (f.getGamme()==Gamme.BQ) {
-				if (true) {
-				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
+			
+				if(cours>= (pourcentageMQ+quantiteEnT)*Seuil) {
 					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);	
 					return quantiteEnT;
 				}
 				
