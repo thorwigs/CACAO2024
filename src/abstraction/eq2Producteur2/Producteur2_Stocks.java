@@ -20,7 +20,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */	
 	//seuil max de la production stockee
-	private static final double SEUIL = 400000;
+	private static final double SEUIL = 4000000;
 	
 	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
@@ -224,7 +224,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				lot.setType_feve(Feve.F_BQ);
 			}
 			else if(lot.getType_feve() == Feve.F_BQ && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_BQ_JETE)) {
-				this.retire_lot(lot);
+				//this.retire_lot(lot);
+				lot.setQuantite(0);
 			}
 		}
 	}
