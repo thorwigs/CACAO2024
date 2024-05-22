@@ -23,7 +23,6 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur1MasseSalariale extends Producteur1Acteur {
 
-	double cout_formation_par_ouvrier=0.0;
 	int ordre=0;
 	double indemnite_licensiement; 
 	protected Journal journalOuvrier;
@@ -399,18 +398,23 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 */
 
 	public void formation (int nbr_à_former,boolean equitable) {
-		double cout_formation=0;
+		//on suppose qu'un ouvrier peut encore travailler lors de sa formation
+		int quantite_max_a_former_par_step=70;
+		int nbr_max_a_former=nbr_à_former;
 
-
+		if (nbr_à_former>quantite_max_a_former_par_step) {
+			
+			nbr_max_a_former=quantite_max_a_former_par_step;
+			
+		}
 
 		//changer la masse salariale
-		if (equitable) {
+		if (equitable ) {
 			Integer a =this.masseSalariale.get(ouvrierEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_à_former);
+			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
 			this.masseSalariale.put(ouvrierEquitableForme, this.masseSalariale.get(ouvrierEquitableForme)+nbr_reel_a_former);
 			this.masseSalariale.put(ouvrierEquitableNonForme, this.masseSalariale.get(ouvrierEquitableNonForme)-nbr_reel_a_former);
 			int restant=nbr_reel_a_former;
-			cout_formation+=this.cout_formation_par_ouvrier*nbr_reel_a_former;
 			ArrayList<Integer> anciennete_initiale=this.anciennete.get(2);
 			ArrayList<Integer> anciennete_finale=this.anciennete.get(1);
 
@@ -434,8 +438,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		else {
 
 			Integer a =this.masseSalariale.get(ouvrierNonEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_à_former);
-			cout_formation+=this.cout_formation_par_ouvrier*nbr_reel_a_former;
+			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
 			this.masseSalariale.put(ouvrierNonEquitableForme, this.masseSalariale.get(ouvrierNonEquitableForme)+nbr_reel_a_former);
 			this.masseSalariale.put(ouvrierNonEquitableNonForme, this.masseSalariale.get(ouvrierNonEquitableNonForme)-nbr_reel_a_former);
 			int restant=nbr_reel_a_former;
@@ -469,6 +472,8 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 		double Labor = this.getSalaireTotal();
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+		this.journalOuvrier.ajouter("on paie un salaire total de " + Labor);
+
 
 		this.journalOuvrier.ajouter("Le nombre d'enfants = " + this.get_Nombre_Enfant());
 
