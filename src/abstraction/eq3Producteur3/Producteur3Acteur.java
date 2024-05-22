@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -46,6 +48,8 @@ public abstract class Producteur3Acteur implements IActeur {
     protected HashMap<Feve,HashMap<Integer,Double>> stockGammeStep;
     protected HashMap<Feve,HashMap<Integer,Double>> coutGammeStep;
     //abstract
+    abstract void deleteAcheteurs(IAcheteurBourse acheteur);
+    abstract void deleteVendeurs(IVendeurBourse vendeur);
     abstract HashMap<Feve,Double> quantite();
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     abstract HashMap<Feve,Double> maindoeuvre();
@@ -241,7 +245,12 @@ public abstract class Producteur3Acteur implements IActeur {
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
 	public void notificationFaillite(IActeur acteur) {
-		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());	
+		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());
+		if (acteur instanceof IVendeurBourse) {
+			deleteVendeurs((IVendeurBourse)acteur);
+		} else if (acteur instanceof IAcheteurBourse) {
+			deleteAcheteurs((IAcheteurBourse)acteur);
+		}
 	}
 
 	// Apres chaque operation sur votre compte bancaire, cette
