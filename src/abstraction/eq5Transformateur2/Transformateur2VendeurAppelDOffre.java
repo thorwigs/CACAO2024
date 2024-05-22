@@ -78,6 +78,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	//////////////////////////////////////////////////////////////
 	/**
 	 * @Erwann
+	 * @Vincent
 	 */
 	public OffreVente proposerVente(AppelDOffre offre) {
 		// On verifie d'abord que l'offre est un chocolat de marque
@@ -99,14 +100,15 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		if (prixAO.get(cm).size()==0) {
 			Gamme gamme = cm.getGamme();
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double prix = bourse.getCours(Feve.F_MQ).getMax()*1.75;
+			double prix = bourse.getCours(Feve.F_MQ).getMax()*1.75; // prise en compte des frais de transofrmation (masse salariale et machines) 
 				
-			if (cm.isEquitable()==true && gamme==Gamme.MQ) {
-				prix = bourse.getCours(Feve.F_MQ).getMax()*3;
+			if (cm.isEquitable() && gamme==Gamme.MQ) {
+				prix = bourse.getCours(Feve.F_MQ).getMax()*1.5;
+
 			}
 			
 			if (gamme == Gamme.BQ) {
-				prix = bourse.getCours(Feve.F_BQ).getMax();
+				prix = bourse.getCours(Feve.F_BQ).getMax()*1.5; // prise en compte des frais de transofrmation (masse salariale et machines) 
 			}
 			return new OffreVente(offre, this, cm, prix);
 		} 
@@ -117,7 +119,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////
-	// Notifs de si oui ou non la proposition est retenue  + Mise à jour JournalAO //	
+	// Notifs de si oui ou non la proposition est retenue  + Mise à jour JournalAO //
 	/////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * @Erwann
@@ -136,6 +138,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 				double prix = propositionRetenue.getPrixT();
 				double quantite_vendu = propositionRetenue.getQuantiteT();
 				stockChocoMarque.get(cm).retirer(this, quantite_vendu, this.cryptogramme); // modif des stocks si la proposition est retenue
+				totalStocksChocoMarque.retirer(this, quantite_vendu, this.cryptogramme);
 				prixAO.get(cm).add(prix*1.05);  // on fait comme si on avait accepte avec 5% de hausse afin que lors des prochains echanges on fasse une offre + onéreuse
 				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix+ " à l'acheuteur : "+propositionRetenue.getOffre().getAcheteur());
 				if (prixAO.get(cm).size()>10) {
