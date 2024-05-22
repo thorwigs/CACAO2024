@@ -55,7 +55,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected double moyProd; // moyenne de production de l'acteur
 	protected double totalProd; // qtté total transformée / produite
 	
-	protected static final double STOCKINITIAL = 50000.0;
+	protected static final double STOCKINITIAL = 10000.0;
 	
 	
 	
@@ -185,7 +185,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 
 	
 	/////////////////////////////////////////////////////////////////////
-	//  Méthodes pour la mise à jour des stocks et du calcul des couts //
+	//  Méthodes pour la mise à jour des stocks et le calcul des couts //
 	/////////////////////////////////////////////////////////////////////
 	/**
 	* @Erwann
@@ -204,6 +204,53 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	*/
 	public double CoutTransformation(ChocolatDeMarque cm, double tonnes) {
 		return tonnes*coutMachines + tonnes*(100-cm.getPourcentageCacao())*coutAdjuvants ;
+	}
+	/**
+	 * @Robin
+	 * @Erwann
+	 * Transforme tous les chocolats en chocolats de marque`avec une répartition équitable entre les marques
+	 */
+	public void TransformationChoco_ChocoMarque() {
+		int nbr_produits_BQ = 0; // nbr de marques de chocolats BQ
+		int nbr_produits_MQ = 0; // nbr de marques de chocolats MQ
+		int nbr_produits_MQ_E = 0; // nbr de marques de chocolats MQ_E
+		for (ChocolatDeMarque cm : chocosProduits) {
+				if (cm.getGamme()== Gamme.MQ) {
+					if (cm.isEquitable()==true) {
+						nbr_produits_MQ_E++;
+					} else {
+						nbr_produits_MQ++;
+					}
+				} else {
+					nbr_produits_BQ++;
+				}
+		}
+		for (Chocolat c : lesChocolats) {
+			for (ChocolatDeMarque cm : chocosProduits) {	
+				double stock = stockChoco.get(c).getValeur();
+				if(c.getGamme() == Gamme.MQ) {
+					if (c.isEquitable()==true) {
+					stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_MQ_E, this.cryptogramme);
+					stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_MQ_E, this.cryptogramme);
+					VariationStockChocoMarque.replace(cm, stock/nbr_produits_MQ_E);
+					totalStocksChocoMarque.ajouter(this, stock/nbr_produits_MQ_E, this.cryptogramme);
+					totalStocksChoco.retirer(this, stock/nbr_produits_MQ_E, this.cryptogramme);
+						} else {
+							stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_MQ, this.cryptogramme);
+							stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_MQ, this.cryptogramme);
+							VariationStockChocoMarque.replace(cm, stock/nbr_produits_MQ);
+							totalStocksChocoMarque.ajouter(this, stock/nbr_produits_MQ, this.cryptogramme);
+							totalStocksChoco.retirer(this, stock/nbr_produits_MQ, this.cryptogramme);
+						}
+					} else {
+						stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_BQ, this.cryptogramme);
+						stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_BQ, this.cryptogramme);
+						VariationStockChocoMarque.replace(cm, stock/nbr_produits_BQ);
+						totalStocksChocoMarque.ajouter(this, stock/nbr_produits_BQ, this.cryptogramme);
+						totalStocksChoco.retirer(this, stock/nbr_produits_BQ, this.cryptogramme);
+					}
+			}
+		}
 	}
 	
 	
@@ -322,46 +369,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.JournalProduction.ajouter("Tonnes de feves transformées : "+TransfoTotal);
 		
 		// Transformation de tous les chocolats en chocolats de marque`avec une répartition équitable entre les marques
-		int nbr_produits_BQ = 0; // nbr de marques de chocolats BQ
-		int nbr_produits_MQ = 0; // nbr de marques de chocolats MQ
-		int nbr_produits_MQ_E = 0; // nbr de marques de chocolats MQ_E
-		for (ChocolatDeMarque cm : chocosProduits) {
-				if (cm.getGamme()== Gamme.MQ) {
-					if (cm.isEquitable()==true) {
-						nbr_produits_MQ_E++;
-					} else {
-						nbr_produits_MQ++;
-					}
-				} else {
-					nbr_produits_BQ++;
-				}
-		}
-		for (Chocolat c : lesChocolats) {
-			for (ChocolatDeMarque cm : chocosProduits) {	
-				double stock = stockChoco.get(c).getValeur();
-				if(c.getGamme() == Gamme.MQ) {
-					if (c.isEquitable()==true) {
-					stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_MQ_E, this.cryptogramme);
-					stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_MQ_E, this.cryptogramme);
-					VariationStockChocoMarque.replace(cm, stock/nbr_produits_MQ_E);
-					totalStocksChocoMarque.ajouter(this, stock/nbr_produits_MQ_E, this.cryptogramme);
-					totalStocksChoco.retirer(this, stock/nbr_produits_MQ_E, this.cryptogramme);
-						} else {
-							stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_MQ, this.cryptogramme);
-							stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_MQ, this.cryptogramme);
-							VariationStockChocoMarque.replace(cm, stock/nbr_produits_MQ);
-							totalStocksChocoMarque.ajouter(this, stock/nbr_produits_MQ, this.cryptogramme);
-							totalStocksChoco.retirer(this, stock/nbr_produits_MQ, this.cryptogramme);
-						}
-					} else {
-						stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_BQ, this.cryptogramme);
-						stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_BQ, this.cryptogramme);
-						VariationStockChocoMarque.replace(cm, stock/nbr_produits_BQ);
-						totalStocksChocoMarque.ajouter(this, stock/nbr_produits_BQ, this.cryptogramme);
-						totalStocksChoco.retirer(this, stock/nbr_produits_BQ, this.cryptogramme);
-					}
-			}
-		}
+		TransformationChoco_ChocoMarque();
 		
 		// Calcul des cout de Transformation avec la méthode "CoutTransformation(ChocolatDeMarque, tonnes)"
 		double coutTransfoTotal = 0;
