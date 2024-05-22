@@ -23,13 +23,11 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur1MasseSalariale extends Producteur1Acteur {
 
-	double cout_formation_par_ouvrier=0.0;
 	int ordre=0;
 	double indemnite_licensiement; 
 	protected Journal journalOuvrier;
 	protected HashMap<Ouvrier, Integer> masseSalariale; // map ayant pour cle un type douvrier et valeur le nombre
 	protected ArrayList<Ouvrier> types_ouvriers;//liste ayant tous les types d'ouvriers possibles
-	protected ArrayList<Double> rendement;//liste pour le rendement de chaque type ouvrier
 	protected ArrayList<Double> salaire;//liste pour le salaire de chaque type d'ouvrier
 	protected ArrayList<ArrayList<Integer>> anciennete;// liste  de listes ayant 5 élements listes 
 	//(qui sont les types d'ouvriers), chaque liste contient 245 élements et chaque élément  presente
@@ -74,21 +72,20 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 		this.salaire=new ArrayList<Double>();
-		this.rendement=new ArrayList<Double>();
 
 		this.types_ouvriers=new ArrayList<Ouvrier>();
 		this.masseSalariale=new HashMap<Ouvrier, Integer>();
 		this.anciennete=new ArrayList<ArrayList<Integer>>();
 
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
+		this.salaire.add(0.8);
+		this.salaire.add(4.0);
+		this.salaire.add(3.0);
+		this.salaire.add(2.4);
+		this.salaire.add(1.8);
 
-		this.rendement.add(1.0);
-		this.rendement.add(1.5);
+		
 
+		
 		this.types_ouvriers.add(enfant);
 		this.types_ouvriers.add(ouvrierEquitableForme);
 		this.types_ouvriers.add(ouvrierEquitableNonForme);
@@ -401,18 +398,23 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 */
 
 	public void formation (int nbr_à_former,boolean equitable) {
-		double cout_formation=0;
+		//on suppose qu'un ouvrier peut encore travailler lors de sa formation
+		int quantite_max_a_former_par_step=70;
+		int nbr_max_a_former=nbr_à_former;
 
-
+		if (nbr_à_former>quantite_max_a_former_par_step) {
+			
+			nbr_max_a_former=quantite_max_a_former_par_step;
+			
+		}
 
 		//changer la masse salariale
-		if (equitable) {
+		if (equitable ) {
 			Integer a =this.masseSalariale.get(ouvrierEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_à_former);
+			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
 			this.masseSalariale.put(ouvrierEquitableForme, this.masseSalariale.get(ouvrierEquitableForme)+nbr_reel_a_former);
 			this.masseSalariale.put(ouvrierEquitableNonForme, this.masseSalariale.get(ouvrierEquitableNonForme)-nbr_reel_a_former);
 			int restant=nbr_reel_a_former;
-			cout_formation+=this.cout_formation_par_ouvrier*nbr_reel_a_former;
 			ArrayList<Integer> anciennete_initiale=this.anciennete.get(2);
 			ArrayList<Integer> anciennete_finale=this.anciennete.get(1);
 
@@ -436,8 +438,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		else {
 
 			Integer a =this.masseSalariale.get(ouvrierNonEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_à_former);
-			cout_formation+=this.cout_formation_par_ouvrier*nbr_reel_a_former;
+			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
 			this.masseSalariale.put(ouvrierNonEquitableForme, this.masseSalariale.get(ouvrierNonEquitableForme)+nbr_reel_a_former);
 			this.masseSalariale.put(ouvrierNonEquitableNonForme, this.masseSalariale.get(ouvrierNonEquitableNonForme)-nbr_reel_a_former);
 			int restant=nbr_reel_a_former;
@@ -471,6 +472,8 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 		double Labor = this.getSalaireTotal();
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+		this.journalOuvrier.ajouter("on paie un salaire total de " + Labor);
+
 
 		this.journalOuvrier.ajouter("Le nombre d'enfants = " + this.get_Nombre_Enfant());
 

@@ -338,7 +338,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 			double al =0.0;
 			double alt =0.0;
 			for (ContratCadre cc : this.contratsEnCours) {
-				if (cc.getVendeur().equals(ac) && cc.getProduit().getType().equals("ChocolatDeMarque")) {
+				if (cc.getVendeur().equals(ac)) {// && cc.getProduit().getType().equals("ChocolatDeMarque")) {
 					al+=cc.getQuantiteALivrerAuStep();
 					alt+=cc.getQuantiteRestantALivrer();
 				}
