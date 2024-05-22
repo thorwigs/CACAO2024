@@ -162,7 +162,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	    		double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; //renegocie le prix de 50% de la variation entre le prix proposé au tour précédent et la proposition de l'acheteur 
 		        return contrat.getPrix() + renego;
 	    	}else {
-	    		return contrat.getPrix();// aie
+	    		return contrat.getPrix(); 
 	    	}
 	    }
 	}
