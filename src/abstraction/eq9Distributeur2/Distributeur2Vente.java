@@ -85,7 +85,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		// TODO Auto-generated method stub
 		if (this.stockChocoMarque!=null && this.stockChocoMarque.keySet().contains(choco)) {
 			this.stockChocoMarque.put(choco, this.stockChocoMarque.get(choco)-quantite);
-			this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
+			//this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
 			// ajout de Maureen pour avoir accès aux ventes précédentes
 			this.totalVentes.put(choco, this.totalVentes.get(choco)+quantite); 
 			if (this.stepActuel != Filiere.LA_FILIERE.getEtape()) {

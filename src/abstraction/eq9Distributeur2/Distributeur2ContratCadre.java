@@ -72,9 +72,9 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		if (produit.getType().equals("ChocolatDeMarque")) {
 			ChocolatDeMarque cm = (ChocolatDeMarque) produit;
 			if (this.stockChocoMarque.get(cm)!=null) {
-				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.totalStocksChocoMarque.getValeur(cryptogramme)<500000; ///A MODIFIER
+				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.getTotalStock(cryptogramme)<500000; ///A MODIFIER
 			} else {
-				return this.totalStocksChocoMarque.getValeur(cryptogramme)<100000;
+				return this.getTotalStock(cryptogramme)<100000;
 			}
 		} else {
 			return false;
@@ -212,7 +212,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		this.journal_CC.ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat #"+contrat.getNumero());
 		if (p.getType().equals("ChocolatDeMarque")) {
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
-			this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
+			//this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
 			this.totalCoutAPayer -= contrat.getPaiementAEffectuerAuStep();
 			if (contrat.getPaiementAEffectuerAuStep()>1) {
 				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep()));
