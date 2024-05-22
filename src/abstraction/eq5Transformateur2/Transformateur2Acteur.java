@@ -55,7 +55,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected double moyProd; // moyenne de production de l'acteur
 	protected double totalProd; // qtté total transformée / produite
 	
-	protected static final double STOCKINITIAL = 50000.0;
+	protected static final double STOCKINITIAL = 10000.0;
 	
 	
 	
