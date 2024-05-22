@@ -21,7 +21,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */	
 	//seuil max de la production stockee
-	private static final double SEUIL = 4000000;
+	private static final double SEUIL = 400000;
 	
 	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
@@ -229,8 +229,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				lst.add(lot);
 				}
 			}
-		for (Producteur2_Lot lot : lst) {
-			this.retire_lot(lot);
+		for (Producteur2_Lot lot :lst) {
+			retire_lot(lot);
 		}
 	}
 	

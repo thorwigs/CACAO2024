@@ -310,8 +310,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		Feve f = (Feve) contrat.getProduit();
-		//System.out.println(" ...............  notif ");
-		//System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + f.name());
+
 		this.contratsEnCours.add(contrat);
 	}
 
