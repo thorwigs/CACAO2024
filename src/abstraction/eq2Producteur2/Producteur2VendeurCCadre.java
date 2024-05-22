@@ -53,7 +53,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	
 	public void next() {
 		super.next();
-		System.out.println(" ------------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " ------------- ");
+		//System.out.println(" ------------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " ------------- ");
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200 && f != Feve.F_MQ_E) { // au moins 100 tonnes par step pendant 6 mois
@@ -69,8 +69,8 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 						if (contrat==null) {
 							journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 						} else {
-							System.out.println(" ...............");
-							System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + ((Feve)contrat.getProduit()).name());
+							//System.out.println(" ...............");
+							//System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + ((Feve)contrat.getProduit()).name());
 							this.contratsEnCours.add(contrat);
 							this.prix_contrat = contrat.getPrix();
 							journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
@@ -195,7 +195,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	}
 	
 	public boolean ajout_contrat_ok(ExemplaireContratCadre contrat) {
-		System.out.println("Traitement du CONTRAT " + contrat.getNumero());
+		//System.out.println("Traitement du CONTRAT " + contrat.getNumero());
 		Feve f = (Feve) contrat.getProduit();
 		double doit_environ_livrer_par_step = contrat.getEcheancier().getQuantiteTotale();		
 		double prod_par_step = this.getHectaresPlantes(f, this.cryptogramme)*0.5/24;
@@ -310,8 +310,8 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		Feve f = (Feve) contrat.getProduit();
-		System.out.println(" ...............  notif ");
-		System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + f.name());
+		//System.out.println(" ...............  notif ");
+		//System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + f.name());
 		this.contratsEnCours.add(contrat);
 	}
 
