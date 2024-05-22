@@ -312,7 +312,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		// Transformation des feves avec la méthode "Transformation (Feve, tonnes)" qui mets à jour les stocks
 		for (Feve f : lesFeves) {
-			double TonnesTranfo = capaciteTransfoTotal * repartition.get(f);
+			double TonnesTranfo = Math.min(capaciteTransfoTotal * repartition.get(f), this.stockFeves.get(f).getValeur(this.cryptogramme));
 			Transformation(f, TonnesTranfo);
 			TransfoTotal += TonnesTranfo;
 		}
