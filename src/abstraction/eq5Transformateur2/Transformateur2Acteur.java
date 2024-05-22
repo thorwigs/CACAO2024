@@ -41,6 +41,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	protected Variable totalStocksChoco; // La qualntite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque; // La quantite totale de stock de chocolat de marque 
 	
+	protected Variable distrib_ou_pas;
+	
 	protected int NbSalaries;
 	protected double salaire; // 1salaire / step
 	protected double coutLicenciement1Salarie; 
@@ -64,12 +66,13 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	 * @Robin 
 	 */
 	public Transformateur2Acteur() {
+		this.distrib_ou_pas= new Variable("1 si Distrib ouverts, 0 sinon",this,1.0);
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.JournalProduction=new Journal(this.getNom()+" journal Production", this);
 		this.totalStocksFeves = new Variable("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new Variable("Eq5TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq5TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
-		
+				
 		this.lesFeves = new LinkedList<Feve>();
 		this.journal.ajouter("Les Feves sont :");
 		for (Feve f : Feve.values()) {
@@ -399,7 +402,12 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.totalProd += TransfoTotal;
 		this.moyProd = this.totalProd/(Filiere.LA_FILIERE.getEtape()+1);
 		this.JournalProduction.ajouter("Production moyenne de l'acteur : "+moyProd+" tonnes/step");	
-	
+		
+		
+		////////////////////////////////////////////////////////////////
+		//  On fait le booléen pour savoir si il reste des distribs  //    (Robin)
+		///////////////////////////////////////////////////////////////
+		this.plus_de_distribs();
 	}
 	
 	
@@ -435,6 +443,24 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		return chocosProduits;
 	}
 	
+	////////////////////////////////////////////////////////
+	//Vérification si les vendeurs sont encore disponibles//
+	////////////////////////////////////////////////////////
+	/**
+	 * @author robin
+	 */
+	public boolean plus_de_distribs() {
+		boolean failliteDistrib = true;
+		for (IActeur eq : Filiere.LA_FILIERE.getActeursSolvables()) {
+			if (eq==Filiere.LA_FILIERE.getActeur("EQ8") || eq==Filiere.LA_FILIERE.getActeur("EQ9")) {
+				failliteDistrib = false;
+			}
+		}
+		if (failliteDistrib==true) {
+			this.distrib_ou_pas.setValeur(this, 0.0, this.cryptogramme);;
+		}
+		return failliteDistrib;
+	}
 	
 	////////////////////////////////////////////////////////
 	//               Méthodes Complémentaires             //
@@ -456,8 +482,10 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		for (Chocolat c : lesChocolats) {
 				res.add(this.stockChoco.get(c));
 		}
+		res.add(this.totalStocksFeves);
+		res.add(this.totalStocksChoco);
 		res.add(this.totalStocksChocoMarque);
-		
+		res.add(this.distrib_ou_pas);
 		return res;
 	}
 	/**

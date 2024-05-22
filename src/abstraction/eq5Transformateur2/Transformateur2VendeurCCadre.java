@@ -45,7 +45,6 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 				totalStep+=c.getQuantiteALivrerAuStep();
 			}
 		}
-		System.out.println(this.moyProd);
 		boolean VenteActive = false;
 		if (totalStep<this.moyProd) {
 			VenteActive = true;
@@ -164,7 +163,20 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	    	EtapenegoVente++;
 	    	if (EtapenegoVente<contrat.getListePrix().size() ) {
 	    		double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; //renegocie le prix de 50% de la variation entre le prix proposé au tour précédent et la proposition de l'acheteur 
-		        return contrat.getPrix() + renego;
+		        if ((contrat.getPrix()+renego)<contrat.getListePrix().get(0)/2 && EtapenegoVente>3) {
+		        	int i=0;
+	        		double prixmax=0;
+		        	for (double px : contrat.getListePrix()) {
+		        		if (i%2==1) {
+		        			if (px>prixmax) {
+		        				prixmax=px;
+		        			}
+		        			i++;
+		        		}
+		        	}
+		        	return prixmax;
+		        }
+	    		return contrat.getPrix() + renego;
 	    	}else {
 	    		return contrat.getPrix(); 
 	    	}
