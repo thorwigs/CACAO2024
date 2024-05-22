@@ -14,9 +14,12 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurBourse extends Producteur1Production implements  IVendeurBourse {
-	public double  pourcentageHQ=0.02 ;
-	public double  pourcentageBQ=0.02 ;
-	public double  pourcentageMQ=0.02 ;
+	public double  pourcentageHQ=0.1 ;
+	public double  pourcentageBQ=0.05 ;
+	public double  pourcentageMQ=0.05 ;
+	public double quantiteEnTBQ;
+	public double quantiteEnTMQ;
+	public double quantiteEnTHQ;
 	private Journal journalBourse;
 	protected ArrayList<Double> bourseBQ; 
 	protected ArrayList<Double> bourseMQ; 
@@ -45,19 +48,24 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	 */
 	public double offre(Feve f, double cours) {
 		
-
+        
 	
-		double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
-
+		double quantiteEnT =this.getQuantiteEnStock(  f ,   cryptogramme);
+		
+       
 
 		if (quantiteEnT!=0) { 
 			double Seuil = getCoutUnitaireProduction(f);
-
+			System.out.println("seuil"+Seuil);
+			System.out.println("cours"+cours);
+		
 
 			if (f.getGamme()==Gamme.MQ) {
 				//if(true) {
-				if(cours>= (pourcentageMQ+Seuil)*quantiteEnT) {
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+				
+				if(cours>= 1400) {
+					this.quantiteEnTMQ=0.4*quantiteEnT;
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTMQ+" T de "+f);
 
 					return quantiteEnT;
 
@@ -67,8 +75,9 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 			if (f.getGamme()==Gamme.HQ) {
 				//if(true) {
 				
-				if(cours>= (pourcentageHQ+Seuil)*quantiteEnT) {
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+				if(cours>= 1700) {
+					this.quantiteEnTHQ=0.7*quantiteEnT;
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTHQ+" T de "+f);
 
 					return quantiteEnT;
 				}
@@ -76,9 +85,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 			}
 			if (f.getGamme()==Gamme.BQ) {
 				//if(true) {
-				if(cours>= (pourcentageMQ+Seuil)*quantiteEnT) {
+				if(cours>= 1200) {
+					this.quantiteEnTBQ=0.3*quantiteEnT;
 					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnTBQ+" T de "+f);
 					return quantiteEnT;
 				}
 				
@@ -86,7 +96,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		}
 		//else {
 			//plantation = new HashMap<Feve, Double>();
-			//double quantite = 50;
+			//double quantite = 100;
 			//plantation.put(f, quantite);
 			//adjustPlantationSize(plantation);
 			
