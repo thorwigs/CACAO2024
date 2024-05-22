@@ -214,7 +214,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		}
 		if (((Feve)contrat.getProduit()).isEquitable()) {
 			
-			return Math.min(0.8 * prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*1.25);
+			return Math.min(0.8 * prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*2);
 			
 			
 		}
