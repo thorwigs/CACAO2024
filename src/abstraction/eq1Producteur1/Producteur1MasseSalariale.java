@@ -29,7 +29,6 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	protected Journal journalOuvrier;
 	protected HashMap<Ouvrier, Integer> masseSalariale; // map ayant pour cle un type douvrier et valeur le nombre
 	protected ArrayList<Ouvrier> types_ouvriers;//liste ayant tous les types d'ouvriers possibles
-	protected ArrayList<Double> rendement;//liste pour le rendement de chaque type ouvrier
 	protected ArrayList<Double> salaire;//liste pour le salaire de chaque type d'ouvrier
 	protected ArrayList<ArrayList<Integer>> anciennete;// liste  de listes ayant 5 élements listes 
 	//(qui sont les types d'ouvriers), chaque liste contient 245 élements et chaque élément  presente
@@ -74,21 +73,20 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 		this.salaire=new ArrayList<Double>();
-		this.rendement=new ArrayList<Double>();
 
 		this.types_ouvriers=new ArrayList<Ouvrier>();
 		this.masseSalariale=new HashMap<Ouvrier, Integer>();
 		this.anciennete=new ArrayList<ArrayList<Integer>>();
 
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
-		this.salaire.add(10.0);
+		this.salaire.add(0.8);
+		this.salaire.add(4.0);
+		this.salaire.add(3.0);
+		this.salaire.add(2.4);
+		this.salaire.add(1.8);
 
-		this.rendement.add(1.0);
-		this.rendement.add(1.5);
+		
 
+		
 		this.types_ouvriers.add(enfant);
 		this.types_ouvriers.add(ouvrierEquitableForme);
 		this.types_ouvriers.add(ouvrierEquitableNonForme);

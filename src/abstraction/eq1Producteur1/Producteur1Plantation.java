@@ -56,10 +56,15 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		 * Retourne un dictionnaire où chaque clé est une Feve et chaque valeur est la surface associée de cette feve.
 		 */
 		plantation = new HashMap<Feve, Double>();
-
+		Math.min(PBQ*this.nombreHec, PBQ*this.get_Nombre_Total());
+		plantation.put(Feve.F_BQ,Math.min(PBQ*this.nombreHec, PBQ*this.get_Nombre_Total()) );
+		plantation.put(Feve.F_MQ,Math.min(PMQ*this.nombreHec, PMQ*this.get_Nombre_Total()));
+		plantation.put(Feve.F_HQ, Math.min(PHQ*this.nombreHec, PHQ*this.get_Nombre_Total()));
+		/*
 		plantation.put(Feve.F_BQ, PBQ*this.nombreHec );
 		plantation.put(Feve.F_MQ, PMQ*this.nombreHec);
 		plantation.put(Feve.F_HQ, PHQ*this.nombreHec);
+		*/
 		this.journalPlantation.ajouter("On a reussi planter");
 		
 		return plantation;
@@ -103,30 +108,34 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		/*
 		 * return nombre d'ouvriers avec un rendement 1 necessaire
 		 */
-		double rendementPresent = this.get_Nombre_Enfant()+this.get_Nombre_Ouvrier_NonEquitable_NonForme()+(this.get_Nombre_Ouvrier_Equitable_Forme()+this.get_Nombre_Ouvrier_NonEquitable_Forme())*1.2+this.get_Nombre_Ouvrier_Equitable_NonForme();
+		
+		double rendementPresent = this.get_Nombre_Enfant()+this.get_Nombre_Ouvrier_NonEquitable_NonForme()+(this.get_Nombre_Ouvrier_Equitable_Forme()*1.5+this.get_Nombre_Ouvrier_NonEquitable_Forme())*1.5+this.get_Nombre_Ouvrier_Equitable_NonForme();
+		HashMap<Feve, Double> demand = new HashMap<Feve, Double>();
 		if (rendementPresent < this.nombreHec) {
 
 
 
-			for (Feve f : this.plantation().keySet()) {
-				if (f.isBio()) {
-					this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation bio est :"+ 1.5*this.plantation().get(f));
-					this.ouvriers.put(f, 1.5*this.plantation().get(f));
-				} else {
-					this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation est :"+ this.plantation().get(f));
-					this.ouvriers.put(f, this.plantation().get(f));
-				}
-			}
+			if (rendementPresent < this.nombreHec) {
+		        for (Feve f : this.plantation().keySet()) {
+		            double requiredWorkers = f.isBio() ? 1.5 * this.plantation().get(f) : this.plantation().get(f);
+		            this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation" 
+		                                            + (f.isBio() ? " bio" : "") + " est :" + requiredWorkers);
+		            demand.put(f, requiredWorkers);
+		        }
+		    } else {
+		        for (Feve f : this.plantation().keySet()) {
+		            demand.put(f, 0.0);
+		        }
+		    }
 		}
-		else {
-			for (Feve f : this.plantation().keySet()) {
-				this.ouvriers.put(f, 0.0);
-			}
+		
+			this.recruitWorkers(demand);
+	}	
+		
+		    
 
-		}
 
-
-	}	 
+	 
 
 	public void setHec(double hec) {
 		this.nombreHec = hec;
@@ -144,7 +153,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	        aEmbaucher += ((int) requiredRendement);
 	    }
 	    this.journalOuvrier.ajouter("On a besoin d'embaucher:" + aEmbaucher);
-	    double what = 0.1 * aEmbaucher;
+	    double what =0.5*aEmbaucher;
 	    aEmbaucher = (int) Math.round(what);
 
 	    this.addQuantiteOuvrier(this.ouvrierEquitableNonForme,(int) Math.round(0.30 * aEmbaucher));
@@ -190,9 +199,9 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		 * return la production annuel
 		 */
 		this.prodAnnee = new HashMap<Feve, Double>();
-		this.prodAnnee.put(Feve.F_BQ,0.7*0.650*this.nombreHec);
-		this.prodAnnee.put(Feve.F_MQ, 0.650*0.28*this.nombreHec);
-		this.prodAnnee.put(Feve.F_HQ, 0.650*0.02*this.nombreHec);
+		this.prodAnnee.put(Feve.F_BQ,Math.min(PBQ*0.650*this.nombreHec, PBQ*0.650*this.get_Nombre_Total()));//0.7*0.650*this.nombreHec);
+		this.prodAnnee.put(Feve.F_MQ, Math.min(PMQ*0.650*this.nombreHec, PMQ*0.650*this.get_Nombre_Total()));
+		this.prodAnnee.put(Feve.F_HQ, Math.min(PHQ*0.650*this.nombreHec, PHQ*0.650*this.get_Nombre_Total()));
 		this.prodAnnee.put(Feve.F_HQ_E, 0.0);
 		this.prodAnnee.put(Feve.F_HQ_BE, 0.0);
 		this.prodAnnee.put(Feve.F_MQ_E,0.0);
@@ -301,7 +310,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	public void next() {
 		super.next();
 		this.maindoeuvre();
-		this.recruitWorkers(this.ouvriers);
+		
 		if (Filiere.LA_FILIERE.getEtape()%12 == 0) {
 			this.achat((nombreHecMax-nombreHec)/2);
 		}
