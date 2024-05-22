@@ -27,6 +27,8 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurContratCadre implements IVendeurContratCadre {
+	
+	private IAcheteurContratCadre acheteurPrecedent;
 	private SuperviseurVentesContratCadre supCC;
 	
 
@@ -50,15 +52,19 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public boolean vend(IProduit produit) { 
 
 		for (ChocolatDeMarque c : this.chocolatCocOasis) {
-			if ((produit.getType().equals("ChocolatDeMarque")) && (c == (ChocolatDeMarque)produit) && (stockChocoMarque.get(produit)>25000) ) {
+			//System.out.println("   ---"+c+" "+(produit.getType().equals("ChocolatDeMarque"))+" "+((produit.getType().equals("ChocolatDeMarque"))?(c.equals((ChocolatDeMarque)produit)):"...")+" "+((produit.getType().equals("ChocolatDeMarque")&&(c.equals((ChocolatDeMarque)produit)))?(stockChocoMarque.get(produit)>25000):"..."));
+			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>25000) ) {
+				//System.out.println(" on vend "+produit);
 				return true;
 			}
 		}
 		for (ChocolatDeMarque c : this.chocolatDistributeur) {
-			if ((produit.getType().equals("ChocolatDeMarque")) &&(c == (ChocolatDeMarque)produit) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 25000 )) {
+			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 25000 )) {
+				//System.out.println(" on vend "+produit);
 				return true;
 			}
 		}
+		//System.out.println(" on ne vend pas "+produit);
 		return false ; 
 		
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
@@ -171,8 +177,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		double prixPropose = 0.0;
 		if (coutproduction_tonne_marque_step.isEmpty()){
 			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
-		}
-		else {
+		} else {
 			prixPropose = contrat.getQuantiteTotale()*1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
 		}
 		prixPrecedent.put(contrat, prixPropose);
@@ -293,6 +298,26 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		}
 		return res;
 	}
+	
+	public double restantALivrerDeType (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if ((c.getProduit() instanceof ChocolatDeMarque) && ((ChocolatDeMarque)c.getProduit()).getChocolat() == choco) {
+				res+=c.getQuantiteRestantALivrer();
+			}
+		}
+		return res;
+	}
+	
+	public double ALivrerDeTypeAuStep (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if ((c.getProduit() instanceof ChocolatDeMarque) && ((ChocolatDeMarque)c.getProduit()).getChocolat() == choco) {
+				res+=c.getQuantiteALivrerAuStep();
+			}
+		} 
+		return res;
+	}
 
 	public double restantPayeARecevoir() {
 		double res=0;
@@ -302,15 +327,14 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		return res;
 	}
 
-	
-	
-	
-	
+
 	//Next
 		
 	public void next() { 
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		
+		this.journalVCC.ajouter("===== phase de demande ======== ");
 		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 
@@ -323,25 +347,30 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);	
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						if (acheteurs.size()>0) {
-							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-							
-							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							for (IAcheteurContratCadre acheteur : acheteurs) {
+								journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 							
 		
-							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
-							if (contrat==null) {
-								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
-								this.contratsEnCours.add(contrat);
-								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+								ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
+								if (contrat==null) {
+									journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								} else {
+									this.contratsEnCours.add(contrat);
+									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+								}
 							}
+							//IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+							
+							
 						} else {
 							journalVCC.ajouter("  pas d'acheteur");
 						}
 					} else {
-						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
+						journalVCC.ajouter(" quantité de " + choco + "  insuffisante pour passer un contrat cadre");
 					}
 				}
+				journalVCC.ajouter(" === fin de phase de demande =========");
+				
 				}
 				
 				
@@ -357,19 +386,33 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						
 						if (acheteurs.size()>0) {
-							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+
+							for (IAcheteurContratCadre acheteur : acheteurs) {
+									journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+
+							/*IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 							
-							
-							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
-							
-							if (contrat==null) {
-								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
-								this.contratsEnCours.add(contrat);
-								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+							if (acheteur == acheteurPrecedent) {
+								acheteurs.remove(acheteur);
+								acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 							}
-							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");		
+							
+							acheteurPrecedent = acheteur;
+							
+							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							*/
+						
+							
+									ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
+							
+									if (contrat==null) {
+										journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+									} else {
+										this.contratsEnCours.add(contrat);
+										journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+									}
+								}
+							//IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 						} else {
 							journalVCC.ajouter("   pas d'acheteur");
 						}
