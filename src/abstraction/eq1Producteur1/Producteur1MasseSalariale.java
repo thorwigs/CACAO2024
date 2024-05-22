@@ -469,6 +469,8 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 		double Labor = this.getSalaireTotal();
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Labor",Labor );
+		this.journalOuvrier.ajouter("on paie un salaire total de " + Labor);
+
 
 		this.journalOuvrier.ajouter("Le nombre d'enfants = " + this.get_Nombre_Enfant());
 
