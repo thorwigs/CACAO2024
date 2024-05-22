@@ -74,6 +74,8 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.journalCC6.ajouter(Color.BLUE, Color.white,"=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		this.journalCC6.ajouter("=== Partie Achat fèves ====================");
 		HashMap<Feve, Integer> Decision = super.Decision();
+		super.addhistorique(coûtMoyenAchatFeve, stockChoco, stockChocoMarque);
+		System.out.println("Décision" + Decision);
 		for(Feve f : Decision.keySet()) {
 			if(Decision.get(f)>10) {
 				this.journalCC6.ajouter("   "+f+" suffisamment de vente pour passer un CC");
