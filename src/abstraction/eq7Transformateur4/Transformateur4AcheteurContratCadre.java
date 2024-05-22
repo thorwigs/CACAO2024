@@ -44,13 +44,11 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
 		return (produit.getType().equals("Feve"))
 				&& (
-						(((Feve)produit).getGamme() == Feve.F_HQ.getGamme()) ||
-						(((Feve)produit).getGamme() == Feve.F_HQ_BE.getGamme())
+						(((Feve)produit) == Feve.F_HQ) ||
+						(((Feve)produit) == Feve.F_HQ_BE)
 					)
 				
 				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 150000 );
-	
-
 	}
 	
 	
@@ -188,9 +186,9 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 					}
 					
 					
-					if (stockFeves.get(f)+restantDu(f)< Math.min(1000, alivrer + 1000 - restantDu(f) ) ) { 
+					if (stockFeves.get(f)+restantDu(f)< Math.min(10000, alivrer + 10000 - restantDu(f) ) ) { 
 						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
+						double parStep = Math.max(900, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 900
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {

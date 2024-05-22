@@ -28,7 +28,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurContratCadre implements IVendeurContratCadre {
 	
-	
+	private IAcheteurContratCadre acheteurPrecedent;
 	private SuperviseurVentesContratCadre supCC;
 	
 
@@ -383,9 +383,22 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						
 						if (acheteurs.size()>0) {
+
 							for (IAcheteurContratCadre acheteur : acheteurs) {
 									journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+
+							/*IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 							
+							if (acheteur == acheteurPrecedent) {
+								acheteurs.remove(acheteur);
+								acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+							}
+							
+							acheteurPrecedent = acheteur;
+							
+							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							*/
+						
 							
 									ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
 							
