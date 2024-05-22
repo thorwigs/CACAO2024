@@ -120,16 +120,16 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
 
-		this.stockChoco.put(Chocolat.C_MQ, 7000.0);
-		this.totalStocksChoco.ajouter(this, 7000.0, this.cryptogramme);
+		this.stockChoco.put(Chocolat.C_MQ, 0.0);
+		this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 		this.journal.ajouter("ajout de 7000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 
 
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 5000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 5000.0, cryptogramme);
+			this.stockChocoMarque.put(c, 0.0); //le premier element de stockchocomarque correspond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 0.0, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
 		

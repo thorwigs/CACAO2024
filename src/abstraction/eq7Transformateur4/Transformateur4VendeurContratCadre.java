@@ -303,6 +303,17 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		return res;
 	}
 	
+	public double restantALivrerAuStep(ChocolatDeMarque choco) {
+		double res=0;			
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(choco)) {
+				res+=c.getQuantiteALivrerAuStep();
+			}
+		}
+		return res;
+	}
+	
+	
 	public double restantALivrerDeType (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
 		double res = 0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -345,9 +356,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 				if (vend(choco)) {
 
-					if ((stockChocoMarque.get(choco) - restantALivrer(choco)>=30000) || (stockChocoMarque.get(choco) >= 100*12)) { 
+					if ((stockChocoMarque.get(choco) - restantALivrerAuStep(choco)>=10000) || (stockChocoMarque.get(choco) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (-20000 + stockChocoMarque.get(choco) - restantALivrer(choco))/12); // au moins 100
+						double parStep = Math.max(100, (-10000 + stockChocoMarque.get(choco) - restantALivrerAuStep(choco))); // au moins 100 par step
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);	
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						if (acheteurs.size()>0) {
@@ -384,9 +395,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				for(ChocolatDeMarque choco : this.chocolatDistributeur) {
 				if (vend(choco)) {
 						
-					if ((stockChoco.get(choco.getChocolat()) - restantALivrer(choco)>=30000) || (stockChoco.get(choco.getChocolat()) >= 100*12)) { 
+					if ((stockChoco.get(choco.getChocolat()) - ALivrerDeTypeAuStep(choco.getChocolat())>=10000) || (stockChoco.get(choco.getChocolat()) >= 100*12)) { 
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (-20000 + stockChoco.get(choco.getChocolat()) - restantALivrer(choco))/12); // au moins 100
+						double parStep = Math.max(100, (-10000 + stockChoco.get(choco.getChocolat()) - ALivrerDeTypeAuStep(choco.getChocolat()))); // au moins 100
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						
