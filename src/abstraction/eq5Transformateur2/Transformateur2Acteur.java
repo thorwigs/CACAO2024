@@ -216,6 +216,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	/**
 	 * @Robin 
 	 * @Erwann
+	 * @Victor
+	 * @Vincent
 	 */
 	public void next() {
 		
@@ -224,7 +226,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		
 		////////////////////////////////////////////////////
-		//            Remplissage Journal Eq5             //
+		//            Remplissage Journal Eq5             //   (Robin)
 		////////////////////////////////////////////////////
 		this.journal.ajouter(" ===ETAPE = " + Filiere.LA_FILIERE.getEtape()+ " A L'ANNEE " + Filiere.LA_FILIERE.getAnnee()+" ===");
 		this.journal.ajouter("=====STOCKS=====");
@@ -245,18 +247,14 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		
 		////////////////////////////////////////////////////
-		//            Paiement cout de stockage           //
+		//            Paiement cout de stockage           //   (Robin)
 		////////////////////////////////////////////////////
-	
-		/* le stockage du chocolat de marque n'est pas encore operationnel donc on ne le prend pas en compte
-		 * à rajouter pour choco marque : +this.totalStocksChocoMarque.getValeur(this.cryptogramme))
-		 */
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme)+this.totalStocksChocoMarque.getValeur(this.cryptogramme))*this.coutStockage);
 		
 		
 		
 		////////////////////////////////////////////////////
-		// Determination de la Capacité de Transformation //
+		// Determination de la Capacité de Transformation //   (Erwann & Vincent & Victor)
 		////////////////////////////////////////////////////
 		double capaciteTransfoTotal = capaciteTransfo * NbSalaries;
 		double coutMasseSalariale = 0;
@@ -300,7 +298,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		
 		////////////////////////////////////////////////////
-		//   Transformation des Fèves en ChocoDeMarque    //
+		//   Transformation des Fèves en ChocoDeMarque    //   (Erwann)
 		////////////////////////////////////////////////////
 		double TransfoTotal = 0;
 		
@@ -354,7 +352,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		
 		////////////////////////////////////////////////////
-		//       Calcul de la moyenne de production       //
+		//       Calcul de la moyenne de production       //    (Robin)
 		////////////////////////////////////////////////////
 		this.totalProd += TransfoTotal;
 		this.moyProd = this.totalProd/(Filiere.LA_FILIERE.getEtape()+1);
