@@ -201,7 +201,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		else{
 			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12 , contrat.getEcheancier().getQuantiteTotale()/12 );
 		}
-	}
+	} 
 	/**
 	 * @author Thomas
 	 */
