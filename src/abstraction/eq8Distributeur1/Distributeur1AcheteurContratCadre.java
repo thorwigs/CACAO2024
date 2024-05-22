@@ -154,7 +154,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		return (produit.getType().equals("ChocolatDeMarque")
 				&& this.stock_Choco.containsKey(produit)
-	//			&& !this.chocoBan.contains(produit)
 				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a );   
 	}
 	
@@ -188,7 +187,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
 			|| !this.stock_Choco.containsKey(contrat.getProduit())
 			|| !this.achete(contrat.getProduit())
-//			|| this.chocoBan.contains(produit)
 			|| contrat.getListePrix().size()>10) {
 			return null;
 		}
