@@ -20,7 +20,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 
-public class Transformateur2AcheteurCCadre extends Transformateur2MasseSalariale2 implements IAcheteurContratCadre {
+public class Transformateur2AcheteurCCadre extends Transformateur2Acteur implements IAcheteurContratCadre {
 	protected SuperviseurVentesContratCadre supCC;
 	protected List<ExemplaireContratCadre> contratsEnCours;
 	protected List<ExemplaireContratCadre> contratsTermines;

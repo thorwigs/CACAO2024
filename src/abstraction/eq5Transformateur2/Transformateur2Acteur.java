@@ -186,12 +186,6 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 				}
 			}
 		}
-		//Regarder quantite a chaque step (a virer dans la version finale)
-		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_BQ, cryptogramme)+" t de feves BQ");
-		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Chocolat.C_BQ, cryptogramme)+" t de chocolat BQ");
-		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+" t de feves MQ");
-		//System.out.println("Step "+Filiere.LA_FILIERE.getEtape()+" on a "+this.getQuantiteEnStock(Chocolat.C_MQ, cryptogramme)+" t de chocolat MQ");
-
 	}
 
 	

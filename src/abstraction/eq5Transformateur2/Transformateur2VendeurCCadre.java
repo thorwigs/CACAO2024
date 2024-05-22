@@ -21,6 +21,7 @@ import abstraction.eq5Transformateur2.Transformateur2MasseSalariale;
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	private HashMap<IAcheteurContratCadre, Integer> BlackListAcheteur;
 	private int EtapenegoVente;
+	private double moyProd;
 	
 	public Transformateur2VendeurCCadre () {
 		super();
