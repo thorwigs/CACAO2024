@@ -92,7 +92,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			return null;
 		}
 		// On verif qu'on a assez de stock
-		if (offre.getQuantiteT() >= stockChocoMarque.get(cm).getValeur() ) {
+		if (offre.getQuantiteT() >= this.stockChocoMarque.get(cm).getValeur(this.cryptogramme) ) {
 			journalAO.ajouter(Color.WHITE, Color.red," Pas assez de stock pour l'AO sur "+cm);
 			return null;
 		}

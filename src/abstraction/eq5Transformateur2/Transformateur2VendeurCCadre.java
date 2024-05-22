@@ -15,8 +15,6 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eq5Transformateur2.Transformateur2MasseSalariale2;
-
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	private HashMap<IAcheteurContratCadre, Integer> BlackListAcheteur;
