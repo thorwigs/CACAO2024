@@ -108,30 +108,34 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		/*
 		 * return nombre d'ouvriers avec un rendement 1 necessaire
 		 */
+		
 		double rendementPresent = this.get_Nombre_Enfant()+this.get_Nombre_Ouvrier_NonEquitable_NonForme()+(this.get_Nombre_Ouvrier_Equitable_Forme()*1.5+this.get_Nombre_Ouvrier_NonEquitable_Forme())*1.5+this.get_Nombre_Ouvrier_Equitable_NonForme();
+		HashMap<Feve, Double> demand = new HashMap<Feve, Double>();
 		if (rendementPresent < this.nombreHec) {
 
 
 
-			for (Feve f : this.plantation().keySet()) {
-				if (f.isBio()) {
-					this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation bio est :"+ 1.5*this.plantation().get(f));
-					this.ouvriers.put(f, 1.5*this.plantation().get(f));
-				} else {
-					this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation est :"+ this.plantation().get(f));
-					this.ouvriers.put(f, this.plantation().get(f));
-				}
-			}
+			if (rendementPresent < this.nombreHec) {
+		        for (Feve f : this.plantation().keySet()) {
+		            double requiredWorkers = f.isBio() ? 1.5 * this.plantation().get(f) : this.plantation().get(f);
+		            this.journalPlantation.ajouter("Nombre d'ouvrier avec un rendement 1 necessaire pour la plantation" 
+		                                            + (f.isBio() ? " bio" : "") + " est :" + requiredWorkers);
+		            demand.put(f, requiredWorkers);
+		        }
+		    } else {
+		        for (Feve f : this.plantation().keySet()) {
+		            demand.put(f, 0.0);
+		        }
+		    }
 		}
-		else {
-			for (Feve f : this.plantation().keySet()) {
-				this.ouvriers.put(f, 0.0);
-			}
+		
+			this.recruitWorkers(demand);
+	}	
+		
+		    
 
-		}
 
-
-	}	 
+	 
 
 	public void setHec(double hec) {
 		this.nombreHec = hec;
@@ -149,7 +153,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	        aEmbaucher += ((int) requiredRendement);
 	    }
 	    this.journalOuvrier.ajouter("On a besoin d'embaucher:" + aEmbaucher);
-	    double what = 0.1 * aEmbaucher;
+	    double what =0.5*aEmbaucher;
 	    aEmbaucher = (int) Math.round(what);
 
 	    this.addQuantiteOuvrier(this.ouvrierEquitableNonForme,(int) Math.round(0.30 * aEmbaucher));
@@ -306,7 +310,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	public void next() {
 		super.next();
 		this.maindoeuvre();
-		this.recruitWorkers(this.ouvriers);
+		
 		if (Filiere.LA_FILIERE.getEtape()%12 == 0) {
 			this.achat((nombreHecMax-nombreHec)/2);
 		}
