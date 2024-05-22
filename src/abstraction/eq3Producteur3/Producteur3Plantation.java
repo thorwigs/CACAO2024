@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
@@ -11,6 +13,9 @@ import abstraction.eqXRomu.produits.Feve;
 public abstract class Producteur3Plantation extends Producteur3Acteur {
 	abstract HashMap<Feve,Double> quantite();
 	abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
+	abstract void deleteAcheteurs(IAcheteurBourse acheteur);
+	abstract void deleteVendeurs(IVendeurBourse vendeur);
+	
 /**
  * @author Alexis et Gabin
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves de qualité XQ 

@@ -22,6 +22,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
 	private SuperviseurVentesContratCadre superviseur;
 	private ExemplaireContratCadre contr;
+	private double nonLivre;
+	private double Livre;
 	
 	/**
 	 * @author Arthur
@@ -43,6 +45,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * Initalise le super et invoque le superviseur
 	 */
 	public void initialiser() {
+		nonLivre = 0;
+		Livre = 0;
 		super.initialiser();
 		//On appelle le superviseur de la filiere
 		superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup."+(SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE>1?SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE+"":"")+"CCadre");
@@ -56,6 +60,9 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
         super.next();
         //on lance de nouveaux contrats (a verifier)
         proposerContrats();
+        if (Filiere.LA_FILIERE.getEtape()%100 == 90) {
+        	this.journal_bourse.ajouter(""+nonLivre/Livre);
+        }
     }
 	
 	/**
@@ -121,7 +128,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		 	double quantiteDisponible = 0.0; // Valeur par défaut
 	        if (quantiteFuture().containsKey(f)) {
 	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après
-	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step);
+	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step-1);
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
@@ -263,12 +270,15 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 			this.journal_contrat_cadre.ajouter("Livraison totale : "+quantite+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			//on envoie ce que l'on a promis et on met a jour les variables
 			ventefevecadre.put((Feve)contrat.getProduit(), quantite);
+			Livre += 1;
 			return quantite;
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock et met a jour les variables
 			this.setQuantiteEnStock((Feve)produit, 0);
 			this.journal_contrat_cadre.ajouter("Livraison partielle : "+stock_inst+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			ventefevecadre.put((Feve)contrat.getProduit(), stock_inst);
+			nonLivre += 1;
+			Livre += 1;
 			return stock_inst;
 		}
 	}
