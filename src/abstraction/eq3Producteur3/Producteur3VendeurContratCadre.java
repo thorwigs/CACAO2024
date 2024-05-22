@@ -2,8 +2,10 @@ package abstraction.eq3Producteur3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -22,6 +24,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
 	private SuperviseurVentesContratCadre superviseur;
 	private ExemplaireContratCadre contr;
+	private double itQ; //compteur du step de négo
 	
 	/**
 	 * @author Arthur
@@ -46,6 +49,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		super.initialiser();
 		//On appelle le superviseur de la filiere
 		superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup."+(SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE>1?SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE+"":"")+"CCadre");
+		itQ = 0;
 	}
 	
 	/**
@@ -74,7 +78,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    for (Feve f : feves) { 
 	    	//pour tous les acheteurs de chaque feves on propose un echeancier de 10 step
 	        List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
-	        for (IAcheteurContratCadre acheteur : acheteurs) {
+	        Set<IAcheteurContratCadre> acheteurSet = new HashSet<IAcheteurContratCadre>(acheteurs);
+	        for (IAcheteurContratCadre acheteur : acheteurSet) {
 	        	int dureeStep = 10; //duree du CC en step
 		        LinkedList<Double> quantiteDispo = quantiteDisponibleFutur(f,Filiere.LA_FILIERE.getEtape(),dureeStep+Filiere.LA_FILIERE.getEtape());
 		        double quantiteDisponible = quantiteDispo.stream().reduce(Double::sum).get();
@@ -193,6 +198,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * Propose un prix de base du cacao en fonction de la feve du contrat
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
+		itQ = 0;
 	    IProduit produit = contrat.getProduit();
 	    if (!(produit instanceof Feve)) { return 0;}
 	    
@@ -200,7 +206,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    double prixBase=coutRevient(feve,contrat.getQuantiteTotale());
 	    //on fixe un prix de base selon la gamme
 	     if (feve.getGamme() == Gamme.HQ) {
-	        prixBase = Math.max(3000.0,prixBase); // à ajuster selon l'équitable et bio équitable
+	        prixBase = Math.max(3000.0,prixBase);
 	    } else if (feve.getGamme() == Gamme.MQ) {
 	       prixBase = Math.max(prixBase, 1910.0);
 	    }
@@ -220,6 +226,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * On propose un nouveau prix (potentiellement le meme) suite a la contre-proposition faite par l'acheteur
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+		itQ += 1;
 	    IProduit produit = contrat.getProduit();
 	    if (!(produit instanceof Feve)) {
 	        return 0; }
@@ -230,8 +237,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	        return prixPropose;
 	    } else {
 
-	        // Sinon, retourner le prix Minimal
-	        return prixMinimal;
+	        // Sinon, retourner un prix qui tend vers prixMinimal au cours de la négociation
+	        return prixMinimal*1.2 - itQ*prixMinimal*0.2/15;
 	    }
 	}
 
