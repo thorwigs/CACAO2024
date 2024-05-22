@@ -48,7 +48,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 				}
 			}
 			chocoalivrer.put(c, alivrer);
-			this.coutproduction_tonne_marque_step.put(c, 0.0);//pas oublier l'initialisation de cette Hashmap
+			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2);//pas oublier l'initialisation de cette Hashmap
 			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
 		
@@ -61,7 +61,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 				}
 			}
 			chocoalivrer.put(c, alivrer);
-			this.coutproduction_tonne_marque_step.put(c, 0.0); //initialisation de la hashmap
+			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2); //initialisation de la hashmap
 			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
 		//remarquons que chocoalivrer contient en clés tout les chocolat de chocolatCocOasis et de chocolatDistributeur
@@ -96,13 +96,13 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			double qtutile1 = 0; //correspond à la qte de fève qu'on va effectivement transformer
 			double stock = this.stockFeves.get(feve_utilise);
 			double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
-			if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)+50000) { 
-				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 25000 pour pouvoir faire des contrats cadre, on se fixe 50000 comme valeur
+			if (this.stockChocoMarque.get(c) < chocoalivrer.get(c)+5000) { 
+				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 5000 pour pouvoir faire des contrats cadre, on se fixe 5000 comme valeur
 				aproduire = aproduire + chocoalivrer.get(c) ;
 			}
 			//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
-			if (this.stockChocoMarque.get(c) < 50000) {
-					aproduire = aproduire + 6260; //6260 parce qu'on ne peut produire que 17000 chaque step, comme ça en 4 tour on peut remettre notre stock au dessus de 25000
+			if (this.stockChocoMarque.get(c) < 5000) {
+					aproduire = aproduire + 2000; //2000 parce qu'on ne peut produire que 17000 (ou autre chose) chaque step, comme ça en 3 tour on peut remettre notre stock au dessus de 5000
 			}
 			//donc si on a pas assez de chocolat, on va nécessairement produire de quoi respecter les contrats mais aussi de quoi relancer des contrats
 			double fevenecessaire = aproduire/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())); //formule conversion entre qte feve et qte choco
@@ -139,7 +139,9 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			this.lescouts.add(payermachine);
 			this.lescouts.add(payeradjuvant);
 			this.production_tonne_marque_step.replace(c, this.production_tonne_marque_step.get(c)+qtechocoproduit);
-			this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			if (qtechocoproduit != 0.0) {
+				this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			}
 			//on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 			//on va tenir compte des cout fixe après à la fin des boucle for
 		}
@@ -174,13 +176,13 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			double qtutile1 = 0; //correspond à la qte de fève qu'on va effectivement transformer
 			double stock = this.stockFeves.get(feve_utilise);
 			double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
-			if (this.stockChoco.get(c.getChocolat()) < chocoalivrer.get(c)+50000) { 
+			if (this.stockChoco.get(c.getChocolat()) < chocoalivrer.get(c)+5000) { 
 				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 25000 pour pouvoir faire des contrats cadre
 				aproduire = aproduire + chocoalivrer.get(c) ;
 			}
 			//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
-			if (this.stockChoco.get(c.getChocolat()) < 50000) {
-					aproduire = aproduire + 6260; //6260 parce qu'on ne peut produire que 17000 chaque step, comme ça en 4 tour on peut remettre notre stock au dessus de 25000
+			if (this.stockChoco.get(c.getChocolat()) < 5000) {
+					aproduire = aproduire + 2000; //2000 parce qu'on ne peut produire que 17000 (ou autre chose) chaque step, comme ça en 3 tour on peut remettre notre stock au dessus de 5000
 			}
 			//donc si on a pas assez de chocolat, on va nécessairement produire de quoi respecter les contrats mais aussi de quoi relancer des contrats
 			double fevenecessaire = aproduire/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())); //formule conversion entre qte feve et qte choco
@@ -217,7 +219,9 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			this.lescouts.add(payermachine);
 			this.lescouts.add(payeradjuvant);
 			this.production_tonne_marque_step.replace(c, this.production_tonne_marque_step.get(c)+qtechocoproduit);
-			this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			if (qtechocoproduit != 0.0) {
+				this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			}
 			//on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 			//on va tenir compte des cout fixe après à la fin des boucle for
 		}
