@@ -314,11 +314,10 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		Feve f = (Feve) contrat.getProduit();
-		if (f != Feve.F_MQ_E) {
-			System.out.println(" ...............");
-			System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + ((Feve)contrat.getProduit()).name());
-			this.contratsEnCours.add(contrat);
-		}
+		
+		System.out.println(" ...............");
+		System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + ((Feve)contrat.getProduit()).name());
+		this.contratsEnCours.add(contrat);
 	}
 
 	/** Retire les fèves du stock pour les livrer au client

@@ -240,7 +240,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 				cout_du_tour = cout_du_tour + PRIX_HECTARE_MQ * nb_hectares; 
 			}
 		}
-	}
+	} 
 
 	/** retourne la production actuelle de cacao sur 2 semaines en tonnes
 	 * @author Anthony
