@@ -111,7 +111,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		}
 	
 	/***
-	 * @author Robin, Erwann
+	 * @author Robin, Erwann, Vincent
 	 */
 	public boolean vend(IProduit produit) {
 		return (this.chocosProduits.contains(produit)) ;
