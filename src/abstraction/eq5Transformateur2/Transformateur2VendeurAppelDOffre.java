@@ -99,9 +99,14 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		if (prixAO.get(cm).size()==0) {
 			Gamme gamme = cm.getGamme();
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double prix = bourse.getCours(Feve.F_MQ).getMax()*5.5;
+			double prix = bourse.getCours(Feve.F_MQ).getMax()*1.75;
+				
+			if (cm.isEquitable()==true && gamme==Gamme.MQ) {
+				prix = bourse.getCours(Feve.F_MQ).getMax()*3;
+			}
+			
 			if (gamme == Gamme.BQ) {
-				prix = bourse.getCours(Feve.F_BQ).getMax()*4.5;
+				prix = bourse.getCours(Feve.F_BQ).getMax();
 			}
 			return new OffreVente(offre, this, cm, prix);
 		} 
@@ -130,10 +135,9 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			if (prixAO.get(cm)!=null) {
 				double prix = propositionRetenue.getPrixT();
 				double quantite_vendu = propositionRetenue.getQuantiteT();
-				double quantite_initiale = stockChocoMarque.get(cm).getValeur();
-				stockChocoMarque.put(cm,new Variable("Eq5Stock "+cm, this,quantite_initiale - quantite_vendu));  // modif des stocks si la proposition est retenue
-				prixAO.get(cm).add(prix*1.08);  // on fait comme si on avait accepte avec 8% de hausse afin que lors des prochains echanges on fasse une offre + honéreuse
-				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix);
+				stockChocoMarque.get(cm).retirer(this, quantite_vendu, this.cryptogramme); // modif des stocks si la proposition est retenue
+				prixAO.get(cm).add(prix*1.05);  // on fait comme si on avait accepte avec 5% de hausse afin que lors des prochains echanges on fasse une offre + onéreuse
+				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix+ " à l'acheuteur : "+propositionRetenue.getOffre().getAcheteur());
 				if (prixAO.get(cm).size()>10) {
 					prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 				}
@@ -148,8 +152,8 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		double prix = propositionRefusee.getPrixT();
 		double quantite = propositionRefusee.getQuantiteT();
 		if (prixAO.get(cm)!=null) {
-			prixAO.get(cm).add(prix*0.90); // on fait comme si on avait accepte avec 10% de baisse afin que lors des prochains echanges on fasse une meilleure offre
-			journalAO.ajouter(Color.RED, Color.white,"   Echec de vente par AO de "+quantite+" tonnes de "+cm+" au prix de  "+prix);
+			prixAO.get(cm).add(prix*0.85); // on fait comme si on avait accepte avec 15% de baisse afin que lors des prochains echanges on fasse une meilleure offre
+			journalAO.ajouter(Color.RED, Color.white,"   Echec de vente par AO de "+quantite+" tonnes de "+cm+" au prix de  "+prix+" à l'acheuteur : "+propositionRefusee.getOffre().getAcheteur());
 			if (prixAO.get(cm).size()>10) {
 				prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 			}

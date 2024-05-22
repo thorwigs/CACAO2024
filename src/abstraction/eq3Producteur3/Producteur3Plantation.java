@@ -22,6 +22,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQ = 47.57*1000;
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
+	private HashMap<Feve, Double> surfacePlantation;
 	
 /**
  * @author Alexis
@@ -43,12 +44,12 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		feveMQ.put(70, surfaceMQ*0.2);
 		feveMQ.put(520, surfaceMQ*0.3);
 		feveMQ.put(720, surfaceMQ*0.5);
-		agePlant.put(Feve.F_MQ, feveBQ);
+		agePlant.put(Feve.F_MQ, feveMQ);
 		
 		HashMap<Integer,Double> feveMQE = new HashMap<Integer,Double>();
 		feveMQE.put(570, surfaceMQE*0.1);
 		feveMQE.put(670, surfaceMQE*0.2);
-		feveMQE.put(670, surfaceMQE*0.2);
+		feveMQE.put(670, surfaceMQE*0.7);
 		agePlant.put(Feve.F_MQ_E, feveMQE);
 		
 		HashMap<Integer,Double> feveHQ = new HashMap<Integer,Double>();
@@ -60,12 +61,21 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		HashMap<Integer,Double> feveHQE = new HashMap<Integer,Double>();
 		feveHQE.put(620, surfaceHQE*0.7);
 		feveHQE.put(720, surfaceHQE*0.3);
-		agePlant.put(Feve.F_HQ, feveHQE);
+		agePlant.put(Feve.F_HQ_E, feveHQE);
 		
 		HashMap<Integer,Double> feveHQBE = new HashMap<Integer,Double>();
 		feveHQBE.put(670, surfaceHQBE*0.1);
 		feveHQBE.put(720, surfaceHQBE*0.9);
-		agePlant.put(Feve.F_HQ, feveHQBE);
+		agePlant.put(Feve.F_HQ_BE, feveHQBE);
+		
+		surfacePlantation=new HashMap<Feve, Double>();
+		surfacePlantation.put(Feve.F_BQ, surfaceBQ);
+		surfacePlantation.put(Feve.F_MQ, surfaceMQ);
+		surfacePlantation.put(Feve.F_MQ_E, surfaceMQE);
+		surfacePlantation.put(Feve.F_HQ, surfaceHQ);
+		surfacePlantation.put(Feve.F_HQ_E, surfaceHQ);
+		surfacePlantation.put(Feve.F_HQ_BE, surfaceHQBE);
+		
 	}
 	
 
@@ -79,16 +89,9 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 */
 	protected HashMap<Feve, Double> plantation() {
 		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
-	//on recupere les surfaces du step precedent (pour l'instant valeurs arbitraires)
-		h.put(Feve.F_HQ, surfaceHQ);
-		h.put(Feve.F_HQ_BE, surfaceHQBE);
-		h.put(Feve.F_HQ_E, surfaceHQE);
-		h.put(Feve.F_MQ, surfaceMQ);
-		h.put(Feve.F_MQ_E, surfaceMQE);
-		h.put(Feve.F_BQ, surfaceBQ);
 	//on augmente la surface 
-		achatPlantation(h);
-		return h;
+		surfacePlantation = achatPlantation(surfacePlantation);
+		return surfacePlantation;
 	}
 
 	/**
@@ -96,16 +99,28 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * @param HashMap<Feve,Double> surfaces (tableau des surfaces par feve)
 	 * @return HashMap<Feve,Double> surfaces (tableau des surfaces par feve)
 	 * Cette methode determine la surface supplementaire a acheter pour chaque type de feve
-	 * Elle s'appuie sur la production et les ventes du step precedent
+	 * Elle s'appuie sur la production et les ventes du step precedent ainsi que sur la fonction aRemplacer
+	 * Lorsqu'on achète des plantations pour remplacer celles qui sont en fin de vie, il faut actualiser agePlant
+	 * On veut en même temps afficher dans le journal les plantations qui ont été renouvelées
 	 */
 	protected HashMap<Feve, Double> achatPlantation(HashMap<Feve, Double> surfaces) {
+		HashMap<Feve, Double> agePlantPrec = new HashMap<Feve, Double>(); //va contenir les surfaces remplacees
 		for (Feve f : prodfeve.keySet()) {
 			double supp = 0; //initialisation de la surface supplementaire
 			double delta = ventefeve.get(f).getValeur() - prodfeve.get(f).getValeur();// difference entre vente et production de f
 			if (delta > 50) { // si on vend beaucoup plus que ce que l'on produit (en tonnes)
 				supp += 100; 
 			}
+			if(aRemplacer(agePlant).get(f) != null) {
+					supp += aRemplacer(agePlant).get(f);
+					agePlantPrec.put(f, aRemplacer(agePlant).get(f));
+					agePlant.get(f).remove(Filiere.LA_FILIERE.getEtape());
+					agePlant.get(f).put(Filiere.LA_FILIERE.getEtape()+720, agePlantPrec.get(f));
+				}
 			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f (en ha)
+		}
+		if(!agePlantPrec.isEmpty()) {
+			journal.ajouter("Surfaces à remplacer pour chaque type de fève:" + agePlantPrec.toString());
 		}
 		return surfaces;
 	}
@@ -114,20 +129,24 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	/**
 	 * @author Alexis
 	 * @param  agePlant
-	 * @return HashMap<Feve,Double> aRemplacer (tableau des surfaces à remplacer par feve)
+	 * @return HashMap<Feve,Double> replace (tableau des surfaces à remplacer par feve)
 	 * Cette methode détermine la quantité de plants trop vieux à remplacer.
 	 * On regarde si pour chaque plantation d'un type de feve, il y a une parcelle qui est trop vieille,
 	 * ie dont le step de fin de vie correspond au step actuel
 	 */
-	protected void aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
+	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
+		HashMap<Feve, Double> replace = new HashMap<Feve, Double>();
 		for(Feve f: agePlant.keySet()) {
 			LinkedList<Integer> steps = new LinkedList<Integer>();
 			steps.addAll(agePlant.get(f).keySet());
 			Collections.sort(steps);
-			if(Filiere.LA_FILIERE.getEtape() == steps.get(0)) {
-				agePlant.get(f).remove(steps.get(0));
+			for(int step: steps) {
+				if(Filiere.LA_FILIERE.getEtape() == step) {
+					replace.put(f, agePlant.get(f).get(step));
+				}
 			}
 		}
+		return replace;
 	}
 	
 ///Gestion de la main d'oeuvre///

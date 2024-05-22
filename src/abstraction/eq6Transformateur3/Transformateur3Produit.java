@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	
 	/**
-	 * @author Mahel
+	 * @author Mahel 
 	 */
 	public Chocolat Correspond(Feve f) {
 		switch( f ) {
@@ -86,15 +86,17 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	
 	/**
 	 * 
-	 * @author Mahel
+	 * @author Mahel et Arthur
 	 */
 	public void TransformationFeve(Feve f) {
 		double feve_en_stock = this.stockFeves.get(f);
-		double choco_en_stock = this.stockChoco.get(this.Correspond(f));
-		if(feve_en_stock >0) {
-			Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Cout de production",feve_en_stock*(0.5*1200+8));
+		double choco_en_stock = this.stockChoco.get(this.Correspond(f));						
+		if(feve_en_stock >0 ) {                                               
+			Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Cout de production",feve_en_stock*(0.5*1200+8+2*1000*0.27));
 			this.stockChoco.put(this.Correspond(f),choco_en_stock + feve_en_stock/4.2);
+			this.stockFeves.put(f,0.0);
 		}
+		
 	}
 	
 	/**

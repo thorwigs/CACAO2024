@@ -23,6 +23,8 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
 	
 	protected int quantiteMiniCC = 1200;
+	protected int stockCibleMini = 40000;
+	protected HashMap<Gamme, Double> listePourcentageMarque;
 	
 	protected int cryptogramme;
 	protected Journal journal;
@@ -75,6 +77,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Variable>();
 
 		this.demandeCC = 0;
+		this.listePourcentageMarque = new HashMap<Gamme, Double>();
 	}
 /**
 *@author Noemie_Grosset
@@ -282,16 +285,24 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	public List<ChocolatDeMarque> getChocolatsProduits() {
 
 		if (this.chocosProduits.size()==0) {
-			Chocolat cmc = Chocolat.C_MQ_E;
-			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
-			this.chocosProduits.add(new ChocolatDeMarque(cmc, "CacaoMagic", pourcentageCacao));
+			Chocolat cmce = Chocolat.C_MQ_E;
+			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmce.getGamme()).getValeur());
+			this.chocosProduits.add(new ChocolatDeMarque(cmce, "CacaoMagic", pourcentageCacao));
 			
+			Chocolat cmc = Chocolat.C_MQ;
+			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
+			this.chocosProduits.add(new ChocolatDeMarque(cmc, "CacaoMagic", pourcentageCacao));
+				
 			Chocolat chc = Chocolat.C_HQ_BE;
 			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+chc.getGamme()).getValeur());
 			this.chocosProduits.add(new ChocolatDeMarque(chc, "LeaderKakao", pourcentageCacao));
+			
+			this.listePourcentageMarque.put(Gamme.MQ, 0.25);
+			this.listePourcentageMarque.put(Gamme.HQ, 0.75);
 		}
 		return this.chocosProduits;
 	}
+	
 /**
 * @author Yannig
 */
