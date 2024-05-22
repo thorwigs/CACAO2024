@@ -38,7 +38,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; //idem pour les chocolat de marques, donc on aura un seul choco, le HQ de stockChoco une fois qu'on lui aura apposé la marque Mirage
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elle peuvent contribuer a produire avec le ratio
 	
-	private List<ChocolatDeMarque>chocosProduits; //liste de tout les chocolat qu'on peut produire, mais qu'on ne va pas forcement produire
+	protected List<ChocolatDeMarque>chocosProduits; //liste de tout les chocolat qu'on peut produire, mais qu'on ne va pas forcement produire
 	protected List<ChocolatDeMarque> chocolatCocOasis;//liste de tout les chocolats que nous produisons sous notre nom
 	protected List<ChocolatDeMarque> chocolatDistributeur; //liste de tout les chocolats sous les noms distributeurs
 	
@@ -81,19 +81,20 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		for (Feve f : Feve.values()) {
 			this.lesFeves.add(f);
 			this.journal.ajouter("   - "+f);
+			
 		}
 		  
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
 			if (f == Feve.F_HQ || f == Feve.F_HQ_BE || f == Feve.F_MQ) {
-			this.stockFeves.put(f, 20000.0);
-			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+				this.stockFeves.put(f, 0.0);
+				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
+				this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			} else {
-			this.stockFeves.put(f, 0.0);
-			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 0 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+				this.stockFeves.put(f, 0.0);
+				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
+				this.journal.ajouter("ajout de 0 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			}
 		}
 		
@@ -109,23 +110,25 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//grâce à ceci on pourra accéder aux différents chocolats marque distributeur (ici 2)
 		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
 		for (String marque : marquesDistributeurs) {
-			this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+			if ((marque == "Chocoflow") || (marque == "Ecacaodor")) {
+				this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+			}	
 		}
 		
 		
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
-		this.stockChoco.put(Chocolat.C_MQ, 45000.0);
-		this.totalStocksChoco.ajouter(this, 45000.0, this.cryptogramme);
-		this.journal.ajouter("ajout de 45000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
-	
+
+		this.stockChoco.put(Chocolat.C_MQ, 49000.0);
+		this.totalStocksChoco.ajouter(this, 49000.0, this.cryptogramme);
+		this.journal.ajouter("ajout de 49000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 
 
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 45000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 45000.0, cryptogramme);
+			this.stockChocoMarque.put(c, 49000.0); //le premier element de stockchocomarque correspond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 49000.0, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
 		
@@ -181,8 +184,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 
 		this.journal.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "===============");
 		
-		
-		
+	
 		this.journal.ajouter("coût de stockage producteur : " + Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		
 	
@@ -191,12 +193,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "CoûtStockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockageTransfo);
 
 		this.journal.ajouter("" + this.getMarquesChocolat());
-		this.journal.ajouter("" + this.getChocolatsProduits());
+	
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journal.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
 		}
 		
-
+		
+		
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -285,11 +288,13 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
 			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 			for (String marque : marquesDistributeurs) {
-				this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, marque, 80)); //Pour les marques distributeurs on ne propose pour l'instant que du chocolat moyenne gamme
+				if ((marque == "Chocoflow") || (marque == "Ecacaodor")) {
+					this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+				}	
 			}
 			
 		}
-		this.journal.ajouter(" " + chocosProduits);
+		this.journal.ajouter(" choco produits" + chocosProduits);
 		return this.chocosProduits;
 	}
 

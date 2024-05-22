@@ -104,14 +104,18 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 					quantites.add(5000.);
 					modif=true;
 				} else if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
-					quantites.add(Math.max(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm), 100.));
+					quantites.add(Math.max(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm), 200.));
 					modif = true;
 				} else {
-					quantites.add(Math.max(e.getQuantite(e.getStepDebut()+i),100));
+					quantites.add(Math.max(e.getQuantite(e.getStepDebut()+i),200.));
 				}
 			} else {
-				if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-this.stockChocoMarque.get(cm)-this.restantDu(cm)) {
-					quantites.add(2*this.getVentePrecedente(cm) -this.stockChocoMarque.get(cm) - this.restantDu(cm));
+				if (Filiere.LA_FILIERE.getChocolatsProduits().contains(cm) && (e.getQuantite(e.getStepDebut()+i)>2*this.getVentePrecedente(cm)-(this.stockChocoMarque.get(cm)+this.restantDu(cm))/e.getNbEcheances() || e.getQuantite(e.getStepDebut()+i)<=200)) {
+					if (2*this.getVentePrecedente(cm) -(this.stockChocoMarque.get(cm) + this.restantDu(cm))/e.getNbEcheances()<=200) {
+						this.journal_negoc.ajouter("Négociation qur qté a échoué car quantités voulues trop faibles, inférieures à 200 par step");
+						return null;
+					}
+					quantites.add(2*this.getVentePrecedente(cm) -(this.stockChocoMarque.get(cm) + this.restantDu(cm))/e.getNbEcheances());
 					modif = true;
 				} else {
 					quantites.add(e.getQuantite(e.getStepDebut()+i));
@@ -124,7 +128,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			this.journal_negoc.ajouter("Nouvelle proposition de négociation sur qté pour "+quantites.toString());
 			return new_e;
 		} else {
-			this.journal_negoc.ajouter("Négociation sur qté finie");
+			this.journal_negoc.ajouter("Négociation sur qté finie : "+e.getQuantiteTotale()+" sur "+e.getNbEcheances()+" échéances");
 			return e;
 		}
 	}
@@ -140,7 +144,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			this.journal_negoc.ajouter("Négociation sur prix a échoué car chocolat de marque "+choco+ " pas référencé");
 			return 0.;
 		}
-		double prix_limite = (prix(choco)*0.7- this.getCoutStockage())*contrat.getQuantiteTotale();
+		double prix_limite = (prix(choco)*0.7- this.getCoutStockage())/**contrat.getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()*/;
 		if (prix_limite<0) {
 			System.out.println("prix limite négatif");
 			System.out.println("prix moyen : "+prix(choco));
@@ -148,7 +152,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			return 0.;
 		}
 		if (contrat.getPrix()<=prix_limite) {
-			this.journal_negoc.ajouter("Négociation sur prix finie");
+			this.journal_negoc.ajouter("Négociation sur prix finie : "+contrat.getPrix());
 			return contrat.getPrix();
 		} else {
 			if (Filiere.LA_FILIERE.getBanque().verifierCapacitePaiement(this, cryptogramme, prix_limite)) {
@@ -167,31 +171,40 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 				this.journal_CC.ajouter("Contrat Cadre pour "+cm+" ?");
 				this.journal_CC.ajouter("Pas assez de "+cm+" en stock donc Contrat Cadre à lancer");
 				double parStep = 0;
+				int nbStep = 12;
 				if (Filiere.LA_FILIERE.getEtape()==0) {
-					parStep = Math.max(1000, 5000-(this.stockChocoMarque.get(cm)-this.restantDu(cm))/12);
+					parStep = Math.max(1000, 5000-(this.stockChocoMarque.get(cm)-this.restantDu(cm))/nbStep);
 				} else {
-					parStep = Math.max(Math.max(Filiere.LA_FILIERE.getAttractivite(cm)*2000, 2*(Filiere.LA_FILIERE.getVentes(cm, Filiere.LA_FILIERE.getEtape()-1)-(this.stockChocoMarque.get(cm)+this.restantDu(cm))/12)),100);
-				}
-				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
-				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
-				this.journal_CC.ajouter(vendeurs.toString());
-				boolean est_contratPasse = false;
-				for (IVendeurContratCadre vendeur : vendeurs ) {
-					this.journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-					this.journal_negoc.ajouter("Nouvelle négociation lancée avec "+vendeur.getNom()+" pour du chocolat "+cm);
-					ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
-					if (contrat==null) {
-						this.journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
-						this.journal_negoc.ajouter(Color.RED, Color.white,"   echec des negociations");
-					} else {
-						est_contratPasse=true;
-						this.journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
-						this.journal_negoc.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
-						notificationNouveauContratCadre(contrat);
-						break;
+					parStep = Math.max(Math.min(Filiere.LA_FILIERE.getAttractivite(cm)*2000, 2*(Filiere.LA_FILIERE.getVentes(cm, Filiere.LA_FILIERE.getEtape()-1)-(this.stockChocoMarque.get(cm)+this.restantDu(cm))/nbStep)),200);	
+					if (parStep*nbStep>200000) {
+						parStep = 15000;						
 					}
-					if (!est_contratPasse) {
-						this.journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
+				}
+				if (parStep>10000) {
+					nbStep = 3;
+				}
+				if (parStep>200) {
+					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, parStep);
+					List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(cm);
+					this.journal_CC.ajouter(vendeurs.toString());
+					boolean est_contratPasse = false;
+					for (IVendeurContratCadre vendeur : vendeurs ) {
+						this.journal_CC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+						this.journal_negoc.ajouter("Nouvelle négociation lancée avec "+vendeur.getNom()+" pour du chocolat "+cm);
+						ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, cm, e, cryptogramme, false);
+						if (contrat==null) {
+							this.journal_CC.ajouter(Color.RED, Color.white,"   echec des negociations, tentative suivante");
+							this.journal_negoc.ajouter(Color.RED, Color.white,"   echec des negociations");
+						} else {
+							est_contratPasse=true;
+							this.journal_CC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							this.journal_negoc.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							notificationNouveauContratCadre(contrat);
+							break;
+						}
+						if (!est_contratPasse) {
+							this.journal_CC.ajouter("Contrat cadre a échoué car pas de vendeur");
+						}
 					}
 				}
 			}

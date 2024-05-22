@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
@@ -129,6 +130,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		// TODO Auto-generated method stub
 		if (this.stockChocoMarque!=null && this.stockChocoMarque.keySet().contains(choco)) {
 			this.stockChocoMarque.put(choco, this.stockChocoMarque.get(choco)-quantite);
+			this.journal_vente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+" pour "+montant+" d'euros ");
 			//this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
 			// ajout de Maureen pour avoir accès aux ventes précédentes
 			this.totalVentes.put(choco, this.totalVentes.get(choco)+quantite); 
@@ -143,10 +145,9 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 
 	@Override
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
-		// TODO Auto-generated method stub
-	if (this.getQuantiteEnStock(choco, crypto)==0.0) {
-		journal.ajouter("plus de chocolat"+choco+"");
-	}
+		if (this.getQuantiteEnStock(choco, crypto)==0.0) {
+			this.journal_vente.ajouter("plus de chocolat"+choco+"");
+			}
 		
 	}
 
