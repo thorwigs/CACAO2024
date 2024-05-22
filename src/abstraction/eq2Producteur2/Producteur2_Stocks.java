@@ -110,7 +110,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 		//Si on dépasse le seuil de stockage
 		if (this.getQuantiteEnStock(type_feve, this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
-			trop_de_stock(type_feve, quantite);
+			//trop_de_stock(type_feve, quantite);
 		}
 		else {
 			if(quantite != 0 && type_feve == Feve.F_BQ) {
