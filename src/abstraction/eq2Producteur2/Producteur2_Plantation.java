@@ -265,6 +265,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 
 			// Production en tonnes
 			// 48 = 0.5 tonnes de fèves par an par hectare / 24 steps
+			this.embauche((long)(total_hectare - nb_employes_equitable +  main_oeuvre_BQ_MQ) , "adulte");
 			double peut_produire_BQ = main_oeuvre_BQ_MQ*0.75;
 			double peut_produire_MQ = main_oeuvre_BQ_MQ - peut_produire_BQ;
 			production_BQ = peut_produire_BQ/48*rend_pest_BQ;
@@ -273,8 +274,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 			// HQ et HQE
 			double prod_HQ_E = Math.max(nb_employes_equitable, nb_hectares_HQ);
 			production_HQ_E = prod_HQ_E/48*rend_pest_HQ;
-			//System.out.println("Prod HQE " + production_HQ_E);
-			//System.out.println(" quantite en stock " + this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme));
 			
 			// On ne fait pas de HQ non equitable sauf s'il n'y a pas assez d'employes en équitable
 			production_HQ = 0;
@@ -291,16 +290,14 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 			
 			// HQ et HQE			
 			production_HQ_E = nb_employes_equitable/48*rend_pest_HQ;
-			//System.out.println(" PROD HQE " + production_HQ_E);
+		
 			// On ne fait pas de HQ non equitable sauf s'il n'y a pas assez d'employes en équitable
 			production_HQ = 0;
 			if (nb_employes_equitable < nb_hectares_HQ) {
-				//System.out.println(" production HQ");
+				
 				production_HQ = (nb_hectares_HQ - nb_employes_equitable /48*rend_pest_HQ);
 			}
 			else {
-				//System.out.println(" etape " + Filiere.LA_FILIERE.getEtape());
-				//System.out.println("il y a " + nb_hectares_HQ + " hectares de HQ et "+ nb_employes_equitable + " employes equitable ");
 				this.planter(nb_hectares_HQ*0.05, Feve.F_HQ);
 			}
 		}
@@ -310,10 +307,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		ajout_stock(Feve.F_HQ, production_HQ);
 		ajout_stock(Feve.F_HQ_E, production_HQ_E);
 		
-		/*System.out.println("on a produit " +production_BQ + " de BQ");
-		System.out.println("on a produit " +production_MQ + " de MQ");
-		System.out.println("on a produit " +production_HQ + " de HQ");
-		System.out.println("on a produit " +production_HQ_E + " de HQ_E");*/
 		
 		this.prodParStep.put(Feve.F_BQ, production_BQ);
 		this.prodParStep.put(Feve.F_MQ, production_MQ);
@@ -355,7 +348,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 				}
 			}
 			
-			//System.out.println("nombre d'hectares " + somme + " de type " + qualite_feve.name());
 			return somme;
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre nombre d'hectares par produit
