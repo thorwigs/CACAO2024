@@ -68,7 +68,9 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 				}
 			}
 		}
-		return prixMoyen/nbPrix * 1.1;
+		if (nbPrix != 0) {
+			return prixMoyen/nbPrix * 1.1;
+		} return PRIX_DEFAUT * 1.1;
 	}
 
 	@Override
