@@ -29,7 +29,7 @@ public class Producteur1Production extends Producteur1Plantation{
 	protected int degrHQ = 4;
 	protected int degrMQ = 8;
 	protected int degrBQ = 12;
-
+	private static boolean amelio = false;
 	//protected HashMap<Feve, Variable> stockag;
 	/**
 	 * Constructeur pour la classe Producteur1Production.
@@ -99,7 +99,7 @@ public class Producteur1Production extends Producteur1Plantation{
 
 		Integer nbt = this.get_Nombre_Total()-this.get_Nombre_Enfant();
 
-		
+
 
 		double h = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme);
 		double m = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme);
@@ -301,13 +301,17 @@ public class Producteur1Production extends Producteur1Plantation{
 	 * On traveillera sous la condition que si le stock depasse une quantite on aimera le reserver mieux
 	 */
 	public boolean AmeliorationStockage() {
-
-		double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
-		double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
-		double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
-		boolean ame = stockHQ > 50 && stockMQ > 50 && stockBQ > 100;
-		this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
-		return ame;
+		if (amelio == false) {
+			double stockHQ = this.getQuantiteEnStock(Feve.F_HQ, cryptogramme) + this.getQuantiteEnStock(Feve.F_HQ_E, cryptogramme)+this.getQuantiteEnStock(Feve.F_HQ_BE, cryptogramme);
+			double stockMQ = this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)+ this.getQuantiteEnStock(Feve.F_MQ_E, cryptogramme);;
+			double stockBQ = this.getQuantiteEnStock(Feve.F_BQ, cryptogramme);
+			boolean ame = stockHQ > 50 && stockMQ > 50 && stockBQ > 100;
+			this.journalStockage.ajouter("On a decide d'ameliorer le stockae pour mieux garder les feves");
+			return ame;
+		}
+		else {
+			return false;
+		}
 	}
 
 
