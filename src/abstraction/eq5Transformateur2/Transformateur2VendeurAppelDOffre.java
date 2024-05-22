@@ -78,6 +78,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	//////////////////////////////////////////////////////////////
 	/**
 	 * @Erwann
+	 * @Vincent
 	 */
 	public OffreVente proposerVente(AppelDOffre offre) {
 		// On verifie d'abord que l'offre est un chocolat de marque
@@ -99,14 +100,14 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 		if (prixAO.get(cm).size()==0) {
 			Gamme gamme = cm.getGamme();
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-			double prix = bourse.getCours(Feve.F_MQ).getMax()*1.75;
+			double prix = bourse.getCours(Feve.F_MQ).getMax()*1.75; // prise en compte des frais de transofrmation (masse salariale et machines) 
 				
 			if (cm.isEquitable()==true && gamme==Gamme.MQ) {
-				prix = bourse.getCours(Feve.F_MQ).getMax()*3;
+				prix = bourse.getCours(Feve.F_MQ).getMax()*1.5; //valorisarion de l'équitable (50% plus cher que le non équitable)
 			}
 			
 			if (gamme == Gamme.BQ) {
-				prix = bourse.getCours(Feve.F_BQ).getMax();
+				prix = bourse.getCours(Feve.F_BQ).getMax()*1.5; // prise en compte des frais de transofrmation (masse salariale et machines) 
 			}
 			return new OffreVente(offre, this, cm, prix);
 		} 
