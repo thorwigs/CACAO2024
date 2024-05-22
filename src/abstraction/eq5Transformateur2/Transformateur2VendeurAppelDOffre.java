@@ -138,6 +138,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 				double prix = propositionRetenue.getPrixT();
 				double quantite_vendu = propositionRetenue.getQuantiteT();
 				stockChocoMarque.get(cm).retirer(this, quantite_vendu, this.cryptogramme); // modif des stocks si la proposition est retenue
+				totalStocksChocoMarque.retirer(this, quantite_vendu, this.cryptogramme);
 				prixAO.get(cm).add(prix*1.05);  // on fait comme si on avait accepte avec 5% de hausse afin que lors des prochains echanges on fasse une offre + onéreuse
 				journalAO.ajouter(Color.GREEN, Color.black,"  Vente par AO de "+quantite_vendu+" tonnes de "+cm+" au prix de "+prix+ " à l'acheuteur : "+propositionRetenue.getOffre().getAcheteur());
 				if (prixAO.get(cm).size()>10) {
