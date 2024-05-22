@@ -15,13 +15,12 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eq5Transformateur2.Transformateur2MasseSalariale;
+import abstraction.eq5Transformateur2.Transformateur2MasseSalariale2;
 
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	private HashMap<IAcheteurContratCadre, Integer> BlackListAcheteur;
 	private int EtapenegoVente;
-	private double moyProd;
 	
 	public Transformateur2VendeurCCadre () {
 		super();
@@ -46,6 +45,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 				totalStep+=c.getQuantiteALivrerAuStep();
 			}
 		}
+		System.out.println(this.moyProd);
 		boolean VenteActive = false;
 		if (totalStep<this.moyProd) {
 			VenteActive = true;
@@ -158,6 +158,9 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		if (Filiere.random.nextDouble() < 0.05) { // 5% des cas
 	        return contrat.getPrix(); // ne refait pas de contreproposition
 	    } else {
+	    	if (contrat.getListePrix().get(0)<contrat.getPrix()) {
+	    		return contrat.getPrix();
+	    	}
 	    	EtapenegoVente++;
 	    	if (EtapenegoVente<contrat.getListePrix().size() ) {
 	    		double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; //renegocie le prix de 50% de la variation entre le prix proposé au tour précédent et la proposition de l'acheteur 
