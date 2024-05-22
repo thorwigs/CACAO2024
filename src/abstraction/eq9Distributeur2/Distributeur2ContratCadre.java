@@ -214,7 +214,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
 			this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
 			this.totalCoutAPayer -= contrat.getPaiementAEffectuerAuStep();
-			if (contrat.getPaiementAEffectuerAuStep()>0.) {
+			if (contrat.getPaiementAEffectuerAuStep()>1) {
 				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Acheminement", this.coutDacheminement(contrat.getPaiementAEffectuerAuStep()));
 			}
 		}

@@ -51,9 +51,12 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 				if (propRetenue != null) {
 					//this.journal_AO.ajouter("On a réaliser un appel d'offre "+PropositionQuantitePrix.toString());
 					this.journal_AO.ajouter("L'appel d'offre est réussie et l'option choisie est: "+propRetenue.getQuantiteT() +" tonnes de "+propRetenue.getProduit()+" chez "+propRetenue.getVendeur()+ " pour un prix de "+propRetenue.getPrixT());
+					
 					this.getStockChocoMarque().put((ChocolatDeMarque) propRetenue.getProduit(),propRetenue.getQuantiteT());
-					Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "frais d'approvisionnement AO", this.coutDacheminement(propRetenue.getPrixT()));
 					this.totalStocksChocoMarque.ajouter(this, propRetenue.getQuantiteT(), cryptogramme);
+					
+					if (this.coutDacheminement(propRetenue.getPrixT())>1) {
+						Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "frais d'approvisionnement AO", this.coutDacheminement(propRetenue.getPrixT()));}
 				}
 			}
 		}
