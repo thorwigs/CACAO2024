@@ -40,7 +40,7 @@ public class Transformateur2MasseSalariale2 extends Transformateur2Acteur {
 	public void initialiser() {
 		super.initialiser();
 		NbSalaries = 5000;
-		salaire = 2000;
+		salaire = 1000;
 		coutLicenciement1Salarie = 4*salaire;
 		capaciteTransfo = 3.7;
 		coutAdjuvants = 370;
