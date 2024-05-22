@@ -19,16 +19,16 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implements IVendeurContratCadre {
 
-	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
-	private List<ExemplaireContratCadre> contratsTermines;
-	protected Journal journalCC;
+	protected SuperviseurVentesContratCadre supCC;
+	protected List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsTermines;
+	protected Journal journalCoC;
 
 	public Producteur1VendeurCCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
-		this.journalCC = new Journal(this.getNom()+" journal CC", this);
+		this.journalCoC = new Journal(this.getNom()+" journal CC", this);
 	}
 
 	public void initialiser() {
@@ -40,7 +40,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 	 */
 	public void next() {
 		super.next();
-		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		this.journalCoC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) {
 			//List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
 			//System.out.println(acheteurs);
@@ -52,7 +52,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			System.out.println(stock.get(f).getValeur()-restantDu(f));
 			*/
 			if (stock.get(f).getValeur()-restantDu(f)>1200 ) { // au moins 100 tonnes par step pendant 6 mois
-				this.journalCC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
+				this.journalCoC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stock.get(f).getValeur()-restantDu(f))/2); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
 				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
@@ -61,16 +61,16 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 				//System.out.println(Filiere.LA_FILIERE.getMarquesChocolat());
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+					journalCoC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, f, e, cryptogramme, false);
 					if (contrat==null) {
-						journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+						journalCoC.ajouter(Color.RED, Color.white,"   echec des negociations");
 					} else {
 						this.contratsEnCours.add(contrat);
-						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+						journalCoC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
 					}
 				} else {
-					journalCC.ajouter("   pas d'acheteur");
+					journalCoC.ajouter("   pas d'acheteur");
 				}
 			}
 
@@ -155,34 +155,34 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 
 	@Override
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("      contreProposition("+contrat.getProduit()+" avec echeancier "+contrat.getEcheancier());
+		journalCoC.ajouter("      contreProposition("+contrat.getProduit()+" avec echeancier "+contrat.getEcheancier());
 		Echeancier ec = contrat.getEcheancier();
 		IProduit produit = contrat.getProduit();
 		boolean accepted = false;
 		//Echeancier res = ec;
 		String type = produit.getType();
 		if (type != "Feve") {
-			journalCC.ajouter("Ce n'est pas une feve");
+			journalCoC.ajouter("Ce n'est pas une feve");
 			return null;
 		}
 		Feve f = (Feve) produit;
 		Double stockdispo = stock.get((Feve) produit).getValeur()-restantDu((Feve) produit);
 		if (stockdispo < 600) { //Au moins 50 tonnes par step
-			journalCC.ajouter("Je n'ai que" +stockdispo);
+			journalCoC.ajouter("Je n'ai que" +stockdispo);
 			return null;
 		}
 		int duree = ec.getStepFin()-ec.getStepDebut();
 		
 		if (duree < 10) {
-			journalCC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
+			journalCoC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
-		if (Filiere.LA_FILIERE.getEtape() < 12) {
-			journalCC.ajouter("On fait pas de contract pendant la 1ere annee");
+		if (Filiere.LA_FILIERE.getEtape() < 1) {
+			journalCoC.ajouter("On fait pas de contract pendant la 1ere etape");
 			return null;
 		}
-		if (this.contratsEnCours.size() >= 3 ) {
-			journalCC.ajouter("On fait pas plus que de 3 contracts en meme temps");
+		if (this.contratsEnCours.size() >= 5 ) {
+			journalCoC.ajouter("On fait pas plus que de 3 contracts en meme temps");
 			return null;
 		}
 		if (ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8) {
@@ -190,14 +190,14 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		}
 		if (accepted = false) {
 			if (ec.getQuantiteTotale()<=stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)) {
-				journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
+				journalCoC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 			} else {
-				journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12))));
+				journalCoC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12))));
 				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit)/12)));
 			}
 		}
-		journalCC.ajouter("Echencier accepted");
+		journalCoC.ajouter("Echencier accepted");
 		return ec;		
 
 	}
@@ -208,8 +208,8 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0;  
 		}
-		return 0;
-		//return prix((Feve) contrat.getProduit());
+		
+		return prix((Feve) contrat.getProduit());
 
 
 
@@ -220,11 +220,11 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		// TODO Auto-generated method stub
 		List<Double> prix = contrat.getListePrix();
 		if (prix.get(prix.size()-1)>=0.975*prix.get(0)) {
-			journalCC.ajouter("      contrePropose le prix demande : "+contrat.getPrix());
+			journalCoC.ajouter("      contrePropose le prix demande : "+contrat.getPrix());
 			return contrat.getPrix();
 		} else {
 			double p = prix.get(0)/prix.get(1);
-			journalCC.ajouter("      contreproposition("+contrat.getPrix()+") retourne "+prix.get(0)*1.05);
+			journalCoC.ajouter("      contreproposition("+contrat.getPrix()+") retourne "+prix.get(0)*1.05);
 			return prix.get(0)*1.05;
 		}
 
@@ -241,7 +241,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		// TODO Auto-generated method stub
 		double stockActuel = stock.get(produit).getValeur((Integer)cryptogramme);
 		double aLivre = Math.min(quantite, stockActuel);
-		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
+		journalCoC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		stock.get(produit).setValeur(this, aLivre, (Integer)cryptogramme);
 		return aLivre;
 
@@ -252,7 +252,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 	 */
 	public List<Journal> getJournaux() {
 		List<Journal> res=super.getJournaux();
-		res.add(journalCC);
+		res.add(journalCoC);
 		return res;
 	}
 }
