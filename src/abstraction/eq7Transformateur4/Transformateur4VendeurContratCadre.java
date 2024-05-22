@@ -173,8 +173,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		double prixPropose = 0.0;
 		if (coutproduction_tonne_marque_step.isEmpty()){
 			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
-		}
-		else {
+		} else {
 			prixPropose = contrat.getQuantiteTotale()*1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
 		}
 		prixPrecedent.put(contrat, prixPropose);

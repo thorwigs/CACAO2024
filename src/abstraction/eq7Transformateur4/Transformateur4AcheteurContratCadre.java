@@ -44,8 +44,8 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
 		return (produit.getType().equals("Feve"))
 				&& (
-						(((Feve)produit) == Feve.F_HQ) ||
-						(((Feve)produit) == Feve.F_HQ_BE)
+						(((Feve)produit).equals(Feve.F_HQ)) ||
+						(((Feve)produit).equals(Feve.F_HQ_BE))
 					)
 				
 				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 150000 );
