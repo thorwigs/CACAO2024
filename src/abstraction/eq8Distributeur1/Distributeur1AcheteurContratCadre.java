@@ -373,6 +373,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 						supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeurs.get(i), choc, x, cryptogramme,false);
 					}
 					
+					
 					ExemplaireContratCadre cc = this.ChoisirCC(this.choix);
 					vendeur = cc.getVendeur();				
 				}
