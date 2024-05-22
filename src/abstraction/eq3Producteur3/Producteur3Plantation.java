@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
@@ -11,6 +13,9 @@ import abstraction.eqXRomu.produits.Feve;
 public abstract class Producteur3Plantation extends Producteur3Acteur {
 	abstract HashMap<Feve,Double> quantite();
 	abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
+	abstract void deleteAcheteurs(IAcheteurBourse acheteur);
+	abstract void deleteVendeurs(IVendeurBourse vendeur);
+	
 /**
  * @author Alexis et Gabin
  * les variables surfaceXQ donnent le nombre d'hectares qui produisent des feves de qualité XQ 
@@ -88,7 +93,6 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	 * Le dictionnaire plantation a pour cle Feve et pour valeur la variable surfaceXQ associee du step precedent + les eventuelles extensions.
 	 */
 	protected HashMap<Feve, Double> plantation() {
-		HashMap<Feve, Double> h = new HashMap<Feve, Double>();
 	//on augmente la surface 
 		surfacePlantation = achatPlantation(surfacePlantation);
 		return surfacePlantation;
@@ -112,10 +116,18 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 				supp += 100; 
 			}
 			if(aRemplacer(agePlant).get(f) != null) {
+				if(f == Feve.F_HQ_E || f == Feve.F_HQ_BE || f == Feve.F_MQ_E) {
+					supp += aRemplacer(agePlant).get(f)+10; // on tend à accroitre nos plantations de bio et d'équitable
+				}
+				else if(f == Feve.F_HQ || f == Feve.F_MQ) {
+					supp += aRemplacer(agePlant).get(f)-10; // on diminue nos plantations conventionnelles
+				}
+				else {
 					supp += aRemplacer(agePlant).get(f);
-					agePlantPrec.put(f, aRemplacer(agePlant).get(f));
-					agePlant.get(f).remove(Filiere.LA_FILIERE.getEtape());
-					agePlant.get(f).put(Filiere.LA_FILIERE.getEtape()+720, agePlantPrec.get(f));
+				}
+				agePlantPrec.put(f, aRemplacer(agePlant).get(f));
+				agePlant.get(f).remove(Filiere.LA_FILIERE.getEtape());
+				agePlant.get(f).put(Filiere.LA_FILIERE.getEtape()+720, agePlantPrec.get(f));
 				}
 			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f (en ha)
 		}
