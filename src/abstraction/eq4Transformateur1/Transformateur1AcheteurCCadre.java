@@ -19,11 +19,11 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 /**
- * @author Oscar_Brian
+ * @author Oscar_Brian 
  */
 public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
 	protected int nombreMois = 3;
@@ -57,7 +57,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    for (Feve f : stockFeves.keySet()) {
 	        if (achete(f)) {
 	            this.journalCC.ajouter("   " + f + " suffisamment peu en stock/contrat pour passer un CC");
-	            double parStep = Math.max(100, (21200 - stockFeves.get(f).getValeur() - restantDu(f)) / 12); // au moins 100
+	            double parStep = Math.max(100, (this.stockCibleMini*this.listePourcentageMarque.get(f.getGamme()) *1.1 + stockFeves.get(f).getValeur() - restantDu(f)) / 12); // au moins 100
 	            Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
 	            List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 	            if (!vendeurs.isEmpty()) {

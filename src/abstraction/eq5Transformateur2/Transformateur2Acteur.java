@@ -50,8 +50,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	 */
 	public Transformateur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
-		this.totalStocksFeves = new VariablePrivee("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChoco = new VariablePrivee("Eq5TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksFeves = new Variable("Eq5TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksChoco = new Variable("Eq5TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq5TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		
 		this.lesFeves = new LinkedList<Feve>();
@@ -92,10 +92,10 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	 * @Erwann
 	 */
 	public void initialiser() {
-		
-		this.totalStocksFeves.ajouter(this, STOCKINITIAL, this.cryptogramme);
-		
-		this.totalStocksChoco.ajouter(this, STOCKINITIAL, this.cryptogramme);
+
+		this.totalStocksFeves.ajouter(this, this.lesFeves.size()*STOCKINITIAL, this.cryptogramme);
+
+		this.totalStocksChoco.ajouter(this, this.lesChocolats.size()*STOCKINITIAL, this.cryptogramme);
 
 
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();

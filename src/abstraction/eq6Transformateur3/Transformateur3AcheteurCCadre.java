@@ -75,7 +75,6 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.journalCC6.ajouter("=== Partie Achat fèves ====================");
 		HashMap<Feve, Integer> Decision = super.Decision();
 		super.addhistorique(coûtMoyenAchatFeve, stockChoco, stockChocoMarque);
-		System.out.println("Décision" + Decision);
 		for(Feve f : Decision.keySet()) {
 			if(Decision.get(f)>10) {
 				this.journalCC6.ajouter("   "+f+" suffisamment de vente pour passer un CC");
@@ -214,13 +213,8 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		}
 		if (((Feve)contrat.getProduit()).isEquitable()) {
 			
+			return Math.min(0.8 * prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*2);
 			
-			if (contrat.getPrix()<0.8 * prixSansDecouvert) {
-				return contrat.getPrix();
-				}
-			else {
-				return Math.min(0.8*prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*1.25);
-			}
 			
 		}
 		else {
@@ -232,7 +226,6 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 				return Math.min(0.8* prixSansDecouvert, 1.04*cours);
 			}
 		}
-	
 	}
 	/**
 	 * @author Thomas

@@ -256,16 +256,21 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			// on a produit moins d'un quart de ce qu'on pouvait produire, c'est pas rentable d'avoir autant d'employé
 			int newnbre = (int)(nbemployeCDI*0.75); // ça va tronquer le nbre si c'est pas un entier
 			if (newnbre>2000) {
+				int a = nbemployeCDI - newnbre;
+				this.journalTransfo.ajouter("On licencie " + a + " employés");
 				nbemployeCDI = newnbre;
 			} else {
+				int a = nbemployeCDI -2000;
+				this.journalTransfo.ajouter("On licencie " + a + " employés");
 				nbemployeCDI = 2000;
 			}
 		}//sinon on considère que on a besoin des employés au cas où
 		
 		if(qtetotaleproduite==peutproduireemploye) {
+			this.journalTransfo.ajouter("On embauche " + 30 + " employés");
 			nbemployeCDI = nbemployeCDI + 30; //on ne peut pas embaucher plus de 30 personnes par step
 		}
-		this.journalTransfo.ajouter("Notre nombre d'employé" + nbemployeCDI);
+		this.journalTransfo.ajouter("Notre nombre d'employé est " + nbemployeCDI);
 		
 		
 		//TEST :
