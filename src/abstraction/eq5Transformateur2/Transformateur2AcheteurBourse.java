@@ -43,18 +43,12 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	 * @Vincent 
 	 */
 	public double demande(Feve f, double cours) {
-		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		if (f.getGamme()==Gamme.BQ) {
-			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
-				this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
-				return STOCKINITIAL - stockFeves.get(f).getValeur();
-			}
-			else {
-				return 0;
-				}
-			}
-			//Stratégie sur le MQ
-		if (f.getGamme()==Gamme.MQ) {
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));		
+		// On programme l'achat avec la disponibilité des distributeurs
+		if (this.plus_de_distribs()==false) {
+		
+			//Stratégie sur le BQ
+			if (f.getGamme()==Gamme.BQ) {
 				if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
 					this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
 					return STOCKINITIAL - stockFeves.get(f).getValeur();
@@ -62,10 +56,23 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 				else {
 					return 0;
 				}
-		}
-		else {
+			}
+		
+		//Stratégie sur le MQ
+			if (f.getGamme()==Gamme.MQ) {
+				if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
+					this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
+					return STOCKINITIAL - stockFeves.get(f).getValeur();
+				}
+				else {
 					return 0;
 				}
+			}
+		
+			//Stratégie sur le HG => pas d'achat de HQ
+
+		} 
+		return 0;
 	}
 
 	///////////////////////////////////////////////////////////////////////
