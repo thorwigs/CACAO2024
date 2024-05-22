@@ -162,7 +162,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	    }
 		 */
 
-		System.out.println(true);
+		//System.out.println(true);
 		aEmbaucher += ((int) (PBQ*rend)) ;
 
 
@@ -172,7 +172,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		aEmbaucher += ((int)(PHQ*rend));
 
 
-		System.out.println(aEmbaucher);
+		//System.out.println(aEmbaucher);
 
 		this.journalOuvrier.ajouter("On a besoin d'embaucher:" + aEmbaucher);
 		double what =0.5*aEmbaucher;
