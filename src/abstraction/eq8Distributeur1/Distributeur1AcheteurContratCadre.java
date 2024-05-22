@@ -370,7 +370,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 						double e = this.stock_Choco.get(choc); 
 						double f = (c-d-e)/(b*this.nombreMarquesParType.get(choc.getChocolat()));
 					    Echeancier x = new Echeancier (a,b,f+1000);
-						supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeur, choc, x, cryptogramme,false);
+						supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeurs.get(i), choc, x, cryptogramme,false);
 					}
 					
 					ExemplaireContratCadre cc = this.ChoisirCC(this.choix);
