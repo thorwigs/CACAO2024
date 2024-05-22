@@ -176,9 +176,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double prixPropose = 0.0;
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
+			prixPropose = this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) ;
 		} else {
-			prixPropose = contrat.getQuantiteTotale()*1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+			prixPropose = 1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
 		}
 		prixPrecedent.put(contrat, prixPropose);
 		return prixPropose;
@@ -199,10 +199,10 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		///////début//////modif 07/05 Pierrick
 		double coutProd = 0.0; //ce truc vaut la même chose que propositionPrix(contrat) mais sans la marge de x%
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			coutProd = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
+			coutProd = this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) ;
 		}
 		else {
-			coutProd = qte*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+			coutProd = coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit());
 		}
 		//////fin/////////
 		
