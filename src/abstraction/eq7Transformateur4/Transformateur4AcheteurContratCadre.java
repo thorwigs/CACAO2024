@@ -43,9 +43,12 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	
 	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
 		return (produit.getType().equals("Feve"))
-				&& (((Feve)produit).equals(Feve.F_HQ) || ((Feve)produit).equals(Feve.F_HQ_BE))
-				&& (stockFeves.get((Feve)produit)+restantDu((Feve)produit)< 15000 );
-		//à modifier selon nécessité de chaque type de fève
+				&& (
+						(((Feve)produit).equals(Feve.F_HQ)) ||
+						(((Feve)produit).equals(Feve.F_HQ_BE))
+					)
+				
+				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 150000 );
 	}
 	
 	
@@ -183,21 +186,24 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 					}
 					
 					
-					if (stockFeves.get(f)+restantDu(f)< Math.min(1000, alivrer + 1000 ) ) { 
+					if (stockFeves.get(f)+restantDu(f)< Math.min(10000, alivrer + 10000 - restantDu(f) ) ) { 
 						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(100, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 100
+						double parStep = Math.max(900, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 900
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
-							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalACC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
-							if (contrat==null) {
-								journalACC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
-								this.contratsEnCours.add(contrat);
-								journalACC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							for (IVendeurContratCadre vendeur : vendeurs) {
+								journalACC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+								ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+								if (contrat==null) {
+									journalACC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								} else {
+									this.contratsEnCours.add(contrat);
+									journalACC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								}
 							}
+							//IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+							
 						} else {
 							journalACC.ajouter("   pas de vendeur");
 						}
