@@ -102,8 +102,9 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 			double prix = bourse.getCours(Feve.F_MQ).getMax()*1.75; // prise en compte des frais de transofrmation (masse salariale et machines) 
 				
-			if (cm.isEquitable()==true && gamme==Gamme.MQ) {
-				prix = bourse.getCours(Feve.F_MQ).getMax()*1.5; //valorisarion de l'équitable (50% plus cher que le non équitable)
+			if (cm.isEquitable() && gamme==Gamme.MQ) {
+				prix = bourse.getCours(Feve.F_MQ).getMax()*1.5;
+
 			}
 			
 			if (gamme == Gamme.BQ) {
@@ -118,7 +119,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////
-	// Notifs de si oui ou non la proposition est retenue  + Mise à jour JournalAO //	
+	// Notifs de si oui ou non la proposition est retenue  + Mise à jour JournalAO //
 	/////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * @Erwann

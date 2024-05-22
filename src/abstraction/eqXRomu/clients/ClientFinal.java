@@ -373,13 +373,19 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 			this.journalAttractivites.ajouter("attractivite du "+choco1.getNom()+" == "+Journal.doubleSur(attractiviteChocolat.get(choco1), 4));
 		}
 		
-		
+		//System.out.println("Distributeurs : "+Filiere.LA_FILIERE.getDistributeurs());		
 		if (this.aff.getValeur()!=0.0) {
 			try {
 
 				PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CF_volumes.csv")));
-				List<IDistributeurChocolatDeMarque> diss= Filiere.LA_FILIERE.getDistributeurs();
+				List<IDistributeurChocolatDeMarque> diss= new ArrayList<IDistributeurChocolatDeMarque>();//Filiere.LA_FILIERE.getDistributeurs();
+				for (IActeur ac : Filiere.LA_FILIERE.getActeurs()) { // On veut ajouter aussi ceux qui ont deja fait faillite.
+					if (ac instanceof IDistributeurChocolatDeMarque) {
+						diss.add((IDistributeurChocolatDeMarque)ac);
+					}
+				}
 				String entetes = "STEP;SOUHAIT_HORS_PRIX";
+
 				for (IDistributeurChocolatDeMarque dis : diss) {
 					entetes = entetes+";souhait_"+dis.getNom()+";achete_"+dis.getNom();
 				}
