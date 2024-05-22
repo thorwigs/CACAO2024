@@ -179,10 +179,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 			prixPropose = 1.07*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
 		} else {
 			prixPropose = 1.07*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+			System.out.println("prix test "+coutproduction_tonne_marque_step.get(contrat.getProduit()));
 		}
+		//System.out.println("prix tonne fève"+getPrixFèves(contrat.getProduit()));
+		System.out.println("prix propose est "+prixPropose);
 		prixPrecedent.put(contrat, prixPropose);
 		return prixPropose;
-	}//prend compte des coûts de production en ajoutant une marge de 10%
+	}//prend compte des coûts de production en ajoutant une marge de 7%
 	
 	
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
@@ -227,7 +230,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		else {
 			return pPropose;
 		}
-	}//négocie le prix en nous garantissant une marge minimale de 2% (on enregistre notre précédente proposition dans prixPrecedent)
+	}//négocie le prix en nous garantissant une marge minimale de 5% (on enregistre notre précédente proposition dans prixPrecedent)
 
 	
 	

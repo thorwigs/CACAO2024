@@ -48,7 +48,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 				}
 			}
 			chocoalivrer.put(c, alivrer);
-			this.coutproduction_tonne_marque_step.put(c, 0.0);//pas oublier l'initialisation de cette Hashmap
+			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2);//pas oublier l'initialisation de cette Hashmap
 			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
 		
@@ -61,7 +61,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 				}
 			}
 			chocoalivrer.put(c, alivrer);
-			this.coutproduction_tonne_marque_step.put(c, 0.0); //initialisation de la hashmap
+			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2); //initialisation de la hashmap
 			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
 		//remarquons que chocoalivrer contient en clés tout les chocolat de chocolatCocOasis et de chocolatDistributeur
@@ -139,7 +139,9 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			this.lescouts.add(payermachine);
 			this.lescouts.add(payeradjuvant);
 			this.production_tonne_marque_step.replace(c, this.production_tonne_marque_step.get(c)+qtechocoproduit);
-			this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			if (qtechocoproduit != 0.0) {
+				this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			}
 			//on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 			//on va tenir compte des cout fixe après à la fin des boucle for
 		}
@@ -217,7 +219,9 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			this.lescouts.add(payermachine);
 			this.lescouts.add(payeradjuvant);
 			this.production_tonne_marque_step.replace(c, this.production_tonne_marque_step.get(c)+qtechocoproduit);
-			this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			if (qtechocoproduit != 0.0) {
+				this.coutproduction_tonne_marque_step.replace(c, (payermachine+payeradjuvant)/qtechocoproduit);
+			}
 			//on ne va pas prendre en compte le prix des fèves utilisé dans cette transfo, il faudra une marge qui en tient compte
 			//on va tenir compte des cout fixe après à la fin des boucle for
 		}
