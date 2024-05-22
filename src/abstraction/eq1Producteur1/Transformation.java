@@ -27,6 +27,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 	public HashMap<Chocolat, Variable > stockChoc;
 	public HashMap<ChocolatDeMarque, Double> stockChocMarque;
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo;
+	protected HashMap<ChocolatDeMarque, Variable> Mmmm;
 	protected List<ChocolatDeMarque> MamaChoco;
 	protected boolean BeginBQ; 
 	protected boolean BeginMQ;
@@ -48,6 +49,8 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 		for (Chocolat choc : Chocolat.values()) {
 			this.stockChoc.put(choc, new Variable("EQ1"+choc,this, 0));
 		}
+		this.Mmmm = new HashMap<ChocolatDeMarque, Variable>();
+
 		this.stockChocMarque = new HashMap<ChocolatDeMarque, Double>();
 		//this.stockChocMarque.put(null, null);
 		this.MamaChoco = new LinkedList<ChocolatDeMarque>();
@@ -76,6 +79,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 					ChocolatDeMarque cm= new ChocolatDeMarque(c, "AfriChoco", pourcentageCacao);
 					this.MamaChoco.add(cm);
+					this.Mmmm.put(cm, new Variable("EQ1"+cm,this, 0) );
 					this.stockChocMarque.put(cm, 0.0);
 
 				}
@@ -136,6 +140,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 				//System.out.println("Begin tran started");
 
 				for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
+
 					int transfo =  (int) (0.5*this.stock.get(f).getValeur());//V1 capacite de tranformation illimitee ... (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
 					if (transfo>0) {
 						this.stock.get(f).setValeur(this, this.stock.get(f).getValeur()-transfo);
@@ -145,17 +150,28 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 						// La moitie (newChoco) sera stockee sous forme de chocolat, l'autre moitie directement etiquetee "Villors"
 						boolean tropDeChoco = this.stock.get(f).getValeur((Integer)cryptogramme)>100000;
 						double newChoco = tropDeChoco ? 0.0 : ((transfo*0.5)*this.pourcentageTransfo.get(f).get(c)); // la moitie en chocolat tant qu'on n'en n'a pas trop
-						double newChocoMarque = ((transfo*0.5)*this.pourcentageTransfo.get(f).get(c))-newChoco;
-
+						double newChocoMarque = ((transfo*0.5)*this.pourcentageTransfo.get(f).get(c));
+						//this.stockChocMarque.put(, newChocoMarque);
+						System.out.println(newChoco);
 						this.stockChoc.get(c).setValeur(this, this.stockChoc.get(c).getValeur()+newChoco);
-
-						//this.journalTransfo.ajouter("En chocolat de marque on a "+ this.stockChocMarque.get(f));
+						for (ChocolatDeMarque cdm : this.Mmmm.keySet()) {
+							if (cdm.getGamme().equals(c.getGamme())) {
+								System.out.println("setting");
+								this.Mmmm.get(cdm).setValeur(this, newChocoMarque);
+							}
+						}
+						//this.Mmmm.get(c).setValeur(this, newChocoMarque);
+						this.journalTransfo.ajouter("En chocolat de marque on a "+ this.stockChocMarque.get(f));
 
 					}
 				}
+
+
+
 			}
-		}	
-	}
+		}
+	}	
+
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			if (p instanceof Feve) {
@@ -186,7 +202,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 				if (!acceptable) {
 					if (!produit.getType().equals("ChocolatDeMarque") || stockChocMarque.get((ChocolatDeMarque)produit)-restantDutr((ChocolatDeMarque)produit)<20) {
 						if (!produit.getType().equals("ChocolatDeMarque")) {
-							journalTransfo.ajouter("      ce n'est pas une feve : je retourne null");
+							journalTransfo.ajouter("      ce n'est pas une CDM : je retourne null");
 						} else {
 							journalTransfo.ajouter("      je n'ai que "+(stockChocMarque.get((ChocolatDeMarque)produit)-restantDutr((ChocolatDeMarque)produit))+" de disponible (moins de 1200) : je retourne null");
 						}
@@ -218,6 +234,10 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 		this.checkStock();
 		this.beginTran();
 		this.MoneyBaby();
+		for (ChocolatDeMarque cdm : this.Mmmm.keySet()) {
+			System.out.println(cdm.getGamme());
+			System.out.println(this.Mmmm.get(cdm).getValeur());
+		}
 		//System.out.println(this.BeginBQ);
 		//System.out.println(this.BeginMQ);
 		//System.out.println(this.BeginHQ);
@@ -305,44 +325,65 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 	public void notificationNouveauContratCadretr(ExemplaireContratCadre contrat) {
 		this.contratsEnCours.add(contrat);
 	}
+	//Vente CC ->
+
 	public void MoneyBaby() {
 		for (ChocolatDeMarque c : stockChocMarque.keySet()) {
-			if (c.getMarque().equals("AfriChoco")) {
 
 
-				this.journalTransfo.ajouter("   " + c + " en stock : " + stockChocMarque.get(c) + " ; restanDu : " + restantDutr(c));
-				if (stockChocMarque.get(c) - restantDutr(c) > 20) {
-					this.journalTransfo.ajouter("   " + c + " suffisamment en stock pour passer un CC");
-					double parStep = Math.max(100, (stockChocMarque.get(c) - restantDutr(c)) / 24);
-					Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
-					List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
-					if (acheteurs.size() > 0) {
-						IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-						journalTransfo.ajouter("   " + acheteur.getNom() + " retenu comme acheteur parmi " + acheteurs.size() + " acheteurs potentiels");
-						ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
-						if (contrat == null) {
-							journalTransfo.ajouter(Color.RED, Color.white, "   echec des negociations");
-						} else {
-							this.contratsEnCours.add(contrat);
-							journalTransfo.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
-						}
+
+			this.journalTransfo.ajouter("   " + c + " en stock : " + stockChocMarque.get(c) + " ; restanDu : " + restantDutr(c));
+			if (stockChocMarque.get(c) - restantDutr(c) > 20) {
+				this.journalTransfo.ajouter("   " + c + " suffisamment en stock pour passer un CC");
+				double parStep = Math.max(100, (stockChocMarque.get(c) - restantDutr(c)) / 24);
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
+				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(c);
+				if (acheteurs.size() > 0) {
+					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+					journalTransfo.ajouter("   " + acheteur.getNom() + " retenu comme acheteur parmi " + acheteurs.size() + " acheteurs potentiels");
+					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, c, e, cryptogramme, false);
+					if (contrat == null) {
+						journalTransfo.ajouter(Color.RED, Color.white, "   echec des negociations");
 					} else {
-						journalTransfo.ajouter("   pas d'acheteur");
+						this.contratsEnCours.add(contrat);
+						journalTransfo.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
 					}
+				} else {
+					journalTransfo.ajouter("   pas d'acheteur");
 				}
-			}
-			for (ExemplaireContratCadre con : this.contratsEnCours) {
-				if (con.getQuantiteRestantALivrer() == 0.0) {
-					this.contratsTermines.add(con);
-				}
-			}
-			for (ExemplaireContratCadre con : this.contratsTermines) {
-				this.contratsEnCours.remove(con);
 			}
 		}
-		
+		for (ExemplaireContratCadre con : this.contratsEnCours) {
+			if (con.getQuantiteRestantALivrer() == 0.0) {
+				this.contratsTermines.add(con);
+			}
+		}
+		for (ExemplaireContratCadre con : this.contratsTermines) {
+			this.contratsEnCours.remove(con);
+		}
 	}
-	
+
+
+	public boolean vend(IProduit produit) {
+		String s = produit.getType();
+		if (s.equals("Feve")) {
+			Feve f = (Feve) produit;
+			this.stock.get(f);
+			if (this.stock.get(f).getValeur()>10) {
+				return true;
+			}
+		}
+		if (produit instanceof ChocolatDeMarque) {
+			ChocolatDeMarque c = (ChocolatDeMarque) produit;
+
+
+			if (this.stockChocMarque.keySet().contains(c)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 
 

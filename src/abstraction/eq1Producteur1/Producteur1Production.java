@@ -5,6 +5,7 @@
 
 /**@author Abderrahmane Er-rahmaouy*/
 package abstraction.eq1Producteur1;
+import java.util.Random;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Production extends Producteur1Plantation{
+    Random random = new Random();
 
 	protected double prix_hq_F;
 	protected Journal journalProduction;
@@ -314,7 +316,36 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 	}
 
+/**
+ * @author youssef
+ * methode qui tient compte des rendements selons la saison
+ * @return double qui decrit le rendement, ce rendement 
+ */
+	public double effet_saison(int i) {
+		//de octobre a mars:grande récolte, 
+		//avril-septembre:baisse de récolte :Saison des pluies
+
+		int rang_step=i%24;
+		if ((rang_step>=18 && rang_step<=23 )||(rang_step>=0 && rang_step<=5)) {
+			return (random.nextInt((120 - 100) + 1) + 120)/100;//forte saison, valeur random entre 1.00 et 1.20
+			
+		}
+		else if (rang_step==6 ||rang_step==17) {
+			return (random.nextInt((90 - 110) + 1) + 110)/100;//forte saison commence sa décroissance, valeur random entre 0.90 et 1.10
+		}
+		else if (rang_step==7 ||rang_step==16) {
+			return (random.nextInt((80 - 100) + 1) + 80)/100;//forte saison commence encore en décroissance, valeur random entre 0.80 et 1.00
+			
+		}
+		else {
+			return (random.nextInt((55 - 80) + 1) + 55)/100;
+			//basse saison commence , valeur random entre 0.55 et 0.8
+		
+		
+		
+		
+	}
 
 
-
+}
 }
