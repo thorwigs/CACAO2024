@@ -117,7 +117,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				 return propositions.get(choisi);
 			 }
 		} 
-
 	}
 	
 	/**
