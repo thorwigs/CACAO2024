@@ -313,8 +313,16 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 				double enVente = this.quantiteEnVente.get(dist).get(choco);
 				double quantiteAchetee = Math.max(0.0, Math.min(quantiteDesiree, enVente));
 				quantiteAchetee = quantiteAchetee<0.05 ? 0.0 : quantiteAchetee; // En dessous de 50kg la quantite demandee devient 0.0 
-				souhait.get(dist).put(step, quantiteDesiree);
-				obtenu.get(dist).put(step, quantiteAchetee);
+				double qd=0;
+				if (souhait.get(dist).keySet().contains(step)) {
+					qd = souhait.get(dist).get(step);
+				}
+				souhait.get(dist).put(step, qd+quantiteDesiree);
+				double qo=0;
+				if (obtenu.get(dist).keySet().contains(step)) {
+					qo = obtenu.get(dist).get(step);
+				}
+				obtenu.get(dist).put(step, qo+quantiteAchetee);
 				JournalDistribution.ajouter("&nbsp;&nbsp;&nbsp;&nbsp;pour "+Journal.texteColore(dist, dist.getNom()+" d'attractivite "+Journal.doubleSur(this.attractiviteDistributeur.get(choco).get(dist), 4)+" (avec prix="+Journal.doubleSur(pri, 4) +") la quantite desiree est "+Journal.doubleSur(quantiteDesiree,4)+" et quantite en vente ="+Journal.doubleSur(enVente, 4)+" -> quantitee achetee "+Journal.doubleSur(quantiteAchetee, 4)));
 				if (quantiteAchetee>0.0) {
 					totalVentes+=quantiteAchetee;
@@ -373,13 +381,19 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 			this.journalAttractivites.ajouter("attractivite du "+choco1.getNom()+" == "+Journal.doubleSur(attractiviteChocolat.get(choco1), 4));
 		}
 		
-		
+		//System.out.println("Distributeurs : "+Filiere.LA_FILIERE.getDistributeurs());		
 		if (this.aff.getValeur()!=0.0) {
 			try {
 
 				PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CF_volumes.csv")));
-				List<IDistributeurChocolatDeMarque> diss= Filiere.LA_FILIERE.getDistributeurs();
+				List<IDistributeurChocolatDeMarque> diss= new ArrayList<IDistributeurChocolatDeMarque>();//Filiere.LA_FILIERE.getDistributeurs();
+				for (IActeur ac : Filiere.LA_FILIERE.getActeurs()) { // On veut ajouter aussi ceux qui ont deja fait faillite.
+					if (ac instanceof IDistributeurChocolatDeMarque) {
+						diss.add((IDistributeurChocolatDeMarque)ac);
+					}
+				}
 				String entetes = "STEP;SOUHAIT_HORS_PRIX";
+
 				for (IDistributeurChocolatDeMarque dis : diss) {
 					entetes = entetes+";souhait_"+dis.getNom()+";achete_"+dis.getNom();
 				}
