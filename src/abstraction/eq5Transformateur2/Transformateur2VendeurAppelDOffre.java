@@ -101,7 +101,7 @@ public class Transformateur2VendeurAppelDOffre extends Transformateur2AcheteurBo
 			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 			double prix = bourse.getCours(Feve.F_MQ).getMax()*1.75;
 				
-			if (cm.isEquitable()==true && gamme==Gamme.MQ) {
+			if (cm.isEquitable() && gamme==Gamme.MQ) {
 				prix = bourse.getCours(Feve.F_MQ).getMax()*3;
 			}
 			
