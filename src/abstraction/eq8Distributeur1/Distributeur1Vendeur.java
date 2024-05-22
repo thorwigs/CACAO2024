@@ -94,7 +94,25 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 		} 
 		else {
-			if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
+			if ((choco.toString().contains("C_BQ")) && (ListPrix.get(choco)<=1500)) {
+				ListPrix.replace(choco, 1500.0);
+			}
+			else if ((choco.toString().contains("C_MQ")) && (ListPrix.get(choco)<=3500)) {
+				ListPrix.replace(choco, 3500.0);
+			}
+			else if ((choco.toString().contains("C_MQ_E")) && (ListPrix.get(choco)<=6000)) {
+				ListPrix.replace(choco, 6000.0);
+			}
+			else if ((choco.toString().contains("C_HQ")) && (ListPrix.get(choco)<=9000)) {
+				ListPrix.replace(choco, 9000.0);
+			}
+			else if ((choco.toString().contains("C_HQ_E")) && (ListPrix.get(choco)<=13500)) {
+				ListPrix.replace(choco, 13500.0);
+			}
+			else if ((choco.toString().contains("C_HQ_BE")) && (ListPrix.get(choco)<=17000)) {
+				ListPrix.replace(choco, 17000.0);
+			}
+			else if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
 				ListPrix.replace(choco, Math.max(7000,0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)));
 			}
 			else if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
@@ -114,7 +132,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	 *@author wiam
 	 */
 	public double prix(ChocolatDeMarque choco) {
-		if (ListPrix.containsKey(choco)) {System.out.println(choco+" "+ListPrix.get(choco));
+		if (ListPrix.containsKey(choco)) {
 			return ListPrix.get(choco);
 		} 
 		else {
