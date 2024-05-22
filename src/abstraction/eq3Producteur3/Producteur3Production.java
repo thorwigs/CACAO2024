@@ -2,13 +2,18 @@ package abstraction.eq3Producteur3;
 
 import java.util.HashMap;
 
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur3Production extends Producteur3Plantation { 
+public abstract class Producteur3Production extends Producteur3Plantation { 
+	abstract void deleteAcheteurs(IAcheteurBourse acheteur);
+	abstract void deleteVendeurs(IVendeurBourse vendeur);
+	
 	//tonne produite par hectare lors d'un step
 	protected double T_ha_BQ = 28.125/1000 ;	//avec pesticide
 	protected double T_ha_MQ = 26.5625/1000 ;
@@ -112,7 +117,7 @@ public class Producteur3Production extends Producteur3Plantation {
 	/**Renvoie la quantité de fèves disponibles après séchage au prochain step
 	 * Elle est utile pour l'établissement d'un contrat cadre
 	 * 
-	 * @author Alexis
+	 * @author Alexis (royalties Gabin : j'ai tout plagia)
 	 */
 	protected HashMap<Feve,Double> quantiteFuture(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();

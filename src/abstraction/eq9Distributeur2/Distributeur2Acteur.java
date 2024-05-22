@@ -20,11 +20,13 @@ public abstract class Distributeur2Acteur implements IActeur {
 	protected Journal journal;
 	private int capaciteStockage;
 	protected double coutStockage;
+	protected Journal journal_vente;
 	
 	
 
 	public Distributeur2Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
+		this.journal_vente = new Journal(this.getNom()+" journal des ventes", this);
 		this.capaciteStockage = Integer.MAX_VALUE;
 		
 	}
@@ -129,6 +131,7 @@ public abstract class Distributeur2Acteur implements IActeur {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal);
+		res.add(this.journal_vente);
 		return res;
 	}
 

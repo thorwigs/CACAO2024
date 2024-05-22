@@ -1,9 +1,16 @@
 package abstraction.eq3Producteur3;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
+import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
+
+import java.util.LinkedList;
+import java.lang.Math;
+
 import abstraction.eq1Producteur1.Producteur1VendeurBourse;
 import abstraction.eq2Producteur2.Producteur2VendeurBourse;
 import abstraction.eq4Transformateur1.Transformateur1AcheteurBourse;
@@ -12,6 +19,30 @@ import abstraction.eq6Transformateur3.Transformateur3AcheteurBourse;
 import abstraction.eq7Transformateur4.Transformateur4AcheteurBourse;
 
 public class Producteur3VendeurBourse extends Producteur3Production implements IVendeurBourse {
+	
+	BourseCacao superviseur;
+	LinkedList<IVendeurBourse> vendeurs;
+	LinkedList<IAcheteurBourse> acheteurs;
+	
+	protected void deleteAcheteurs(IAcheteurBourse acheteur) {
+		acheteurs.remove(acheteur);
+	}
+	protected void deleteVendeurs(IVendeurBourse vendeur) {
+		vendeurs.remove(vendeur);
+	}
+	
+	public void initialiser() {
+		super.initialiser();	
+		superviseur = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");
+		vendeurs = new LinkedList<IVendeurBourse>();
+		acheteurs = new LinkedList<IAcheteurBourse>();
+		vendeurs.add((Producteur1VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ1"));
+		vendeurs.add((Producteur2VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ2"));
+		acheteurs.add((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4"));
+		acheteurs.add((Transformateur2AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ5"));
+		acheteurs.add((Transformateur3AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ6"));
+		acheteurs.add((Transformateur4AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ7"));
+	}
 	
 	
 	/**
@@ -48,18 +79,26 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 	 * La formule mathematique se base sur le fonctionnement du systeme
 	 */
 	private double quantiteAV(Feve f, double cours, double stock) {
-		double autresAV = ((Producteur1VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ1")).offre(f,cours)+((Producteur2VendeurBourse)Filiere.LA_FILIERE.getActeur("EQ2")).offre(f,cours);
-		double dem = ((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4")).demande(f,cours)+((Transformateur2AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ5")).demande(f,cours)+((Transformateur3AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ6")).demande(f,cours)+((Transformateur4AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ7")).demande(f,cours);
-		this.journal_bourse.ajouter("eq4"+((Transformateur1AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ4")).demande(f,cours));
-		this.journal_bourse.ajouter("eq5"+((Transformateur2AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ5")).demande(f,cours));
-		this.journal_bourse.ajouter("eq6"+((Transformateur3AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ6")).demande(f,cours));
-		this.journal_bourse.ajouter("eq7"+((Transformateur4AcheteurBourse)Filiere.LA_FILIERE.getActeur("EQ7")).demande(f,cours));
-		this.journal_bourse.ajouter("dem"+dem);
+		double autresAV = 0;
+		double dem = 0;
+		for (IVendeurBourse vendeur : vendeurs) {
+			if (!(superviseur.getVendeursBlackListes().contains(vendeur))) {
+				autresAV += vendeur.offre(f, cours);
+			}
+		}
+		for (IAcheteurBourse acheteur : acheteurs) {
+			if (!(superviseur.getAcheteursBlackListes().contains(acheteur))) {
+				dem += acheteur.demande(f, cours);
+			}
+		}
+		
 		if (dem >= autresAV+stock) {
 			return stock;
 		}
 		else if (dem == 0) {
 			return 0;
+		} else if (autresAV == 0) {
+			return Math.min(stock,dem);
 		} else if (stock < dem) {
 			return stock/dem*autresAV/(1-stock/dem);
 		} else {
