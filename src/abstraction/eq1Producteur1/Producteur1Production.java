@@ -314,7 +314,34 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 	}
 
+/**
+ * @author youssef
+ * methode qui tient compte des rendements selons la saison
+ * @return double qui decrit le rendement, ce rendement 
+ */
+	public double effet_saison(int i) {
+		//de octobre a mars:grande récolte, 
+		//avril-septembre:baisse de récolte :Saison des pluies
 
+		int rang_step=i%24;
+		if ((rang_step>=18 && rang_step<=23 )||(rang_step>=0 && rang_step<=5)) {
+			return 1.0;
+			
+		}
+		else if (rang_step==6 ||rang_step==17) {
+			return 0.9;
+		}
+		else if (rang_step==7 ||rang_step==16) {
+			return 0.8;
+			
+		}
+		else {
+			return 0.5;
+		}
+		
+		
+		
+	}
 
 
 }
