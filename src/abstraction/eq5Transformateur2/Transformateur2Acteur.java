@@ -232,13 +232,13 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.journal.ajouter("=====STOCKS=====");
 		this.journal.ajouter("prix stockage chez producteur : "+ Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur());
 		for (Feve f : lesFeves) {
-		this.journal.ajouter("Quantité en stock de feves " +f+ ": "+stockFeves.get(f).getValeur());
+			this.journal.ajouter("Quantité en stock de feves " +f+ ": "+stockFeves.get(f).getValeur());
 		}
 		for (Chocolat c : lesChocolats) {
-		this.journal.ajouter("Quantité en stock de Chocolat " +c+ ": "+stockChoco.get(c).getValeur());
+			this.journal.ajouter("Quantité en stock de Chocolat " +c+ ": "+stockChoco.get(c).getValeur());
 		}
 		for (ChocolatDeMarque cm : chocosProduits) {
-		this.journal.ajouter("Quantité en stock de chocolat de marque " +cm+ ": " +stockChocoMarque.get(cm).getValeur());
+			this.journal.ajouter("Quantité en stock de chocolat de marque " +cm+ ": " +stockChocoMarque.get(cm).getValeur());
 		}
 		this.journal.ajouter("stocks feves : "+this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("stocks chocolat : "+this.totalStocksChoco.getValeur(this.cryptogramme));
@@ -256,13 +256,28 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		
 		//
-		double somme = 0;
+		double sommecm = 0;
+		double sommec = 0;
+		double sommef = 0;
 		for (ChocolatDeMarque cm : this.chocosProduits) {
-			somme += this.stockChocoMarque.get(cm).getValeur();
+			sommecm += this.stockChocoMarque.get(cm).getValeur();
 		}
-		System.out.println("_______________VERIF__________________");
+		for (Chocolat c : this.lesChocolats) {
+			sommec += this.stockChoco.get(c).getValeur();
+		}
+		for (Feve f : this.lesFeves) {
+			sommef += this.stockFeves.get(f).getValeur();
+		}
+		System.out.println("__________________________________________");
+		System.out.println("_______________VERIF  CM__________________");
 		System.out.println(this.totalStocksChocoMarque.getValeur(this.cryptogramme));
-		System.out.println(somme);
+		System.out.println(sommecm);
+		System.out.println("_______________VERIF  C___________________");
+		System.out.println(this.totalStocksChoco.getValeur(this.cryptogramme));
+		System.out.println(sommec);
+		System.out.println("_______________VERIF  F___________________");
+		System.out.println(this.totalStocksFeves.getValeur(this.cryptogramme));
+		System.out.println(sommef);
 		//
 		
 		
@@ -275,13 +290,13 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		double coutMasseSalariale = 0;
 		
 		/* Stratégie d'embauche/licenciement : 
-		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 30% de nos stocks.
+		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 20% de nos stocks.
 		 * 	   On embauche au maximum 2000 salarié par step
 		 * --> On licencie si notre capacité de transformation est 2 fois supérieur à nos stocks.
 		 *     On licencie 30% de notre effectif
 		 */
 		
-		if (capaciteTransfoTotal < 0.3 * this.totalStocksFeves.getValeur()) {
+		if (capaciteTransfoTotal < 0.2 * this.totalStocksFeves.getValeur()) {
 			int embauche =(int)((0.4 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
 			if (embauche> 2000){
 				embauche=2000;
