@@ -24,7 +24,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
 	private SuperviseurVentesContratCadre superviseur;
 	private ExemplaireContratCadre contr;
-	private double itQ; //compteur du step de négo
+	private int itQ; //compteur du step de négo
+	private double prixNego; 
 	private double nonLivre;
 	private double Livre;
 	
@@ -54,6 +55,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		//On appelle le superviseur de la filiere
 		superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup."+(SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE>1?SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE+"":"")+"CCadre");
 		itQ = 0;
+		prixNego = 0;
 	}
 	
 	/**
@@ -223,7 +225,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	      } else if (feve.isEquitable()) {
 	           prixBase = Math.max(3200.0, prixBase); // Prix pour équitable 
 	      }
-	    return prixBase * 1.2; // Ajouter une marge de profit par exemple de 20% à modifier
+	      prixNego = prixBase * 1.2;
+	      return prixNego; // Ajouter une marge de profit par exemple de 20% à modifier
 	}
 
 	/**
@@ -234,17 +237,21 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		itQ += 1;
+		this.journal_bourse.ajouter("itQ="+itQ);
 	    IProduit produit = contrat.getProduit();
 	    if (!(produit instanceof Feve)) {
 	        return 0; }
 	    double prixPropose = contrat.getPrix();
-	    double prixMinimal= propositionPrix(contrat)/1.2;
+	    double prixMinimal= prixNego/1.2;
+	    this.journal_bourse.ajouter("prixMinimal"+prixMinimal);
 	    // Si le prix proposé est supérieur au prixMinimal, accepter le prix proposé
 	    if (prixPropose > prixMinimal) {
 	        return prixPropose;
 	    } else {
 
 	        // Sinon, retourner un prix qui tend vers prixMinimal au cours de la négociation
+	    	double test = prixMinimal*1.2 - itQ*prixMinimal*0.2/15;
+	    	this.journal_bourse.ajouter("testprix="+ test);
 	        return prixMinimal*1.2 - itQ*prixMinimal*0.2/15;
 	    }
 	}
