@@ -19,11 +19,12 @@ import abstraction.eq9Distributeur2.*;
 public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre implements IAcheteurBourse {
 	protected Journal journalBourse;
 	private double achatMaxParStep;
-
-
+	
+	
 	////////////////////////////////////////////
 	// Constructeur --> met à jour le journal //
 	////////////////////////////////////////////
+	
 	/**
 	 * @Erwann
 	 */
@@ -43,13 +44,17 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	 */
 	public double demande(Feve f, double cours) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		//Stratégie sur le BQ
-		if ((Filiere.LA_FILIERE.getBanque().aFaitFaillite(Filiere.LA_FILIERE.getDistributeurs().get(0)))
-			|| (Filiere.LA_FILIERE.getBanque().aFaitFaillite(Filiere.LA_FILIERE.getDistributeurs().get(1)))) {
-			return 0;
-		}
-		else {
-			if (f.getGamme()==Gamme.BQ) {
+		if (f.getGamme()==Gamme.BQ) {
+			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
+				this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
+				return STOCKINITIAL - stockFeves.get(f).getValeur();
+			}
+			else {
+				return 0;
+				}
+			}
+			//Stratégie sur le MQ
+		if (f.getGamme()==Gamme.MQ) {
 				if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
 					this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
 					return STOCKINITIAL - stockFeves.get(f).getValeur();
@@ -57,27 +62,11 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 				else {
 					return 0;
 				}
-			}
 		}
-		
-		//Stratégie sur le MQ
-		if (f.getGamme()==Gamme.MQ) {
-
-			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
-				this.journalBourse.ajouter("On chercher a acquérir : "+(STOCKINITIAL - stockFeves.get(f).getValeur())+" tonnes de Fèves "+f);
-				return STOCKINITIAL - stockFeves.get(f).getValeur();
-			}
-			else {
-				return 0;
-			}
-		}
-		
-		//Stratégie sur le HG => pas d'achat de HQ
-
-		return 0;
-		
+		else {
+					return 0;
+				}
 	}
-
 
 	///////////////////////////////////////////////////////////////////////
 	// Notifs de la vente ou de la BlackList + Mise à jour JournalBourse //	
