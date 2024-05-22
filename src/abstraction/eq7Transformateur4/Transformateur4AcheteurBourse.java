@@ -30,8 +30,8 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;
 		}
-		if (f.equals(Feve.F_HQ) && stockFeves.get(f)<=700) {
-			D = 700 - stockFeves.get(f);
+		if (f.equals(Feve.F_HQ) && stockFeves.get(f)<=1000) {
+			D = 4000 - stockFeves.get(f);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;
 		}
