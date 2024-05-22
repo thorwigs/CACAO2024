@@ -9,6 +9,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 
 import java.util.LinkedList;
+import java.lang.Math;
 
 import abstraction.eq1Producteur1.Producteur1VendeurBourse;
 import abstraction.eq2Producteur2.Producteur2VendeurBourse;
@@ -81,10 +82,14 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		double autresAV = 0;
 		double dem = 0;
 		for (IVendeurBourse vendeur : vendeurs) {
-			autresAV += vendeur.offre(f, cours);
+			if (!(superviseur.getVendeursBlackListes().contains(vendeur))) {
+				autresAV += vendeur.offre(f, cours);
+			}
 		}
 		for (IAcheteurBourse acheteur : acheteurs) {
-			dem += acheteur.demande(f, cours);
+			if (!(superviseur.getAcheteursBlackListes().contains(acheteur))) {
+				dem += acheteur.demande(f, cours);
+			}
 		}
 		
 		if (dem >= autresAV+stock) {
@@ -92,6 +97,8 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 		}
 		else if (dem == 0) {
 			return 0;
+		} else if (autresAV == 0) {
+			return Math.min(stock,dem);
 		} else if (stock < dem) {
 			return stock/dem*autresAV/(1-stock/dem);
 		} else {
