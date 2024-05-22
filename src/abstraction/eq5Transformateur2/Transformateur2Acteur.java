@@ -219,8 +219,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	 */
 	public void next() {
 		
-		this.JournalProduction.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		
+		this.JournalProduction.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");	
 		
 		
 		////////////////////////////////////////////////////
@@ -249,14 +248,6 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		////////////////////////////////////////////////////
 		//this.totalStocksChocoMarque.getValeur(this.cryptogramme);
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
@@ -392,7 +383,6 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.totalProd += TransfoTotal;
 		this.moyProd = this.totalProd/(Filiere.LA_FILIERE.getEtape()+1);
 		this.JournalProduction.ajouter("Production moyenne de l'acteur : "+moyProd+" tonnes/step");	
-	
 	}
 	
 	

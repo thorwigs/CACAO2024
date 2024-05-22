@@ -188,7 +188,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockChocoMarque.get((ChocolatDeMarque)produit).ajouter(this, quantite, this.cryptogramme);
+		this.stockChocoMarque.get((ChocolatDeMarque)produit).retirer(this, quantite, this.cryptogramme);
 		this.totalStocksChocoMarque.retirer(this, quantite, this.cryptogramme);
 		return quantite;
 		}
