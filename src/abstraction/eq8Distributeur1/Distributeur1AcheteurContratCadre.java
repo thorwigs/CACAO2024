@@ -330,15 +330,20 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	}
 	
 	public ExemplaireContratCadre ChoisirCC(List<ExemplaireContratCadre> liste) {
-		double prix = liste.get(0).getPrix()*this.Coefficient.get(liste.get(0).getVendeur().getNom());
-		int choix = 0;
-		for (int i=1; i<liste.size();i++) {
-			if (liste.get(i).getPrix()*this.Coefficient.get(liste.get(i).getVendeur().getNom())<prix) {
-				choix = i;
-				prix = liste.get(i).getPrix();
+		ExemplaireContratCadre con = null;
+		if (liste.size()>0) {
+			double prix = liste.get(0).getPrix()*this.Coefficient.get(liste.get(0).getVendeur().getNom());
+			int choix = 0;
+			for (int i=1; i<liste.size();i++) {
+				if (liste.get(i).getPrix()*this.Coefficient.get(liste.get(i).getVendeur().getNom())<prix) {
+					choix = i;
+					prix = liste.get(i).getPrix();
+				}
 			}
-		}
-		return liste.get(choix);
+			con = liste.get(choix);
+		} 
+		
+		return con;
 	}
 	
 	/**
@@ -399,10 +404,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 					    Echeancier x = new Echeancier (a,b,f+1000);
 						supCC.demandeAcheteur((IAcheteurContratCadre)this, vendeurs.get(i), choc, x, cryptogramme,false);
 					}
-					
-					
+
 					ExemplaireContratCadre cc = this.ChoisirCC(this.choix);
-					vendeur = cc.getVendeur();				
+					if (cc!=null) {
+						vendeur = cc.getVendeur();				
+					}
+				
 				}
 				
 				if (vendeur!=null) {
