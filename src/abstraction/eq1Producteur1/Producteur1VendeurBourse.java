@@ -2,6 +2,7 @@
 package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
@@ -43,12 +44,9 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	 * @return La quantité de fèves offerte sur la bourse.
 	 */
 	public double offre(Feve f, double cours) {
-		// TODO Auto-generated method stub
+		
 
-		//if (f.isBio() || f.isEquitable()) {
-			//journalBourse.ajouter("On vend pas de bio ni equitable en bourse");
-			//return 0;
-		//}
+	
 		double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
 
 
@@ -57,8 +55,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 			if (f.getGamme()==Gamme.MQ) {
-				
-				if(cours>= (pourcentageMQ+quantiteEnT)*Seuil) {
+				//if(true) {
+				if(cours>= (pourcentageMQ+Seuil)*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 
 					return quantiteEnT;
@@ -67,8 +65,9 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				
 			}
 			if (f.getGamme()==Gamme.HQ) {
+				//if(true) {
 				
-				if(cours>= (pourcentageHQ+quantiteEnT)*Seuil) {
+				if(cours>= (pourcentageHQ+Seuil)*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 
 					return quantiteEnT;
@@ -76,8 +75,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 			
 			}
 			if (f.getGamme()==Gamme.BQ) {
-				
-				if(cours>= (pourcentageMQ+quantiteEnT)*Seuil) {
+				//if(true) {
+				if(cours>= (pourcentageMQ+Seuil)*quantiteEnT) {
 					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
 					return quantiteEnT;
@@ -85,6 +84,15 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				
 			}
 		}
+		//else {
+			//plantation = new HashMap<Feve, Double>();
+			//double quantite = 50;
+			//plantation.put(f, quantite);
+			//adjustPlantationSize(plantation);
+			
+			
+		//}
+		
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 		return 0;
 
@@ -130,6 +138,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 			}
 		}
 	}
+	
 	/**
 	 * Renvoie les journaux de l'acteur, y compris le journal de la bourse.
 	 * @return Une liste contenant les journaux de l'acteur.
@@ -139,9 +148,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		res.add(journalBourse);
 		return res;
 	}
-	public void updatePlant() {
-		
-	}
+	
 	public void next() {
 		super.next();
 		changePlant();
