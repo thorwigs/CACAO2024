@@ -144,7 +144,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 			this.journal_negoc.ajouter("Négociation sur prix a échoué car chocolat de marque "+choco+ " pas référencé");
 			return 0.;
 		}
-		double prix_limite = (prix(choco)*0.7- this.getCoutStockage())*contrat.getQuantiteTotale();
+		double prix_limite = (prix(choco)*0.7- this.getCoutStockage())*contrat.getQuantiteTotale()/contrat.getEcheancier().getNbEcheances();
 		if (prix_limite<0) {
 			System.out.println("prix limite négatif");
 			System.out.println("prix moyen : "+prix(choco));
