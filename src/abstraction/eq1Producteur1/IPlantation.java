@@ -26,11 +26,7 @@ public interface IPlantation {
      */
     void maindoeuvre();
     
-    /**
-     * Recrute de la main-d'œuvre en fonction des besoins et des conditions du marché.
-     * @param demand Une estimation de la demande en main-d'œuvre pour chaque type de feve
-     */
-    void recruitWorkers(HashMap<Feve, Double> demand);
+    
     
     // Gestion de la production
     
@@ -45,5 +41,7 @@ public interface IPlantation {
      * @param d1 Dictionnaire de la production au temps t1
      */
     void setProdTemps(HashMap<Feve, Double> d0, HashMap<Feve, Double> d1);
+
+	
     
 }
