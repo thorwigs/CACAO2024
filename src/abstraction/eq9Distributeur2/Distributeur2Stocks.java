@@ -19,8 +19,8 @@ import abstraction.eqXRomu.produits.IProduit;
 public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	protected List<ChocolatDeMarque> chocolatsVillors;
 	private List<ChocolatDeMarque>chocosProduits;
-	protected Variable totalStocksChocoMarque;  
-	protected Variable totalCorrect;
+	//protected Variable totalStocksChocoMarque;  
+	protected Variable totalStocks;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected ArrayList<Variable> indicateurs=init();
 	
@@ -28,8 +28,8 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	public Distributeur2Stocks() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		
-		this.totalStocksChocoMarque = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
-		this.totalCorrect = new VariablePrivee("Eq9DTotalStocksCorrect", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
+		//this.totalStocksChocoMarque = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
+		this.totalStocks = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
 		/*for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			this.stockChocoIndicateur.put(cm,new Variable("Eq9DStockChocoMarque_"+ cm , "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0));
 		}*/
@@ -47,7 +47,8 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 			quantite= Filiere.LA_FILIERE.getVentes(cm, -24);			
 			this.stockChocoMarque.put(cm, quantite);
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
-			this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);}
+			//this.totalStocksChocoMarque.ajouter(this,  quantite, cryptogramme);
+			}
 		
 		MiseAJour(indicateurs);
 		}
@@ -58,15 +59,14 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 			this.getJournaux().get(0).ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+ this.getQuantiteEnStock(cm,this.cryptogramme));}
 		
 		MiseAJour(indicateurs);
-		this.totalCorrect.setValeur(this, this.getTotalStock(cryptogramme),cryptogramme);
+		this.totalStocks.setValeur(this, this.getTotalStock(cryptogramme),cryptogramme);
 	}
 	
 	
 	
 	public List<Variable> getIndicateurs(){
 		List<Variable> res = new ArrayList<Variable>();
-		res.add(totalStocksChocoMarque);
-		res.add(totalCorrect);
+		res.add(totalStocks);
 		res.addAll(indicateurs);
 		
 		return res;}
