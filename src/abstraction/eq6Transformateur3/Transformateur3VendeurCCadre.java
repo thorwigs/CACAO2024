@@ -88,7 +88,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	}
 
 	/**
-	 * @author Arthur
+	 * @author Arthur et Mahel
 	 */
 	public boolean vend(IProduit produit) {
 		
