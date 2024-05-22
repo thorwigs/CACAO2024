@@ -35,10 +35,10 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 	/////////////
 	/**
 	 * @Erwann
+	 * @Vincent 
 	 */
 	public double demande(Feve f, double cours) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-
 		//Stratégie sur le BQ
 		if (f.getGamme()==Gamme.BQ) {
 			if (stockFeves.get(f).getValeur() <= STOCKINITIAL) {
@@ -48,7 +48,6 @@ public class Transformateur2AcheteurBourse extends Transformateur2VendeurCCadre 
 			else {
 				return 0;
 			}
-
 		}
 		
 		//Stratégie sur le MQ
