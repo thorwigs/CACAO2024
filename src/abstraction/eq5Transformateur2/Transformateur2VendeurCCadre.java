@@ -72,7 +72,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, cm, e, cryptogramme, false);
 					if (contrat==null) {
 						if (this.BlackListAcheteur.containsKey(acheteur)) {
-							this.BlackListAcheteur.put(acheteur,this.BlackListAcheteur.get(acheteur)+1);
+							this.BlackListAcheteur.replace(acheteur,this.BlackListAcheteur.get(acheteur)+1);
 						} else {
 							this.BlackListAcheteur.put(acheteur, 1);
 						}
@@ -115,6 +115,13 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 * @author Robin, Erwann
 	 */
 	public boolean vend(IProduit produit) {
+		return (this.chocosProduits.contains(produit)) ;
+	}
+	
+	/***
+	 * @author Robin, Vincent
+	 */
+	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		double totalStep = 0;
 		for (ExemplaireContratCadre c : contratsEnCours) {
 			totalStep+=c.getQuantiteALivrerAuStep();
@@ -123,16 +130,12 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		if (totalStep<this.moyProd) {
 			VenteActive = true;
 		}
-		return (this.chocosProduits.contains(produit) && VenteActive) ;
+		if (VenteActive == true) {
+			return contrat.getEcheancier();
+		} else {
+		return null;
+			}
 	}
-	
-	/***
-	 * @author Robin, Vincent
-	 */
-	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-		
-		return contrat.getEcheancier();
-		}
 	
 	/***
 	 * @author Robin,Erwann
@@ -181,7 +184,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockChocoMarque.put((ChocolatDeMarque)produit, new Variable("Eq5Stock "+produit, this,this.stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-quantite));
+		this.stockChocoMarque.get((ChocolatDeMarque)produit).ajouter(this, quantite, this.cryptogramme);
 		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
 		return quantite;
 		}
