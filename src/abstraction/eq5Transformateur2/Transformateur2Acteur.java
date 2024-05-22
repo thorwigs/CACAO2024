@@ -191,11 +191,9 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	*/
 	public void Transformation(Feve f, double tonnes) {
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
-		if (this.stockFeves.containsKey((Feve)f)){
+		if (this.stockFeves.containsKey((Feve)f) & this.stockChoco.containsKey((Chocolat)c)){
 			this.stockFeves.get((Feve)f).retirer(this, tonnes, this.cryptogramme); //Maj stock de feves 
 			this.totalStocksFeves.retirer(this, tonnes, this.cryptogramme);
-		}
-		if (this.stockChoco.containsKey((Chocolat)c)){
 			this.stockChoco.get((Chocolat) c).ajouter(this, tonnes, this.cryptogramme); //Maj stock choco
 			this.totalStocksChoco.ajouter(this, tonnes, this.cryptogramme);
 		}
@@ -255,30 +253,9 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		
 		
-		//
-		double sommecm = 0;
-		double sommec = 0;
-		double sommef = 0;
-		for (ChocolatDeMarque cm : this.chocosProduits) {
-			sommecm += this.stockChocoMarque.get(cm).getValeur();
-		}
-		for (Chocolat c : this.lesChocolats) {
-			sommec += this.stockChoco.get(c).getValeur();
-		}
-		for (Feve f : this.lesFeves) {
-			sommef += this.stockFeves.get(f).getValeur();
-		}
-		System.out.println("__________________________________________");
-		System.out.println("_______________VERIF  CM__________________");
-		System.out.println(this.totalStocksChocoMarque.getValeur(this.cryptogramme));
-		System.out.println(sommecm);
-		System.out.println("_______________VERIF  C___________________");
-		System.out.println(this.totalStocksChoco.getValeur(this.cryptogramme));
-		System.out.println(sommec);
-		System.out.println("_______________VERIF  F___________________");
-		System.out.println(this.totalStocksFeves.getValeur(this.cryptogramme));
-		System.out.println(sommef);
-		//
+		
+		
+		
 		
 		
 		
@@ -297,7 +274,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		 */
 		
 		if (capaciteTransfoTotal < 0.2 * this.totalStocksFeves.getValeur()) {
-			int embauche =(int)((0.4 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
+			int embauche =(int)((0.2 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
 			if (embauche> 2000){
 				embauche=2000;
 			}
@@ -368,27 +345,28 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 				}
 		}
 		for (Chocolat c : lesChocolats) {
-			for (ChocolatDeMarque cm : chocosProduits) {				
+			for (ChocolatDeMarque cm : chocosProduits) {	
+				double stock = stockChoco.get(c).getValeur();
 				if(c.getGamme() == Gamme.MQ) {
 					if (c.isEquitable()==true) {
-					stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stockChoco.get(c).getValeur()/nbr_produits_MQ_E, this.cryptogramme);
-					stockChoco.get((Chocolat) c).retirer(this, stockChoco.get(c).getValeur()/nbr_produits_MQ_E, this.cryptogramme);
-					VariationStockChocoMarque.replace(cm, stockChoco.get(c).getValeur()/nbr_produits_MQ_E);
-					totalStocksChocoMarque.ajouter(this, stockChoco.get(c).getValeur()/nbr_produits_MQ_E, this.cryptogramme);
-					totalStocksChoco.retirer(this, stockChoco.get(c).getValeur()/nbr_produits_MQ_E, this.cryptogramme);
+					stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_MQ_E, this.cryptogramme);
+					stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_MQ_E, this.cryptogramme);
+					VariationStockChocoMarque.replace(cm, stock/nbr_produits_MQ_E);
+					totalStocksChocoMarque.ajouter(this, stock/nbr_produits_MQ_E, this.cryptogramme);
+					totalStocksChoco.retirer(this, stock/nbr_produits_MQ_E, this.cryptogramme);
 						} else {
-							stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stockChoco.get(c).getValeur()/nbr_produits_MQ, this.cryptogramme);
-							stockChoco.get((Chocolat) c).retirer(this, stockChoco.get(c).getValeur()/nbr_produits_MQ, this.cryptogramme);
-							VariationStockChocoMarque.replace(cm, stockChoco.get(c).getValeur()/nbr_produits_MQ);
-							totalStocksChocoMarque.ajouter(this, stockChoco.get(c).getValeur()/nbr_produits_MQ, this.cryptogramme);
-							totalStocksChoco.retirer(this, stockChoco.get(c).getValeur()/nbr_produits_MQ, this.cryptogramme);
+							stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_MQ, this.cryptogramme);
+							stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_MQ, this.cryptogramme);
+							VariationStockChocoMarque.replace(cm, stock/nbr_produits_MQ);
+							totalStocksChocoMarque.ajouter(this, stock/nbr_produits_MQ, this.cryptogramme);
+							totalStocksChoco.retirer(this, stock/nbr_produits_MQ, this.cryptogramme);
 						}
 					} else {
-						stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stockChoco.get(c).getValeur()/nbr_produits_BQ, this.cryptogramme);
-						stockChoco.get((Chocolat) c).retirer(this, stockChoco.get(c).getValeur()/nbr_produits_BQ, this.cryptogramme);
-						VariationStockChocoMarque.replace(cm, stockChoco.get(c).getValeur()/nbr_produits_BQ);
-						totalStocksChocoMarque.ajouter(this, stockChoco.get(c).getValeur()/nbr_produits_BQ, this.cryptogramme);
-						totalStocksChoco.retirer(this, stockChoco.get(c).getValeur()/nbr_produits_BQ, this.cryptogramme);
+						stockChocoMarque.get((ChocolatDeMarque) cm).ajouter(this, stock/nbr_produits_BQ, this.cryptogramme);
+						stockChoco.get((Chocolat) c).retirer(this, stock/nbr_produits_BQ, this.cryptogramme);
+						VariationStockChocoMarque.replace(cm, stock/nbr_produits_BQ);
+						totalStocksChocoMarque.ajouter(this, stock/nbr_produits_BQ, this.cryptogramme);
+						totalStocksChoco.retirer(this, stock/nbr_produits_BQ, this.cryptogramme);
 					}
 			}
 		}
