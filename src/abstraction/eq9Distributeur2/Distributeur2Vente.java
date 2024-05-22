@@ -120,9 +120,13 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
+<<<<<<< HEAD
 
 		return this.quantiteEnVenteTGG(crypto).get(choco);
 
+=======
+		return this.quantiteEnVente(choco, crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG*0.99;
+>>>>>>> branch 'main' of https://github.com/Maxime-cod/CACAO2024
 	}
 
 	@Override
@@ -130,7 +134,7 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 		// TODO Auto-generated method stub
 		if (this.stockChocoMarque!=null && this.stockChocoMarque.keySet().contains(choco)) {
 			this.stockChocoMarque.put(choco, this.stockChocoMarque.get(choco)-quantite);
-			this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
+			//this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
 			// ajout de Maureen pour avoir accès aux ventes précédentes
 			this.totalVentes.put(choco, this.totalVentes.get(choco)+quantite); 
 			if (this.stepActuel != Filiere.LA_FILIERE.getEtape()) {

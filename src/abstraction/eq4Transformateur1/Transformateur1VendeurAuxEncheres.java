@@ -16,6 +16,9 @@ public class Transformateur1VendeurAuxEncheres extends Transformateur1AcheteurCC
 
 
 	private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
+	/**
+	 * @author Noémie_Grosset
+	 */
 	private SuperviseurVentesAuxEncheres supEncheres;
 	protected Journal journalEncheres;
 

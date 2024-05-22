@@ -49,11 +49,14 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 				OffreVente propRetenue=((SuperviseurVentesAO) Filiere.LA_FILIERE.getActeur("Sup.AO")).acheterParAO(this,this.cryptogramme,chocolat,quantite);
 				this.getJournaux().get(2).ajouter("On a plus de "+chocolat+" et on en cherche "+quantite);
 				if (propRetenue != null) {
-					//this.getJournaux().get(2).ajouter("On a réaliser un appel d'offre "+PropositionQuantitePrix.toString());
-					this.getJournaux().get(2).ajouter("L'appel d'offre est réussie et l'option choisie est: "+propRetenue.getQuantiteT() +" tonnes de "+propRetenue.getProduit()+" chez "+propRetenue.getVendeur()+ " pour un prix de "+propRetenue.getPrixT());
+					//this.journal_AO.ajouter("On a réaliser un appel d'offre "+PropositionQuantitePrix.toString());
+					this.journal_AO.ajouter("L'appel d'offre est réussie et l'option choisie est: "+propRetenue.getQuantiteT() +" tonnes de "+propRetenue.getProduit()+" chez "+propRetenue.getVendeur()+ " pour un prix de "+propRetenue.getPrixT());
+					
 					this.getStockChocoMarque().put((ChocolatDeMarque) propRetenue.getProduit(),propRetenue.getQuantiteT());
-					Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "frais d'approvisionnement AO", this.coutDacheminement(propRetenue.getPrixT()));
-					this.totalStocksChocoMarque.ajouter(this, propRetenue.getQuantiteT(), cryptogramme);
+					//this.totalStocksChocoMarque.ajouter(this, propRetenue.getQuantiteT(), cryptogramme);
+					
+					if (this.coutDacheminement(propRetenue.getPrixT())>1) {
+						Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "frais d'approvisionnement AO", this.coutDacheminement(propRetenue.getPrixT()));}
 				}
 			}
 		}
