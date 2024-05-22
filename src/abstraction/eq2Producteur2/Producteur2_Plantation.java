@@ -376,13 +376,9 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Quentin
 	 */
 	public void suppressionVieuxHectares() {
-		for(Feve f : this.getPlantation().keySet()) {
-			for(Integer annee : this.getPlantation().get(f).keySet()) {
-				if(this.annee_actuelle == annee) {
-					this.plantation.get(f).remove(annee);
-				}
-			}
-		}
+		this.plantation.get(Feve.F_BQ).remove(annee_actuelle);
+		this.plantation.get(Feve.F_MQ).remove(annee_actuelle);
+		this.plantation.get(Feve.F_HQ).remove(annee_actuelle);	
 	}
 	
 	/** Ajoute les nouvelles informations sur les plantations au journal des plantations
@@ -430,7 +426,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	/**Cette fonction next sert à implémenter notre stratégie.
 	 * Si notre stock est vide à la fin d'un tour cela implique que nous avons vendu l'intégralité
 	 * de notre production. Il peut être utile d'acheter de nouveaux hectares pour produire plus de cacao.
-	 * @author Noémie
+	 * @author Noémie, Quentin
 	 */
 	public void next() {
 		super.next();
