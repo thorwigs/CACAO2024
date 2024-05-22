@@ -21,8 +21,13 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
+
+	protected static int PRIX_DEFAUT = 4500;
 	
 	protected int quantiteMiniCC = 1200;
+	protected int stockCibleMini = 40000;
+	protected int nbSalaries = (int) (this.stockCibleMini / 3.75);
+	protected HashMap<Gamme, Double> listePourcentageMarque;
 	
 	protected int cryptogramme;
 	protected Journal journal;
@@ -75,6 +80,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		this.stockChocoMarque = new HashMap<ChocolatDeMarque,Variable>();
 
 		this.demandeCC = 0;
+		this.listePourcentageMarque = new HashMap<Gamme, Double>();
 	}
 /**
 *@author Noemie_Grosset
@@ -183,7 +189,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", couts);
 		}
 		
-		coutMainDOeuvre = 1000*0.27*nbTonnesProduites;
+		
+		double nbInterim = Math.max(0, nbTonnesProduites/0.27-this.nbSalaries);
+		coutMainDOeuvre = 2*1000*nbInterim + this.nbSalaries*1000;
 		if (coutMainDOeuvre > 0.0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Main d'oeuvre", coutMainDOeuvre);
 		}
@@ -289,10 +297,13 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 			Chocolat cmc = Chocolat.C_MQ;
 			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+cmc.getGamme()).getValeur());
 			this.chocosProduits.add(new ChocolatDeMarque(cmc, "CacaoMagic", pourcentageCacao));
-			
+				
 			Chocolat chc = Chocolat.C_HQ_BE;
 			pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+chc.getGamme()).getValeur());
 			this.chocosProduits.add(new ChocolatDeMarque(chc, "LeaderKakao", pourcentageCacao));
+			
+			this.listePourcentageMarque.put(Gamme.MQ, 0.25);
+			this.listePourcentageMarque.put(Gamme.HQ, 0.75);
 		}
 		return this.chocosProduits;
 	}
