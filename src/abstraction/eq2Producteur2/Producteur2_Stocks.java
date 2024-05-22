@@ -20,7 +20,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */	
 	//seuil max de la production stockee
-	private static final double SEUIL = 400000;
+	private static final double SEUIL = 4000000;
 	
 	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
@@ -108,7 +108,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	public void ajout_stock(Feve type_feve, double quantite) {
 		
 		//Si on dépasse le seuil de stockage
-		if (this.getStockTotal(this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
+		if (this.getQuantiteEnStock(type_feve, this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
+			//System.out.println(" il y a trop de stock de " + type_feve.name());
 			trop_de_stock(type_feve, quantite);
 		}
 		else {
@@ -125,6 +126,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ));
 			}
 			if(quantite != 0 && type_feve == Feve.F_HQ_E) {
+				//System.out.println(" ajout nouveau lot de hq_e avec " + quantite + " feve");
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ_E));
 			}
 			if(quantite != 0 && type_feve == Feve.F_HQ_BE) {
@@ -241,6 +243,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 		for(Producteur2_Lot lot : lst_lot) {
 			if(lot.getType_feve() == type_feve) {
+				
 				lst_lot_feve.add(lot);
 			}
 		}
@@ -261,15 +264,22 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */
 	public double stock_a_vendre(Feve type_feve, double quantite_demandee) {
+		//System.out.println("stock a vendre avec " + type_feve.name());
 		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
+		if (type_feve == Feve.F_HQ_E) {
+			//System.out.println(" nombre de lots " + lst_lot_feve.size());
+		}
+		
 		double quantite_prise = 0;
 		for(Producteur2_Lot l : lst_lot_feve) {
 			if(quantite_prise == quantite_demandee) {
+				//System.out.println("On a pris " + quantite_prise + " de feve " + type_feve.name());
 				return quantite_prise;
 			}
 			else {
 				if(quantite_prise + l.getQuantite() <= quantite_demandee) {
 					quantite_prise += l.getQuantite();
+					//System.out.println("On a pris " + quantite_prise + " de feve " + type_feve.name());
 					this.retire_lot(l);
 				}
 				else {
@@ -293,7 +303,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
 		double quantite_retiree = 0;
 		for(Producteur2_Lot l : lst_lot_feve) {
-			if(quantite_retiree >= quantite && stock_init-quantite_retiree < SEUIL ) {
+			if(quantite_retiree/2 >= quantite && stock_init-quantite_retiree < SEUIL ) {
 				break;
 			}
 			else {
