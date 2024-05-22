@@ -14,9 +14,9 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	/** Définition des variables
 	 * @author Noémie
 	 */ 
-	private int nb_employes ;
-	private int nb_employes_equitable;
-	private int nb_employes_enfants;
+	private long nb_employes ;
+	private long nb_employes_equitable;
+	private long nb_employes_enfants;
 	
 	private double salaire_enfant;
 	private double salaire_adulte;
@@ -52,37 +52,37 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	/** getter
 	 * @author Noémie
 	 */
-	public int getNb_employes() {
+	public long getNb_employes() {
 		return nb_employes;
 	}
 	/** setter
 	 * @author Noémie
 	 */
-	public void setNb_employes(int nb_employes) {
+	public void setNb_employes(long nb_employes) {
 		this.nb_employes = nb_employes;
 	}
 	/** getter
 	 * @author Noémie
 	 */
-	public int getNb_employes_equitable() {
+	public long getNb_employes_equitable() {
 		return nb_employes_equitable;
 	}
 	/** setter
 	 * @author Noémie
 	 */
-	public void setNb_employes_equitable(int nb_employes_equitable) {
+	public void setNb_employes_equitable(long nb_employes_equitable) {
 		this.nb_employes_equitable = nb_employes_equitable;
 	}
 	/** getter
 	 * @author Noémie
 	 */
-	public int getNb_employes_enfants() {
+	public long getNb_employes_enfants() {
 		return nb_employes_enfants;
 	}
 	/** setter
 	 * @author Noémie
 	 */
-	public void setNb_employes_enfants(int nb_employes_enfants) {
+	public void setNb_employes_enfants(long nb_employes_enfants) {
 		this.nb_employes_enfants = nb_employes_enfants;
 	}
 	
@@ -121,7 +121,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	/** Retourne le nombre d'employés de la catégorie passée en paramètre
 	 * @author Noémie
 	 */
-	public int getNombreEmployes(String categorie) {
+	public long getNombreEmployes(String categorie) {
 		if (categorie == "enfant") {
 			return this.getNb_employes_enfants();
 		}
@@ -136,7 +136,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	/** Met à jour le nombre d'employés dans une catégorie
 	 * @author Noémie
 	 */
-	public void setNombreEmployes(String categorie, int d) {
+	public void setNombreEmployes(String categorie, long d) {
 		if (categorie == "enfant") {
 			this.setNb_employes_enfants(d);
 		}
@@ -151,8 +151,8 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	/** Licencie n personnes de la catégorie passée en paramètre
 	 * @author Noémie
 	 */
-	public void licencie (int n, String categorie) {
-		int nb_emp = getNombreEmployes(categorie);	
+	public void licencie (long n, String categorie) {
+		long nb_emp = getNombreEmployes(categorie);	
 		
 		// Si on demande à en licencier alors qu'il n'y a déjà plus personne
 		if ((nb_emp - n) < 0) {
@@ -168,8 +168,8 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	/** Embauche n personnes de la catégorie passée en paramètre
 	 * @author Noémie
 	 */
-	public void embauche(int n, String categorie) {
-		int nb_emp = getNombreEmployes(categorie);
+	public void embauche(long n, String categorie) {
+		long nb_emp = getNombreEmployes(categorie);
 		this.setNombreEmployes(categorie, nb_emp+n);
 	}
 	
@@ -190,8 +190,8 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	 */
 	public void trop_d_employes() {
 		double pourcentage_enf = this.getPourcentage_enfants();
-		int a_licencier = (int) (this.getNb_Employes_total()*0.05);
-		int nb_enfants = (int) pourcentage_enf/100*a_licencier;
+		long a_licencier = (long) (this.getNb_Employes_total()*0.05);
+		long nb_enfants = (long) pourcentage_enf/100*a_licencier;
 		
 		this.licencie(nb_enfants, "enfants");
 		this.licencie(a_licencier-nb_enfants, getDescription());
@@ -223,20 +223,21 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	 */
 	public void strategie()  {
 		double benef = this.getBenefice();
+		//System.out.println(" pourcentage equitable" + this.getPourcentage_equitable());
 		if (benef > 10*cout_humain_par_step()){
 			if (getPourcentage_enfants() < 0.02) {
 				double nb_ade=0.001*this.getNb_Employes_total();
 				double nb_ade_max=0.2*this.getNb_Employes_total();
-				this.embauche(Math.min((int) nb_ade,(int) nb_ade_max), "adulte équitable");
+				this.embauche(Math.min((long) nb_ade,(long) nb_ade_max), "adulte équitable");
 			}
 			else if (this.getPourcentage_equitable() < 20) {
-				int nb_enf = getNb_employes_enfants();
-				
+				long nb_enf = getNb_employes_enfants();
+			
 				// le nombre d'employés qui changent de catégorie est égal à 2% des enfants
-				int nb_employes_modif = (int) Math.round(0.02*nb_enf);
+				long nb_employes_modif = (long) Math.round(0.02*nb_enf);
 				
 				// parmis ces employés, 80% passent en équitable
-				int modif_equitable = (int) Math.round(nb_employes_modif*0.8);
+				long modif_equitable = (long) Math.round(nb_employes_modif*0.8);
 				
 				this.licencie(nb_employes_modif,"enfant");
 				this.embauche(modif_equitable, "adulte équitable");
