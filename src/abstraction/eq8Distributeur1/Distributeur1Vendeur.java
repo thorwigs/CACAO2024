@@ -95,7 +95,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		}
 		else {
 			if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
-				ListPrix.replace(choco, 0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1));
+				ListPrix.replace(choco, Math.max(7000,0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)));
 			}
 			else if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
 				ListPrix.replace(choco, ListPrix.get(choco)*0.8);
@@ -114,7 +114,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	 *@author wiam
 	 */
 	public double prix(ChocolatDeMarque choco) {
-		if (ListPrix.containsKey(choco)) {
+		if (ListPrix.containsKey(choco)) {System.out.println(choco+" "+ListPrix.get(choco));
 			return ListPrix.get(choco);
 		} 
 		else {
