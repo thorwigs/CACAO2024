@@ -3,12 +3,18 @@ package abstraction.eqXRomu.clients;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import abstraction.eqXRomu.appelDOffre.VenteAO;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IAssermente;
@@ -31,8 +37,10 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 	private Map<IDistributeurChocolatDeMarque, Map<ChocolatDeMarque, Double>> quantiteEnTG;// Memorise pour chaque distributeur la quantite de chaque chocolat de marque en vente en tete de gondole au step courant. Cela permet d'eviter les incoherences qui pourraient etre engendrees par un distributeur ne retournant pas toujours la meme valeur durant le meme step (on ne fait appel qu'une fois et on memorise le resultat)
 	private Map<IDistributeurChocolatDeMarque, Map<ChocolatDeMarque, Variable>> prix;// Memorise pour chaque distributeur et chaque chocolat de marque une variable gardant trace du prix a l'etape.
 	//    private List<ChocolatDeMarque>chocolatsDeMarquesProduits; //  == Filiere.LA_FILIERE.getChocolatsProduits();
+	private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
 
-
+	private HashMap<Integer, Double> souhaitHorsPrix;
+	private HashMap<IDistributeurChocolatDeMarque, HashMap<Integer, Double>> souhait, obtenu;
 	private double distributionsAnnuelles[][] ;
 	// Exemple : 
 	//	{
@@ -121,6 +129,7 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		this.JournalDistribution.ajouter("=== initialisation du client "+this.getNom()+" ===");
 		this.marques = Filiere.LA_FILIERE.getMarquesChocolat();
 		this.initEvolutionDistributionAnnuelleDesVentes();
+		aff = Filiere.LA_FILIERE.getIndicateur("BourseCacao Aff.Graph.");
 
 		this.chocolatsDeMarquesProduits = Filiere.LA_FILIERE.getChocolatsProduits();
 
@@ -131,12 +140,16 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		this.volumeVente.cloner(this.venteCM.get(chocolatsDeMarquesProduits.get(0))); // initialement c'est le premier chocolat de marque dont le volume de vente est affiche
 		this.cmSelectionnee.addObserver(this);
 		
-		
+		souhait = new HashMap<IDistributeurChocolatDeMarque, HashMap<Integer,Double>>();
+		obtenu  = new HashMap<IDistributeurChocolatDeMarque, HashMap<Integer,Double>>();
+		souhaitHorsPrix = new HashMap<Integer, Double>();
 		List<IDistributeurChocolatDeMarque> distributeurs = Filiere.LA_FILIERE.getDistributeurs();
 		for (IDistributeurChocolatDeMarque d : distributeurs) {
 			this.quantiteEnVente.put(d, new HashMap<ChocolatDeMarque, Double>());
 			this.quantiteEnTG.put(d, new HashMap<ChocolatDeMarque, Double>());
 			this.prix.put(d, new HashMap<ChocolatDeMarque, Variable>());
+			this.souhait.put(d,  new HashMap<Integer, Double>());
+			this.obtenu.put(d,  new HashMap<Integer, Double>());
 			for (ChocolatDeMarque choco : chocolatsDeMarquesProduits) {
 				this.prix.get(d).put(choco, new Variable("prix"+d.getNom()+choco, null, this,  0.0, 100.0, -1.0));
 			}
@@ -257,7 +270,10 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		JournalDistribution.ajouter("Evolution conso globale : delta conso = "+Journal.doubleSur(deltaConso, 4)+" ==> conso = "+Journal.doubleSur(conso.getValeur(),2));
 
 		// Calcul du volume de la consommation a cette etape 
+		int step =Filiere.LA_FILIERE.getEtape();
 		double consoStep = conso.getValeur()*ratioStep();
+		this.souhaitHorsPrix.put(step, consoStep);
+		
 		JournalDistribution.ajouter("Conso a cette etape = "+Journal.doubleSur(consoStep, 4)+" (ratio distribution="+Journal.doubleSur(ratioStep(), 4)+")");
 
 		// Repartition des besoins clients en ventes
@@ -297,6 +313,8 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 				double enVente = this.quantiteEnVente.get(dist).get(choco);
 				double quantiteAchetee = Math.max(0.0, Math.min(quantiteDesiree, enVente));
 				quantiteAchetee = quantiteAchetee<0.05 ? 0.0 : quantiteAchetee; // En dessous de 50kg la quantite demandee devient 0.0 
+				souhait.get(dist).put(step, quantiteDesiree);
+				obtenu.get(dist).put(step, quantiteAchetee);
 				JournalDistribution.ajouter("&nbsp;&nbsp;&nbsp;&nbsp;pour "+Journal.texteColore(dist, dist.getNom()+" d'attractivite "+Journal.doubleSur(this.attractiviteDistributeur.get(choco).get(dist), 4)+" (avec prix="+Journal.doubleSur(pri, 4) +") la quantite desiree est "+Journal.doubleSur(quantiteDesiree,4)+" et quantite en vente ="+Journal.doubleSur(enVente, 4)+" -> quantitee achetee "+Journal.doubleSur(quantiteAchetee, 4)));
 				if (quantiteAchetee>0.0) {
 					totalVentes+=quantiteAchetee;
@@ -354,6 +372,40 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		for (ChocolatDeMarque choco1 : chocolatsDeMarquesProduits) {
 			this.journalAttractivites.ajouter("attractivite du "+choco1.getNom()+" == "+Journal.doubleSur(attractiviteChocolat.get(choco1), 4));
 		}
+		
+		//System.out.println("Distributeurs : "+Filiere.LA_FILIERE.getDistributeurs());		
+		if (this.aff.getValeur()!=0.0) {
+			try {
+
+				PrintWriter aEcrire= new PrintWriter(new BufferedWriter(new FileWriter("docs"+File.separator+"CF_volumes.csv")));
+				List<IDistributeurChocolatDeMarque> diss= new ArrayList<IDistributeurChocolatDeMarque>();//Filiere.LA_FILIERE.getDistributeurs();
+				for (IActeur ac : Filiere.LA_FILIERE.getActeurs()) { // On veut ajouter aussi ceux qui ont deja fait faillite.
+					if (ac instanceof IDistributeurChocolatDeMarque) {
+						diss.add((IDistributeurChocolatDeMarque)ac);
+					}
+				}
+				String entetes = "STEP;SOUHAIT_HORS_PRIX";
+
+				for (IDistributeurChocolatDeMarque dis : diss) {
+					entetes = entetes+";souhait_"+dis.getNom()+";achete_"+dis.getNom();
+				}
+				aEcrire.println(entetes);//"STEP;SOUHAIT_HORS_PRIX;CHOCOLAT;CHOCOLAT_DE_MARQUE");
+				for (int i = 0; i<=step;i++) {	
+					String s = i+";"+souhaitHorsPrix.get(i);
+					for (IDistributeurChocolatDeMarque d : diss) {
+						s = s+";"+souhait.get(d).get(i)+";"+obtenu.get(d).get(i);
+					}
+					aEcrire.println(s);// i+";"+souhaitHorsPrix.get(i)+";"  (volumesF.keySet().contains(i)?volumesF.get(i):"0.0")+";" +(volumesC.keySet().contains(i)?volumesC.get(i):"0.0")+";"+(volumesCM.keySet().contains(i)?volumesCM.get(i):"0.0")+";" );
+				}
+				aEcrire.close();
+				
+				
+			}
+			catch (IOException e) {
+				throw new Error("Une operation sur les fichiers a leve l'exception "+e) ;
+			}
+		}	
+
 	}
 	public List<String> getNomsFilieresProposees() {
 		List<String> noms = new ArrayList<String>();
@@ -530,5 +582,13 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 	
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0;
+	}
+	
+	public double getAttractivite(ChocolatDeMarque cm) {
+		return attractiviteChocolat.keySet().contains(cm) ? attractiviteChocolat.get(cm) : 0.0;
+	}
+	
+	public double getAttractivite(ChocolatDeMarque cm, IDistributeurChocolatDeMarque dis) {
+		return attractiviteDistributeur.keySet().contains(cm) ? (attractiviteDistributeur.get(cm).keySet().contains(dis) ?  attractiviteDistributeur.get(cm).get(dis): 0.0) : 0.0;
 	}
 }
