@@ -1,6 +1,7 @@
 /**@authors Fatima-Ezzahra  */
 package abstraction.eq1Producteur1;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
@@ -16,13 +17,18 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	public double  pourcentageBQ=0.02 ;
 	public double  pourcentageMQ=0.02 ;
 	private Journal journalBourse;
-	//protected 
+	protected ArrayList<Double> bourseBQ; 
+	protected ArrayList<Double> bourseMQ; 
+	protected ArrayList<Double> bourseHQ; 
 	/**
 	 * Constructeur de la classe Producteur1VendeurBourse.
 	 */
 	public Producteur1VendeurBourse() {
 		super();
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse", this);
+		bourseBQ = new ArrayList<Double>();
+		bourseMQ = new ArrayList<Double>();
+		bourseHQ = new ArrayList<Double>();
 	}
 
 
@@ -51,31 +57,29 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 			if (f.getGamme()==Gamme.MQ) {
-			
-							
-					if(cours>= (pourcentageMQ+quantiteEnT)*Seuil) {
+				if (true) {
+				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);	
+
 					return quantiteEnT;
 
 				}
 				
 			}
 			if (f.getGamme()==Gamme.HQ) {
-				
-				if(cours>= (pourcentageHQ+quantiteEnT)*Seuil) {
+				if (true) {
+				//if(cours>= (pourcentageHQ+1)*Seuil*quantiteEnT) {
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);	
+
 					return quantiteEnT;
 				}
 			
 			}
 			if (f.getGamme()==Gamme.BQ) {
-			
-				if(cours>= (pourcentageMQ+quantiteEnT)*Seuil) {
+				if (true) {
+				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
 					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-					System.out.println(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT);	
 					return quantiteEnT;
 				}
 				
@@ -118,6 +122,14 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 	}
+	public void changePlant() {
+		double ameBQ = 0; double ameMQ= 0; double ameHQ = 0;
+		if (bourseBQ.size() > 12) {
+			for (int i = 0; i < bourseBQ.size()-1;i++) {
+				ameBQ += (bourseBQ.get(i+1)-bourseBQ.get(i+1))/bourseBQ.get(i);
+			}
+		}
+	}
 	/**
 	 * Renvoie les journaux de l'acteur, y compris le journal de la bourse.
 	 * @return Une liste contenant les journaux de l'acteur.
@@ -132,8 +144,11 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	}
 	public void next() {
 		super.next();
+		changePlant();
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		bourse.getCours(Feve.F_BQ).getValeur();
+		bourseBQ.add(bourse.getCours(Feve.F_BQ).getValeur());
+		bourseMQ.add(bourse.getCours(Feve.F_MQ).getValeur());
+		bourseHQ.add(bourse.getCours(Feve.F_HQ).getValeur());
 		
 	}
 

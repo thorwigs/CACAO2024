@@ -18,7 +18,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
-/**@author youssef ben abdeljelil*/
+
 
 
 public class Producteur1MasseSalariale extends Producteur1Acteur {
@@ -51,7 +51,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	protected Ouvrier ouvrierNonEquitableForme;
 	protected Ouvrier ouvrierNonEquitableNonForme;
 
-
+	/**
+	 * @author haythem
+	 */
 	public Producteur1MasseSalariale() {
 		this.journalOuvrier = new Journal(this.getNom()+"   journal Ouvrier",this);//initialisation journal
 		this.nb_enfants = 150;
@@ -98,7 +100,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		masseSalariale.put(enfant, this.nb_enfants);
 
 		masseSalariale.put(ouvrierEquitableNonForme, this.nb_equitable);
-		masseSalariale.put(ouvrierEquitableForme, 0); // 
+		masseSalariale.put(ouvrierEquitableForme, 0); 
 		masseSalariale.put(ouvrierNonEquitableForme, 0);
 		masseSalariale.put(ouvrierNonEquitableNonForme, this.nb_normal);
 
@@ -129,20 +131,19 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	}
 
 
+	/**
+	 * @author haythem
+	 * @return masse salariale
+	 */
 	public HashMap<Ouvrier,Integer> getMasseSalariale() {
 		return this.masseSalariale;
 	}
+
 
 	public Integer get_Nombre_Enfant() { 
 		return masseSalariale.get(enfant); 
 
 	}
-
-
-
-
-
-
 	public Integer get_Nombre_Ouvrier_Equitable_Forme() { 
 		return masseSalariale.get(ouvrierEquitableForme); 
 	}
@@ -150,7 +151,6 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	public Integer get_Nombre_Ouvrier_Equitable_NonForme() { 
 		return masseSalariale.get(ouvrierEquitableNonForme); 
 	}
-
 
 	public Integer get_Nombre_Ouvrier_NonEquitable_Forme() { 
 		return masseSalariale.get(ouvrierNonEquitableForme); 
@@ -166,7 +166,11 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	}
 
 
-
+	/**
+	 * @author haythem
+	 * @param ouvrier de type Ouvrier
+	 * @param quantite quantite à ajouter
+	 */
 	public void addQuantiteOuvrier(Ouvrier ouvrier, int quantite) {
 		// Récupère la quantité actuelle ou initialise à 0 si l'ouvrier n'existe pas
 		Integer current = masseSalariale.getOrDefault(ouvrier, 0);
@@ -185,6 +189,11 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 	}
 
+	/**
+	 * @param type_ouvrier :le numéro du type d'ouvrier 
+	 * @param quantite:quantite à ajouter
+	 * @author haythem
+	 */
 	public void addQuantiteOuvrier(int type_ouvrier, int quantite) {//on peut utiliser cette méthode 
 		//aussi en fournissant le numero de type d'ouvriers qu'on veut ajouter
 		// 0 correspond à enfant
@@ -196,6 +205,13 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 	}
+
+	/**
+	 * 
+	 * @return salaire total en tenant compte de l'anciennete >10 ans correspond 
+	 * à une augmentation de 15% du salaire
+	 * @author haythem
+	 */
 	public double getSalaireTotal() {
 		double total = 0;
 
@@ -317,7 +333,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 			// Calcul de l'indemnité pour les employés supprimés à cet index
 			indemnite_licensiement += (int)(supprimes * pourcentageIndemnite * this.salaire.get(indice_type_ouvrier)); 
-			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemnite_licensiement",indemnite_licensiement );
+			if (indemnite_licensiement>0){
+				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "indemnite_licensiement",indemnite_licensiement );
+			}
 
 			anciennete_a_modifer.set(index, anciennete_a_modifer.get(index)-supprimes);
 
@@ -340,6 +358,10 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		return res;
 
 	}
+
+	/**
+	 * @author fatima
+	 */
 	public void amelioration() {
 		if (this.croissanceParStep.size() > 5) {
 			int etape = Filiere.LA_FILIERE.getEtape();
@@ -351,10 +373,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 			if ((annee != 0)& (annee % 5 == 0) && croissant   ) {
 
-                int nb = Math.min(enfants, 10);
-				this.removeEmploye(0,nb);//remove 10 enfants
-				this.journalOuvrier.ajouter("On a licencier" + nb +"enfants" );
-        
+
+				this.removeEmploye(0,10);//remove 10 enfants
+
 
 
 				if (this.salaire.get(1) < 2.5 ) { 
@@ -375,6 +396,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 			}
 		}
 	}
+	/**
+	 * @author youssef
+	 */
 
 	public void formation (int nbr_à_former,boolean equitable) {
 		double cout_formation=0;
