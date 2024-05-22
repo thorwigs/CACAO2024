@@ -194,15 +194,18 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
-							IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
-							journalACC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
-							ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
-							if (contrat==null) {
-								journalACC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
-								this.contratsEnCours.add(contrat);
-								journalACC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+							for (IVendeurContratCadre vendeur : vendeurs) {
+								journalACC.ajouter("   "+vendeur.getNom()+" retenu comme vendeur parmi "+vendeurs.size()+" vendeurs potentiels");
+								ExemplaireContratCadre contrat = supCC.demandeAcheteur(this, vendeur, f, e, cryptogramme, false);
+								if (contrat==null) {
+									journalACC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								} else {
+									this.contratsEnCours.add(contrat);
+									journalACC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signe");
+								}
 							}
+							//IVendeurContratCadre vendeur = vendeurs.get(Filiere.random.nextInt(vendeurs.size()));
+							
 						} else {
 							journalACC.ajouter("   pas de vendeur");
 						}

@@ -331,6 +331,8 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		
+		this.journalVCC.ajouter("===== phase de demande ======== ");
+		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 
 				for (ChocolatDeMarque choco : this.chocolatCocOasis) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
@@ -342,18 +344,21 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);	
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						if (acheteurs.size()>0) {
-							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-							
-							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							for (IAcheteurContratCadre acheteur : acheteurs) {
+								journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 							
 		
-							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
-							if (contrat==null) {
-								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
-								this.contratsEnCours.add(contrat);
-								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+								ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
+								if (contrat==null) {
+									journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+								} else {
+									this.contratsEnCours.add(contrat);
+									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+								}
 							}
+							//IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+							
+							
 						} else {
 							journalVCC.ajouter("  pas d'acheteur");
 						}
@@ -361,6 +366,8 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisante pour passer un contrat cadre");
 					}
 				}
+				journalVCC.ajouter(" === fin de phase de demande =========");
+				
 				}
 				
 				
@@ -376,19 +383,20 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(choco);
 						
 						if (acheteurs.size()>0) {
-							IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+							for (IAcheteurContratCadre acheteur : acheteurs) {
+									journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
 							
 							
-							ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
+									ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, choco, e, cryptogramme, true);
 							
-							if (contrat==null) {
-								journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
-							} else {
-								this.contratsEnCours.add(contrat);
-								journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
-							}
-							journalVCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");		
+									if (contrat==null) {
+										journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
+									} else {
+										this.contratsEnCours.add(contrat);
+										journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+									}
+								}
+							//IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
 						} else {
 							journalVCC.ajouter("   pas d'acheteur");
 						}
