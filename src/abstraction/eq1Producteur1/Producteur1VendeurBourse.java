@@ -67,7 +67,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 					this.quantiteEnTMQ=0.4*quantiteEnT;
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTMQ+" T de "+f);
 
-					return quantiteEnT;
+					return quantiteEnTMQ;
 
 				}
 				
@@ -79,7 +79,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 					this.quantiteEnTHQ=0.7*quantiteEnT;
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTHQ+" T de "+f);
 
-					return quantiteEnT;
+					return quantiteEnTHQ;
 				}
 			
 			}
@@ -89,7 +89,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 					this.quantiteEnTBQ=0.3*quantiteEnT;
 					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnTBQ+" T de "+f);
-					return quantiteEnT;
+					return quantiteEnTBQ;
 				}
 				
 			}
