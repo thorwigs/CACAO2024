@@ -254,6 +254,20 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 		
 		
+		
+		//
+		double somme = 0;
+		for (ChocolatDeMarque cm : this.chocosProduits) {
+			somme += this.stockChocoMarque.get(cm).getValeur();
+		}
+		System.out.println("_______________VERIF__________________");
+		System.out.println(this.totalStocksChocoMarque.getValeur(this.cryptogramme));
+		System.out.println(somme);
+		//
+		
+		
+		
+		
 		////////////////////////////////////////////////////
 		// Determination de la Capacité de Transformation //   (Erwann & Vincent & Victor)
 		////////////////////////////////////////////////////
