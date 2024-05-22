@@ -229,7 +229,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
 			totalStockChoco.retirer(this, quantite, cryptogramme);
 			}
-		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+" pour "+montant+" d'euros ");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
 		
 	}
 
