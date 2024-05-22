@@ -53,10 +53,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	
 	public void next() {
 		super.next();
-		System.out.println(" ---------------  ETAPE " + Filiere.LA_FILIERE.getEtape() + " ----------");
-		//System.out.println("quantite en stock de BQ " + this.getQuantiteEnStock(Feve.F_BQ,this.cryptogramme));
-		//System.out.println("quantite en stock de MQ " + this.getQuantiteEnStock(Feve.F_MQ,this.cryptogramme));
-		//System.out.println("quantite en stock de HQE " + this.getQuantiteEnStock(Feve.F_HQ_E,this.cryptogramme));
+		System.out.println(" ------------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " ------------- ");
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200 && f != Feve.F_MQ_E) { // au moins 100 tonnes par step pendant 6 mois
@@ -162,7 +159,17 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	 * @author Maxime
 	 */
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200 && ((Feve)produit) != Feve.F_MQ_E;
+		if (produit instanceof Feve){
+			Feve f = (Feve) produit;
+			if (f == Feve.F_MQ_E) {
+				return false;
+			}
+			else {
+				return produit.getType().equals("Feve") && stock.get((Feve)produit)-restantDu((Feve)produit)>1200;
+		
+			}
+		}
+		return false;
 	}
 	
 	public double getNbTonnesVenduesCC() {
@@ -180,11 +187,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 			}
 		}
 		if (doit_livrer < prod_par_step) {
-			//System.out.println(" on a assez de " + f.name() + " pour tenter de passer un contrat");
 			return prod_par_step - doit_livrer;
 		}
 		else {
-			//System.out.println(" on n'a pas assez de " + f.name());
 			return 0;
 		}
 	}
@@ -195,28 +200,19 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		double doit_environ_livrer_par_step = contrat.getEcheancier().getQuantiteTotale();		
 		double prod_par_step = this.getHectaresPlantes(f, this.cryptogramme)*0.5/24;
 		double doit_deja_livrer = 0;
-		//System.out.println(" ----- ");
-		//System.out.println("Feve de contrat qu'on hésite à passer " + f.name());
-		
+	
 		for (ExemplaireContratCadre  c : this.contratsEnCours) {
 			Feve feve_contrat = (Feve) c.getProduit();
-			//System.out.println(" feve du contrat en cours " + ((Feve) c.getProduit()).name());
+			
 			if (f.equals(feve_contrat)) {
-				//System.out.println(" Quantite a livrer par step " + c.getQuantiteALivrerAuStep());
 				doit_deja_livrer = doit_deja_livrer + c.getQuantiteALivrerAuStep();
 			}
 		}
-		/*System.out.println(" CONTRAT " + contrat.getNumero());
-		System.out.println("on produit " + prod_par_step + " de feve " + f.name());
-		System.out.println("on doit deja livrer " + doit_deja_livrer + " et avec ce nouveau contrat : " +doit_environ_livrer_par_step );*/
-		
 		
 		if (doit_deja_livrer + doit_environ_livrer_par_step < prod_par_step) {
-			//System.out.println(" on accepte ");
 			return true;
 		}
 		
-		//System.out.println("on refuse");
 		return false;
 		
 	}
@@ -258,7 +254,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit)-restantDu((Feve)produit)/12)));
 					}
 				}
-				//System.out.println("le contrat passé est avec le type de feve :" + ((Feve) produit).name() );
+			
 				journalCC.ajouter("      j'accepte l'echeancier");
 				return res;
 	}
@@ -268,7 +264,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	 * @author Maxime
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		if (!contrat.getProduit().getType().equals("Feve")) {
+		if (!contrat.getProduit().getType().equals("Feve") || ( (Feve) contrat.getProduit()) == Feve.F_MQ_E) {
 			return 0; // ne peut pas etre le cas normalement 
 		}
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
@@ -329,21 +325,14 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		double stockActuel = this.getQuantiteEnStock(f, this.cryptogramme);
 		double a_livrer_par_step = contrat.getQuantiteALivrerAuStep();
 		if (stockActuel < a_livrer_par_step) {
-			//System.out.println(" pas assez de " + f.name() + " pour le contrat " + contrat.getNumero());
-			/*System.out.println("-------------- ETAPE "+ Filiere.LA_FILIERE.getEtape()+ " -----------------");
-			System.out.println(" fonction livrer, type de fève : " + f.name() );
-			System.out.println("quantite a livrer  " + a_livrer_par_step);
-			System.out.println(" nombres d'hectares actuels " + this.getHectaresPlantes(f, this.cryptogramme));*/
-			int quantite_a_planter = (int) (48*a_livrer_par_step*2);
-			this.embauche(quantite_a_planter, "adulte");
+			int quantite_a_planter = (int) (48*a_livrer_par_step);
 			this.planter(quantite_a_planter, f);
-			/*System.out.println(" on plante " + quantite_a_planter );
-			System.out.println(" nombres d'hectares après plantation " + this.getHectaresPlantes(f, this.cryptogramme));*/
+			
 		}
 		double aLivre = Math.min(quantite, stockActuel);
-		//System.out.println(" on a " + this.getQuantiteEnStock(f, this.cryptogramme));
+		
 		this.stock_a_vendre(f, quantite);
-		if (this.getQuantiteEnStock(f, this.cryptogramme) < 1000) {
+		if (this.getQuantiteEnStock(f, this.cryptogramme) < 10000) {
 			double hectares_a_planter = aLivre*2*1.3; // 0.5 tonnes par hectare et 1.3 pour avoir un peu plus
 			this.planter(hectares_a_planter, f);
 		}

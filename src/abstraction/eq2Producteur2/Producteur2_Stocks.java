@@ -109,7 +109,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 		//Si on dépasse le seuil de stockage
 		if (this.getQuantiteEnStock(type_feve, this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
-			//System.out.println(" il y a trop de stock de " + type_feve.name());
 			trop_de_stock(type_feve, quantite);
 		}
 		else {
@@ -263,11 +262,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */
 	public double stock_a_vendre(Feve type_feve, double quantite_demandee) {
-		//System.out.println("stock a vendre avec " + type_feve.name());
+		
 		List<Producteur2_Lot> lst_lot_feve = this.lot_type_feve(type_feve);
-		if (type_feve == Feve.F_HQ_E) {
-			//System.out.println(" nombre de lots " + lst_lot_feve.size());
-		}
 		
 		double quantite_prise = 0;
 		for(Producteur2_Lot l : lst_lot_feve) {
