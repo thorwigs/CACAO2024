@@ -92,7 +92,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			if (choco.getChocolat()==Chocolat.C_HQ_BE) {
 				ListPrix.put(choco, (double) 30000);
 			}
-		}
+		} 
 		else {
 			if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
 				ListPrix.replace(choco, Math.max(7000,0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)));
