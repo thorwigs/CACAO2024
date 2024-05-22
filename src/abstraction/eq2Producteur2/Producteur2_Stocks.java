@@ -1,5 +1,6 @@
 package abstraction.eq2Producteur2;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
@@ -109,7 +110,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 		//Si on dépasse le seuil de stockage
 		if (this.getQuantiteEnStock(type_feve, this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
-			trop_de_stock(type_feve, quantite);
+			//trop_de_stock(type_feve, quantite);
 		}
 		else {
 			if(quantite != 0 && type_feve == Feve.F_BQ) {
@@ -213,6 +214,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */
 	public void changement_qualite() {
+		List<Producteur2_Lot> lst = new LinkedList<Producteur2_Lot>();
 		for(Producteur2_Lot lot : this.lst_stock_total) {
 			if((lot.getType_feve() == Feve.F_HQ_E || lot.getType_feve() == Feve.F_HQ_BE) && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_HQ_MQ)) {
 				lot.setType_feve(Feve.F_MQ_E);
@@ -224,9 +226,12 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				lot.setType_feve(Feve.F_BQ);
 			}
 			else if(lot.getType_feve() == Feve.F_BQ && (Filiere.LA_FILIERE.getEtape() - lot.getEtape() >= DELAI_BQ_JETE)) {
-				//this.retire_lot(lot);
-				lot.setQuantite(0);
+
+				lst.add(lot);
 			}
+		}
+		for (Producteur2_Lot lot :lst) {
+			retire_lot(lot);
 		}
 	}
 	
