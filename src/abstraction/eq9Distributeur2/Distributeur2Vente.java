@@ -120,13 +120,8 @@ public abstract class Distributeur2Vente extends Distributeur2Stocks implements 
 	@Override
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
 		// TODO Auto-generated method stub
-<<<<<<< HEAD
 
 		return this.quantiteEnVenteTGG(crypto).get(choco);
-
-=======
-		return this.quantiteEnVente(choco, crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG*0.99;
->>>>>>> branch 'main' of https://github.com/Maxime-cod/CACAO2024
 	}
 
 	@Override
