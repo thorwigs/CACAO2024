@@ -78,7 +78,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			}  
 		} */
 		
-		
 		int choisi=-1; // permet de connaître la proposition choisi à la fin, la moins chere, ou renverra -1 si pas d'offre correspondante
 		for (int i=0; i<propositions.size();i++) {
 			if(propositions.get(0).getOffre().getProduit().equals(propositions.get(i).getProduit())) {
@@ -102,7 +101,8 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			}
 			choisi=choix;
 		}
-		
+
+		this.choix = new HashMap<Integer,OffreVente>();
 		
 		if (choisi==-1) {
 			journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN,"   refus de l'AO : produit pas correspondant à la demande");
@@ -116,7 +116,8 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			 } else {
 				 return propositions.get(choisi);
 			 }
-		}
+		} 
+
 	}
 	
 	/**
