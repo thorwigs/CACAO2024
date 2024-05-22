@@ -29,7 +29,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		
 		//this.totalStocksChocoMarque = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
-		this.totalStocks = new VariablePrivee("Eq9DTotalStocksCorrect", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
+		this.totalStocks = new VariablePrivee("Eq9DTotalStocks", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0);
 		/*for (ChocolatDeMarque cm : Filiere.LA_FILIERE.getChocolatsProduits()) {
 			this.stockChocoIndicateur.put(cm,new Variable("Eq9DStockChocoMarque_"+ cm , "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0,Double.MAX_VALUE, 0.0));
 		}*/
