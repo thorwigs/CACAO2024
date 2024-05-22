@@ -52,15 +52,19 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	public boolean vend(IProduit produit) { 
 
 		for (ChocolatDeMarque c : this.chocolatCocOasis) {
-			if ((produit.getType().equals("ChocolatDeMarque")) && (c == (ChocolatDeMarque)produit) && (stockChocoMarque.get(produit)>25000) ) {
+			//System.out.println("   ---"+c+" "+(produit.getType().equals("ChocolatDeMarque"))+" "+((produit.getType().equals("ChocolatDeMarque"))?(c.equals((ChocolatDeMarque)produit)):"...")+" "+((produit.getType().equals("ChocolatDeMarque")&&(c.equals((ChocolatDeMarque)produit)))?(stockChocoMarque.get(produit)>25000):"..."));
+			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>25000) ) {
+				System.out.println(" on vend "+produit);
 				return true;
 			}
 		}
 		for (ChocolatDeMarque c : this.chocolatDistributeur) {
-			if ((produit.getType().equals("ChocolatDeMarque")) &&(c == (ChocolatDeMarque)produit) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 25000 )) {
+			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 25000 )) {
+				System.out.println(" on vend "+produit);
 				return true;
 			}
 		}
+		System.out.println(" on ne vend pas "+produit);
 		return false ; 
 		
 		//à modifier selon ce qu'on veut vendre et dans quelles circonstances
