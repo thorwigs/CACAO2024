@@ -40,8 +40,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
 		this.contrat_term= new LinkedList<ExemplaireContratCadre>();
 		this.journalCC= new Journal (this.getNom() + "journal CC", this);
-		this.test=0;
 		this.choix=new LinkedList<ExemplaireContratCadre>();
+		this.test=1;
 	}
 	
 
@@ -255,18 +255,43 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 //			|| this.chocoBan.contains(produit)) {
 			return 0.0; 
 		}
-
+		
 		if (this.test==0) {
 			this.choix.add(contrat);
 			return 0.0;
 		}
-		if (contrat.getPrix() <= this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*0.80 && this.test == 1) {
-			return contrat.getPrix();		
+				
+		double x = 0.0;
+		
+		if (contrat.getPrix() <= this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*0.85 && this.test == 1) {
+			if (contrat.getListePrix().size()<2){
+				x=contrat.getPrix();		
+			} else {
+				if (contrat.getListePrix().get(contrat.getListePrix().size()-1)<contrat.getListePrix().get(contrat.getListePrix().size()-2)*1.04){
+					x=contrat.getPrix();		
+				}
+			}		
 		}
 				
 		else {
-			return this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*(0.80+(0.15*contrat.getListePrix().size())/supCC.MAX_PRIX_NEGO);
+			if (this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*(0.80+(0.15*contrat.getListePrix().size())/supCC.MAX_PRIX_NEGO) <this.Min(contrat.getListePrix())) {
+				x=this.prix_a_perte(contrat.getProduit(),contrat.getPrix())*(0.80+(0.15*contrat.getListePrix().size())/supCC.MAX_PRIX_NEGO);
+			} else {
+				x=this.Min(contrat.getListePrix());
+			}
 		}
+		return x; 
+		
+	}
+	
+	public Double Min(List<Double> liste) {
+		double x = 10000000000.0;
+		for (int i=0;i<liste.size();i++) {
+			if (i%2==0 && liste.get(i)<x) {
+				x = liste.get(i);
+			}
+		}
+		return x;
 	}
 
 	/**
@@ -324,6 +349,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	 */
 	public void next() {
 		super.next();
+		this.test=0;
+		this.choix=new LinkedList<ExemplaireContratCadre>();
 		this.journalCC.ajouter("");
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 
@@ -342,9 +369,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		
 		
 		for (ChocolatDeMarque choc : chocolats) {
+			this.test=0;
+			this.choix=new LinkedList<ExemplaireContratCadre>();
 			if (this.achete(choc)) {
 				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter pour le chocolat : "+choc);
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
+
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
@@ -403,10 +433,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 						this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"" );	
 					} 
 				}
-				this.choix=new LinkedList<ExemplaireContratCadre>();
-				this.test=0;
 			}
 		}
+		this.test=1;
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
 		this.journalCC.ajouter("");
 
