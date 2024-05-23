@@ -183,7 +183,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	 * @author Thomas
 	 */
 	public boolean achete(IProduit produit) {
-		if( ! produit.getType().equals("Feve")) {
+		/**if( ! produit.getType().equals("Feve")) {
 			return false;
 		}
 		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
@@ -191,7 +191,11 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 				return stockChocoMarque.get(produit)+restantDu((Feve)produit)<50000;
 			}
 		}
-		return false;
+		return false;*/
+		if (produit.getType().equals("Feve")) {
+			return ((Feve)produit)==Feve.F_MQ || ((Feve)produit)==Feve.F_MQ_E || ((Feve)produit)==Feve.F_BQ;
+		}
+	return false;
 	}
 	/**
 	 * @author Thomas
