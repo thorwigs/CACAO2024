@@ -15,6 +15,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eq4Transformateur1.*;
@@ -74,6 +75,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.journalCC6.ajouter(Color.BLUE, Color.white,"=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		this.journalCC6.ajouter("=== Partie Achat fèves ====================");
 		HashMap<Feve, Integer> Decision = super.Decision();
+		super.addhistorique(coûtMoyenAchatFeve, stockChoco, stockChocoMarque);
 		for(Feve f : Decision.keySet()) {
 			if(Decision.get(f)>10) {
 				this.journalCC6.ajouter("   "+f+" suffisamment de vente pour passer un CC");
@@ -181,8 +183,19 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	 * @author Thomas
 	 */
 	public boolean achete(IProduit produit) {
-		return produit.getType().equals("Feve") 
-				&& stockFeves.get(produit)+restantDu((Feve)produit)<150000;
+		/**if( ! produit.getType().equals("Feve")) {
+			return false;
+		}
+		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
+			if(Correspond(c.getChocolat())==produit) {
+				return stockChocoMarque.get(produit)+restantDu((Feve)produit)<50000;
+			}
+		}
+		return false;*/
+		if (produit.getType().equals("Feve")) {
+			return ((Feve)produit)==Feve.F_MQ || ((Feve)produit)==Feve.F_MQ_E || ((Feve)produit)==Feve.F_BQ;
+		}
+	return false;
 	}
 	/**
 	 * @author Thomas
@@ -199,7 +212,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		else{
 			return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12 , contrat.getEcheancier().getQuantiteTotale()/12 );
 		}
-	}
+	} 
 	/**
 	 * @author Thomas
 	 */
@@ -212,13 +225,8 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		}
 		if (((Feve)contrat.getProduit()).isEquitable()) {
 			
+			return Math.min(0.8 * prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*2);
 			
-			if (contrat.getPrix()<0.8 * prixSansDecouvert) {
-				return contrat.getPrix();
-				}
-			else {
-				return Math.min(0.8*prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*1.25);
-			}
 			
 		}
 		else {
@@ -230,7 +238,6 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 				return Math.min(0.8* prixSansDecouvert, 1.04*cours);
 			}
 		}
-	
 	}
 	/**
 	 * @author Thomas
@@ -251,5 +258,4 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 		}
 	}
-
 }

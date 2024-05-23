@@ -44,14 +44,15 @@ public class Transformateur3AcheteurBourse extends Transformateur3AcheteurCCadre
 		// Stratégie : Notre acteur achète des fèves selon leurs différents cours en bourse, et ses stocks.
 		// Il achète en fonction de seuils pour le cours comme pour ses stocks.
 		
+		
 		if (f.getGamme()==Gamme.BQ) {
-			 double seuilTrèsBas_BQ = 1000.0;
-			    double seuilBas_BQ = 2000.0;
-			    double seuilHaut_BQ = 3000.0;
+			 double seuilTrèsBas_BQ = 500.0;
+			    double seuilBas_BQ = 750.0;
+			    double seuilHaut_BQ = 1000.0;
 			    double demandeDefault_BQ = 500.0; 
 
-			     if (this.stockFeves.get(f)<10000.0) {
-					return 10000-this.stockFeves.get(f); // Si on n'a plus de fèves, on en achète en urgence en bourse pour avoir un "fond de roulement" à 10k
+			     if (this.stockFeves.get(f)<100.0) {
+					return 500-this.stockFeves.get(f); // Si on n'a plus de fèves, on en achète en urgence en bourse pour avoir un "fond de roulement" à 10k
 				}
 			
 			
@@ -59,7 +60,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3AcheteurCCadre
 			        return demandeDefault_BQ * 3.0 ; // Si le cours est vraiment bas, on achète beaucoup
 			    }
 			    
-			     if (this.stockFeves.get(f)>50000.0) { // Si on a trop de stocks, on achète uniquement si le cours est très bas (if du dessus, sinon on ignore les if suivants)
+			     if (this.stockFeves.get(f)>1000.0) { // Si on a trop de stocks, on achète uniquement si le cours est très bas (if du dessus, sinon on ignore les if suivants)
 				    	return 0.0;
 				    }
 			   
@@ -78,12 +79,12 @@ public class Transformateur3AcheteurBourse extends Transformateur3AcheteurCCadre
 		
 		else if (f.getGamme()==Gamme.MQ) {
 			
-	    double seuilTrèsBas_MQ = 1500.0;
-	    double seuilBas_MQ = 3000.0;
-	    double seuilHaut_MQ = 4000.0;
+	    double seuilTrèsBas_MQ = 750.0;
+	    double seuilBas_MQ = 1000.;
+	    double seuilHaut_MQ = 1300.0;
 	    double demandeDefault_MQ = 500.0; 
 
-	     if (this.stockFeves.get(f)<10000.0) {
+	     if (this.stockFeves.get(f)<1000.0) {
 			return 10000-this.stockFeves.get(f); // Si on n'a plus de fèves, on en achète en urgence en bourse pour avoir un "fond de roulement" à 10k
 		}
 	
@@ -92,7 +93,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3AcheteurCCadre
 	        return demandeDefault_MQ * 3.0 ; // Si le cours est vraiment bas, on achète beaucoup
 	    }
 	    
-	     if (this.stockFeves.get(f)>50000.0) { // Si on a trop de stocks, on achète uniquement si le cours est très bas (if du dessus, sinon on ignore les if suivants)
+	     if (this.stockFeves.get(f)>1500.0) { // Si on a trop de stocks, on achète uniquement si le cours est très bas (if du dessus, sinon on ignore les if suivants)
 		    	return 0.0;
 		    }
 	   
