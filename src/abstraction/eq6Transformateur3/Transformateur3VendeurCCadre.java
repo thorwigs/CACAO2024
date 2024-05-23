@@ -88,7 +88,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	}
 
 	/**
-	 * @author Arthur
+	 * @author Arthur et Mahel
 	 */
 	public boolean vend(IProduit produit) {
 		
@@ -122,15 +122,15 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 	}
 
 	/**
-	 * @author Thomas et Cédric
+	 * @author Thomas et Cédric et Arthur
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		
 		Chocolat c = ((ChocolatDeMarque) contrat.getProduit()).getChocolat();
 		Feve f = super.Correspond(c);
-		double prix = coûtMoyenAchatFeve.get(f) + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
+		double prix = coûtMoyenAchatFeve.get(f)*4.2 + 0.5 * 1200 + 8; // prise en compte du cout de production ( pas exactement car non prise en compte de la qualité de notre chocolat,0.5 choisi arbitrairementet(pourcentage d'adjuvants)) et du prix moyen de la tonne de fève qu'on achète dans nos contrats en cours
 		
-		return 1.03 * prix; //  un petit +3% pour maximiser le prfofit
+		return 1.05 * prix; //  un petit +5% pour maximiser le profit
 		
 	}
 	/**
