@@ -246,5 +246,4 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 		}
 	}
-
 }
