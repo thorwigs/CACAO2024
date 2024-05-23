@@ -2,8 +2,10 @@ package abstraction.eq3Producteur3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -22,6 +24,10 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	private LinkedList<ExemplaireContratCadre> contratsEnCours = new LinkedList<>();
 	private SuperviseurVentesContratCadre superviseur;
 	private ExemplaireContratCadre contr;
+	private int itQ; //compteur du step de négo
+	private double prixNego; 
+	private double nonLivre;
+	private double Livre;
 	
 	/**
 	 * @author Arthur
@@ -43,9 +49,13 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * Initalise le super et invoque le superviseur
 	 */
 	public void initialiser() {
+		nonLivre = 0;
+		Livre = 0;
 		super.initialiser();
 		//On appelle le superviseur de la filiere
 		superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup."+(SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE>1?SuperviseurVentesContratCadre.NB_SUPRVISEURS_CONTRAT_CADRE+"":"")+"CCadre");
+		itQ = 0;
+		prixNego = 0;
 	}
 	
 	/**
@@ -56,6 +66,9 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
         super.next();
         //on lance de nouveaux contrats (a verifier)
         proposerContrats();
+        if (Filiere.LA_FILIERE.getEtape()%100 == 90) {
+        	this.journal_bourse.ajouter(""+nonLivre/Livre);
+        }
     }
 	
 	/**
@@ -74,7 +87,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    for (Feve f : feves) { 
 	    	//pour tous les acheteurs de chaque feves on propose un echeancier de 10 step
 	        List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
-	        for (IAcheteurContratCadre acheteur : acheteurs) {
+	        Set<IAcheteurContratCadre> acheteurSet = new HashSet<IAcheteurContratCadre>(acheteurs);
+	        for (IAcheteurContratCadre acheteur : acheteurSet) {
 	        	int dureeStep = 10; //duree du CC en step
 		        LinkedList<Double> quantiteDispo = quantiteDisponibleFutur(f,Filiere.LA_FILIERE.getEtape(),dureeStep+Filiere.LA_FILIERE.getEtape());
 		        double quantiteDisponible = quantiteDispo.stream().reduce(Double::sum).get();
@@ -121,7 +135,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		 	double quantiteDisponible = 0.0; // Valeur par défaut
 	        if (quantiteFuture().containsKey(f)) {
 	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après
-	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step);
+	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step-1);
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
@@ -193,6 +207,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * Propose un prix de base du cacao en fonction de la feve du contrat
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat) {
+		itQ = 0;
 	    IProduit produit = contrat.getProduit();
 	    if (!(produit instanceof Feve)) { return 0;}
 	    
@@ -200,7 +215,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	    double prixBase=coutRevient(feve,contrat.getQuantiteTotale());
 	    //on fixe un prix de base selon la gamme
 	     if (feve.getGamme() == Gamme.HQ) {
-	        prixBase = Math.max(3000.0,prixBase); // à ajuster selon l'équitable et bio équitable
+	        prixBase = Math.max(3000.0,prixBase);
 	    } else if (feve.getGamme() == Gamme.MQ) {
 	       prixBase = Math.max(prixBase, 1910.0);
 	    }
@@ -210,7 +225,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	      } else if (feve.isEquitable()) {
 	           prixBase = Math.max(3200.0, prixBase); // Prix pour équitable 
 	      }
-	    return prixBase * 1.2; // Ajouter une marge de profit par exemple de 20% à modifier
+	      prixNego = prixBase * 1.2;
+	      return prixNego; // Ajouter une marge de profit par exemple de 20% à modifier
 	}
 
 	/**
@@ -220,18 +236,23 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * On propose un nouveau prix (potentiellement le meme) suite a la contre-proposition faite par l'acheteur
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+		itQ += 1;
+		this.journal_bourse.ajouter("itQ="+itQ);
 	    IProduit produit = contrat.getProduit();
 	    if (!(produit instanceof Feve)) {
 	        return 0; }
 	    double prixPropose = contrat.getPrix();
-	    double prixMinimal= propositionPrix(contrat)/1.2;
+	    double prixMinimal= prixNego/1.2;
+	    this.journal_bourse.ajouter("prixMinimal"+prixMinimal);
 	    // Si le prix proposé est supérieur au prixMinimal, accepter le prix proposé
 	    if (prixPropose > prixMinimal) {
 	        return prixPropose;
 	    } else {
 
-	        // Sinon, retourner le prix Minimal
-	        return prixMinimal;
+	        // Sinon, retourner un prix qui tend vers prixMinimal au cours de la négociation
+	    	double test = prixMinimal*1.2 - itQ*prixMinimal*0.2/15;
+	    	this.journal_bourse.ajouter("testprix="+ test);
+	        return prixMinimal*1.2 - itQ*prixMinimal*0.2/15;
 	    }
 	}
 
@@ -263,12 +284,15 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 			this.journal_contrat_cadre.ajouter("Livraison totale : "+quantite+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			//on envoie ce que l'on a promis et on met a jour les variables
 			ventefevecadre.put((Feve)contrat.getProduit(), quantite);
+			Livre += 1;
 			return quantite;
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock et met a jour les variables
 			this.setQuantiteEnStock((Feve)produit, 0);
 			this.journal_contrat_cadre.ajouter("Livraison partielle : "+stock_inst+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			ventefevecadre.put((Feve)contrat.getProduit(), stock_inst);
+			nonLivre += 1;
+			Livre += 1;
 			return stock_inst;
 		}
 	}

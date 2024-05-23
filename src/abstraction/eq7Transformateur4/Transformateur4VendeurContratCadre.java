@@ -53,13 +53,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 
 		for (ChocolatDeMarque c : this.chocolatCocOasis) {
 			//System.out.println("   ---"+c+" "+(produit.getType().equals("ChocolatDeMarque"))+" "+((produit.getType().equals("ChocolatDeMarque"))?(c.equals((ChocolatDeMarque)produit)):"...")+" "+((produit.getType().equals("ChocolatDeMarque")&&(c.equals((ChocolatDeMarque)produit)))?(stockChocoMarque.get(produit)>25000):"..."));
-			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>25000) ) {
+			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>4500) ) {
 				//System.out.println(" on vend "+produit);
 				return true;
 			}
 		}
 		for (ChocolatDeMarque c : this.chocolatDistributeur) {
-			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 25000 )) {
+			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 4500 )) {
 				//System.out.println(" on vend "+produit);
 				return true;
 			}
@@ -85,38 +85,38 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		//si ce sont des mirages , codé par Anaïs et Pierrick
 		if ( ((ChocolatDeMarque)contrat.getProduit()).getMarque() == "Mirage") {
 			if (stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()))-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
-			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
-			} else { // les volumes sont corrects, la duree et le debut aussi
-				return contrat.getEcheancier();
-			}
-		} else {
-			double marge = - 25000 + stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit())) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
-			if (marge<100) {
-				return null;
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
+				} else { // les volumes sont corrects, la duree et le debut aussi
+					return contrat.getEcheancier();
+				}
 			} else {
-				double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
+				double marge = - 25000 + stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit())) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
+				if (marge<100) {
+					return null;
+				} else {
+					double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 				}
 			}
 			
 		//si ce ne sont pas des Mirage; codé par Eliott
 		} else {		
 			if (stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() )-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
-			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
-			} else { // les volumes sont corrects, la duree et le debut aussi
-				return contrat.getEcheancier();
-			}
-		} else {
-			double marge = - 25000 + stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() ) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
-			if (marge<100) {
-				return null;
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
+				} else { // les volumes sont corrects, la duree et le debut aussi
+					return contrat.getEcheancier();
+				}
 			} else {
-				double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
+				double marge = - 25000 + stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() ) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
+				if (marge<100) {
+					return null;
+				} else {
+					double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 				}
 			}
 		}
@@ -175,14 +175,18 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		double prixPropose = 0.0;
+		
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			prixPropose = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
+			prixPropose = 1.07*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
 		} else {
-			prixPropose = contrat.getQuantiteTotale()*1.05*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+			prixPropose = 1.07*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+
 		}
+		//System.out.println("prix tonne fève"+getPrixFèves(contrat.getProduit()));
+		//System.out.println("prix propose est "+prixPropose);
 		prixPrecedent.put(contrat, prixPropose);
 		return prixPropose;
-	}//prend compte des coûts de production en ajoutant une marge de 10%
+	}//prend compte des coûts de production en ajoutant une marge de 7%
 	
 	
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
@@ -199,35 +203,35 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		///////début//////modif 07/05 Pierrick
 		double coutProd = 0.0; //ce truc vaut la même chose que propositionPrix(contrat) mais sans la marge de x%
 		if (coutproduction_tonne_marque_step.isEmpty()){
-			coutProd = contrat.getQuantiteTotale()*(this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) );
+			coutProd = this.coutmachine + this.coutadjuvant*0.2 + getPrixFèves(contrat.getProduit()) + (1000*this.nbemployeCDI + 658)/(this.nbemployeCDI*this.tauxproductionemploye) ;
 		}
 		else {
-			coutProd = qte*(coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit()));
+			coutProd = coutproduction_tonne_marque_step.get(contrat.getProduit()) + getPrixFèves(contrat.getProduit());
 		}
 		//////fin/////////
 		
 		if (pPropose <  pPrecedent) {
-			if ((pPropose+pPrecedent)/2 >= coutProd*1.02){
+			if ((pPropose+pPrecedent)/2 >= coutProd*1.05){
 				prixPrecedent.put(contrat, (pPropose+pPrecedent)/2);
 				return (pPropose+pPrecedent)/2;
 			}
-			if ((pPropose+2*pPrecedent)/3 >= coutProd*1.02){
+			if ((pPropose+2*pPrecedent)/3 >= coutProd*1.05){
 				prixPrecedent.put(contrat, (pPropose+2*pPrecedent)/3);
 				return (pPropose+2*pPrecedent)/3;
 			}
-			if ((pPropose+3*pPrecedent)/4 >= coutProd*1.02){
+			if ((pPropose+3*pPrecedent)/4 >= coutProd*1.05){
 				prixPrecedent.put(contrat, (pPropose+3*pPrecedent)/4);
 				return (pPropose+3*pPrecedent)/4;
 			}
 			else {
-				prixPrecedent.put(contrat, coutProd*1.02);
-				return coutProd*1.02;
+				prixPrecedent.put(contrat, coutProd*1.05);
+				return coutProd*1.05;
 			}
 		}
 		else {
 			return pPropose;
 		}
-	}//négocie le prix en nous garantissant une marge minimale de 2% (on enregistre notre précédente proposition dans prixPrecedent)
+	}//négocie le prix en nous garantissant une marge minimale de 5% (on enregistre notre précédente proposition dans prixPrecedent)
 
 	
 	
@@ -334,7 +338,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		super.next();
 		this.journalVCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		
-		this.journalVCC.ajouter("===== phase de demande ======== ");
+		this.journalVCC.ajouter("===== phase de demande chocolat Mirage ======== ");
 		
 			//Pour les chocos de la marque CocOasis, codé par Anaïs et Pierrick
 
@@ -356,7 +360,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 									journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 								} else {
 									this.contratsEnCours.add(contrat);
-									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getPrix() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getMontantRestantARegler() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
 								}
 							}
 							//IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
@@ -369,11 +373,12 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisante pour passer un contrat cadre");
 					}
 				}
-				journalVCC.ajouter(" === fin de phase de demande =========");
+				
 				
 				}
 				
-				
+				journalVCC.ajouter(" === fin de phase de demande chocolat Mirage =========");
+				this.journalVCC.ajouter("===== phase de demande chocolat Distributeur ======== ");
 			//Pour les chocos de marque distributeur, codé par Eliott
 				
 				for(ChocolatDeMarque choco : this.chocolatDistributeur) {
@@ -420,8 +425,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 						journalVCC.ajouter(" quantité de " + choco + "  insuffisnate pour passer un contrat cadre");
 					}	
 				}
-				}
 				
+				}
+				journalVCC.ajouter(" === fin de phase de demande chocolat Distributeur =========");
 				
 		// On archive les contrats terminés  (pas à modifier)
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
