@@ -92,13 +92,14 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 			}
 		}
 		
-		if (dem >= autresAV+stock) {
+		if (dem > autresAV+stock) {
 			return stock;
-		}
-		else if (dem == 0) {
+		} else if (dem == autresAV+stock){
+			return stock-0.01; //si l'offre est egale a la demande, le cours descend: on fait en sorte d'avoir une offre legerement inferieur pour augmenter le cours
+		} else if (dem == 0) {
 			return 0;
 		} else if (autresAV == 0) {
-			return Math.min(stock,dem);
+			return Math.min(stock,dem)-0.01;
 		} else if (stock < dem) {
 			return stock/dem*autresAV/(1-stock/dem);
 		} else {

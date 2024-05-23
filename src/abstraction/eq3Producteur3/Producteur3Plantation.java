@@ -170,15 +170,14 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	*/
 	protected HashMap<Feve,Double> maindoeuvre() {
 		//renvoie le nombre d'ouvriers necessaires et le type de feve selon la superficie (en ha) et le type de plantation
-		HashMap<Feve,Double> surfaces = plantation();
 		HashMap<Feve,Double> ouvriers = new HashMap<Feve,Double>();
-		for (Feve f : surfaces.keySet()) {
+		for (Feve f : surfacePlantation.keySet()) {
 			if (f.isBio()) {
 				//1.5 ouvriers par ha en bio
-				ouvriers.put(f, 1.5*surfaces.get(f));
+				ouvriers.put(f, 1.5*surfacePlantation.get(f));
 			} else {
 				//1 ouvrier par ha en conventionnel
-				ouvriers.put(f, surfaces.get(f));
+				ouvriers.put(f, surfacePlantation.get(f));
 			}
 		}
 		return ouvriers;
