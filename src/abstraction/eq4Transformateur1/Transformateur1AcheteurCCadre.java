@@ -68,7 +68,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	                    journalCC.ajouter(Color.RED, Color.WHITE, "   échec des négociations");
 	                } else {
 	                    this.contratsEnCoursAchat.add(contrat);
-	                    journalCC.ajouter(Color.GREEN, vendeur.getColor(), "   contrat signé avec l'échéancier : "+contrat.getEcheancier());
+	                    journalCC.ajouter(Color.GREEN, Color.WHITE, "   contrat signé avec l'échéancier : "+contrat.getEcheancier());
 	                }
 	            } else {
 	                journalCC.ajouter("   pas de vendeur");
