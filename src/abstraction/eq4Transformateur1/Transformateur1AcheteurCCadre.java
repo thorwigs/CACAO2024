@@ -15,6 +15,7 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
@@ -112,12 +113,24 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
 	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC.get(Gamme.HQ) * nombreMois, this.quantiteMiniCC);
+	        		double stockChocoTransformer = 0;
+	        		for (ChocolatDeMarque cdm : this.stockChocoMarque.keySet()) {
+	        			if(cdm.getGamme() == feve.getGamme()) {
+	        				stockChocoTransformer += this.stockChocoMarque.get(cdm).getValeur();
+	        			}
+	        		}
+	        		boolean reponse = stockChocoTransformer + stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC.get(Gamme.HQ) * nombreMois, this.quantiteMiniCC);
 	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
 	        		return reponse;
 	        	}
 	        	if (feve.getGamme() == Gamme.MQ) {
-	        		boolean reponse = stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC.get(Gamme.MQ) * nombreMois, this.quantiteMiniCC);
+	        		double stockChocoTransformer = 0;
+	        		for (ChocolatDeMarque cdm : this.stockChocoMarque.keySet()) {
+	        			if(cdm.getGamme() == feve.getGamme()) {
+	        				stockChocoTransformer += this.stockChocoMarque.get(cdm).getValeur();
+	        			}
+	        		}
+	        		boolean reponse = stockChocoTransformer + stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC.get(Gamme.MQ) * nombreMois, this.quantiteMiniCC);
 	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
 	        		return reponse;
 	        	}
