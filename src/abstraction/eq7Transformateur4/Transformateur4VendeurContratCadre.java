@@ -53,13 +53,13 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 
 		for (ChocolatDeMarque c : this.chocolatCocOasis) {
 			//System.out.println("   ---"+c+" "+(produit.getType().equals("ChocolatDeMarque"))+" "+((produit.getType().equals("ChocolatDeMarque"))?(c.equals((ChocolatDeMarque)produit)):"...")+" "+((produit.getType().equals("ChocolatDeMarque")&&(c.equals((ChocolatDeMarque)produit)))?(stockChocoMarque.get(produit)>25000):"..."));
-			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>4500) ) {
+			if ((produit.getType().equals("ChocolatDeMarque")) && (c.equals((ChocolatDeMarque)produit)) && (stockChocoMarque.get(produit)>1000) ) {
 				//System.out.println(" on vend "+produit);
 				return true;
 			}
 		}
 		for (ChocolatDeMarque c : this.chocolatDistributeur) {
-			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 4500 )) {
+			if ((produit.getType().equals("ChocolatDeMarque")) &&(c.equals((ChocolatDeMarque)produit)) && (stockChoco.get(((ChocolatDeMarque)produit).getChocolat()) > 1000 )) {
 				//System.out.println(" on vend "+produit);
 				return true;
 			}
@@ -84,7 +84,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 
 		//si ce sont des mirages , codé par Anaïs et Pierrick
 		if ( ((ChocolatDeMarque)contrat.getProduit()).getMarque() == "Mirage") {
-			if (stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()))-restantALivrer((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()>100) {
+			if (stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit()))-restantALivrerAuStep((ChocolatDeMarque)(contrat.getProduit()))-contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()>1000) {
 				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
@@ -92,11 +92,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					return contrat.getEcheancier();
 				}
 			} else {
-				double marge = - 25000 + stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit())) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
+				double marge = - 1000 + stockChocoMarque.get((ChocolatDeMarque)(contrat.getProduit())) - restantALivrerAuStep((ChocolatDeMarque)(contrat.getProduit()));
 				if (marge<100) {
 					return null;
 				} else {
-					double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
+					double quantite = marge; // un nombre aleatoire entre 25000 et la marge
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 				}
 			}
@@ -111,11 +111,11 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					return contrat.getEcheancier();
 				}
 			} else {
-				double marge = - 25000 + stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() ) - restantALivrer((ChocolatDeMarque)(contrat.getProduit()));
+				double marge = - 1000 + stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() ) - restantALivrerAuStep((ChocolatDeMarque)(contrat.getProduit()));
 				if (marge<100) {
 					return null;
 				} else {
-					double quantite = 25000 + Filiere.random.nextDouble()*(marge-100); // un nombre aleatoire entre 25000 et la marge
+					double quantite = marge; // un nombre aleatoire entre 25000 et la marge
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
 				}
 			}
@@ -279,7 +279,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if (contrat.getVendeur().equals(this)) {
-			journalVCC.ajouter("Nouveau contrat :"+contrat);
+			journalVCC.ajouter("Nouveau contrat :"+contrat.getAcheteur() + " pour un total de " + contrat.getMontantRestantARegler() + " et un total de " + contrat.getQuantiteTotale() + " " + contrat.getProduit());
 			this.contratsEnCours.add(contrat);
 		}
 		else {
@@ -371,7 +371,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 									journalVCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 								} else {
 									this.contratsEnCours.add(contrat);
-									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getMontantRestantARegler() + "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
+									journalVCC.ajouter(Color.GREEN, Color.BLACK, "   contrat " + contrat.getNumero() + " signé avec l'équipe " + contrat.getAcheteur()+ " pour un total de " + contrat.getMontantRestantARegler()+ "euros et d'un stock de " + contrat.getQuantiteTotale() + " de " + contrat.getProduit());
 								}
 							}
 							//IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
