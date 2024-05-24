@@ -72,7 +72,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		if (produit.getType().equals("ChocolatDeMarque")) {
 			ChocolatDeMarque cm = (ChocolatDeMarque) produit;
 			if (this.stockChocoMarque.get(cm)!=null) {
-				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000 && this.getTotalStock(cryptogramme)<500000; ///A MODIFIER
+				return this.stockChocoMarque.get(cm)-this.restantDu(cm)<20000; ///A MODIFIER
 			} else {
 				return this.getTotalStock(cryptogramme)<100000;
 			}
@@ -146,8 +146,6 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 		}
 		double prix_limite = (prix(choco)*0.7- this.getCoutStockage())/**contrat.getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()*/;
 		if (prix_limite<0) {
-			System.out.println("prix limite négatif");
-			System.out.println("prix moyen : "+prix(choco));
 			this.journal_negoc.ajouter("Négociation a échoué car nous ne sommes pas en capacité de payer : "+prix_limite);
 			return 0.;
 		}
@@ -224,7 +222,7 @@ public abstract class Distributeur2ContratCadre extends Distributeur2Vente imple
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		this.journal_CC.ajouter("Livraison du produit "+quantiteEnTonnes+" tonnes de "+p+", issu du contrat #"+contrat.getNumero());
 		if (p.getType().equals("ChocolatDeMarque")) {
-			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes);
+			this.getStockChocoMarque().put((ChocolatDeMarque) p, quantiteEnTonnes + this.getStockChocoMarque().get((ChocolatDeMarque)p));
 			//this.totalStocksChocoMarque.ajouter(this, quantiteEnTonnes, cryptogramme);
 			this.totalCoutAPayer -= contrat.getPaiementAEffectuerAuStep();
 			if (contrat.getPaiementAEffectuerAuStep()>1) {
