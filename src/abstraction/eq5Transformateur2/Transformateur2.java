@@ -4,9 +4,6 @@ package abstraction.eq5Transformateur2;
  * Transformateur2Acteur
  *    /|\
  *     |
- * Transformateur2MasseSalariale
- *    /|\
- *     |
  * Transformateur2AcheteurCCadre
  *    /|\
  *     |

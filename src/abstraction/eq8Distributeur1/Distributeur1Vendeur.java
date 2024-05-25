@@ -92,10 +92,28 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			if (choco.getChocolat()==Chocolat.C_HQ_BE) {
 				ListPrix.put(choco, (double) 30000);
 			}
-		}
+		} 
 		else {
-			if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
-				ListPrix.replace(choco, 0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1));
+			if ((choco.toString().contains("C_BQ")) && (ListPrix.get(choco)<=1500)) {
+				ListPrix.replace(choco, 1500.0);
+			}
+			else if ((choco.toString().contains("C_MQ")) && (ListPrix.get(choco)<=3500)) {
+				ListPrix.replace(choco, 3500.0);
+			}
+			else if ((choco.toString().contains("C_MQ_E")) && (ListPrix.get(choco)<=6000)) {
+				ListPrix.replace(choco, 6000.0);
+			}
+			else if ((choco.toString().contains("C_HQ")) && (ListPrix.get(choco)<=9000)) {
+				ListPrix.replace(choco, 9000.0);
+			}
+			else if ((choco.toString().contains("C_HQ_E")) && (ListPrix.get(choco)<=13500)) {
+				ListPrix.replace(choco, 13500.0);
+			}
+			else if ((choco.toString().contains("C_HQ_BE")) && (ListPrix.get(choco)<=17000)) {
+				ListPrix.replace(choco, 17000.0);
+			}
+			else if ((choco.isEquitable()) && (ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1))) {
+				ListPrix.replace(choco, Math.max(7000,0.97*Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)));
 			}
 			else if (0.8*ListPrix.get(choco)>Filiere.LA_FILIERE.prixMoyen(choco, Filiere.LA_FILIERE.getEtape()-1)) {
 				ListPrix.replace(choco, ListPrix.get(choco)*0.8);
@@ -229,7 +247,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
 			totalStockChoco.retirer(this, quantite, cryptogramme);
 			}
-		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+" pour "+montant+" d'euros ");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
 		
 	}
 
@@ -313,6 +331,9 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
+		for (ChocolatDeMarque choco : chocolats) {
+			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+this.prix(choco));
+		}
 		this.MiseAJourCoefficient(this.Coefficient);
 		this.augmentationCapaciteRayons();
 		this.setNombreEmploye();

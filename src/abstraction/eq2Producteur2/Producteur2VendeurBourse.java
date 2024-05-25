@@ -54,7 +54,6 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 	
 	public double getNbTonnesVenduesBourse() {
 		double nb = this.getQuantiteVendue();
-		
 		if (Filiere.LA_FILIERE.getEtape() != this.etapeBourse) {
 			// On remet à 0 la quantité vendue à chaque tour (on souhaite suivre la vente par tour)
 			this.setQuantiteVendue(0);
