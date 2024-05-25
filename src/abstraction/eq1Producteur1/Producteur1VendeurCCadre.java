@@ -177,7 +177,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			journalCoC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
-		if (Filiere.LA_FILIERE.getEtape() < 1) {
+		if (Filiere.LA_FILIERE.getEtape() < 12) {
 			journalCoC.ajouter("On fait pas de contract pendant la 1ere etape");
 			return null;
 		}
