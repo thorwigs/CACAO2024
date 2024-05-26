@@ -91,7 +91,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	public double restantDu(Feve f) {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCoursAchat) {
-			if (c.getProduit().equals(f)) {
+			if (c.getProduit().equals(f)) { 
 				res+=c.getQuantiteRestantALivrer();
 			}
 		}
