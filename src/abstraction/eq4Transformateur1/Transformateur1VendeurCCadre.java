@@ -143,7 +143,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 					} else {
-						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)/12))));
+						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit))/12))));
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)/12)));
 					}
 				}

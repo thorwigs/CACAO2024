@@ -77,15 +77,13 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	    }
 	    // On archive les contrats terminés
 	    for (ExemplaireContratCadre c : new ArrayList<>(this.contratsEnCoursAchat)) {
-	        if (c.getQuantiteRestantALivrer() == 0.0 && c.getMontantRestantARegler() <= 0.0) {
+	        if ((c.getQuantiteRestantALivrer() == 0.0 && c.getMontantRestantARegler() <= 0.0) || (Filiere.LA_FILIERE.getActeursSolvables().contains(c.getAcheteur()) && Filiere.LA_FILIERE.getActeursSolvables().contains(c.getVendeur()))) {
 	            this.contratsTermines.add(c);
 	            this.contratsEnCoursAchat.remove(c);
+		        journalCC.ajouter("Archivage du contrat " + c);
 	        }
 	    }
-	    for (ExemplaireContratCadre c : this.contratsTermines) {
-	        journalCC.ajouter("Archivage du contrat " + c);
-	        this.contratsTermines.remove(c);
-	    }
+	    
 	    this.journalCC.ajouter("=================================");}
 	    
 	public double restantDu(Feve f) {
