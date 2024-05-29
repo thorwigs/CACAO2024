@@ -146,13 +146,25 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	 *@author ianis
 	 */
 	public boolean achete(IProduit produit) {
+		//System.out.println("");
+		//System.out.println("Produit : "+produit);
 		double a = 0 ; 
 		for (int i=0; i<contrat_en_cours.size(); i++) {
 			if (contrat_en_cours.get(i).getProduit().equals(produit)) {
 				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 			}
 		}
+		if (produit.getType().equals("ChocolatDeMarque")
+				&& this.stock_Choco.containsKey(produit)) {
+			/*System.out.println("ce qu'on va recevoir : "+a);
+			System.out.println("prevision : "+this.prevision(produit,24));
+			System.out.println("stock : "+this.stock_Choco.get(produit));
+			System.out.println("condition : "+(this.prevision(produit, 24) - this.stock_Choco.get(produit) - a));
+			System.out.println("");	*/
+		}
+
 		return (produit.getType().equals("ChocolatDeMarque")
+				&& this.banni.contains(produit)==false
 				&& this.stock_Choco.containsKey(produit)
 				&& 1000 < this.prevision(produit, 24) - this.stock_Choco.get(produit) - a );   
 	}
@@ -326,6 +338,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)p,i);
 		}
 		d = d * (1+(Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
+		
 		return d ; 
 	}
 	
@@ -351,6 +364,18 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	 */
 	public void next() {
 		super.next();
+		System.out.println("etape : "+Filiere.LA_FILIERE.getEtape() );
+		double r = 0.0;
+		for (ChocolatDeMarque choc : chocolats) {
+			r = r + this.prevision(choc, 24);
+		}
+		/*System.out.println("prevision annuelle pour l'ensemble des chocolats : "+r);*/
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
+
 		this.test=0;
 		this.choix=new LinkedList<ExemplaireContratCadre>();
 		this.journalCC.ajouter("");
@@ -442,6 +467,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		this.test=1;
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
 		this.journalCC.ajouter("");
+		
+		
 
 	}
 }

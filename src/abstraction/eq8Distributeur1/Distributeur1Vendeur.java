@@ -29,6 +29,11 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 	protected HashMap<String,Double> Fidele;
 	protected HashMap<String,Double> Coefficient;
 	protected LinkedList<String> equipe;
+	protected HashMap<ChocolatDeMarque,Integer> chocoVendu;
+	protected HashMap<ChocolatDeMarque,Integer> aVendu;
+	protected LinkedList<ChocolatDeMarque> banni;
+
+
 
 	
 	/**
@@ -43,6 +48,10 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		this.Fidele = new HashMap<String,Double>();
 		this.Coefficient = new HashMap<String,Double>();
 		this.equipe = new LinkedList<String>();
+		this.chocoVendu = new HashMap<ChocolatDeMarque,Integer>();
+		this.aVendu = new HashMap<ChocolatDeMarque,Integer>();
+		this.banni = new LinkedList<ChocolatDeMarque>();
+
 	}
 	
 	
@@ -67,6 +76,12 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		this.equipe.add("EQ5");
 		this.equipe.add("EQ6");
 		this.equipe.add("EQ7");
+		
+		for (ChocolatDeMarque choc : chocolats) {
+			this.chocoVendu.putIfAbsent(choc, 5);
+			this.aVendu.putIfAbsent(choc, 0);
+
+		}
 	}
 
 	/**
@@ -246,9 +261,10 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		if (pos>=0) {
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
 			totalStockChoco.retirer(this, quantite, cryptogramme);
-			}
+			this.aVendu.replace(choco, 1);
+		}
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
-		
+
 	}
 
 	/**
@@ -340,8 +356,27 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		for (int i=0;i<this.ListPrix.size(); i++) {
 			this.setPrix(chocolats.get(i));
 		}
+		
+		for (ChocolatDeMarque choc : chocolats) {
+			if (this.aVendu.get(choc)==0 && this.chocoVendu.get(choc)>0){
+				this.chocoVendu.put(choc, this.chocoVendu.get(choc)-1);
+			} else if (this.aVendu.get(choc)==1 && this.chocoVendu.get(choc)<5) {
+				this.chocoVendu.put(choc, this.chocoVendu.get(choc)+1);
+			}
+			if (this.chocoVendu.get(choc)==0 && this.banni.contains(choc)==false) {
+				this.banni.add(choc);				
+			}
+			if (this.chocoVendu.get(choc)>0 && this.banni.contains(choc)) {
+				this.banni.remove(choc);
+			}
+			if (!this.banni.contains(choc)) {
+				System.out.println("choc : "+choc);
+			}
+			this.aVendu.replace(choc, 0);
+		}
+		
+		
 		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Fixe", this.Cout_Fixe());
-
 	}
 	
 
