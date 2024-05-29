@@ -94,17 +94,19 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				
 			}
 		}
-		//else {
-			//plantation = new HashMap<Feve, Double>();
-			//double quantite = 100;
-			//plantation.put(f, quantite);
-			//adjustPlantationSize(plantation);
+		
+		
+			plantation = new HashMap<Feve, Double>();
+			double quantite = 1000;
+			plantation.put(f, quantite);
+			adjustPlantationSize(plantation);
 			
 			
-		//}
+		
 		
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 		return 0;
+		
 
 
 	}
