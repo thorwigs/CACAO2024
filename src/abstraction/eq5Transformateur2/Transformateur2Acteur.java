@@ -150,6 +150,7 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		conversion = 0.1 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
+		System.out.println(pourcentageTransfo);
 		// Initialisation des valeurs
 		this.NbSalaries = 5000;
 		this.salaire = 1000;
@@ -193,10 +194,11 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public void Transformation(Feve f, double tonnes) {
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
 		if (this.stockFeves.containsKey((Feve)f) & this.stockChoco.containsKey((Chocolat)c)){
+			double pourcentageCacao = this.pourcentageTransfo.get(f.get(f.getGamme(), f.isBio(), f.isEquitable())).get(c.get(c.getGamme(), c.isBio(), c.isEquitable()));
 			this.stockFeves.get((Feve)f).retirer(this, tonnes, this.cryptogramme); //Maj stock de feves 
 			this.totalStocksFeves.retirer(this, tonnes, this.cryptogramme);
-			this.stockChoco.get((Chocolat) c).ajouter(this, tonnes, this.cryptogramme); //Maj stock choco
-			this.totalStocksChoco.ajouter(this, tonnes, this.cryptogramme);
+			this.stockChoco.get((Chocolat) c).ajouter(this, tonnes*(1/pourcentageCacao), this.cryptogramme); //Maj stock choco
+			this.totalStocksChoco.ajouter(this, tonnes*(1/pourcentageCacao), this.cryptogramme);
 		}
 	}
 	/**
