@@ -7,6 +7,7 @@ import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
 //codé par Yanis et Anaïs
@@ -21,7 +22,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 		this.journalBourse = new Journal(this.getNom()+" journal Bourse achat", this);
 	}
 	
-
+	
 
 
 	public double demande(Feve f, double cours) { //changer selon conditions et qte d'achat de chaque fève
@@ -30,7 +31,7 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;
 		}
-		if (f.equals(Feve.F_HQ) && stockFeves.get(f)<=1000) {
+		if (f.equals(Feve.F_HQ) && stockFeves.get(f)<= 1000 ) {
 			D = 4000 - stockFeves.get(f);
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;
