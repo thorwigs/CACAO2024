@@ -6,6 +6,7 @@
 /**@author Abderrahmane Er-rahmaouy*/
 package abstraction.eq1Producteur1;
 
+
 import java.util.ArrayList;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Production extends Producteur1Plantation{
+    
 
 	protected double prix_hq_F;
 	protected Journal journalProduction;
@@ -257,7 +259,7 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.journalProduction.ajouter("On a ces quantites:"+ this.stock.get(Feve.F_HQ_BE).getValeur()+ "en stock pour la gamme BQ en  :"+ Filiere.LA_FILIERE.getEtape());
 		double totalStock = 0;
 		for (Feve f : Feve.values()) {
-			this.stock.get(f).ajouter(this,this.getProd().get(f) );
+			this.stock.get(f).ajouter(this,rendSaison*this.getProd().get(f) );
 
 			totalStock += this.stock.get(f).getValeur();
 		}
@@ -279,9 +281,9 @@ public class Producteur1Production extends Producteur1Plantation{
 		this.Stockage_BQ();
 
 		if (this.AmeliorationStockage() || this.degrHQ > 4 || this.degrMQ > 8 || this.degrBQ > 12) {
-			this.degrHQ += 0;
-			this.degrMQ += 0;
-			this.degrBQ += 0;
+			this.degrHQ += 2;
+			this.degrMQ += 4;
+			this.degrBQ += 6;
 		}
 
 		//System.out.println(this.Stock_MQ);
@@ -314,6 +316,9 @@ public class Producteur1Production extends Producteur1Plantation{
 		}
 	}
 
+
+
+	
 
 
 

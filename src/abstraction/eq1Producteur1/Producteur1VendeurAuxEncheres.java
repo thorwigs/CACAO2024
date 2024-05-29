@@ -3,7 +3,7 @@ package abstraction.eq1Producteur1;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -166,5 +166,32 @@ public class Producteur1VendeurAuxEncheres extends Producteur1VendeurAppelIDOffr
 		res.add(this.journalEncheres);
 		return res;
 	}
+	
+	public void  update_quantite_vendu_bourse() {
+
+		this.quantiteEnTBQ= this.getQuantiteEnStock(Feve.F_BQ, cryptogramme)-this.restantDu(Feve.F_BQ);
+
+		this.quantiteEnTHQ= this.getQuantiteEnStock(Feve.F_HQ, cryptogramme)-this.restantDu(Feve.F_HQ);
+		this.quantiteEnTMQ= this.getQuantiteEnStock(Feve.F_MQ, cryptogramme)-this.restantDu(Feve.F_MQ);
+		
+		
+	}
+	 
+	public void next() {
+		super.next();
+		update_quantite_vendu_bourse();
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
