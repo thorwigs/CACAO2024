@@ -88,14 +88,22 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 		if ( ((ChocolatDeMarque)contrat.getProduit()).getMarque() == "Mirage") {
 			if ((stockChocoMarque.get(cM)-restantALivrerAuStep(cM)-contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()> 5000) 
 			&& ( this.totalBesoin+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < this.peutproduireemploye * 1.05)) {
-				//double a = (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()+this.totalBesoin);
-				
-				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
-				|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
-					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
-				} else { // les volumes sont corrects, la duree et le debut aussi
-					return contrat.getEcheancier();
+				if ((contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances())<3000) {
+					if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
+					} else { // les volumes sont corrects, la duree et le debut aussi
+						return contrat.getEcheancier();
+					}
+				} else {
+					if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, 3000 );
+					} else { // les volumes sont corrects, la duree et le debut aussi
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, contrat.getEcheancier().getNbEcheances(), 1000 );
+					}
 				}
+				
 			} else { //les volumes sont incorrects
 				if ((stockChocoMarque.get(cM)-restantALivrerAuStep(cM) - 1000> 5000)
 				&& ( this.totalBesoin + 1000 < this.peutproduireemploye * 1.05) ){
