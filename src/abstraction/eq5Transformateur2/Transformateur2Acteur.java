@@ -310,17 +310,20 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		double coutMasseSalariale = 0;
 		
 		/* Stratégie d'embauche/licenciement : 
-		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 20% de nos stocks.
-		 * 	   On embauche au maximum 2000 salarié par step
+		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 10% de nos stocks.
+		 * 	   On embauche au maximum 2000 salariés par step
+		 * 	   On n'embauche plus si on a plus de 17 000 salariés
 		 * --> On licencie si notre capacité de transformation est 2 fois supérieur à nos stocks.
 		 *     On licencie 30% de notre effectif
 		 */
 		
-		if (capaciteTransfoTotal < 0.2 * this.totalStocksFeves.getValeur()) {
-			int embauche =(int)((0.2 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
-			if (embauche> 2000){
-				embauche=2000;
-			}
+		if (capaciteTransfoTotal < 0.1 * this.totalStocksFeves.getValeur()) {
+			int embauche =(int)((0.1 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
+			if (embauche > 2000) {
+				embauche = 2000;
+			}else if (this.NbSalaries > 17000) {
+				embauche = 0;
+			}	
 			this.NbSalaries += embauche;
 			this.JournalProduction.ajouter("On embauche"+embauche+"personnes");
 			coutMasseSalariale = NbSalaries * salaire;
