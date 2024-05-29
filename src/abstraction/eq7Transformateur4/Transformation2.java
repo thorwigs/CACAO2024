@@ -34,9 +34,6 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 		HashMap<ChocolatDeMarque, Double> partProduite = new HashMap<ChocolatDeMarque,Double>(); 
 		
 		
-		
-	
-		
 		HashMap<ChocolatDeMarque, Double> chocoEffectivementProduit = new HashMap<ChocolatDeMarque,Double>();
 		
 		for (Feve f : this.lesFeves) {
@@ -44,39 +41,23 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 		}
 		
 		
-		
-	
-		
-		
-		
-		
 		this.lescouts = new LinkedList<Double>();//on initialise avec une liste vide (supprime les données du step precedent)
-		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>(); //on la reset à 0, permettra de savoir combien on a dépensé pour fabriquer une tonne d'un chocolat
-		this.production_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();//on la reset à 0, permettre de savoir combien on a produit d'un chocolat ce step
+		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>(); //reset à 0, permettra de savoir combien on a dépensé pour fabriquer une tonne d'un chocolat
+		this.production_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();//reset à 0, permettre de savoir combien on a produit d'un chocolat ce step
 		this.peutproduireemploye = this.tauxproductionemploye*this.nbemployeCDI; //ce qu'on peut produire avec nos employés (en terme de conversion de fève)
-		//double peutencoreproduire = this.peutproduireemploye; //ce qu'on peut encore produire ce step, au départ c'est tout ce que nos employé peuvent faire
-		
-		//////////on fixe le critère : ce qu'on doit produire comme choco de marque, dépendant des contrats cadre en cours pour l'instant//////////
 		
 		//Pour les chocos de marque cocoasis//////////////////////////////////////////////////////////
 		
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2);//pas oublier l'initialisation de cette Hashmap
+			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2);//initialisation Hashmap
 			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
 		
 		//Pour les chocos de marque distributeurs///////////////////////////////////////////////////////
 		for (ChocolatDeMarque c : chocolatDistributeur) {
-			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2); //initialisation de la hashmap
+			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2); //initialisation Hashmap
 			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
-		
-		//hola
-		
-		//////////On fixe ce qu'on produit et on le produit si on en a pas assez en stock//////////
-		
-		
-		
 	
 			
 		//#################################### QUANTITE PRODUITE ####################################################
@@ -92,9 +73,6 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 				partProduite.put(c,0.0);
 			}	
 		}
-		
-
-		
 		
 		if (this.totalBesoin < this.peutproduireemploye )	{
 			for (ChocolatDeMarque c : this.chocosProduits) {
