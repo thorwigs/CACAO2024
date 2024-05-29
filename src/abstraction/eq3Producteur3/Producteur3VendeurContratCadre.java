@@ -27,6 +27,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	//@author Alexis
 	private int itQ; //compteur du step de négo
 	private double prixNego;
+	private double livre = 0;
+	private double nonLivre = 0;
 	
 	/**
 	 * @author Arthur
@@ -63,6 +65,9 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
         super.next();
         //on lance de nouveaux contrats (a verifier)
         proposerContrats();
+        if (Filiere.LA_FILIERE.getEtape() % 100 == 98) {
+        	this.journal_contrat_cadre.ajouter("Taux de livraisons partielles : "+nonLivre/livre);
+        }
     }
 	
 	/**
@@ -128,8 +133,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 private double quantiteDisponiblePourNouveauContrat(Feve f, int step) {		 	
 		 	double quantiteDisponible = 0.0; // Valeur par défaut
 	        if (quantiteFuture().containsKey(f)) {
-	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après
-	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step-2);
+	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après (on prend le min du tour d'avant et d'apres le step qui nous interesse pour eviter les livraisons partielles)
+	        	quantiteDisponible = Math.min(quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step-2),quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step));
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
@@ -274,12 +279,15 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 			this.journal_contrat_cadre.ajouter("Livraison totale : "+quantite+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			//on envoie ce que l'on a promis et on met a jour les variables
 			ventefevecadre.put((Feve)contrat.getProduit(), quantite);
+			livre += 1;
 			return quantite;
 		} else {
 			//on ne peut pas tout fournir, on envoie tout le stock et met a jour les variables
 			this.setQuantiteEnStock((Feve)produit, 0);
 			this.journal_contrat_cadre.ajouter("Livraison partielle : "+stock_inst+" T de feves "+((Feve)produit).getGamme()+" pour le CC n°"+contrat.getNumero());
 			ventefevecadre.put((Feve)contrat.getProduit(), stock_inst);
+			livre += 1;
+			nonLivre += 1;
 			return stock_inst;
 		}
 	}
