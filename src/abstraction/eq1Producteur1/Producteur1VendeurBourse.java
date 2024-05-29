@@ -24,6 +24,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	protected ArrayList<Double> bourseBQ; 
 	protected ArrayList<Double> bourseMQ; 
 	protected ArrayList<Double> bourseHQ; 
+	private int offreNonSatisfait=0;
 	/**
 	 * Constructeur de la classe Producteur1VendeurBourse.
 	 */
@@ -103,11 +104,14 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 			
 			
 		
-		
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
-		HashMap<Feve, Double> ajustements = new HashMap<>();
-		ajustements.put(f, 10.0);
-		adjustPlantationSize( ajustements);
+		this.offreNonSatisfait+=1;
+		if (offreNonSatisfait>=5) {
+		 journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
+		 HashMap<Feve, Double> ajustements = new HashMap<>();
+		 ajustements.put(f, 10.0);
+		 adjustPlantationSize( ajustements);
+		 this.offreNonSatisfait=0;
+		}
 		
 		return 0;
 		
