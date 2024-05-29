@@ -274,9 +274,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 					//là on sais quelle fève on utilise
 					//double stock = this.stockFeves.get(feve_utilise);
 					//double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
+					
+					this.journal.ajouter("restant a livrer au step " +restantALivrerAuStep(c) );
+					
 					if (this.stockChocoMarque.get(c) < restantALivrerAuStep(c)+10000) { 
 						//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 5000 pour pouvoir faire des contrats cadre, on se fixe 5000 comme valeur
-						chocoAProduire.put(c,restantALivrerAuStep(c)+1000);
+						chocoAProduire.put(c,restantALivrerAuStep(c)+2000);
 
 					//} else if (stock - restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 10000
 					//		&& this.stockChocoMarque.get(c) < 20000) {
@@ -321,7 +324,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 					//là on sais quelle fève on utilise
 					//double stock = this.stockFeves.get(feve_utilise);
 					if (this.stockChoco.get(c.getChocolat()) < restantALivrerDeTypeAuStep(c.getChocolat())+10000) { 
-						chocoAProduire.put(c,restantALivrerDeTypeAuStep(c.getChocolat())+1000);
+						chocoAProduire.put(c,restantALivrerDeTypeAuStep(c.getChocolat())+2000);
 						
 					//} else if (stock -restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 3000
 					//		&& this.stockChoco.get(c.getChocolat()) < 20000) {
