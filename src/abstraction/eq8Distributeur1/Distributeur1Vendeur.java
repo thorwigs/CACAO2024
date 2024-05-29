@@ -236,7 +236,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 					double x = (0.3 * capaciteTG) / (nombreMarquesParType.getOrDefault(Chocolat.C_HQ_E, 1)+nombreMarquesParType.getOrDefault(Chocolat.C_HQ_BE, 1)-2);
 					return Math.abs(Math.min(this.getQuantiteEnStock(choco,crypto), x));
 				} 
-			}
+			} 
 		}
 		return 0;     
 	}
