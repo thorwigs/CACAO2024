@@ -113,10 +113,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			if ( f.equals(Feve.F_HQ_E) || f.equals(Feve.F_BQ) ) {
-				this.stockFeves.put(f, 11000.0);
-				this.totalStocksFeves.ajouter(this, 11000.0, this.cryptogramme);
-				this.journal.ajouter("ajout de 11000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+
+			if ( f.equals(Feve.F_BQ) || f.equals(Feve.F_HQ_E) ) {
+				this.stockFeves.put(f, 5000.0);
+				this.totalStocksFeves.ajouter(this, 5000.0, this.cryptogramme);
+				this.journal.ajouter("ajout de 5000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+
 			} else {
 				this.stockFeves.put(f, 0.0);
 				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
@@ -158,7 +160,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 				this.totalStocksChocoMarque.ajouter(this, 7000.0, cryptogramme);
 				this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 			} else {
-				this.stockChocoMarque.put(c, 0.0); //le premier element de stockchocomarque correspond a mirage
+				this.stockChocoMarque.put(c, 0.0);
 				this.totalStocksChocoMarque.ajouter(this, 0.0, cryptogramme);
 				this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 			}

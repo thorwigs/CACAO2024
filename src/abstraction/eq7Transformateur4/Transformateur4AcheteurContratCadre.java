@@ -47,6 +47,7 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE, HQ ou MQ
 		return (produit.getType().equals("Feve"))
 				&& (
+
 						//(((Feve)produit).equals(Feve.F_HQ)) ||
 						(((Feve)produit).equals(Feve.F_HQ_E)) ||
 						(((Feve)produit).equals(Feve.F_BQ))
@@ -218,7 +219,8 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 		
 		List<Feve> fInteresse = new LinkedList<Feve>();
 		//fInteresse.add(Feve.F_HQ_BE);
-		fInteresse.add(Feve.F_HQ);
+
+		//fInteresse.add(Feve.F_HQ);
 		fInteresse.add(Feve.F_BQ);
 		fInteresse.add(Feve.F_HQ_E);
 				for (Feve f : fInteresse) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
