@@ -110,26 +110,26 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 		//Si on dépasse le seuil de stockage
 		if (this.getQuantiteEnStock(type_feve, this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
-			//trop_de_stock(type_feve, quantite);
+			trop_de_stock(type_feve, quantite);
 		}
 		else {
-			if(quantite != 0 && type_feve == Feve.F_BQ) {
+			if(quantite > 0 && type_feve == Feve.F_BQ) {
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_BQ));
 			}
-			if(quantite != 0 && type_feve == Feve.F_MQ) {
+			if(quantite > 0 && type_feve == Feve.F_MQ) {
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_MQ));
 			}
-			if(quantite != 0 && type_feve == Feve.F_MQ_E) {
+			if(quantite > 0 && type_feve == Feve.F_MQ_E) {
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_MQ_E));
 			}
-			if(quantite != 0 && type_feve == Feve.F_HQ) {
+			if(quantite > 0 && type_feve == Feve.F_HQ) {
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ));
 			}
-			if(quantite != 0 && type_feve == Feve.F_HQ_E) {
+			if(quantite > 0 && type_feve == Feve.F_HQ_E) {
 				//System.out.println(" ajout nouveau lot de hq_e avec " + quantite + " feve");
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ_E));
 			}
-			if(quantite != 0 && type_feve == Feve.F_HQ_BE) {
+			if(quantite > 0 && type_feve == Feve.F_HQ_BE) {
 				this.lst_stock_total.add(new Producteur2_Lot(quantite, Feve.F_HQ_BE));
 			}
 			this.lot_to_hashmap();
@@ -274,13 +274,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		double quantite_prise = 0;
 		for(Producteur2_Lot l : lst_lot_feve) {
 			if(quantite_prise == quantite_demandee) {
-				//System.out.println("On a pris " + quantite_prise + " de feve " + type_feve.name());
 				return quantite_prise;
 			}
 			else {
 				if(quantite_prise + l.getQuantite() <= quantite_demandee) {
 					quantite_prise += l.getQuantite();
-					//System.out.println("On a pris " + quantite_prise + " de feve " + type_feve.name());
 					this.retire_lot(l);
 				}
 				else {

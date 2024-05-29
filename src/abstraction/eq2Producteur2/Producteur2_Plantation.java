@@ -28,12 +28,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected static final int PRIX_HECTARE_MQ = 1000;
 	protected static final int PRIX_HECTARE_HQ = 1500;
 	
-	protected double nb_hectares_max;
-	//protected double nb_hectares_actuel;
-	
 	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
 
-	//protected int qualite;
 	protected int pourcentage_HQ;
 	protected int pourcentage_MQ;
 	protected int pourcentage_BQ;
@@ -54,8 +50,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public Producteur2_Plantation() {
-
-		//this.nb_hectares_max=5000000.0*2;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 		this.plantation = new HashMap <Feve, HashMap<Integer, Double>>();
 	}
@@ -94,7 +88,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
         }
         plantation.put(Feve.F_HQ,hectare_HQ);
 
-        //
         HashMap<Integer, Double> hectare_MQ = new HashMap<>();
 
         for(int i  = 0; i < 40; i++) {
@@ -103,20 +96,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
         }
         plantation.put(Feve.F_MQ,hectare_MQ);
     }
-	 
-	/** Getter
-	 * @author Anthony
-	 */
-	public double getNb_hectares_max() {
-		return this.nb_hectares_max;
-	}
-
-	/** Setter
-	 * @author Anthony
-	 */
-	public void setNb_hectares_max(double nb_hectares_max) {
-		this.nb_hectares_max = nb_hectares_max;
-	}
 
 	/** Getter
 	 * @author Anthony
@@ -202,11 +181,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public void planter(double nb_hectares, Feve f) {
-		/*if (getHectaresTotal(this.cryptogramme) + nb_hectares > getNb_hectares_max()) { //achat impossible
-			this.journal.ajouter("on ne peut pas acheter plus de terrain.");
-			return;
-		}*/
-		
 		// Il n'y a pas d'hectares MQ_E ou HQ_E donc il faut définir une nouvelle variable
 		Feve qualite;
 		if (f == Feve.F_HQ || f == Feve.F_HQ_E) {
