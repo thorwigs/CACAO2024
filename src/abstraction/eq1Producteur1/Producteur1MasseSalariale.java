@@ -499,8 +499,8 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 		this.updateAnciennete();
 		if (Filiere.LA_FILIERE.getEtape() % 10 ==0) {
+			this.formation((int) (this.get_Nombre_Ouvrier_NonEquitable_NonForme()*0.2), false);
 			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), true);
-			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), false);
 		}
 
 		this.amelioration();

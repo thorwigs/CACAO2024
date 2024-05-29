@@ -1,7 +1,6 @@
 package abstraction.eq1Producteur1;
 /**@author Abderrahmane ER-RAHMAOUY*/
 import java.awt.Color;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,24 +10,16 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
-import java.util.ArrayList;
-import java.util.List;
 
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
 
 	protected int cryptogramme;
 	protected Journal journal;
-	//new stuff I added : Abdo
+	
 	private double coutStockage;
 	
 	private double coutUnitaireProductionBQ = 1;
@@ -91,21 +82,10 @@ public class Producteur1Acteur implements IActeur {
 	 /**
      * Initialise l'acteur Producteur1.
      */
+	@SuppressWarnings("static-access")
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		/*
-		this.nb_enfants = 150;
-		this.liste_Ouvrier=new Producteru1MasseSalariale();
-		this.liste_Ouvrier.addOuvrier(nb_enfants,labourEnfant,false,false,true);
-		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,true,false,false);
-		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,false);
-		*/
-		/*
-		this.stockIni = new HashMap<Feve, Double>();
-		for (Feve feve : Feve.values()) {
-			this.stockIni.put(feve, 20000.0); //le nombre reste a changer
-		}
-*/
+	
 		
 		this.soldeInitiale = this.getSolde();
 		this.soldeParStep.add(this.soldeInitiale);
@@ -258,22 +238,7 @@ public class Producteur1Acteur implements IActeur {
 	
 	
 	
-	public void embauche(int à_embaucher) {
-		
-	
-		
-			}
-	
-	public void licensier(int à_licensier) {
-		
-		
-		
-	}
-	
-	public void formation() {
-		
-		
-	}
+
 	@Override
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0.0;

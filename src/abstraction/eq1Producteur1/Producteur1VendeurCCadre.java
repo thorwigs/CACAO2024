@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
@@ -19,221 +18,225 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implements IVendeurContratCadre {
 
-    protected SuperviseurVentesContratCadre supCC;
-    private HashMap<IAcheteurContratCadre, Integer> Acheteurs;
-    protected List<ExemplaireContratCadre> contratsEnCours;
-    protected List<ExemplaireContratCadre> contratsTermines;
-    protected Journal journalCoC;
-    private double moy;
-    private List<Double> echancesQua;
+	protected SuperviseurVentesContratCadre supCC;
+	private HashMap<IAcheteurContratCadre, Integer> Acheteurs;
+	protected List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsTermines;
+	protected Journal journalCoC;
 
-    public Producteur1VendeurCCadre() {
-        super();
-        this.contratsEnCours = new LinkedList<>();
-        this.contratsTermines = new LinkedList<>();
-        this.journalCoC = new Journal(this.getNom() + " journal CC", this);
-        this.moy = 0;
-        this.echancesQua = new LinkedList<>();
-        this.Acheteurs = new HashMap<>();
-    }
+	private List<Double> echancesQua;
 
-    public void initialiser() {
-        super.initialiser();
-        this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
-    }
+	public Producteur1VendeurCCadre() {
+		super();
+		this.contratsEnCours = new LinkedList<>();
+		this.contratsTermines = new LinkedList<>();
+		this.journalCoC = new Journal(this.getNom() + " journal CC", this);
 
-    public void next() {
-        super.next();
-        this.journalCoC.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + " ====================");
-        for (Feve f : stock.keySet()) {
-            if (stock.get(f).getValeur() - restantDu(f) > 1200) {
-                this.journalCoC.ajouter("   " + f + " suffisamment en stock pour passer un CC");
-                double parStep = Math.max(100, (stock.get(f).getValeur() - restantDu(f)) / 2);
-                Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
-                List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
-                if (acheteurs.size() > 0) {
-                    IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
-                    journalCoC.ajouter("   " + acheteur.getNom() + " retenu comme acheteur parmi " + acheteurs.size() + " acheteurs potentiels");
-                    ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, f, e, cryptogramme, false);
-                    if (contrat == null) {
-                        journalCoC.ajouter(Color.RED, Color.white, "   echec des negociations");
-                    } else {
-                        this.contratsEnCours.add(contrat);
-                        journalCoC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
-                    }
-                } else {
-                    journalCoC.ajouter("   pas d'acheteur");
-                }
-            }
-        }
-    }
+		this.echancesQua = new LinkedList<>();
+		this.Acheteurs = new HashMap<>();
+	}
 
-    public double restantDu(Feve f) {
-        double res = 0;
-        for (ExemplaireContratCadre c : this.contratsEnCours) {
-            if (c.getProduit().equals(f)) {
-                res += c.getQuantiteRestantALivrer();
-            }
-        }
-        return res;
-    }
+	public void initialiser() {
+		super.initialiser();
+		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+	}
 
-    public double prix(Feve f) {
-        double res = 0;
-        int count = 0;
-        for (ExemplaireContratCadre c : this.contratsEnCours) {
-            if (c.getProduit().equals(f)) {
-                res += c.getPrix();
-                count += 1;
-            }
-        }
-        for (ExemplaireContratCadre c : this.contratsTermines) {
-            if (c.getProduit().equals(f)) {
-                res += c.getPrix();
-                count += 1;
-            }
-        }
-        if (count != 0) {
-            return res / count;
-        }
-        Gamme gamme = f.getGamme();
-        boolean bio = f.isBio();
-        boolean equitable = f.isEquitable();
-        double prime = 0;
-        if (bio) {
-            prime += 100;
-        }
-        if (equitable) {
-            prime += 60;
-        }
-        if (gamme == Gamme.HQ) {
-            prime += 300;
-        }
-        res += prime + 1472;
-        return res;
-    }
+	public void next() {
+		super.next();
+		this.journalCoC.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + " ====================");
+		for (Feve f : stock.keySet()) {
+			if (stock.get(f).getValeur() - restantDu(f) > 1200) {
+				this.journalCoC.ajouter("   " + f + " suffisamment en stock pour passer un CC");
+				double parStep = Math.max(100, (stock.get(f).getValeur() - restantDu(f)) / 2);
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, parStep);
+				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
+				if (acheteurs.size() > 0) {
+					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
+					journalCoC.ajouter("   " + acheteur.getNom() + " retenu comme acheteur parmi " + acheteurs.size() + " acheteurs potentiels");
+					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, f, e, cryptogramme, false);
+					if (contrat == null) {
+						journalCoC.ajouter(Color.RED, Color.white, "   echec des negociations");
+					} else {
+						this.contratsEnCours.add(contrat);
+						journalCoC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+					}
+				} else {
+					journalCoC.ajouter("   pas d'acheteur");
+				}
+			}
+		}
+	}
 
-    @Override
-    public boolean vend(IProduit produit) {
-        String s = produit.getType();
-        if (s.equals("Feve")) {
-            Feve f = (Feve) produit;
-            if (this.stock.get(f).getValeur() > 10) {
-                return true;
-            }
-        }
-        return false;
-    }
+	public double restantDu(Feve f) {
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(f)) {
+				res += c.getQuantiteRestantALivrer();
+			}
+		}
+		return res;
+	}
 
-    @Override
-    public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-        journalCoC.ajouter("      contreProposition(" + contrat.getProduit() + " avec echeancier " + contrat.getEcheancier());
-        Echeancier ec = contrat.getEcheancier();
+	public double prix(Feve f) {
+		double res = 0;
+		int count = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(f)) {
+				res += c.getPrix();
+				count += 1;
+			}
+		}
+		for (ExemplaireContratCadre c : this.contratsTermines) {
+			if (c.getProduit().equals(f)) {
+				res += c.getPrix();
+				count += 1;
+			}
+		}
+		if (count != 0) {
+			return res / count;
+		}
+		Gamme gamme = f.getGamme();
+		boolean bio = f.isBio();
+		boolean equitable = f.isEquitable();
+		double prime = 0;
+		if (bio) {
+			prime += 100;
+		}
+		if (equitable) {
+			prime += 60;
+		}
+		if (gamme == Gamme.HQ) {
+			prime += 300;
+		}
+		res += prime + 1472;
+		return res;
+	}
 
-        if ((contrat.getAcheteur().equals(Filiere.LA_FILIERE.getActeur("EQ6")))) {
-            return null;
-        }
+	@Override
+	public boolean vend(IProduit produit) {
+		String s = produit.getType();
+		if (s.equals("Feve")) {
+			Feve f = (Feve) produit;
+			if (this.stock.get(f).getValeur() > 10) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-        IProduit produit = contrat.getProduit();
-        boolean accepted = false;
-        String type = produit.getType();
-        if (!type.equals("Feve")) {
-            journalCoC.ajouter("Ce n'est pas une feve");
-            return null;
-        }
+	@Override
+	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		journalCoC.ajouter("      contreProposition(" + contrat.getProduit() + " avec echeancier " + contrat.getEcheancier());
+		Echeancier ec = contrat.getEcheancier();
 
-        this.echancesQua.add(ec.getQuantiteTotale());
-        Feve f = (Feve) produit;
+		if ((contrat.getAcheteur().equals(Filiere.LA_FILIERE.getActeur("EQ6")))) {
+			return null;
+		}
 
-        double stockdispo = stock.get(f).getValeur() - restantDu(f);
+		IProduit produit = contrat.getProduit();
+		boolean accepted = false;
+		String type = produit.getType();
+		if (!type.equals("Feve")) {
+			journalCoC.ajouter("Ce n'est pas une feve");
+			return null;
+		}
 
-        for (int i = 0; i < this.echancesQua.size() - 1; i++) {
-            moy += this.echancesQua.get(i);
-        }
-        moy /= this.echancesQua.size();
-        if (stockdispo < 30000) {
-            journalCoC.ajouter("Insufficient stock: " + stockdispo);
-            return null;
-        }
+		this.echancesQua.add(ec.getQuantiteTotale());
+		Feve f = (Feve) produit;
 
-        if (Acheteurs.keySet().contains(contrat.getAcheteur())) {
-            if (Acheteurs.get(contrat.getAcheteur()) >= 1) {
-                return null;
-            }
-        }
+		double stockdispo = stock.get(f).getValeur() - restantDu(f);
 
-        if (ec.getQuantiteTotale() > moy * 1.2) {
-            return null;
-        }
 
-        int duree = ec.getStepFin() - ec.getStepDebut();
-        if (duree < 10) {
-            journalCoC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
-            return null;
-        }
-        if (Filiere.LA_FILIERE.getEtape() < 12) {
-            journalCoC.ajouter("On fait pas de contract pendant la 1ere etape");
-            return null;
-        }
-        if (this.contratsEnCours.size() >= 4) {
-            journalCoC.ajouter("Maximum number of ongoing contracts reached");
-            return null;
-        }
-        if (ec.getStepDebut() < Filiere.LA_FILIERE.getEtape() + 8) {
-            accepted = true;
-        }
-        if (!accepted) {
-            if (ec.getQuantiteTotale() <= stock.get((Feve) produit).getValeur() - restantDu((Feve) produit)) {
-                journalCoC.ajouter("      je retourne " + new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) (ec.getQuantiteTotale() / 12)));
-                return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) (ec.getQuantiteTotale() / 12));
-            } else {
-                journalCoC.ajouter("      je retourne " + new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) ((stock.get((Feve) produit).getValeur() - restantDu((Feve) produit) / 12))));
-                return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) ((stock.get((Feve) produit).getValeur() - restantDu((Feve) produit) / 12)));
-            }
-        }
-        journalCoC.ajouter("Echeancier accepted");
-        return ec;
-    }
+		if (stockdispo < 20000) {
+			journalCoC.ajouter("Insufficient stock: " + stockdispo);
+			return null;
+		}
 
-    @Override
-    public double propositionPrix(ExemplaireContratCadre contrat) {
-        if (!contrat.getProduit().getType().equals("Feve")) {
-            return 0;
-        }
-        return prix((Feve) contrat.getProduit());
-    }
+		if (Acheteurs.keySet().contains(contrat.getAcheteur())) {
+			if (Acheteurs.get(contrat.getAcheteur()) >= 3) {
+				return null;
+			}
+		}
+		double quanmax = this.ProdParStep().get(f) * (ec.getStepFin() - ec.getStepDebut());
+		if (f.isEquitable()) {
+			double eq = (this.get_Nombre_Ouvrier_Equitable_NonForme() + this.get_Nombre_Ouvrier_Equitable_NonForme()) / this.get_Nombre_Total();
+			quanmax *= eq;
+		}
+		if (Filiere.LA_FILIERE.getActeursSolvables().contains(Filiere.LA_FILIERE.getActeur("EQ2"))) {
+			if (ec.getQuantiteTotale() > 0.7 * quanmax) {
+				journalCoC.ajouter(Color.RED, Color.white, "  Grosses Demandes");
+				return null;
+			}
+		}
 
-    @Override
-    public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        List<Double> prix = contrat.getListePrix();
-        if (prix.get(prix.size() - 1) >= 0.975 * prix.get(0)) {
-            journalCoC.ajouter("      contrePropose le prix demande : " + contrat.getPrix());
-            return contrat.getPrix();
-        } else {
-            journalCoC.ajouter("      contreproposition(" + contrat.getPrix() + ") retourne " + prix.get(0) * 1.05);
-            return prix.get(0) * 1.05;
-        }
-    }
+		int duree = ec.getStepFin() - ec.getStepDebut();
+		if (duree < 10) {
+			journalCoC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
+			return null;
+		}
+		if (Filiere.LA_FILIERE.getEtape() < 12) {
+			journalCoC.ajouter("On fait pas de contract pendant la 12ere etapes");
+			return null;
+		}
+		if (this.contratsEnCours.size() >= 5) {
+			journalCoC.ajouter("Maximum number of ongoing contracts reached");
+			return null;
+		}
+		if (ec.getStepDebut() < Filiere.LA_FILIERE.getEtape() + 8) {
+			accepted = true;
+		}
+		if (!accepted) {
+			if (ec.getQuantiteTotale() <= stock.get((Feve) produit).getValeur() - restantDu((Feve) produit)) {
+				journalCoC.ajouter("      je retourne " + new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) (ec.getQuantiteTotale() / 12)));
+				return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) (ec.getQuantiteTotale() / 12));
+			} else {
+				journalCoC.ajouter("      je retourne " + new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) ((stock.get((Feve) produit).getValeur() - restantDu((Feve) produit) / 12))));
+				return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) ((stock.get((Feve) produit).getValeur() - restantDu((Feve) produit) / 12)));
+			}
+		}
+		journalCoC.ajouter("Echeancier accepted");
+		return ec;
+	}
 
-    @Override
-    public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        journalCoC.ajouter("New contract: " + contrat);
-        Acheteurs.put(contrat.getAcheteur(), Acheteurs.getOrDefault(contrat.getAcheteur(), 0) + 1);
-        this.contratsEnCours.add(contrat);
-    }
+	@Override
+	public double propositionPrix(ExemplaireContratCadre contrat) {
+		if (!contrat.getProduit().getType().equals("Feve")) {
+			return 0;
+		}
+		return prix((Feve) contrat.getProduit());
+	}
 
-    @Override
-    public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double stockActuel = stock.get(produit).getValeur((Integer) cryptogramme);
-        double aLivre = Math.min(quantite, stockActuel);
-        journalCoC.ajouter("   Livraison de " + aLivre + " T de " + produit + " sur " + quantite + " exigees pour contrat " + contrat.getNumero() + " avec " + contrat.getAcheteur());
-        stock.get(produit).setValeur(this, stockActuel - aLivre, (Integer) cryptogramme);
-        return aLivre;
-    }
+	@Override
+	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+		List<Double> prix = contrat.getListePrix();
+		if (prix.get(prix.size() - 1) >= 0.975 * prix.get(0)) {
+			journalCoC.ajouter("      contrePropose le prix demande : " + contrat.getPrix());
+			return contrat.getPrix();
+		} else {
+			journalCoC.ajouter("      contreproposition(" + contrat.getPrix() + ") retourne " + prix.get(0) * 1.05);
+			return prix.get(0) * 1.05;
+		}
+	}
 
-    public List<Journal> getJournaux() {
-        List<Journal> res = super.getJournaux();
-        res.add(journalCoC);
-        return res;
-    }
+	@Override
+	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+		journalCoC.ajouter("New contract: " + contrat);
+		Acheteurs.put(contrat.getAcheteur(), Acheteurs.getOrDefault(contrat.getAcheteur(), 0) + 1);
+		this.contratsEnCours.add(contrat);
+	}
+
+	@Override
+	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+		double stockActuel = stock.get(produit).getValeur((Integer) cryptogramme);
+		double aLivre = Math.min(quantite, stockActuel);
+		journalCoC.ajouter("   Livraison de " + aLivre + " T de " + produit + " sur " + quantite + " exigees pour contrat " + contrat.getNumero() + " avec " + contrat.getAcheteur());
+		stock.get(produit).setValeur(this, stockActuel - aLivre, (Integer) cryptogramme);
+		return aLivre;
+	}
+
+	public List<Journal> getJournaux() {
+		List<Journal> res = super.getJournaux();
+		res.add(journalCoC);
+		return res;
+	}
 }

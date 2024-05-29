@@ -144,32 +144,29 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	 * @return double qui decrit le rendement, ce rendement 
 	 */
 	public double effet_saison(int i) {
-		//de octobre a mars:grande récolte, 
-		//avril-septembre:baisse de récolte :Saison des pluies
+	    // De octobre à mars : grande récolte
+	    // Avril-septembre : baisse de récolte : Saison des pluies
 
-		int rang_step=i%24;
-		if ((rang_step>=18 && rang_step<=23 )||(rang_step>=0 && rang_step<=5)) {
-			return (random.nextInt((120 - 100) + 1) + 120)/100;//forte saison, valeur random entre 1.00 et 1.20
-			
-		}
-		else if (rang_step==6 ||rang_step==17) {
-			return (random.nextInt((90 - 110) + 1) + 110)/100;//forte saison commence sa décroissance, valeur random entre 0.90 et 1.10
-		}
-		else if (rang_step==7 ||rang_step==16) {
-			return (random.nextInt((80 - 100) + 1) + 80)/100;//forte saison commence encore en décroissance, valeur random entre 0.80 et 1.00
-			
-		}
-		else {
-			return (random.nextInt((55 - 80) + 1) + 55)/100;
-			//basse saison commence , valeur random entre 0.55 et 0.8
-		
-		
-		
-		
+	    int rang_step = i % 24;
+	    if ((rang_step >= 18 && rang_step <= 23) || (rang_step >= 0 && rang_step <= 5)) {
+	        // Forte saison, valeur random entre 1.00 et 1.20
+	        return (random.nextInt((120 - 100) + 1) + 100) / 100.0;
+	    } else if (rang_step == 6 || rang_step == 17) {
+	        // Forte saison commence sa décroissance, valeur random entre 0.90 et 1.10
+	        return (random.nextInt((110 - 90) + 1) + 90) / 100.0;
+	    } else if (rang_step == 7 || rang_step == 16) {
+	        // Forte saison commence encore en décroissance, valeur random entre 0.80 et 1.00
+	        return (random.nextInt((100 - 80) + 1) + 80) / 100.0;
+	    } else {
+	        // Basse saison commence, valeur random entre 0.55 et 0.80
+	        return (random.nextInt((80 - 55) + 1) + 55) / 100.0;
+	    }
 	}
 
 
-}
+
+
+
 
 
 
@@ -301,11 +298,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		return production;
 	}
 
-	@Override
-	public void setProdTemps(HashMap<Feve, Double> d0, HashMap<Feve, Double> d1) {
-		// TODO Auto-generated method stub
 
-	}
 	public HashMap<Feve, Double> ProdParStep(){
 		/*
 		 * retourne la production par etape
