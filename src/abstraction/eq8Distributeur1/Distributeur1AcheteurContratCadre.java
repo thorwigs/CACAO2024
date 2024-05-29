@@ -460,8 +460,5 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		this.test=1;
 		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"=================================");
 		this.journalCC.ajouter("");
-		
-		
-
 	}
 }
