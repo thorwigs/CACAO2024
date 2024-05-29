@@ -75,7 +75,7 @@ public class Transformateur4VendeurAppelDOffre extends Transformateur4VendeurCon
 				BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 				double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
 				if (cm.getChocolat().getGamme()==Gamme.HQ) {
-					px = bourse.getCours(Feve.F_MQ).getMax()*2;
+					px = bourse.getCours(Feve.F_HQ).getMax()*2;
 				} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
 					px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
 				}

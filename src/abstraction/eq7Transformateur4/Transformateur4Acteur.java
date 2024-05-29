@@ -64,6 +64,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected double peutproduireemploye;
 	
 	protected HashMap<ChocolatDeMarque,Double> chocoAProduire;
+	protected HashMap<ChocolatDeMarque, Double> chocoEffectivementProduit;
 	protected HashMap<Feve,Double> feveNecessaire;
 
 	
@@ -112,10 +113,12 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
+
 			if ( f.equals(Feve.F_BQ) || f.equals(Feve.F_HQ_E) ) {
 				this.stockFeves.put(f, 5000.0);
 				this.totalStocksFeves.ajouter(this, 5000.0, this.cryptogramme);
 				this.journal.ajouter("ajout de 5000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+
 			} else {
 				this.stockFeves.put(f, 0.0);
 				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
@@ -152,7 +155,7 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			if ( !(c.getChocolat().equals(Chocolat.C_HQ_E)) ) {
+			if ( (c.getChocolat().equals(Chocolat.C_HQ_E)) ) {
 				this.stockChocoMarque.put(c, 7000.0); //le premier element de stockchocomarque correspond a mirage
 				this.totalStocksChocoMarque.ajouter(this, 7000.0, cryptogramme);
 				this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
@@ -192,6 +195,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.journal.ajouter("le stock de chocolat avec notre marque initial est de " + totalStocksChocoMarque.getValeur(cryptogramme));
 
 
+		this.feveNecessaire = new HashMap<Feve,Double>();
+		this.chocoAProduire = new HashMap<ChocolatDeMarque,Double>(); 
+		this.chocoEffectivementProduit = new HashMap<ChocolatDeMarque,Double>(); 
 
 	}
 	
@@ -228,22 +234,16 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journal.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
-			
-				
-		
 		}
 		
-		this.feveNecessaire = new HashMap<Feve,Double>();
-		this.chocoAProduire = new HashMap<ChocolatDeMarque,Double>(); 
 		
-		if (feveNecessaire.isEmpty()) {
-			for (Feve f : lesFeves) {
-				feveNecessaire.put(f, 0.0);
-			}
-		} else {
-			for (Feve f : lesFeves) {
-				feveNecessaire.replace(f, 0.0);
-			}
+		for (ChocolatDeMarque c : this.chocosProduits) {
+			this.chocoEffectivementProduit.put(c, 0.0);
+			this.chocoAProduire.put(c,0.0);
+		}
+		
+		for (Feve f : lesFeves) {
+			feveNecessaire.put(f, 0.0);
 		}
 		
 		this.totalBesoin = 0;
