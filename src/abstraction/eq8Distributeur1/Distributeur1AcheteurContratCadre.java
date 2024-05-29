@@ -396,7 +396,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			if (this.achete(choc)) {
 				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter pour le chocolat : "+choc);
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
-
+				
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
