@@ -102,7 +102,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				
 				if(cours>= 1400) {
 					this.quantiteEnTMQ=0.4*quantiteEnT; // quantité mise à jour dans la classe vendeurAuxEncheres
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTMQ+" T de "+f);
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTMQ+" T de "+f+"à"+cours);
 
 					return quantiteEnTMQ;
 
@@ -114,9 +114,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				
 				if(cours>= 1700) {
 					this.quantiteEnTHQ=0.7*quantiteEnT; // quantité mise à jour dans la classe vendeurAuxEncheres
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTHQ+" T de "+f);
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTHQ+" T de "+f+"à"+cours);
 
 					return quantiteEnTHQ;
+					
 				}
 			
 			}
@@ -125,7 +126,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				if(cours>= 1200) {
 					this.quantiteEnTBQ=0.3*quantiteEnT;  // quantité mise à jour dans la classe vendeurAuxEncheres
 					
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnTBQ+" T de "+f);
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnTBQ+" T de "+f+"à"+cours);
 					return quantiteEnTBQ;
 				}
 				
