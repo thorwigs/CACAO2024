@@ -80,7 +80,9 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		for (ChocolatDeMarque choc : chocolats) {
 			this.chocoVendu.putIfAbsent(choc, 5);
 			this.aVendu.putIfAbsent(choc, 0);
-
+			if (choc.getMarque().equals("Ecacaodor")) {
+				this.banni.add(choc);
+			}
 		}
 	}
 
@@ -366,16 +368,12 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			if (this.chocoVendu.get(choc)==0 && this.banni.contains(choc)==false) {
 				this.banni.add(choc);				
 			}
-			if (this.chocoVendu.get(choc)>0 && this.banni.contains(choc)) {
+			if (this.chocoVendu.get(choc)>0 && this.banni.contains(choc) && choc.getMarque().equals("Ecacaodor")==false) {
 				this.banni.remove(choc);
 			}
-			if (!this.banni.contains(choc)) {
-				System.out.println("choc : "+choc);
-			}
+
 			this.aVendu.replace(choc, 0);
-		}
-		
-		
+		}		
 		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Fixe", this.Cout_Fixe());
 	}
 	

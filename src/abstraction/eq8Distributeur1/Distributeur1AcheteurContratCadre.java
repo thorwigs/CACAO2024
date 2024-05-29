@@ -364,17 +364,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	 */
 	public void next() {
 		super.next();
-		System.out.println("etape : "+Filiere.LA_FILIERE.getEtape() );
 		double r = 0.0;
 		for (ChocolatDeMarque choc : chocolats) {
 			r = r + this.prevision(choc, 24);
 		}
-		/*System.out.println("prevision annuelle pour l'ensemble des chocolats : "+r);*/
-		System.out.println("");
-		System.out.println("");
-		System.out.println("");
-		System.out.println("");
-		System.out.println("");
 
 		this.test=0;
 		this.choix=new LinkedList<ExemplaireContratCadre>();
