@@ -40,7 +40,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		boolean VenteActive=this.VenteActive();
 		//this.journalCC.ajouter(this.moyProd+"  prod - total    "+totalStep);
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
-			if (VenteActive == true) {
+			if ((VenteActive == true) && (this.vend(cm)))  {
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
 				double parStep = this.stockChocoMarque.get(cm).getValeur()/(52*2); // On vend la moitié de la quantité totale de notre stock
 				if (parStep<100) {
@@ -205,7 +205,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		double totalStep=0;
 		for (ExemplaireContratCadre c : contratsEnCours) {
 			if (this.chocosProduits.contains(c.getProduit())){
-				totalStep+=c.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape());
+				totalStep+=c.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1);
 			}
 		}
 		boolean VenteActive = false;
