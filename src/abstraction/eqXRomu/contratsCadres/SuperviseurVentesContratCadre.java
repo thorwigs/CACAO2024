@@ -31,7 +31,6 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	private HashMap<IActeur, Integer> cryptos;
 	private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
 	private HashMap<Feve, HashMap<Integer, Double>> livraisonsFeves;
-	private Echeancier propPrecedente;
 
 	private HashMap<IActeur, HashMap<Integer, Double>> chocolatALivrerStep, chocolatALivrerTotale; // pour chaque vendeur et chaque step la quantite qu'il doit livre au prochain step.
 	
