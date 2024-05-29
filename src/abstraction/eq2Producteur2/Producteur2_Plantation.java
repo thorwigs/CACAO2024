@@ -22,7 +22,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	private static final int START_YEARS = 2024;
 	private static final double nb_hectares_initiaux = 3000000;
-	private static final double nb_max_hectares = 6000000;
+	private static final double nb_max_hectares = 7000000;
 	private static final int DUREE_VIE = 40;
 	
 	protected static final int PRIX_HECTARE_BQ = 500;
