@@ -19,7 +19,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implements IVendeurContratCadre {
 
 	protected SuperviseurVentesContratCadre supCC;
-	private HashMap<IAcheteurContratCadre, Integer> BlackListAcheteur;
+	private HashMap<IAcheteurContratCadre, Integer> Acheteurs;
 	protected List<ExemplaireContratCadre> contratsEnCours;
 	protected List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCoC;
@@ -33,7 +33,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		this.journalCoC = new Journal(this.getNom() + " journal CC", this);
 		this.moy = 0;
 		this.echancesQua = new LinkedList<Double>();
-		this.BlackListAcheteur = new HashMap<IAcheteurContratCadre, Integer>();
+		this.Acheteurs = new HashMap<IAcheteurContratCadre, Integer>();
 	}
 
 	public void initialiser() {
@@ -147,31 +147,37 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		//System.out.println(contrat.getAcheteur());
 		//System.out.println(Filiere.LA_FILIERE.getActeur("EQ6"));
 		//System.out.println(contrat.getAcheteur().equals(Filiere.LA_FILIERE.getActeur("EQ6")));
-		//if ((contrat.getAcheteur().equals(Filiere.LA_FILIERE.getActeur("EQ6")))){
-		//	return null;
-		//}
+		if ((contrat.getAcheteur().equals(Filiere.LA_FILIERE.getActeur("EQ6")))){
+			return null;
+			}
 		IProduit produit = contrat.getProduit();
 		if (!(produit instanceof Feve)) {
 			journalCoC.ajouter("Not a cocoa bean");
 			return null;
 		}
 		this.echancesQua.add(ec.getQuantiteTotale());
-		
+
 		Feve f = (Feve) produit;
 		Double stockdispo = stock.get(f).getValeur() - restantDu(f);
 		//System.out.println(stock.get(f).getValeur());
-		
+
 		for (int i =0; i < this.echancesQua.size() -1; i++) {
 			moy += this.echancesQua.get(i);
 		}
 		moy/=this.echancesQua.size();
-		if (stockdispo < 2000) {
+		if (stockdispo < 30000) {
 			journalCoC.ajouter("Insufficient stock: " + stockdispo);
 			return null;
 		}
-		
-		
-		if (ec.getQuantiteTotale()>25000) {
+		if (Acheteurs.keySet().contains(contrat.getAcheteur())) {
+			if (Acheteurs.get(contrat.getAcheteur())>=1) {
+				return null;
+			}
+			
+		}
+
+
+		if (ec.getQuantiteTotale()>moy*1.2) {
 			return null;
 		}
 		int duree = ec.getStepFin() - ec.getStepDebut();
@@ -183,7 +189,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 			journalCoC.ajouter("Contract not allowed in first 12th steps");
 			return null;
 		}
-		if (this.contratsEnCours.size() >= 5) {
+		if (this.contratsEnCours.size() >= 4) {
 			journalCoC.ajouter("Maximum number of ongoing contracts reached");
 			return null;
 		}
@@ -223,6 +229,14 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 
 		journalCoC.ajouter("New contract: " + contrat);
+		if (Acheteurs.containsKey(contrat.getAcheteur())) {
+			Acheteurs.put(contrat.getAcheteur(), this.Acheteurs.get(contrat.getAcheteur()));
+		}
+		else {
+			Acheteurs.put(contrat.getAcheteur(),1);
+		}
+
+
 		this.contratsEnCours.add(contrat);
 
 	}
@@ -235,15 +249,15 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		stock.get(produit).setValeur(this, stockActuel - aLivre, (Integer) cryptogramme);
 		return aLivre;
 	}
-	
+
 	public List<Journal> getJournaux() {
 		List<Journal> res = super.getJournaux();
 		res.add(journalCoC);
 		return res;
 	}
 	public double rest(Feve f) {
-		
-		
+
+
 		return 0.0;
 	}
 

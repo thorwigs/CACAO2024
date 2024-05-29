@@ -1,8 +1,6 @@
 package abstraction.eq1Producteur1;
 /**@author Youssef Ben Abdeljelil*/
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
+
 
 /*
  *///////////////////////////////////////YOUSSEF BEN ABDELJELIL//////////////////////////////
