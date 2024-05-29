@@ -114,7 +114,8 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 			this.coutproduction_tonne_marque_step.put(c, this.coutmachine + this.coutadjuvant*0.2); //initialisation de la hashmap
 			this.production_tonne_marque_step.put(c, 0.0);//idem
 		}
-		//remarquons que chocoalivrer contient en clés tout les chocolat de chocolatCocOasis et de chocolatDistributeur
+		
+		//hola
 		
 		//////////On fixe ce qu'on produit et on le produit si on en a pas assez en stock//////////
 		
