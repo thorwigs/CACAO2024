@@ -185,33 +185,16 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	public void planter(double nb_hectares, Feve f) {
 		// Il n'y a pas d'hectares MQ_E ou HQ_E donc il faut définir une nouvelle variable
-		Feve qualite;
-		if (f == Feve.F_HQ || f == Feve.F_HQ_E) {
-			qualite = Feve.F_HQ;
-		}
-		else if (f == Feve.F_MQ || f == Feve.F_MQ_E) {
-			qualite = Feve.F_MQ;
+		if (this.getHectaresTotal(cryptogramme) + nb_hectares < nb_max_hectares) {
+			this.journalPlantation.ajouter(" on a atteint le max d'hectares");
 		}
 		else {
-			qualite = Feve.F_BQ;
-		}
-		
-		if (this.plantation.containsKey(annee_actuelle + DUREE_VIE)) {
-			double deja_achetes_cette_annee = this.plantation.get(qualite).get(annee_actuelle + DUREE_VIE);
-			plantation.get(qualite).put(annee_actuelle + DUREE_VIE, deja_achetes_cette_annee + nb_hectares);
-		}
-		else {
-			plantation.get(qualite).put(annee_actuelle + DUREE_VIE, nb_hectares);
-		}
-		if (qualite == Feve.F_HQ) {
-			// On ne fait que de la haute qualité équitable
-			this.embauche((int) nb_hectares, "adulte équitable");
-			cout_du_tour = cout_du_tour + PRIX_HECTARE_HQ * nb_hectares; 
-		}
-		else {
-			this.embauche((int) nb_hectares, "adulte");
-			if (qualite == Feve.F_BQ) {
-				cout_du_tour = cout_du_tour + PRIX_HECTARE_BQ * nb_hectares; 
+			Feve qualite;
+			if (f == Feve.F_HQ || f == Feve.F_HQ_E) {
+				qualite = Feve.F_HQ;
+			}
+			else if (f == Feve.F_MQ || f == Feve.F_MQ_E) {
+				qualite = Feve.F_MQ;
 			}
 			else {
 				qualite = Feve.F_BQ;
@@ -235,7 +218,29 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 					cout_du_tour = cout_du_tour + PRIX_HECTARE_BQ * nb_hectares; 
 				}
 				else {
-					cout_du_tour = cout_du_tour + PRIX_HECTARE_MQ * nb_hectares; 
+					qualite = Feve.F_BQ;
+				}
+				
+				if (this.plantation.containsKey(annee_actuelle + DUREE_VIE)) {
+					double deja_achetes_cette_annee = this.plantation.get(qualite).get(annee_actuelle + DUREE_VIE);
+					plantation.get(qualite).put(annee_actuelle + DUREE_VIE, deja_achetes_cette_annee + nb_hectares);
+				}
+				else {
+					plantation.get(qualite).put(annee_actuelle + DUREE_VIE, nb_hectares);
+				}
+				if (qualite == Feve.F_HQ) {
+					// On ne fait que de la haute qualité équitable
+					this.embauche((int) nb_hectares, "adulte équitable");
+					cout_du_tour = cout_du_tour + PRIX_HECTARE_HQ * nb_hectares; 
+				}
+				else {
+					this.embauche((int) nb_hectares, "adulte");
+					if (qualite == Feve.F_BQ) {
+						cout_du_tour = cout_du_tour + PRIX_HECTARE_BQ * nb_hectares; 
+					}
+					else {
+						cout_du_tour = cout_du_tour + PRIX_HECTARE_MQ * nb_hectares; 
+					}
 				}
 			}
 		}
