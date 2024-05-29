@@ -55,7 +55,7 @@ public abstract class Producteur2Acteur implements IActeur {
 
 		this.init_stock(Feve.F_BQ, 102384.55); //103846153.8
 		this.init_stock(Feve.F_MQ, 38678.61); //62115384.62
-		this.init_stock(Feve.F_HQ_E, 2600.24); //3076923.076
+		this.init_stock(Feve.F_HQ_E, 0); //3076923.076
 		
 		this.lot_to_hashmap();
 		
