@@ -9,6 +9,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 
 /** Classe permettant de gérer les stocks
  * @author Quentin
@@ -272,7 +273,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 		double quantite_prise = 0;
 		for(Producteur2_Lot l : lst_lot_feve) {
-			if(quantite_prise == quantite_demandee) {
+			if(quantite_prise == quantite_demandee || quantite_prise == this.getQuantiteEnStock(type_feve, this.cryptogramme)) {
 				return quantite_prise;
 			}
 			else {
