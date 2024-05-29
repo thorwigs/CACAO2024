@@ -113,7 +113,7 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 		double stockdispo = this.stockChocoMarque.get((ChocolatDeMarque) contrat.getProduit());
 		
 		
-		if ( contrat.getEcheancier().getQuantiteTotale() < stockdispo ){
+		if ( contrat.getEcheancier().getQuantiteTotale() < stockdispo - restantDu((ChocolatDeMarque)contrat.getProduit())){
 			return contrat.getEcheancier();
 		}
 		else {
@@ -141,11 +141,11 @@ public class Transformateur3VendeurCCadre extends Transformateur3Produit impleme
 			return contrat.getPrix(); // Premier pile ou face, pour savoir si on négocie ou non (ici si la 
 									  // condition est vérifiée on ne négocie pas)
 		} 
-		else if (Filiere.random.nextDouble()<0.5){ // Deuxième pile ou face, s'il est vérifié on négocie la vente à -4,9%
-			return 0.951*contrat.getPrix();
+		else if (Filiere.random.nextDouble()<0.5){ // Deuxième pile ou face, s'il est vérifié on négocie la vente à +4,9%
+			return 1.049*contrat.getPrix();
 		}
 		else {
-			return 0.901*contrat.getPrix();  //  Si les 2 premiers pile ou face ont échoué, on négocie la vente à -9,9%
+			return 1.099*contrat.getPrix();  //  Si les 2 premiers pile ou face ont échoué, on négocie la vente à +9,9%
 		}
 	}
 
