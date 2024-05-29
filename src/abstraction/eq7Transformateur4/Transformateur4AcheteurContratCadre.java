@@ -47,9 +47,9 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE, HQ ou MQ
 		return (produit.getType().equals("Feve"))
 				&& (
-						(((Feve)produit).equals(Feve.F_HQ)) ||
-						(((Feve)produit).equals(Feve.F_HQ_BE)) ||
-						(((Feve)produit).equals(Feve.F_MQ))
+						//(((Feve)produit).equals(Feve.F_HQ)) ||
+						(((Feve)produit).equals(Feve.F_HQ_E)) ||
+						(((Feve)produit).equals(Feve.F_BQ))
 					)
 				
 				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 20000 );
@@ -176,33 +176,6 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 	}
 		
 	
-		/*
-		if (((Feve)contrat.getProduit()).isEquitable()) { // pas de cours en bourse
-			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
-			double alea = Filiere.random.nextInt((int)max);
-			if (contrat.getPrix()<Math.min(alea, prixSansDecouvert)) {
-				return contrat.getPrix();
-			} 
-			else {
-				return Math.min(prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur()*(1+(Filiere.random.nextInt(25)/100.0))); // entre 1 et 1.25 le prix de F_MQ
-			}
-		} 
-		else {
-			double cours = bourse.getCours((Feve)contrat.getProduit()).getValeur();
-			double coursMax = bourse.getCours((Feve)contrat.getProduit()).getMax();
-			int alea = coursMax-cours>1 ? Filiere.random.nextInt((int)(coursMax-cours)) : 0;
-			if (contrat.getPrix()<cours+alea) {
-				return Math.min(prixSansDecouvert, contrat.getPrix());
-			} else {
-				return Math.min(prixSansDecouvert, cours*(1.1-(Filiere.random.nextDouble()/3.0)));
-			}
-		}
-	}
-	
-	*/
-	
-	
-	
 	
 	//Après finalisation contrat 
 	
@@ -246,8 +219,8 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 		List<Feve> fInteresse = new LinkedList<Feve>();
 		//fInteresse.add(Feve.F_HQ_BE);
 		fInteresse.add(Feve.F_HQ);
-		fInteresse.add(Feve.F_MQ);
-		fInteresse.add(Feve.F_HQ_BE);
+		fInteresse.add(Feve.F_BQ);
+		fInteresse.add(Feve.F_HQ_E);
 				for (Feve f : fInteresse) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					
 					double BesoinPourChoco = 0.0; //quantité à livrer de fèves

@@ -33,9 +33,6 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 	
 		HashMap<ChocolatDeMarque, Double> partProduite = new HashMap<ChocolatDeMarque,Double>(); 
 		
-		
-		HashMap<ChocolatDeMarque, Double> chocoEffectivementProduit = new HashMap<ChocolatDeMarque,Double>();
-		
 		for (Feve f : this.lesFeves) {
 			this.journalTransfo.ajouter("stock de fève" + f+ "avant ce step est "+ this.stockFeves.get(f));
 		}
@@ -67,11 +64,13 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 			if (chocoAProduire.get(c) != 0) {
 				partProduite.put(c, chocoAProduire.get(c)/this.totalBesoin);
 				
-				journalTransfo.ajouter("" + c + " prend " + partProduite.get(c) + " de la production");
+				
 				
 			} else {
 				partProduite.put(c,0.0);
-			}	
+			}
+			
+			journalTransfo.ajouter("" + c + " prend " + partProduite.get(c) + " de la production");
 		}
 		
 		if (this.totalBesoin < this.peutproduireemploye )	{
@@ -124,7 +123,7 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 		//##################################### PRODUCTION ######################################################
 			
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.replace(c, this.stockChocoMarque.get(c) + chocoEffectivementProduit.get(c));
+			this.stockChocoMarque.put(c, this.stockChocoMarque.get(c) + chocoEffectivementProduit.get(c));
 			this.totalStocksChocoMarque.ajouter(this, chocoEffectivementProduit.get(c), cryptogramme);
 			
 			for (Feve f : this.lesFeves) {
@@ -146,7 +145,7 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 		}
 		
 		for (ChocolatDeMarque c : chocolatDistributeur) {
-			this.stockChoco.replace(c.getChocolat(), this.stockChoco.get(c.getChocolat()) + chocoEffectivementProduit.get(c));
+			this.stockChoco.put(c.getChocolat(), this.stockChoco.get(c.getChocolat()) + chocoEffectivementProduit.get(c));
 			this.totalStocksChoco.ajouter(this, chocoEffectivementProduit.get(c), cryptogramme);
 			
 			
