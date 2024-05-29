@@ -54,7 +54,6 @@ public abstract class Producteur3Acteur implements IActeur {
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     abstract HashMap<Feve,Double> maindoeuvre();
 	protected abstract HashMap<Feve,Double> newQuantite();
-	protected HashMap<Feve, Double> partDeMarcheFeve;
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
