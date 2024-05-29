@@ -32,7 +32,6 @@ public class Producteur2VendeurEncheres extends Producteur2VendeurCCadre impleme
 		}		
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
-		//this.stock=new Variable(this.getNom()+"Stock"+f, this, 0.0, 1000000000.0,stock);
 		this.feve = f;
 		this.prixMin = prixMin;
 		

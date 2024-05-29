@@ -158,7 +158,6 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 		if ((nb_emp - n) < 0) {
 			this.setNombreEmployes(categorie, 0);
 			this.journalRH.ajouter("il n y a plus d employes dans la categorie " + categorie);
-	
 		}
 		else { 
 			this.setNombreEmployes(categorie, nb_emp-n);
@@ -216,33 +215,41 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	
 	
 	/**  Fonction qui permet d'implémenter notre stratégie. 
-	 * Si notre solde est supérieur à ce que nous coûte 10 tours de simulation
+	 * Si notre bénéfice  est supérieur à ce que nous coûte 2 tours de simulation
 	 * en ressources humaines on peut embaucher de nouveaux employés adultes dont une part en équitable.
 	 * On suppose qu'en faisant une telle action on diminue le travail infantile de 2%.
 	 * @author Noémie
 	 */
 	public void strategie()  {
 		double benef = this.getBenefice();
-		//System.out.println(" pourcentage equitable" + this.getPourcentage_equitable());
-		if (benef > 10*cout_humain_par_step()){
+		if (benef > 2*cout_humain_par_step()){
+			// S'il n'y a déjà plus d'enfants dans la plantation
 			if (getPourcentage_enfants() < 0.02) {
 				double nb_ade=0.001*this.getNb_Employes_total();
 				double nb_ade_max=0.2*this.getNb_Employes_total();
 				this.embauche(Math.min((long) nb_ade,(long) nb_ade_max), "adulte équitable");
 			}
+			
+			// Si le pourcentage d'employes équitable est supérieur à 20
 			else if (this.getPourcentage_equitable() < 20) {
 				long nb_enf = getNb_employes_enfants();
 			
 				// le nombre d'employés qui changent de catégorie est égal à 2% des enfants
 				long nb_employes_modif = (long) Math.round(0.02*nb_enf);
 				
-				// parmis ces employés, 80% passent en équitable
-				long modif_equitable = (long) Math.round(nb_employes_modif*0.8);
-				
+				// parmis ces employés, 60% passent en équitable
+				long modif_equitable = (long) Math.round(nb_employes_modif*0.6);
 				this.licencie(nb_employes_modif,"enfant");
 				this.embauche(modif_equitable, "adulte équitable");
 				this.embauche(nb_employes_modif - modif_equitable, "adulte");
 			}
+		}
+		// S'il y a trop d'employes equitables
+		else if(this.getPourcentage_equitable() > 25) {
+			long nb_emp_eq = this.getNb_employes_equitable();
+			long nb_max_emp_eq = (long) (0.2 * this.getNb_Employes_total());
+			this.licencie(nb_emp_eq - nb_max_emp_eq, "adulte équitable");
+			this.embauche(nb_emp_eq - nb_max_emp_eq, "adulte");
 		}
 	}
 	

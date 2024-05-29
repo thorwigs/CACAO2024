@@ -28,12 +28,10 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected static final int PRIX_HECTARE_MQ = 1000;
 	protected static final int PRIX_HECTARE_HQ = 1500;
 	
-	protected double nb_hectares_max;
-	//protected double nb_hectares_actuel;
-	
+	protected double nb_hectares_max;	
 	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
 
-	//protected int qualite;
+	// Simplement pour l'initialisation de la plantation
 	protected int pourcentage_HQ;
 	protected int pourcentage_MQ;
 	protected int pourcentage_BQ;
@@ -54,8 +52,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public Producteur2_Plantation() {
-
-		//this.nb_hectares_max=5000000.0*2;
 		this.journalPlantation =new Journal(this.getNom()+" journal Plantation",this);
 		this.plantation = new HashMap <Feve, HashMap<Integer, Double>>();
 	}

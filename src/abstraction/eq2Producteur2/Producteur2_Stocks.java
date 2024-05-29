@@ -110,7 +110,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		
 		//Si on dépasse le seuil de stockage
 		if (this.getQuantiteEnStock(type_feve, this.cryptogramme)+ quantite > SEUIL && quantite > 0) {
-			//trop_de_stock(type_feve, quantite);
+			trop_de_stock(type_feve, quantite);
 		}
 		else {
 			if(quantite != 0 && type_feve == Feve.F_BQ) {
@@ -143,22 +143,22 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 */
 	public void init_stock(Feve type_feve, double quantite) {
 		List<Producteur2_Lot> stocks =  new ArrayList<Producteur2_Lot>();
-		if(quantite != 0 && type_feve == Feve.F_BQ) {
+		if(quantite > 0 && type_feve == Feve.F_BQ) {
 			stocks.add(new Producteur2_Lot(quantite, Feve.F_BQ,0));
 		}
-		if(quantite != 0 && type_feve == Feve.F_MQ) {
+		if(quantite > 0 && type_feve == Feve.F_MQ) {
 			stocks.add(new Producteur2_Lot(quantite, Feve.F_MQ,0));
 		}
-		if(quantite != 0 && type_feve == Feve.F_MQ_E) {
+		if(quantite > 0 && type_feve == Feve.F_MQ_E) {
 			stocks.add(new Producteur2_Lot(quantite, Feve.F_MQ_E,0));
 		}
-		if(quantite != 0 && type_feve == Feve.F_HQ) {
+		if(quantite > 0 && type_feve == Feve.F_HQ) {
 			stocks.add(new Producteur2_Lot(quantite, Feve.F_HQ,0));
 		}
-		if(quantite != 0 && type_feve == Feve.F_HQ_E) {
+		if(quantite > 0 && type_feve == Feve.F_HQ_E) {
 			stocks.add(new Producteur2_Lot(quantite, Feve.F_HQ_E,0));
 		}
-		if(quantite != 0 && type_feve == Feve.F_HQ_BE) {
+		if(quantite > 0 && type_feve == Feve.F_HQ_BE) {
 			stocks.add(new Producteur2_Lot(quantite, Feve.F_HQ_BE,0));
 		}
 		this.lst_stock_total = stocks;
@@ -207,7 +207,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		stock.put(Feve.F_MQ_E, feve_mq_e);
 		stock.put(Feve.F_HQ_E, feve_hq_e);
 		stock.put(Feve.F_HQ_BE, feve_hq_be);
-		
 	}
 	
 	/** Change la qualité des fèves en fonction de la durée de stockage
@@ -307,7 +306,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 			if(quantite_retiree/2 >= quantite && stock_init-quantite_retiree < SEUIL ) {
 				break;
 			}
-			else {
+			else{
 				if(quantite_retiree + l.getQuantite() <= quantite) {
 					quantite_retiree += l.getQuantite();
 					this.retire_lot(l);

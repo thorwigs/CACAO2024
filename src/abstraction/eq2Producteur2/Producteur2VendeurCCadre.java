@@ -34,6 +34,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	protected int etapeCC;
 	protected double prix_contrat;
 
+	/** Constructeur de classe
+	 * @author Noemie
+	 */
 	public Producteur2VendeurCCadre() {
 		super();
 		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
@@ -41,6 +44,9 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		this.journalCC = new Journal(this.getNom()+" journal CC", this);
 	}
 	
+	/** initialisation
+	 * @author Noemie
+	 */
 	public void initialiser() {
 		super.initialiser();
 		this.etapeCC = 0;
@@ -50,10 +56,8 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	/** next
 	 * @author Maxime
 	 */
-	
 	public void next() {
 		super.next();
-		//System.out.println(" ------------------- ETAPE " + Filiere.LA_FILIERE.getEtape() + " ------------- ");
 		this.journalCC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stock.get(f)-restantDu(f)>1200 && f != Feve.F_MQ_E) { // au moins 100 tonnes par step pendant 6 mois
@@ -69,8 +73,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 						if (contrat==null) {
 							journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 						} else {
-							//System.out.println(" ...............");
-							//System.out.println("         CONTRAT " + contrat.getNumero() + " signé. Type de feve : " + ((Feve)contrat.getProduit()).name());
 							this.contratsEnCours.add(contrat);
 							this.prix_contrat = contrat.getPrix();
 							journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
@@ -172,10 +174,17 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		return false;
 	}
 	
+	/** Retourne la quantite de feve vendue par contrats cadres
+	 * @author Noemie
+	 */
 	public double getNbTonnesVenduesCC() {
 		return quantiteVendueCC;
 	}
 
+	/** Pour les contrats qui n'ont pas encore été signés, on évalue si on va produire assez
+	 * pour pouvoir tenir ce nouveau contrat en plus des autres
+	 * @author Noemie
+	 */
 	public double par_step(Feve f) {
 		double doit_livrer = 0;
 		double prod_par_step = this.getHectaresPlantes(f, this.cryptogramme)*0.5/24/2;
@@ -195,9 +204,8 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 	}
 	
 	public boolean ajout_contrat_ok(ExemplaireContratCadre contrat) {
-		//System.out.println("Traitement du CONTRAT " + contrat.getNumero());
 		Feve f = (Feve) contrat.getProduit();
-		double doit_environ_livrer_par_step = contrat.getEcheancier().getQuantiteTotale();		
+		double doit_environ_livrer_par_step = contrat.getEcheancier().getQuantiteTotale()/24;		
 		double prod_par_step = this.getHectaresPlantes(f, this.cryptogramme)*0.5/24;
 		double doit_deja_livrer = 0;
 	
@@ -212,7 +220,6 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		if (doit_deja_livrer + doit_environ_livrer_par_step < prod_par_step) {
 			return true;
 		}
-		
 		return false;
 		
 	}
