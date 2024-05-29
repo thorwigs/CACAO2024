@@ -454,6 +454,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 				i--;
 			}
 		}
+		
 
 
 	}
