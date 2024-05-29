@@ -12,7 +12,6 @@ import abstraction.eqXRomu.produits.Feve;
 
 public abstract class Producteur3Plantation extends Producteur3Acteur {
 	abstract HashMap<Feve,Double> quantite();
-	abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
 	abstract void deleteAcheteurs(IAcheteurBourse acheteur);
 	abstract void deleteVendeurs(IVendeurBourse vendeur);
 	
@@ -32,7 +31,8 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	
 /**
  * @author Alexis
- * variable qui répertorie l'âge des plants	
+ * Initialisation de la variable qui prend en compte les années de fin de production (en variant les années au début)
+ * Initialisation des couts de plantation par qualité de fève
  * pour chaque type de fève, il y a un dictionnaire dont les clés sont les steps de fin de vie d'une parcelle
  */
 	private HashMap<Feve,HashMap<Integer,Double>> agePlant;
@@ -149,6 +149,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 				}
 			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f (en ha)
 			if(supp > 0) {
+				//on paie les couts liées aux nouvelles plantations
 				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Coût plantation supplémentaire "+f, supp*coutPlantation.get(f));
 			}
 		}
@@ -170,10 +171,11 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	protected HashMap<Feve, Double> aRemplacer(HashMap<Feve,HashMap<Integer,Double>> agePlant) {
 		HashMap<Feve, Double> replace = new HashMap<Feve, Double>();
 		for(Feve f: agePlant.keySet()) {
+			//on fait une liste ordonée pour avoir les steps dans l'ordre
 			LinkedList<Integer> steps = new LinkedList<Integer>();
 			steps.addAll(agePlant.get(f).keySet());
 			Collections.sort(steps);
-			for(int step: steps) {
+			for (int step: steps) {
 				if(Filiere.LA_FILIERE.getEtape() == step) {
 					replace.put(f, agePlant.get(f).get(step));
 				}

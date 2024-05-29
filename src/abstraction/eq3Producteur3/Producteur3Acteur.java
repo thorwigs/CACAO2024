@@ -53,9 +53,9 @@ public abstract class Producteur3Acteur implements IActeur {
     abstract void deleteAcheteurs(IAcheteurBourse acheteur);
     abstract void deleteVendeurs(IVendeurBourse vendeur);
     abstract HashMap<Feve,Double> quantite();
-    abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     abstract HashMap<Feve,Double> maindoeuvre();
 	protected abstract HashMap<Feve,Double> newQuantite();
+	
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
@@ -118,23 +118,6 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
 		//On set les stocks
-		/**
-		 *Initialisation basée sur les quantités produites actuellement au Pérou
-		 *surface:
-		HQ_BE : 8 420 ha 
-		HQ : 22 740 ha ; HQ_E : 7 580 ha  (Non Bio) 
-		MQ : 47 570 ha ; MQ_E : 11 890 ha 
-		BQ : 134 775 ha 
-		 * @author Gabin
-		 
-		 *Modification valeurs:
-		 *On initialise à une valeur correspondant à la production pendant 2 steps
-		 HQ : 33 kg/(ha.2steps)
-		 MQ : 83 kg/(ha.2steps)
-		 BQ : 166 kg/(ha.2steps)
-		 Les quantités sont en tonnes
-		 *@author Alexis
-		 */
 		setQuantiteEnStock(Feve.F_BQ, 22372);
 		setQuantiteEnStock(Feve.F_MQ, 3900);
 		setQuantiteEnStock(Feve.F_MQ_E, 986);
@@ -283,6 +266,7 @@ public abstract class Producteur3Acteur implements IActeur {
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
+	//on supprime les acteurs qui font faillite des vendeurs/acheteurs en bourse
 	public void notificationFaillite(IActeur acteur) {
 		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());
 		if (acteur instanceof IVendeurBourse) {
@@ -399,7 +383,6 @@ public abstract class Producteur3Acteur implements IActeur {
 	  * @return coutMaindoeuvre
 	  * Calcule les couts de main d'oeuvre
 	  */	
-	 
 	 protected double coutMaindoeuvre() {
 		    // Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
 

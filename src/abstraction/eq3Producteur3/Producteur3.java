@@ -28,9 +28,3 @@ public class Producteur3 extends Producteur3VendeurContratCadre  {
 		super.next();
 	}
 }
-
-/**Ordre execution
- * 
- * Clients Finaux -> eq 1 -> eq2 -> ... -> eq9 -> Romu -> SuperviseurCC -> bourse -> superviseur AO -> superviseur OA
- *
-**/
