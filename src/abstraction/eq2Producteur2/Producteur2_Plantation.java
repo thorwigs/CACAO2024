@@ -185,7 +185,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	public void planter(double nb_hectares, Feve f) {
 		// Il n'y a pas d'hectares MQ_E ou HQ_E donc il faut définir une nouvelle variable
-		if (this.getHectaresTotal(cryptogramme) + nb_hectares > nb_max_hectares) {
+		if (this.getHectaresTotal(cryptogramme) + nb_hectares >= nb_max_hectares) {
 			this.journalPlantation.ajouter(" on a atteint le max d'hectares");
 		}
 		else {
