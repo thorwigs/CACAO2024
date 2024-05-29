@@ -135,7 +135,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 		if (ListPrix.containsKey(choco)) {
 			return ListPrix.get(choco);
 		} 
-		else {
+		else { 
 			return 0;
 		}
 	}
