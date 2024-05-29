@@ -97,7 +97,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		// les initialisations sont faites dans le constructeur
 	}
 	
-	
 	/** getBenefice
 	 * 
 	 * @author Maxime
@@ -112,6 +111,10 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 
+	/** getCoursBourse
+	 * 
+	 * @author Maxime
+	 */
 	public double getCoursBourse(Feve f) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		Variable cours = bourse.getCours(f);
@@ -188,7 +191,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	/** Renvoie les indicateurs
 	 * @author Noémie
 	 */
-	
 	public List<Variable> getIndicateurs() {
 		
 		List<Variable> res = new ArrayList<Variable>();

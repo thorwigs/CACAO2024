@@ -44,14 +44,23 @@ public abstract class Producteur2VendeurBourse extends Producteur2_Plantation im
 		}
 	}
 	
+	/** retourne la quantité vendue de feves à ce tour
+	 * @author Noemie
+	 */
 	public double getQuantiteVendue() {
 		return this.quantiteVendue;
 	}
 	
+	/** set la quantité vendue de feves à ce tour à n
+	 * @author Noemie
+	 */
 	public void setQuantiteVendue(double n) {
 		this.quantiteVendue = n;
 	}
 	
+	/** retourne la quantité de feves vendue en bourse
+	 * @author Noemie
+	 */
 	public double getNbTonnesVenduesBourse() {
 		double nb = this.getQuantiteVendue();
 		if (Filiere.LA_FILIERE.getEtape() != this.etapeBourse) {
