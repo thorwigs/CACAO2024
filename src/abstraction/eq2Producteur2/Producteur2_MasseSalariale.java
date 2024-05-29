@@ -23,7 +23,7 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	private double salaire_adulte_equitable;
 	
 	protected Journal journalRH;
-	
+	abstract public double getHectaresTotal(int cryptogramme) ;
 	
 	
 	/** Constructeur
@@ -39,9 +39,9 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 	 */
 	public void initialiser() {
 		super.initialiser();
-		this.nb_employes = 3679200;  		  
-		this.nb_employes_equitable = 100800; // 2% au départ
-		this.nb_employes_enfants = 1260000;  // 25% au départ
+		this.nb_employes = 730000;  		  
+		this.nb_employes_equitable = 20000; // 2% au départ
+		this.nb_employes_enfants = 250000;  // 25% au départ
 		
 		// Salaire à la journée
 		this.salaire_enfant =  1;
@@ -245,14 +245,13 @@ public abstract class Producteur2_MasseSalariale extends Producteur2_Stocks {
 			}
 		}
 		// S'il y a trop d'employes equitables
-		else if(this.getPourcentage_equitable() > 25) {
+		if(this.getPourcentage_equitable() > 25) {
 			long nb_emp_eq = this.getNb_employes_equitable();
 			long nb_max_emp_eq = (long) (0.2 * this.getNb_Employes_total());
 			this.licencie(nb_emp_eq - nb_max_emp_eq, "adulte équitable");
 			this.embauche(nb_emp_eq - nb_max_emp_eq, "adulte");
 		}
 	}
-	
 	
 
 	/** Méthode next qui appelle stratégie et met à jour le journal RH 

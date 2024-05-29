@@ -163,7 +163,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		for (Feve f : Feve.values()) {
 			if (f != Feve.F_HQ_BE) {
-				this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+				this.stock_variable.get(f).setValeur(this, this.getQuantiteEnStock(f, cryptogramme));
 				this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
 			}
 		}
@@ -275,6 +275,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee_prod = this.stock.get(p);
 			return quantite_stockee_prod;
+			//return this.getStockTotal(cryptogramme);
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}

@@ -21,7 +21,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */	
 	//seuil max de la production stockee
-	private static final double SEUIL = 400000;
+	private static final double SEUIL = 300000;
 	
 	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
@@ -40,7 +40,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		super();
 		this.journalStocks = new Journal(this.getNom()+" journalStocks", this);
 		this.lst_stock_total = new ArrayList<Producteur2_Lot>();
-		
 	}
 	
 	/** Initialisation
@@ -229,9 +228,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				lst.add(lot);
 			}
 		}
+		// on retire les lots périmés
 		for (Producteur2_Lot lot :lst) {
 			retire_lot(lot);
 		}
+		lot_to_hashmap();
 	}
 	
 	
@@ -273,13 +274,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		double quantite_prise = 0;
 		for(Producteur2_Lot l : lst_lot_feve) {
 			if(quantite_prise == quantite_demandee) {
-				//System.out.println("On a pris " + quantite_prise + " de feve " + type_feve.name());
 				return quantite_prise;
 			}
 			else {
 				if(quantite_prise + l.getQuantite() <= quantite_demandee) {
 					quantite_prise += l.getQuantite();
-					//System.out.println("On a pris " + quantite_prise + " de feve " + type_feve.name());
 					this.retire_lot(l);
 				}
 				else {
