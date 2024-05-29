@@ -410,6 +410,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void next(){
 		super.next();
 		production_cacao();
+		ajout_stock_journal(); //pour avoir le journal mis à jour après la production de fèves
 		for (Feve f : Feve.values()) {
 			if (f != Feve.F_HQ_BE) {
 				this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));

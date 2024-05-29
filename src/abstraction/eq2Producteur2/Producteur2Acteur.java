@@ -163,7 +163,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		for (Feve f : Feve.values()) {
 			if (f != Feve.F_HQ_BE) {
-				this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+				this.stock_variable.get(f).setValeur(this, this.getQuantiteEnStock(f, this.cryptogramme));
 				this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
 			}
 		}
