@@ -454,12 +454,13 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 				i--;
 			}
 		}
+
 		if (coutTotalFormation > 0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Cout Total de formation des ouvirers", coutTotalFormation);
 			this.journalOuvrier.ajouter("On a paye le cout suivant pour augmenter le rendement de certains ouvriers:"+ coutTotalFormation);
 		}
-
 	}
+
 
 
 

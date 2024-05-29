@@ -10,9 +10,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
-
-//classe codée par maxime
-public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO { 
+public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre implements IAcheteurAO { //classe codé par maxime
 	protected Journal journal_AO;
 	public Distributeur2AppelOffre() {
 		super();
@@ -58,7 +56,7 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 					this.getStockChocoMarque().put((ChocolatDeMarque) propRetenue.getProduit(),propRetenue.getQuantiteT() + this.getStockChocoMarque().get((ChocolatDeMarque)propRetenue.getProduit()));
 					//this.totalStocksChocoMarque.ajouter(this, propRetenue.getQuantiteT(), cryptogramme);
 					
-					if (this.coutDacheminement(propRetenue.getPrixT())>0) {
+					if (this.coutDacheminement(propRetenue.getPrixT())>1) {
 						Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "frais d'approvisionnement AO", this.coutDacheminement(propRetenue.getPrixT()));}
 				}
 			}

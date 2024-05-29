@@ -72,23 +72,23 @@ public class Distributeur1Acteur implements IActeur, IMarqueChocolat, IFabricant
 		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"===== STOCK INITIALE =====");
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
-			if (cm.getChocolat()==Chocolat.C_BQ && cm.getMarque()!="Ecacaodor" ) {
-				stock=96000/ (nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_BQ ) {
+				stock=96000/ (nombreMarquesParType.getOrDefault(Chocolat.C_BQ, 1));
 			}
-			if (cm.getChocolat()==Chocolat.C_MQ && cm.getMarque()!="Ecacaodor") {
-				stock=60000/ (nombreMarquesParType.getOrDefault(Chocolat.C_MQ, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_MQ ) {
+				stock=60000/ (nombreMarquesParType.getOrDefault(Chocolat.C_MQ, 1));
 			}
-			if (cm.getChocolat()==Chocolat.C_MQ_E && cm.getMarque()!="Ecacaodor") {
-				stock=12000/ (nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_MQ_E) {
+				stock=12000/ nombreMarquesParType.getOrDefault(Chocolat.C_MQ_E, 1);
 			}
-			if (cm.getChocolat()==Chocolat.C_HQ && cm.getMarque()!="Ecacaodor") {
-				stock=48000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_HQ ) {
+				stock=48000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ, 1));
 			}
-			if (cm.getChocolat()==Chocolat.C_HQ_E && cm.getMarque()!="Ecacaodor") {
-				stock=12000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ_E, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_HQ_E) {
+				stock=12000/ nombreMarquesParType.getOrDefault(Chocolat.C_HQ_E, 1);
 			}
-			if (cm.getChocolat()==Chocolat.C_HQ_BE && cm.getMarque()!="Ecacaodor")  {
-				stock=12000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ_BE, 1)-1);
+			if (cm.getChocolat()==Chocolat.C_HQ_BE )  {
+				stock=12000/ (nombreMarquesParType.getOrDefault(Chocolat.C_HQ_BE, 1));
 			}
 			this.stock_Choco.put(cm, stock);
 			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,cm+"->"+this.stock_Choco.get(cm));

@@ -39,8 +39,6 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 	//    private List<ChocolatDeMarque>chocolatsDeMarquesProduits; //  == Filiere.LA_FILIERE.getChocolatsProduits();
 	private Variable aff; // variable de la bourse precisant si on affiche ou non les donnees.
 
-	private Variable attMin, attMax; 
-	
 	private HashMap<Integer, Double> souhaitHorsPrix;
 	private HashMap<IDistributeurChocolatDeMarque, HashMap<Integer, Double>> souhait, obtenu;
 	private double distributionsAnnuelles[][] ;
@@ -92,8 +90,6 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		this.conso=new Variable(getNom()+" consommation annuelle", null, this, consommationAnnuelle);
 		this.deltaConsoMin=new Variable(getNom()+" delta annuel min conso", null, this, 0.0);
 		this.deltaConsoMax=new Variable(getNom()+" delta annuel max conso", null, this, 0.0);
-		this.attMax = new Variable(getNom()+" attractivite max", null, this, 1000000000.0);
-		this.attMin = new Variable(getNom()+" attractivite min", null, this, 0.000001);
 		this.dureeMinTransitionDistribution = new Variable(getNom()+" duree min evolution distribution", null, this, 24);
 		this.dureeMaxTransitionDistribution = new Variable(getNom()+" duree max evolution distribution", null, this, 48);
 		this.quantiteEnVente=new HashMap<IDistributeurChocolatDeMarque, Map<ChocolatDeMarque, Double>>();
@@ -283,13 +279,12 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		// Repartition des besoins clients en ventes
 		JournalDistribution.ajouter("= Repartition des besoins clients en ventes ===");
 		double totalAttractiviteChocolats = this.getTotalAttractiviteChocolatsDeMarque();
-//System.out.println("total attractivite "+totalAttractiviteChocolats);
+
 		JournalDistribution.ajouter("&nbsp;&nbsp;Somme des attractivites des chocolats = "+Journal.doubleSur(totalAttractiviteChocolats,4));
 		Map<ChocolatDeMarque, Double> ventesEtape = new HashMap<ChocolatDeMarque, Double>();
 
 		for (ChocolatDeMarque choco : chocolatsDeMarquesProduits) {
 			double consoStepChoco = consoStep*attractiviteChocolat.get(choco)/totalAttractiviteChocolats;
-			//System.out.println(choco+" "+attractiviteChocolat.get(choco));
 			JournalDistribution.ajouter(Color.cyan,Color.black,"&nbsp;&nbsp;-- Choco : "+choco.getNom()+" attractivite="+Journal.doubleSur(attractiviteChocolat.get(choco), 4)+" --> conso etape = "+Journal.doubleSur(consoStepChoco, 2));
 			// Cette consommation consoStepChoco est a repartir entre les distributeurs au prorata de leur attractivite sur ce produit
 			List<IDistributeurChocolatDeMarque> distributeursDeChoco = Filiere.LA_FILIERE.getDistributeurs();
@@ -383,10 +378,7 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 			}
 		}
 		for (ChocolatDeMarque choco1 : chocolatsDeMarquesProduits) {
-			double att = attractiviteChocolat.get(choco1);
-			att = Math.max(this.attMin.getValeur(), Math.min(this.attMax.getValeur(), att));
-			attractiviteChocolat.put(choco1, att);
-			this.journalAttractivites.ajouter("attractivite du "+choco1.getNom()+" == "+Journal.doubleSur(attractiviteChocolat.get(choco1), 4));//
+			this.journalAttractivites.ajouter("attractivite du "+choco1.getNom()+" == "+Journal.doubleSur(attractiviteChocolat.get(choco1), 4));
 		}
 		
 		//System.out.println("Distributeurs : "+Filiere.LA_FILIERE.getDistributeurs());		
@@ -448,8 +440,6 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 		res.add(this.surcoutQualitesDifferentes);
 		res.add(this.gainAttractiviteMemeQualite);
 		res.add(this.gainAttractiviteQualiteDifferente);
-		res.add(this.attMax);
-		res.add(this.attMin);
 		return res;
 	}
 	public List<Journal> getJournaux() {

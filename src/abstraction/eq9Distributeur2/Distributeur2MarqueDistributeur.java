@@ -7,7 +7,7 @@ import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-// codé par Haitam
+//Classe codée par Margot Lourenço Da Silva
 public class Distributeur2MarqueDistributeur extends Distributeur2AppelOffre implements IMarqueChocolat {
 
 	@Override

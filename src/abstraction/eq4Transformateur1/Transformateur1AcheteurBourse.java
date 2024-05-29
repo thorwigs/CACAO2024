@@ -39,7 +39,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Acteur impleme
 		if(this.listePourcentageMarque.keySet().contains(f.getGamme())) {
 			double stockCible = Math.max(this.nombreMois*this.demandeCC.get(f.getGamme()), this.stockCibleMini*this.listePourcentageMarque.get(f.getGamme()));
 			stockCible = Math.max(stockCible - this.totalStocksChocoMarque.getValeur(this.cryptogramme), 0);
-			this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de feve "+f);
+			this.journalAchatBourse.ajouter("- Le stock cible est de "+stockCible+"T de feve");
 			double demandeMin=100;
 		    if (f == Feve.F_HQ_BE) {
 		        if (this.stockFeves.get(f).getValeur() < stockCible) {

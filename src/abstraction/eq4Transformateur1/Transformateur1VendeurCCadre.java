@@ -144,7 +144,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 					} else {
 						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit))/12))));
-						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit))/12));
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)/12)));
 					}
 				}
 				journalCC.ajouter("      j'accepte l'echeancier");
@@ -182,10 +182,10 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		double prixCC = prix((ChocolatDeMarque)contrat.getProduit());
 		if (prixCC==0.0) {
-			PRIX_DEFAUT.put(((ChocolatDeMarque)contrat.getProduit()).getGamme(), PRIX_DEFAUT.get(((ChocolatDeMarque)contrat.getProduit()).getGamme())*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
+			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
 		double prixBaseBourse =  bourse.getCours(((ChocolatDeMarque) contrat.getProduit()).getChocolat().equals(Chocolat.C_HQ_BE)? Feve.F_HQ : Feve.F_MQ).getValeur()*1.5;
-		double res = Math.max(Math.max(prixCC*1.25, (double)PRIX_DEFAUT.get(((ChocolatDeMarque)contrat.getProduit()).getGamme())), prixBaseBourse);
+		double res = Math.max(Math.max(prixCC*1.25, (double)PRIX_DEFAUT), prixBaseBourse);
 		journalCC.ajouter("      propositionPrix retourne "+res);
 		return res;
 	}
