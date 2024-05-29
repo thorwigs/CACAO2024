@@ -30,6 +30,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	protected Journal journalCC;
 	protected  int test;
 	protected List<ExemplaireContratCadre> choix;
+	protected Double attract_tot;
+
 	
 
 	/**
@@ -51,6 +53,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+		this.attract_tot=0.0;
+		for (ChocolatDeMarque choc : chocolats) {
+			this.attract_tot= this.attract_tot + Filiere.LA_FILIERE.getAttractivite(choc);
+		}
 	}
 
 	/**
@@ -153,14 +159,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			if (contrat_en_cours.get(i).getProduit().equals(produit)) {
 				a = a + contrat_en_cours.get(i).getQuantiteRestantALivrer();
 			}
-		}
-		if (produit.getType().equals("ChocolatDeMarque")
-				&& this.stock_Choco.containsKey(produit)) {
-			/*System.out.println("ce qu'on va recevoir : "+a);
-			System.out.println("prevision : "+this.prevision(produit,24));
-			System.out.println("stock : "+this.stock_Choco.get(produit));
-			System.out.println("condition : "+(this.prevision(produit, 24) - this.stock_Choco.get(produit) - a));
-			System.out.println("");	*/
 		}
 
 		return (produit.getType().equals("ChocolatDeMarque")
@@ -336,13 +334,14 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	 */
 	public double prevision (IProduit p,int b) {
 		double d = 0.0;
+		double f = Filiere.LA_FILIERE.getAttractivite((ChocolatDeMarque)p)/this.attract_tot;
 		int a = Filiere.LA_FILIERE.getEtape();
 		for (int i =a-b; i<a ; i++ ) {
 			d = d + Filiere.LA_FILIERE.getVentes((ChocolatDeMarque)p,i);
 		}
 		d = d * (1+(Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel max conso").getValeur() + Filiere.LA_FILIERE.getIndicateur("C.F. delta annuel min conso").getValeur())/2);
 		
-		return d ; 
+		return d*f ; 
 	}
 	
 	public ExemplaireContratCadre ChoisirCC(List<ExemplaireContratCadre> liste) {
@@ -397,7 +396,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			if (this.achete(choc)) {
 				this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LPURPLE,"Recherche d'un vendeur aupres de qui acheter pour le chocolat : "+choc);
 				List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(choc);
-
+				
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
 				}
