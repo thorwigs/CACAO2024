@@ -188,7 +188,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		}
 		for(Feve f : stockFeves.keySet()) {
 			if(f==produit) {
-				return stockFeves.get(produit)+restantDu((Feve)produit)<0000;
+				return stockFeves.get(produit)+restantDu((Feve)produit)<20000;
 			}
 		}
 		return false;
