@@ -255,6 +255,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 			    x = new Echeancier (a,b,f);
 			}
 		}
+		
 		return x;
 	}
 	
