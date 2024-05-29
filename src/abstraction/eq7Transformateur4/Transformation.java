@@ -14,17 +14,18 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformation extends Transformateur4VendeurContratCadre{
+public class Transformation {
 
 	protected Journal journalTransfo ;
 	protected List<Double> lescouts; //liste qui contiendra certains des couts à faire pour un step, initialiser à une liste vide à chaque début de l'appel next
 	
 
 	public Transformation() {
-		super();
-		this.journalTransfo = new Journal(this.getNom()+" journal transfo", this);
+		//super();
+		//this.journalTransfo = new Journal(this.getNom()+" journal transfo", this);
 			}
 	
+	/*
 //Pierrick
 	public void next() {
 		
@@ -295,5 +296,7 @@ public class Transformation extends Transformateur4VendeurContratCadre{
 			res.add(journalTransfo);
 			return res;
 		}
+		
+		*/
 		
 }

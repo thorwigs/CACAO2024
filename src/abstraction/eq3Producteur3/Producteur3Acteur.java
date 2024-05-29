@@ -41,6 +41,8 @@ public abstract class Producteur3Acteur implements IActeur {
     //creation d'un tableau de variables qui donne les stocks pour chaque type de feve 
     //@alexis
     protected HashMap<Feve, Variable> stockfeve;
+    
+    protected HashMap<Feve,Variable> plantations; //variable qui suit la surface de plantation HQ_BE @author Arthur
   
     
     protected HashMap<Feve, Double> ventefevebourse;
@@ -51,10 +53,9 @@ public abstract class Producteur3Acteur implements IActeur {
     abstract void deleteAcheteurs(IAcheteurBourse acheteur);
     abstract void deleteVendeurs(IVendeurBourse vendeur);
     abstract HashMap<Feve,Double> quantite();
-    abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     abstract HashMap<Feve,Double> maindoeuvre();
 	protected abstract HashMap<Feve,Double> newQuantite();
-	protected HashMap<Feve, Double> partDeMarcheFeve;
+	
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
@@ -65,15 +66,50 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.stockfeve = new HashMap<Feve,Variable>();
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
-
+		this.plantations = new HashMap<Feve,Variable>();
 		//VALEURS INITIALES
-		for (Feve f : Feve.values()) {
-			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
-			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 1.0));
-			this.prodfeve.put(f,  new Variable("Eq3Prod "+f, this, 1.0));
-			this.ventefevebourse.put(f, 0.2);
-			this.ventefevecadre.put(f, 0.8);
-		}
+		//BQ
+		this.ventefeve.put(Feve.F_BQ,  new Variable("Eq3Vente "+Feve.F_BQ, this, 3600));
+		this.stockfeve.put(Feve.F_BQ,  new Variable("Eq3Stock "+Feve.F_BQ, this, 22372));
+		this.prodfeve.put(Feve.F_BQ,  new Variable("Eq3Prod "+Feve.F_BQ, this, 3790));
+		this.ventefevebourse.put(Feve.F_BQ, 3600.0);
+		this.ventefevecadre.put(Feve.F_BQ, 0.0);
+		this.plantations.put(Feve.F_BQ, new Variable("Plantation "+Feve.F_BQ,this,134775));
+		//MQ
+		this.ventefeve.put(Feve.F_MQ,  new Variable("Eq3Vente "+Feve.F_MQ, this, 2024));
+		this.stockfeve.put(Feve.F_MQ,  new Variable("Eq3Stock "+Feve.F_MQ, this, 3900));
+		this.prodfeve.put(Feve.F_MQ,  new Variable("Eq3Prod "+Feve.F_MQ, this, 1263));
+		this.ventefevebourse.put(Feve.F_MQ, 2024*0.8);
+		this.ventefevecadre.put(Feve.F_MQ, 2024*0.2);
+		this.plantations.put(Feve.F_MQ, new Variable("Plantation "+Feve.F_MQ,this,47570));
+		//MQ_E
+		this.ventefeve.put(Feve.F_MQ_E,  new Variable("Eq3Vente "+Feve.F_MQ_E, this, 290));
+		this.stockfeve.put(Feve.F_MQ_E,  new Variable("Eq3Stock "+Feve.F_MQ_E, this, 986));
+		this.prodfeve.put(Feve.F_MQ_E,  new Variable("Eq3Prod "+Feve.F_MQ_E, this, 315));
+		this.ventefevebourse.put(Feve.F_MQ_E, 290.0);
+		this.ventefevecadre.put(Feve.F_MQ_E, 0.0);
+		this.plantations.put(Feve.F_MQ_E, new Variable("Plantation "+Feve.F_MQ_E,this,11890));
+		//HQ
+		this.ventefeve.put(Feve.F_HQ,  new Variable("Eq3Vente "+Feve.F_HQ, this, 502));
+		this.stockfeve.put(Feve.F_HQ,  new Variable("Eq3Stock "+Feve.F_HQ, this, 750));
+		this.prodfeve.put(Feve.F_HQ,  new Variable("Eq3Prod "+Feve.F_HQ, this, 568));
+		this.ventefevebourse.put(Feve.F_HQ, 502.0);
+		this.ventefevecadre.put(Feve.F_HQ, 0.0);
+		this.plantations.put(Feve.F_HQ, new Variable("Plantation "+Feve.F_HQ,this,22740));	
+		//HQ_E
+		this.ventefeve.put(Feve.F_HQ_E,  new Variable("Eq3Vente "+Feve.F_HQ_E, this, 189));
+		this.stockfeve.put(Feve.F_HQ_E,  new Variable("Eq3Stock "+Feve.F_HQ_E, this, 250));
+		this.prodfeve.put(Feve.F_HQ_E,  new Variable("Eq3Prod "+Feve.F_HQ_E, this, 189.5));
+		this.ventefevebourse.put(Feve.F_HQ_E, 189.0);
+		this.ventefevecadre.put(Feve.F_HQ_E, 0.0);
+		this.plantations.put(Feve.F_HQ_E, new Variable("Plantation "+Feve.F_HQ_E,this,7580));	
+		//HQ_E
+		this.ventefeve.put(Feve.F_HQ_BE,  new Variable("Eq3Vente "+Feve.F_HQ_BE, this, 189));
+		this.stockfeve.put(Feve.F_HQ_BE,  new Variable("Eq3Stock "+Feve.F_HQ_BE, this, 277));
+		this.prodfeve.put(Feve.F_HQ_BE,  new Variable("Eq3Prod "+Feve.F_HQ_BE, this, 189.45));
+		this.ventefevebourse.put(Feve.F_HQ_BE, 189.0);
+		this.ventefevecadre.put(Feve.F_HQ_BE, 0.0);
+		this.plantations.put(Feve.F_HQ_BE, new Variable("Plantation "+Feve.F_HQ_BE,this,8420));	
 		 
 	}
 	
@@ -82,23 +118,6 @@ public abstract class Producteur3Acteur implements IActeur {
 	public void initialiser() {
 		this.stocks = new HashMap<IProduit,Integer>();
 		//On set les stocks
-		/**
-		 *Initialisation basée sur les quantités produites actuellement au Pérou
-		 *surface:
-		HQ_BE : 8 420 ha 
-		HQ : 22 740 ha ; HQ_E : 7 580 ha  (Non Bio) 
-		MQ : 47 570 ha ; MQ_E : 11 890 ha 
-		BQ : 134 775 ha 
-		 * @author Gabin
-		 
-		 *Modification valeurs:
-		 *On initialise à une valeur correspondant à la production pendant 2 steps
-		 HQ : 33 kg/(ha.2steps)
-		 MQ : 83 kg/(ha.2steps)
-		 BQ : 166 kg/(ha.2steps)
-		 Les quantités sont en tonnes
-		 *@author Alexis
-		 */
 		setQuantiteEnStock(Feve.F_BQ, 22372);
 		setQuantiteEnStock(Feve.F_MQ, 3900);
 		setQuantiteEnStock(Feve.F_MQ_E, 986);
@@ -192,6 +211,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		//Détail des transactions pour chaque type de fève, @Youssef
 		    this.journal.ajouter("Feve " + f.name() + ": Prod=" + quantite().get(f) + "t, VenteCadre=" + ventefevecadre.get(f) + "t, VenteBourse=" + ventefevebourse.get(f) + "t, Stock=" + this.getQuantiteEnStock(f, cryptogramme) + "t");
 		}
+		
 
 	}
 	
@@ -210,6 +230,8 @@ public abstract class Producteur3Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : Feve.values()) {
 			res.add(stockfeve.get(f));
+			res.add(prodfeve.get(f));
+			res.add(plantations.get(f));
 		}
 		return res;
 	}
@@ -244,6 +266,7 @@ public abstract class Producteur3Acteur implements IActeur {
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
+	//on supprime les acteurs qui font faillite des vendeurs/acheteurs en bourse
 	public void notificationFaillite(IActeur acteur) {
 		this.journal.ajouter("Faillite de l'acteur "+acteur.toString());
 		if (acteur instanceof IVendeurBourse) {
@@ -360,7 +383,6 @@ public abstract class Producteur3Acteur implements IActeur {
 	  * @return coutMaindoeuvre
 	  * Calcule les couts de main d'oeuvre
 	  */	
-	 
 	 protected double coutMaindoeuvre() {
 		    // Calcule le coût de la main-d'œuvre en tenant compte des salaires des ouvriers
 
@@ -375,10 +397,8 @@ public abstract class Producteur3Acteur implements IActeur {
 
 		        // Déterminer le salaire en fonction du type de fève
 		        if (f.isEquitable()) {
-		            salaireOuvrier = 3.9*14; // Salaire pour l'equitable (bio ou non)
 		            salaireOuvrier = 3.9 * 15; // Salaire pour l'equitable (bio ou non) (*15 comme c'est 3.9 par jour et le step comporte 15 jours) 
-		        } else {
-		            salaireOuvrier = 2.6*14; // Salaire standard pour les non équitable 
+		        } else { 
 		            salaireOuvrier = 2.6 * 15; // Salaire standard pour les non équitable 
 		        }
 
@@ -422,9 +442,9 @@ public abstract class Producteur3Acteur implements IActeur {
 			 stockGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), quantite().get(f));
 		 //on ajoute les couts du step
 			 if (f.isEquitable()) {
-				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9*14);
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*3.9*15);
 			 } else {
-				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6*14);
+				 coutGammeStep.get(f).put(Filiere.LA_FILIERE.getEtape(), maindoeuvre().get(f)*2.6*15);
 			 }
 		//on regarde tous les steps pour prendre en compte les ventes sur les stocks et rapport de couts
 			LinkedList<Integer> steps = new LinkedList<Integer>();
@@ -464,6 +484,7 @@ public abstract class Producteur3Acteur implements IActeur {
 			 return 0.0;
 		 } else {
 			 double accu = 0.0;
+			 double quantiteDemQ = quantiteDem;
 			 //On veut destocker step par step
 			 LinkedList<Integer> steps = new LinkedList<Integer>();
 			 steps.addAll(stockGammeStep.get(f).keySet());
@@ -471,11 +492,12 @@ public abstract class Producteur3Acteur implements IActeur {
 			 for (Integer step : steps) {
 				 double stockStep = stockGammeStep.get(f).get(step);
 				 //On ajoute les couts de revient en proportion de la quantite demandee
-				 if (stockStep > quantiteDem) {
-					 accu += quantiteDem/stockStep * coutGammeStep.get(f).get(step);
+				 if (stockStep > quantiteDemQ) {
+					 accu += quantiteDemQ/stockStep * coutGammeStep.get(f).get(step);
+					 break;
 				 } else {
 					 accu += coutGammeStep.get(f).get(step);
-					 quantiteDem -= stockStep;
+					 quantiteDemQ -= stockStep;
 				 }
 			 }
 			 return accu/quantiteDem;
