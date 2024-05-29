@@ -28,6 +28,7 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 	private double surfaceMQE = 11.89*1000;
 	private double surfaceBQ = 134.775*1000;
 	private HashMap<Feve, Double> surfacePlantation;
+	private HashMap<Feve, Double> coutPlantation;
 	
 /**
  * @author Alexis
@@ -81,6 +82,14 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		surfacePlantation.put(Feve.F_HQ_E, surfaceHQ);
 		surfacePlantation.put(Feve.F_HQ_BE, surfaceHQBE);
 		
+		coutPlantation = new HashMap<Feve, Double>();
+		coutPlantation.put(Feve.F_BQ, 500.0);
+		coutPlantation.put(Feve.F_MQ, 1000.0);
+		coutPlantation.put(Feve.F_MQ_E, 1000.0);
+		coutPlantation.put(Feve.F_HQ, 1500.0);
+		coutPlantation.put(Feve.F_HQ_E, 1500.0);
+		coutPlantation.put(Feve.F_HQ_BE, 1500.0);
+		
 	}
 	
 
@@ -130,6 +139,9 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 				agePlant.get(f).put(Filiere.LA_FILIERE.getEtape()+720, agePlantPrec.get(f));
 				}
 			surfaces.put(f, surfaces.get(f)+supp); // on augmente la surface de plantation pour le type f (en ha)
+			if(supp > 0) {
+				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Coût plantation supplémentaire "+f, supp*coutPlantation.get(f));
+			}
 		}
 		if(!agePlantPrec.isEmpty()) {
 			journal.ajouter("Surfaces à remplacer pour chaque type de fève:" + agePlantPrec.toString());
