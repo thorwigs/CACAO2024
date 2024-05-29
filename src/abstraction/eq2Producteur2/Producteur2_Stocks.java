@@ -81,7 +81,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	/** Setter
 	 * @author Quentin
 	 */
-	public void SetLst_Stock_total( List<Producteur2_Lot> lst) {
+	public void setLst_Stock_total( List<Producteur2_Lot> lst) {
 		this.lst_stock_total = lst;
 	}
 	
@@ -345,8 +345,8 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 */
 	public void next() {
 		super.next();
-		this.lot_to_hashmap();
 		this.changement_qualite();
+		this.lot_to_hashmap();
 	}
 }
 
