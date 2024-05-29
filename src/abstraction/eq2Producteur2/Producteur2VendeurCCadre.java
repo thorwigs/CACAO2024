@@ -330,7 +330,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 		double stockActuel = this.getQuantiteEnStock(f, this.cryptogramme);
 		double a_livrer_par_step = contrat.getQuantiteALivrerAuStep();
 		if (stockActuel < a_livrer_par_step) {
-			int quantite_a_planter = (int) (48*a_livrer_par_step);
+			int quantite_a_planter = (int) (a_livrer_par_step);
 			this.planter(quantite_a_planter, f);
 			
 		}

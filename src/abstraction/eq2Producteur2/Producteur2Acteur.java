@@ -81,9 +81,7 @@ public abstract class Producteur2Acteur implements IActeur {
 			if (f != Feve.F_HQ_BE){
 				this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
 			}
-		}
-		
-		
+		}	
 	}
 	
 	/** Définition de méthodes abstraites
@@ -275,6 +273,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee_prod = this.stock.get(p);
 			return quantite_stockee_prod;
+			//return this.getStockTotal(cryptogramme);
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}

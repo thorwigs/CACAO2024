@@ -22,7 +22,7 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 	 * @author Quentin
 	 */	
 	//seuil max de la production stockee
-	private static final double SEUIL = 400000;
+	private static final double SEUIL = 100000;
 	
 	//délais avant de passer à une qualité inférieure
 	private static final double DELAI_HQ_MQ = 4;
@@ -41,7 +41,6 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 		super();
 		this.journalStocks = new Journal(this.getNom()+" journalStocks", this);
 		this.lst_stock_total = new ArrayList<Producteur2_Lot>();
-		
 	}
 	
 	/** Initialisation
@@ -230,9 +229,11 @@ public abstract class Producteur2_Stocks extends Producteur2Acteur {
 				lst.add(lot);
 			}
 		}
+		// on retire les lots périmés
 		for (Producteur2_Lot lot :lst) {
 			retire_lot(lot);
 		}
+		lot_to_hashmap();
 	}
 	
 	
