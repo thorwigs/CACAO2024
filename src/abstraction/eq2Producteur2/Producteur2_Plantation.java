@@ -21,8 +21,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	private static final int START_YEARS = 2024;
-	private static final double nb_hectares_initiaux = 3000000;
-	private static final double nb_max_hectares = 7000000;
+	private static final double nb_hectares_initiaux = 2500000;
+	private static final double nb_max_hectares = 3000000;
 	private static final int DUREE_VIE = 40;
 	
 	protected static final int PRIX_HECTARE_BQ = 500;
@@ -185,7 +185,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 */
 	public void planter(double nb_hectares, Feve f) {
 		// Il n'y a pas d'hectares MQ_E ou HQ_E donc il faut définir une nouvelle variable
-		if (this.getHectaresTotal(cryptogramme) + nb_hectares < nb_max_hectares) {
+		if (this.getHectaresTotal(cryptogramme) + nb_hectares >= nb_max_hectares) {
 			this.journalPlantation.ajouter(" on a atteint le max d'hectares");
 		}
 		else {
