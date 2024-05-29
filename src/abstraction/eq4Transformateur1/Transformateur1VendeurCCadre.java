@@ -18,6 +18,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 /**
@@ -26,13 +27,12 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse implements IVendeurContratCadre {
 	
 	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
 	
 	public Transformateur1VendeurCCadre() {
 		super();
-		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
+		this.contratsEnCoursVente=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.journalCC = new Journal(this.getNom()+" journal CC vendeur", this);
 	}
@@ -74,8 +74,8 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 					if (contrat==null) {
 						journalCC.ajouter(Color.RED, Color.white,"   echec des negociations");
 					} else {
-						this.contratsEnCours.add(contrat);
-						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat signe");
+						this.contratsEnCoursVente.add(contrat);
+						journalCC.ajouter(Color.GREEN, acheteur.getColor(), "   contrat #"+contrat.getNumero() +" signe");
 					}
 				} else {
 					journalCC.ajouter("   pas d'acheteur");
@@ -83,18 +83,20 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 			}
 		}
 		// On archive les contrats termines
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
+		for (ExemplaireContratCadre c : this.contratsEnCoursVente) {
 			if (c.getQuantiteRestantALivrer()==0.0) {
 				this.contratsTermines.add(c);
 			}
 		}
 		for (ExemplaireContratCadre c : this.contratsTermines) {
-			this.contratsEnCours.remove(c);
+			this.contratsEnCoursVente.remove(c);
 		}
 		
-		this.demandeCC = 0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			this.demandeCC += c.getQuantiteALivrerAuStep();
+		for (Gamme c: this.demandeCC.keySet()) {
+			this.demandeCC.put(c, 0.);
+		}
+		for (ExemplaireContratCadre c : this.contratsEnCoursVente) {
+			this.demandeCC.put(((ChocolatDeMarque) c.getProduit()).getGamme(), this.demandeCC.get(((ChocolatDeMarque) c.getProduit()).getGamme()) + c.getQuantiteALivrerAuStep());
 		}
 		this.journalCC.ajouter("La demande des contrats cadres est de "+this.demandeCC+"T");
 		this.journalCC.ajouter("=================================");
@@ -102,7 +104,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	
 	public double restantDu(ChocolatDeMarque f) {
 		double res=0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
+		for (ExemplaireContratCadre c : this.contratsEnCoursVente) {
 			if (c.getProduit().equals(f)) {
 				res+=c.getQuantiteRestantALivrer();
 			}
@@ -141,8 +143,8 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12)));
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 					} else {
-						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)/12))));
-						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)/12)));
+						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit))/12))));
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit))/12));
 					}
 				}
 				journalCC.ajouter("      j'accepte l'echeancier");
@@ -152,7 +154,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	public double prix(ChocolatDeMarque cdm) {
 		double res=0;
 		List<Double> lesPrix = new LinkedList<Double>();
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
+		for (ExemplaireContratCadre c : this.contratsEnCoursVente) {
 			if (c.getProduit().equals(cdm)) {
 				lesPrix.add(c.getPrix());
 			}
@@ -180,10 +182,10 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		double prixCC = prix((ChocolatDeMarque)contrat.getProduit());
 		if (prixCC==0.0) {
-			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
+			PRIX_DEFAUT.put(((ChocolatDeMarque)contrat.getProduit()).getGamme(), PRIX_DEFAUT.get(((ChocolatDeMarque)contrat.getProduit()).getGamme())*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
 		double prixBaseBourse =  bourse.getCours(((ChocolatDeMarque) contrat.getProduit()).getChocolat().equals(Chocolat.C_HQ_BE)? Feve.F_HQ : Feve.F_MQ).getValeur()*1.5;
-		double res = Math.max(Math.max(prixCC*1.25, (double)PRIX_DEFAUT), prixBaseBourse);
+		double res = Math.max(Math.max(prixCC*1.25, (double)PRIX_DEFAUT.get(((ChocolatDeMarque)contrat.getProduit()).getGamme())), prixBaseBourse);
 		journalCC.ajouter("      propositionPrix retourne "+res);
 		return res;
 	}
@@ -218,7 +220,11 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	}
 	
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		this.contratsEnCours.add(contrat);
+		if (contrat.getProduit() instanceof ChocolatDeMarque) {
+			journalCC.ajouter(Color.GREEN, Color.WHITE, "contrat accepté : "+"#"+contrat.getNumero()+" | acheteur : "+contrat.getAcheteur()+" | vendeur : "+contrat.getVendeur()+" | produit : "+contrat.getProduit()+" | quaantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
+			this.contratsEnCoursVente.add(contrat);
+		}
+		super.notificationNouveauContratCadre(contrat);
 	}
 
 	@Override
