@@ -24,7 +24,13 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	protected ArrayList<Double> bourseBQ; 
 	protected ArrayList<Double> bourseMQ; 
 	protected ArrayList<Double> bourseHQ; 
-	private int offreNonSatisfait=0;
+	private int offreNonSatisfaitF_HQ_E=0;
+	private int offreNonSatisfaitF_HQ=0;
+	private int offreNonSatisfaitF_MQ_E=0;
+	private int offreNonSatisfaitF_MQ_=0;
+	private int offreNonSatisfaitF_BQ_=0;
+
+	
 	/**
 	 * Constructeur de la classe Producteur1VendeurBourse.
 	 */
@@ -34,6 +40,35 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		bourseBQ = new ArrayList<Double>();
 		bourseMQ = new ArrayList<Double>();
 		bourseHQ = new ArrayList<Double>();
+	}
+	
+	public int offreNonSatisfait(Feve f,int retirer) { //met à jour les variables offreNonSatisfait
+		if (f.getGamme()==Gamme.BQ) {
+			offreNonSatisfaitF_BQ_+=retirer;
+			return offreNonSatisfaitF_BQ_;
+		}
+		else if (f.getGamme()==Gamme.HQ) {
+			if (f.isEquitable()) {
+				offreNonSatisfaitF_HQ_E+= retirer;
+				return offreNonSatisfaitF_HQ_E;
+			}
+			else {
+			offreNonSatisfaitF_HQ+=retirer;
+			return offreNonSatisfaitF_HQ;
+			}
+		}
+		else if (f.getGamme()==Gamme.MQ) {
+			if (f.isEquitable()) {
+				offreNonSatisfaitF_MQ_E+=retirer;
+				return offreNonSatisfaitF_MQ_E;
+			}
+			else {
+				offreNonSatisfaitF_MQ_ +=retirer;
+				return offreNonSatisfaitF_MQ_;
+			}
+		}
+		return 0; 
+		
 	}
 
 
@@ -48,6 +83,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	 * @return La quantité de fèves offerte sur la bourse.
 	 */
 	public double offre(Feve f, double cours) {
+		
 		
         
 	
@@ -101,18 +137,20 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 			double quantite = 1000;
 			plantation.put(f, quantite);
 			adjustPlantationSize(plantation);
+			int k=offreNonSatisfait( f,0);
 			
 			
 		
-		this.offreNonSatisfait+=1;
-		if (offreNonSatisfait>=5) {
-		 journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
+		
+		if (	k  >= 5) {
+		
 		 HashMap<Feve, Double> ajustements = new HashMap<>();
 		 ajustements.put(f, 10.0);
 		 adjustPlantationSize( ajustements);
-		 this.offreNonSatisfait=0;
+		 offreNonSatisfait( f,-k);
+		 
 		}
-		
+		 journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 		return 0;
 		
 
