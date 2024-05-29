@@ -2,6 +2,7 @@ package abstraction.eq4Transformateur1;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,12 +30,14 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	private SuperviseurVentesContratCadre supCC;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
+	private HashMap<IProduit, List<Double>> contratAuStep;
 	
 	public Transformateur1VendeurCCadre() {
 		super();
-		this.contratsEnCoursVente=new LinkedList<ExemplaireContratCadre>();
-		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
+		this.contratsEnCoursVente = new LinkedList<ExemplaireContratCadre>();
+		this.contratsTermines = new LinkedList<ExemplaireContratCadre>();
 		this.journalCC = new Journal(this.getNom()+" journal CC vendeur", this);
+		this.contratAuStep = new HashMap<IProduit, List<Double>>();
 	}
 	
 	@Override
@@ -95,9 +98,12 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		for (Gamme c: this.demandeCC.keySet()) {
 			this.demandeCC.put(c, 0.);
 		}
-		for (ExemplaireContratCadre c : this.contratsEnCoursVente) {
-			this.demandeCC.put(((ChocolatDeMarque) c.getProduit()).getGamme(), this.demandeCC.get(((ChocolatDeMarque) c.getProduit()).getGamme()) + c.getQuantiteALivrerAuStep());
+		for (IProduit c : this.contratAuStep.keySet()) {
+			for(double quantite : this.contratAuStep.get(c)) {
+				this.demandeCC.put(((ChocolatDeMarque) c).getGamme(), this.demandeCC.get(((ChocolatDeMarque) c).getGamme()) + quantite);
+			}
 		}
+		this.contratAuStep.clear();
 		this.journalCC.ajouter("La demande des contrats cadres est de "+this.demandeCC+"T");
 		this.journalCC.ajouter("=================================");
 	}
@@ -122,14 +128,19 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 	@Override
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("      contreProposition("+contrat.getProduit()+" avec echeancier "+contrat.getEcheancier());
-		Echeancier ec = contrat.getEcheancier();
+		List<Echeancier> ecs = contrat.getEcheanciers();
+		Echeancier ec = ecs.get(ecs.size()-1);
 		IProduit produit = contrat.getProduit();
-		Echeancier res = ec;
+		Echeancier dernierPropo = null;
+		if (ecs.size() > 1) {
+			dernierPropo = ecs.get(ecs.size()-2);
+		}
 		boolean acceptable = produit.getType().equals("ChocolatDeMarque")
 				&& ec.getQuantiteTotale()>=this.quantiteMiniCC  // au moins 100 tonnes par step pendant 6 mois
 				&& ec.getStepFin()-ec.getStepDebut()>=11   // duree totale d'au moins 12 etapes
 				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8 // ca doit demarrer dans moins de 4 mois
-				&& ec.getQuantiteTotale()<stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit);
+				&& (ec.getQuantiteTotale()<stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)
+				|| (ecs.size() > 1 && dernierPropo.getQuantite(dernierPropo.getStepDebut())*1.3 > ec.getQuantite(ec.getStepDebut())));
 				if (!acceptable) {
 					if (!produit.getType().equals("ChocolatDeMarque") || stockChocoMarque.get((ChocolatDeMarque)produit).getValeur()-restantDu((ChocolatDeMarque)produit)<this.quantiteMiniCC) {
 						if (!produit.getType().equals("ChocolatDeMarque")) {
@@ -148,7 +159,7 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 					}
 				}
 				journalCC.ajouter("      j'accepte l'echeancier");
-				return res;
+				return ec;
 	}
 	
 	public double prix(ChocolatDeMarque cdm) {
@@ -223,12 +234,17 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		if (contrat.getProduit() instanceof ChocolatDeMarque) {
 			journalCC.ajouter(Color.GREEN, Color.WHITE, "contrat accepté : "+"#"+contrat.getNumero()+" | acheteur : "+contrat.getAcheteur()+" | vendeur : "+contrat.getVendeur()+" | produit : "+contrat.getProduit()+" | quaantité totale : "+contrat.getQuantiteTotale()+" | Prix : "+contrat.getPrix());	
 			this.contratsEnCoursVente.add(contrat);
+		} else {
+			super.notificationNouveauContratCadre(contrat);
 		}
-		super.notificationNouveauContratCadre(contrat);
 	}
 
 	@Override
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+		if(!this.contratAuStep.containsKey(produit)) {
+			this.contratAuStep.put(produit, new LinkedList<Double>());
+		}
+		this.contratAuStep.get(produit).add(quantite);
 		double stockActuel = stockChocoMarque.get(produit).getValeur();
 		double aLivre = Math.min(quantite, stockActuel);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
