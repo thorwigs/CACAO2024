@@ -15,8 +15,6 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eq5Transformateur2.Transformateur2MasseSalariale;
-
 
 public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre implements IVendeurContratCadre {
 	private HashMap<IAcheteurContratCadre, Integer> BlackListAcheteur;
@@ -39,17 +37,8 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	public void next() {
 		super.next();
 		this.journalCC.ajouter(Color.PINK,Color.BLACK,"===VENDEUR=========STEP"+Filiere.LA_FILIERE.getEtape()+" ====================");
-		double totalStep=0;
-		for (ExemplaireContratCadre c : contratsEnCours) {
-			if (this.chocosProduits.contains(c.getProduit())){
-				totalStep+=c.getQuantiteALivrerAuStep();
-			}
-		}
-		boolean VenteActive = false;
-		if (totalStep<this.moyProd) {
-			VenteActive = true;
-		}
-		this.journalCC.ajouter(this.moyProd+"  prod-total    "+totalStep);
+		boolean VenteActive=this.VenteActive();
+		//this.journalCC.ajouter(this.moyProd+"  prod - total    "+totalStep);
 		for (ChocolatDeMarque cm : chocosProduits) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (VenteActive == true) {
 				this.journalCC.ajouter("   "+cm+" suffisamment de stock pour passer un CC");
@@ -115,7 +104,12 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 * @author Robin, Erwann
 	 */
 	public boolean vend(IProduit produit) {
-		return (this.chocosProduits.contains(produit)) ;
+		boolean VenteActive = this.VenteActive();
+		if (VenteActive==true) {
+			return (this.chocosProduits.contains(produit)) ;
+		}else {
+			return false;
+		}
 	}
 	
 	/***
@@ -157,12 +151,28 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 		if (Filiere.random.nextDouble() < 0.05) { // 5% des cas
 	        return contrat.getPrix(); // ne refait pas de contreproposition
 	    } else {
+	    	if (contrat.getListePrix().get(0)<contrat.getPrix()) {
+	    		return contrat.getPrix();
+	    	}
 	    	EtapenegoVente++;
 	    	if (EtapenegoVente<contrat.getListePrix().size() ) {
 	    		double renego = (contrat.getListePrix().get(EtapenegoVente - 1) - contrat.getListePrix().get(EtapenegoVente))*0.5; //renegocie le prix de 50% de la variation entre le prix proposé au tour précédent et la proposition de l'acheteur 
-		        return contrat.getPrix() + renego;
+		        if ((contrat.getPrix()+renego)<contrat.getListePrix().get(0)/2 && EtapenegoVente>3) {
+		        	int i=0;
+	        		double prixmax=0;
+		        	for (double px : contrat.getListePrix()) {
+		        		if (i%2==1) {
+		        			if (px>prixmax) {
+		        				prixmax=px;
+		        			}
+		        			i++;
+		        		}
+		        	}
+		        	return prixmax;
+		        }
+	    		return contrat.getPrix() + renego;
 	    	}else {
-	    		return contrat.getPrix();// aie
+	    		return contrat.getPrix(); 
 	    	}
 	    }
 	}
@@ -184,8 +194,24 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		this.journalCC.ajouter("Livraison de : "+quantite+", tonnes de :"+produit.getType()+" provenant du contrat : "+contrat.getNumero());
-		this.stockChocoMarque.get((ChocolatDeMarque)produit).ajouter(this, quantite, this.cryptogramme);
-		this.totalStocksChocoMarque.retirer(this, quantite, cryptogramme);
+		this.stockChocoMarque.get((ChocolatDeMarque)produit).retirer(this, quantite, this.cryptogramme);
+		this.totalStocksChocoMarque.retirer(this, quantite, this.cryptogramme);
 		return quantite;
 		}
+	/**
+	 * @author robin
+	 */
+	public boolean VenteActive() {
+		double totalStep=0;
+		for (ExemplaireContratCadre c : contratsEnCours) {
+			if (this.chocosProduits.contains(c.getProduit())){
+				totalStep+=c.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape());
+			}
+		}
+		boolean VenteActive = false;
+		if (totalStep<this.moyProd) {
+			VenteActive = true;
+		}
+		return VenteActive;
+	}
 }
