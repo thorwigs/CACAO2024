@@ -7,16 +7,12 @@
  */
 package abstraction.eq1Producteur1;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.produits.Feve;
 
 
 
@@ -48,7 +44,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	protected Ouvrier ouvrierEquitableNonForme;
 	protected Ouvrier ouvrierNonEquitableForme;
 	protected Ouvrier ouvrierNonEquitableNonForme;
-
+	protected static double coutFormation = 2 ; 
 	/**
 	 * @author haythem
 	 */
@@ -83,9 +79,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		this.salaire.add(2.4);
 		this.salaire.add(1.8);
 
-		
 
-		
+
+
 		this.types_ouvriers.add(enfant);
 		this.types_ouvriers.add(ouvrierEquitableForme);
 		this.types_ouvriers.add(ouvrierEquitableNonForme);
@@ -364,7 +360,6 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 			int etape = Filiere.LA_FILIERE.getEtape();
 			int annee = Filiere.LA_FILIERE.getAnnee(etape);
 
-			int enfants = this.get_Nombre_Enfant();
 			int size = this.croissanceParStep.size();
 			boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 
@@ -397,21 +392,25 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 * @author youssef
 	 */
 
+	@SuppressWarnings("static-access")
 	public void formation (int nbr_à_former,boolean equitable) {
 		//on suppose qu'un ouvrier peut encore travailler lors de sa formation
-		int quantite_max_a_former_par_step=70;
+		int quantite_max_a_former_par_step=(int)0.1*(this.get_Nombre_Ouvrier_NonEquitable_NonForme()+this.get_Nombre_Ouvrier_Equitable_NonForme());
+		double coutTotalFormation = 0;
 		int nbr_max_a_former=nbr_à_former;
 
 		if (nbr_à_former>quantite_max_a_former_par_step) {
-			
+
 			nbr_max_a_former=quantite_max_a_former_par_step;
-			
+
 		}
 
 		//changer la masse salariale
 		if (equitable ) {
 			Integer a =this.masseSalariale.get(ouvrierEquitableNonForme);
 			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
+			coutTotalFormation = nbr_reel_a_former*this.coutFormation;
+
 			this.masseSalariale.put(ouvrierEquitableForme, this.masseSalariale.get(ouvrierEquitableForme)+nbr_reel_a_former);
 			this.masseSalariale.put(ouvrierEquitableNonForme, this.masseSalariale.get(ouvrierEquitableNonForme)-nbr_reel_a_former);
 			int restant=nbr_reel_a_former;
@@ -434,11 +433,13 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 
 
 
+
 		}
 		else {
 
 			Integer a =this.masseSalariale.get(ouvrierNonEquitableNonForme);
 			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
+			coutTotalFormation = nbr_reel_a_former*this.coutFormation;
 			this.masseSalariale.put(ouvrierNonEquitableForme, this.masseSalariale.get(ouvrierNonEquitableForme)+nbr_reel_a_former);
 			this.masseSalariale.put(ouvrierNonEquitableNonForme, this.masseSalariale.get(ouvrierNonEquitableNonForme)-nbr_reel_a_former);
 			int restant=nbr_reel_a_former;
@@ -453,7 +454,10 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 				i--;
 			}
 		}
-
+		if (coutTotalFormation > 0) {
+			Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Cout Total de formation des ouvirers", coutTotalFormation);
+			this.journalOuvrier.ajouter("On a paye le cout suivant pour augmenter le rendement de certains ouvriers:"+ coutTotalFormation);
+		}
 
 	}
 
@@ -493,6 +497,10 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		ordre=0;
 
 		this.updateAnciennete();
+		if (Filiere.LA_FILIERE.getEtape() % 10 ==0) {
+			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), true);
+			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), false);
+		}
 
 		this.amelioration();
 	}

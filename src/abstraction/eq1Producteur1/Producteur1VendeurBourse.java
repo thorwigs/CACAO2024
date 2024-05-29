@@ -2,6 +2,7 @@
 package abstraction.eq1Producteur1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
@@ -13,13 +14,23 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1VendeurBourse extends Producteur1Production implements  IVendeurBourse {
-	public double  pourcentageHQ=0.02 ;
-	public double  pourcentageBQ=0.02 ;
-	public double  pourcentageMQ=0.02 ;
+	public double  pourcentageHQ=0.1 ;
+	public double  pourcentageBQ=0.05 ;
+	public double  pourcentageMQ=0.05 ;
+	public double quantiteEnTBQ;
+	public double quantiteEnTMQ;
+	public double quantiteEnTHQ;
 	private Journal journalBourse;
 	protected ArrayList<Double> bourseBQ; 
 	protected ArrayList<Double> bourseMQ; 
 	protected ArrayList<Double> bourseHQ; 
+	private int offreNonSatisfaitF_HQ_E=0;
+	private int offreNonSatisfaitF_HQ=0;
+	private int offreNonSatisfaitF_MQ_E=0;
+	private int offreNonSatisfaitF_MQ_=0;
+	private int offreNonSatisfaitF_BQ_=0;
+
+	
 	/**
 	 * Constructeur de la classe Producteur1VendeurBourse.
 	 */
@@ -29,6 +40,35 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		bourseBQ = new ArrayList<Double>();
 		bourseMQ = new ArrayList<Double>();
 		bourseHQ = new ArrayList<Double>();
+	}
+	
+	public int offreNonSatisfait(Feve f,int retirer) { //met à jour les variables offreNonSatisfait
+		if (f.getGamme()==Gamme.BQ) {
+			offreNonSatisfaitF_BQ_+=retirer;
+			return offreNonSatisfaitF_BQ_;
+		}
+		else if (f.getGamme()==Gamme.HQ) {
+			if (f.isEquitable()) {
+				offreNonSatisfaitF_HQ_E+= retirer;
+				return offreNonSatisfaitF_HQ_E;
+			}
+			else {
+			offreNonSatisfaitF_HQ+=retirer;
+			return offreNonSatisfaitF_HQ;
+			}
+		}
+		else if (f.getGamme()==Gamme.MQ) {
+			if (f.isEquitable()) {
+				offreNonSatisfaitF_MQ_E+=retirer;
+				return offreNonSatisfaitF_MQ_E;
+			}
+			else {
+				offreNonSatisfaitF_MQ_ +=retirer;
+				return offreNonSatisfaitF_MQ_;
+			}
+		}
+		return 0; 
+		
 	}
 
 
@@ -43,50 +83,77 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 	 * @return La quantité de fèves offerte sur la bourse.
 	 */
 	public double offre(Feve f, double cours) {
-		// TODO Auto-generated method stub
-
-		//if (f.isBio() || f.isEquitable()) {
-			//journalBourse.ajouter("On vend pas de bio ni equitable en bourse");
-			//return 0;
-		//}
-		double quantiteEnT = this.getQuantiteEnStock(  f ,   cryptogramme);
-
+		
+		
+        
+	
+		double quantiteEnT =this.getQuantiteEnStock(  f ,   cryptogramme);
+		
+       
 
 		if (quantiteEnT!=0) { 
 			double Seuil = getCoutUnitaireProduction(f);
-
+			//System.out.println("seuil"+Seuil);
+			//System.out.println("cours"+cours);
+		
 
 			if (f.getGamme()==Gamme.MQ) {
-				if (true) {
-				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+				
+				
+				if(cours>= 1400) {
+					this.quantiteEnTMQ=0.4*quantiteEnT; // quantité mise à jour dans la classe vendeurAuxEncheres
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTMQ+" T de "+f+"à"+cours);
 
-					return quantiteEnT;
+					return quantiteEnTMQ;
 
 				}
 				
 			}
 			if (f.getGamme()==Gamme.HQ) {
-				if (true) {
-				//if(cours>= (pourcentageHQ+1)*Seuil*quantiteEnT) {
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
+		
+				
+				if(cours>= 1700) {
+					this.quantiteEnTHQ=0.7*quantiteEnT; // quantité mise à jour dans la classe vendeurAuxEncheres
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTHQ+" T de "+f+"à"+cours);
 
-					return quantiteEnT;
+					return quantiteEnTHQ;
+					
 				}
 			
 			}
 			if (f.getGamme()==Gamme.BQ) {
-				if (true) {
-				//if(cours>= (pourcentageMQ+1)*Seuil*quantiteEnT) {
-					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
-					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnT+" T de "+f);
-					return quantiteEnT;
+			
+				if(cours>= 1200) {
+					this.quantiteEnTBQ=0.3*quantiteEnT;  // quantité mise à jour dans la classe vendeurAuxEncheres
+					
+					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnTBQ+" T de "+f+"à"+cours);
+					return quantiteEnTBQ;
 				}
 				
 			}
 		}
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
+		
+		
+			plantation = new HashMap<Feve, Double>();
+			double quantite = 1000;
+			plantation.put(f, quantite);
+			adjustPlantationSize(plantation);
+			int k=offreNonSatisfait( f,0);
+			
+			
+		
+		
+		if (	k  >= 5) {
+		
+		 HashMap<Feve, Double> ajustements = new HashMap<>();
+		 ajustements.put(f, 10.0);
+		 adjustPlantationSize( ajustements);
+		 offreNonSatisfait( f,-k);
+		 
+		}
+		 journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 		return 0;
+		
 
 
 	}
@@ -122,14 +189,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 	}
-	public void changePlant() {
-		double ameBQ = 0; double ameMQ= 0; double ameHQ = 0;
-		if (bourseBQ.size() > 12) {
-			for (int i = 0; i < bourseBQ.size()-1;i++) {
-				ameBQ += (bourseBQ.get(i+1)-bourseBQ.get(i+1))/bourseBQ.get(i);
-			}
-		}
-	}
+	
+	
 	/**
 	 * Renvoie les journaux de l'acteur, y compris le journal de la bourse.
 	 * @return Une liste contenant les journaux de l'acteur.
@@ -138,17 +199,19 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
 		return res;
-	}
-	public void updatePlant() {
 		
 	}
+	
+	
+	 
 	public void next() {
 		super.next();
-		changePlant();
+		
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		bourseBQ.add(bourse.getCours(Feve.F_BQ).getValeur());
 		bourseMQ.add(bourse.getCours(Feve.F_MQ).getValeur());
 		bourseHQ.add(bourse.getCours(Feve.F_HQ).getValeur());
+		
 		
 	}
 
