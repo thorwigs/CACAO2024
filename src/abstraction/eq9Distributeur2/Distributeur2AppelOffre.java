@@ -56,7 +56,7 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 					this.getStockChocoMarque().put((ChocolatDeMarque) propRetenue.getProduit(),propRetenue.getQuantiteT() + this.getStockChocoMarque().get((ChocolatDeMarque)propRetenue.getProduit()));
 					//this.totalStocksChocoMarque.ajouter(this, propRetenue.getQuantiteT(), cryptogramme);
 					
-					if (this.coutDacheminement(propRetenue.getPrixT())>1) {
+					if (this.coutDacheminement(propRetenue.getPrixT())>0) {
 						Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "frais d'approvisionnement AO", this.coutDacheminement(propRetenue.getPrixT()));}
 				}
 			}
