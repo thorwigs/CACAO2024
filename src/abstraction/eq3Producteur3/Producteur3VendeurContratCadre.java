@@ -68,6 +68,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
         proposerContrats();
         if (Filiere.LA_FILIERE.getEtape()%100 == 90) {
         	this.journal_bourse.ajouter(""+nonLivre/Livre);
+        	Livre = 0;
+        	nonLivre = 0;
         }
     }
 	
@@ -135,7 +137,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 		 	double quantiteDisponible = 0.0; // Valeur par défaut
 	        if (quantiteFuture().containsKey(f)) {
 	        	//La quantite disponible de base correspond a ce que l'on produit à l'étape d'après
-	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step-1);
+	            quantiteDisponible = quantiteFuture().get(f)/coeff(Filiere.LA_FILIERE.getEtape())*coeff(step-2);
 	        }
 
 	        for (ExemplaireContratCadre contrat : contratsEnCours) {
