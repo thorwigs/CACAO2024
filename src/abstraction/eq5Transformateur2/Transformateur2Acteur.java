@@ -150,7 +150,6 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		conversion = 0.1 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
-		System.out.println(pourcentageTransfo);
 		// Initialisation des valeurs
 		this.NbSalaries = 5000;
 		this.salaire = 1000;
