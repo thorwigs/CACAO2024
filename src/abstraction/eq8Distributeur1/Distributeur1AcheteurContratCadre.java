@@ -197,6 +197,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("ChocolatDeMarque")
+			|| this.banni.contains(contrat.getProduit())
 			|| !this.stock_Choco.containsKey(contrat.getProduit())
 			|| !this.achete(contrat.getProduit())
 			|| contrat.getListePrix().size()>10) {
@@ -206,7 +207,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 
 		Echeancier x = contrat.getEcheancier();
 		int a = Filiere.LA_FILIERE.getEtape()+1;
-		int b = 24 ;
+		int b = 24;
 		double c = this.prevision(contrat.getProduit(), b) ;	
 		double d = 0 ; 
 		int coeff = coeffQualite((ChocolatDeMarque)(contrat.getProduit()));
@@ -217,37 +218,38 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Vendeur impl
 		}
 		double e = this.stock_Choco.get(contrat.getProduit()); 
 		double f = (c-d-e)/(b*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()));
-		if (b>=24 && b<=72) {
+		
+		if (contrat.getEcheancier().getNbEcheances()>=24 && contrat.getEcheancier().getNbEcheances()<=72) {
 			
 			if (contrat.getProduit().toString().contains("C_BQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*40)/(x.getNbEcheances()*100*100*(this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat())-1))
 				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 			} 
 			if (contrat.getProduit().toString().contains("C_MQ_E")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*(this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat())-1))
 				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				}
 			if ( contrat.getProduit().toString().contains("C_MQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*(this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat())-1))
 				&& contrat.getQuantiteTotale() > c-d-e+100*coeff)  {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_BE")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*5)/(x.getNbEcheances()*100*100*(this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat())-1))
 				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ_E")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*10)/(x.getNbEcheances()*100*100*(this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat())-1))
 				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				}
 			if (contrat.getProduit().toString().contains("C_HQ")
-				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat()))
+				&& contrat.getQuantiteTotale()<= (7200000*24*40*15)/(x.getNbEcheances()*100*100*(this.nombreMarquesParType.get(((ChocolatDeMarque)contrat.getProduit()).getChocolat())-1))
 				&& contrat.getQuantiteTotale() > c-d-e+100*coeff) {
 				} 			
 		} else {
 			b = 24;
-			if (contrat.getQuantiteTotale() > c-d-e+100*coeff) {
+			if (contrat.getQuantiteTotale() < c-d-e+100*coeff) {
 			    x = new Echeancier (a,b,f+100*coeff*(1+contrat.getListePrix().size()));
-			} else if (f-100*(1+contrat.getListePrix().size())>0){
+			} else if (f-100*coeff*(1+contrat.getListePrix().size())>0){
 			    x = new Echeancier (a,b,f-100*coeff*(1+contrat.getListePrix().size()));
 			} else {
 			    x = new Echeancier (a,b,f);
