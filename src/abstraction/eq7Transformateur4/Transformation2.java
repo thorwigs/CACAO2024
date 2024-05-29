@@ -11,7 +11,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformation2 extends Transformateur4VendeurContratCadre {
+public class Transformation2 extends Transformateur4AcheteurBourse {
 
 	protected Journal journalTransfo ;
 	protected List<Double> lescouts; //liste qui contiendra certains des couts à faire pour un step, initialiser à une liste vide à chaque début de l'appel next
@@ -152,13 +152,13 @@ public class Transformation2 extends Transformateur4VendeurContratCadre {
 			//double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
 			if (this.stockChocoMarque.get(c) < restantALivrerAuStep(c)+5000) { 
 				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 5000 pour pouvoir faire des contrats cadre, on se fixe 5000 comme valeur
-				chocoAProduire.put(c,restantALivrerAuStep(c)+1000);
+				chocoAProduire.put(c,restantALivrerAuStep(c)+500);
 
-			} else if (stock - restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 3000
-					&& this.stockChocoMarque.get(c) < 20000) {
-				chocoAProduire.put(c,restantALivrerAuStep(c) + 2000);
+			//} else if (stock - restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 10000
+			//		&& this.stockChocoMarque.get(c) < 20000) {
+			//	chocoAProduire.put(c,restantALivrerAuStep(c) );
 			} else {
-				chocoAProduire.put(c, 0.0);
+				chocoAProduire.put(c,  restantALivrerAuStep(c));
 			}
 			//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
 	

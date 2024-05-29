@@ -21,7 +21,7 @@ import java.awt.Color;
 
 //codé par Anaïs
 
-public class Transformateur4AcheteurContratCadre extends Transformateur4AcheteurBourse implements IAcheteurContratCadre{
+public class Transformateur4AcheteurContratCadre extends Transformation2 implements IAcheteurContratCadre{
 	
 	private SuperviseurVentesContratCadre supCC;
 	
@@ -299,7 +299,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 					
 					if (stockFeves.get(f)+this.getQuantiteAuStep(f) - BesoinPourChoco < 10000 ) { 
 						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(500, (1000-this.getQuantiteAuStep(f)+BesoinPourChoco)); // au moins 900
+						double parStep = Math.max(500, (1000-this.getQuantiteAuStep(f)+BesoinPourChoco)); // au moins 500
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {

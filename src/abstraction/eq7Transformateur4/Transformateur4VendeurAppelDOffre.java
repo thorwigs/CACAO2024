@@ -21,7 +21,7 @@ import abstraction.eqXRomu.produits.IProduit;
 //classe 'codé' par Eliott, néanmoins ce n'est pour l'instant qu'un copé-collé de l'exemple de Vendeur Appel d'offre fourni
 
 
-public class Transformateur4VendeurAppelDOffre extends Transformation2 implements IVendeurAO {
+public class Transformateur4VendeurAppelDOffre extends Transformateur4VendeurContratCadre implements IVendeurAO {
 	private HashMap<ChocolatDeMarque, List<Double>> prixAO;
 	protected Journal journalAO;
 
