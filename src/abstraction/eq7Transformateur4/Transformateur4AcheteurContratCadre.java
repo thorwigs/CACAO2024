@@ -140,9 +140,9 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 	
 		if (i == 0.0) { //si on a pas de contrat cadre (au début) pour les fèves, on se base sur le cours de la bourse pour des F_HQ
 			if (feve_utilise.isEquitable() == true ) {
-				prix = bourse.getCours(Feve.F_HQ).getValeur()*3;//testP *2
+				prix = bourse.getCours(Feve.F_HQ).getValeur()*2;//testP *2
 			} else {
-				prix = bourse.getCours(feve_utilise).getValeur()*3;//testP *1.5
+				prix = bourse.getCours(feve_utilise).getValeur()*1.75;//testP *1.5
 			}	
 		} else {
 			prix = prixtot/i;	
@@ -157,17 +157,17 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 			}
 		} else {
 			if (prixPropose > prixPrecedentF.get(N)) {
-				if ((prixPropose+prixPrecedentF.get(N))/2 <= prix*3){// *1.2
+				if ((prixPropose+prixPrecedentF.get(N))/2 <= prix*1.3){// *1.2
 					prixPrecedentF.replace(N,(prixPropose+prixPrecedentF.get(N))/2);
 					return prixPrecedentF.get(N);
-				} else if ((prixPropose+2*prixPrecedentF.get(N))/3 <= prix*3){ // *1.2
+				} else if ((prixPropose+2*prixPrecedentF.get(N))/3 <= prix*1.3){ // *1.2
 					prixPrecedentF.replace(N,(prixPropose+2*prixPrecedentF.get(N))/3);
 					return prixPrecedentF.get(N);
-				} else if ((prixPropose+3*prixPrecedentF.get(N))/4 <= prix*3){ // *1.2
+				} else if ((prixPropose+3*prixPrecedentF.get(N))/4 <= prix*1.3){ // *1.2
 					prixPrecedentF.replace(N,(prixPropose+3*prixPrecedentF.get(N))/4);
 					return prixPrecedentF.get(N);
 				} else {
-					prixPrecedentF.replace(N, prix*3); // *1.2
+					prixPrecedentF.replace(N, prix*1.3); // *1.2
 					return prixPrecedentF.get(N);
 				}
 			} else {
