@@ -13,18 +13,24 @@ import abstraction.eqXRomu.produits.IProduit;
 public abstract class Producteur3Production extends Producteur3Plantation { 
 	abstract void deleteAcheteurs(IAcheteurBourse acheteur);
 	abstract void deleteVendeurs(IVendeurBourse vendeur);
-	
+	/**
+	 * @author Gabin
+	 * partie relative à la quantité produite, aux délais, aux saisons
+	 */
 	//tonne produite par hectare lors d'un step
 	protected double T_ha_BQ = 28.125/1000 ;	//avec pesticide
 	protected double T_ha_MQ = 26.5625/1000 ;
 	protected double T_ha_HQ = 25.0/1000 ;
 	protected double T_ha_HQ_BE = 22.5/1000 ;   //sans pesticide (bio équitable)
 	protected HashMap< Integer , HashMap<Feve,Double> > prodTemps = new HashMap<Integer,HashMap<Feve,Double>>(); //variable qui sert a prendre en compte le temps de séchage
-	protected Journal journal_Production;
+	
+	
+	/**
+	 * @author Gabin
+	 * Initialise les productions de feves
+	 */
 	public void initialiser() {
 		super.initialiser();
-		//On set les productions
-		//@Gabin
 		HashMap<Feve,Double> d01 = new HashMap<Feve,Double>();
 		d01.put(Feve.F_BQ, 3.79);
 		d01.put(Feve.F_MQ, 2.527);		//80% de HQ est non équitable
@@ -32,7 +38,8 @@ public abstract class Producteur3Production extends Producteur3Plantation {
 		d01.put(Feve.F_HQ, 1.137);			//60% de HQ est ni bio ni équitable
 		d01.put(Feve.F_HQ_E, 0.379);		//20% de HQ est équitable
 		d01.put(Feve.F_HQ_BE, 0.3789);		//20% de HQ est bio équitable
-		setProdTemps(d01,d01);
+		prodTemps.put(0, d01);
+		prodTemps.put(1, d01);
 	}
 	
 	/**
@@ -40,7 +47,7 @@ public abstract class Producteur3Production extends Producteur3Plantation {
 	 * @return HashMap<Feve,Double> (tableau des récoltes selon les fèves)
 	 * Dictionnaire renvoyant la quantité produite pour chaque type de cacao (et types bio/équitable). 
 	 * Prend en compte les surfaces de plantation et les tonnes produites par hectare lors d'un step.
-	 * !!! nouveauté : prend en compte la saisonnalité
+	 * nouveauté : prend en compte la saisonnalité selon un modele mathematique
 	 */
 	protected HashMap<Feve,Double> newQuantite() {
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
@@ -93,15 +100,6 @@ public abstract class Producteur3Production extends Producteur3Plantation {
 		return prodTemps;
 	}
 	
-	/**
-	 * @author Gabin
-	 * @param HashMap<Feve,Double> d0, d1 (production pour les différents types de fèves au temps 0 et 1
-	 * Initialise la variable prodTemps qui sert a prendre en compte le temps de séchage
-	 */
-	protected void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1) {
-		prodTemps.put(0, d0);
-		prodTemps.put(1, d1);
-	}	
 	
 	/**
 	 * @author Gabin
@@ -115,9 +113,9 @@ public abstract class Producteur3Production extends Producteur3Plantation {
 	}
 	
 	/**Renvoie la quantité de fèves disponibles après séchage au prochain step
-	 * Elle est utile pour l'établissement d'un contrat cadre
+	 * Elle est utile pour l'établissement d'un contrat cadre (getteur qui ne modifie pas les valeurs d'autres variables)
 	 * 
-	 * @author Alexis (royalties Gabin : j'ai tout plagia)
+	 * @author Alexis (inspiration : Gabin)
 	 */
 	protected HashMap<Feve,Double> quantiteFuture(){
 		HashMap<Feve,Double> quantite = new HashMap<Feve,Double>();
@@ -135,6 +133,7 @@ public abstract class Producteur3Production extends Producteur3Plantation {
 	
 	/**Fonction pour trouver le mois et prendre en compte la saisonnalité
 	 * @author Gabin 
+	 * @param int i (step)
 	 * @return le coefficient du mois. on se base sur une approche avec des paliers et variations linéaires
 	 */
 	
