@@ -37,8 +37,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * La fonction renvoie si oui ou non, on veut vendre du produit proposer en CC (oui si feve HQ et MQ)
 	 */
 	public boolean vend(IProduit produit) {
-		//On accepte les contrats cadres sur le HQ et MQ en V1
-		if ((produit instanceof Feve)&&((((Feve)produit).getGamme() == Gamme.HQ)||(((Feve)produit).getGamme() == Gamme.MQ))) {
+		//On accepte les contrats cadres sur HQ,MQ,BQ
+		if (produit instanceof Feve) {
 			return true;
 		} else {
 			return false;
@@ -75,15 +75,7 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	 * Fonction qui lance des CC selon la feve et notre capacite et fournir
 	 */
 	public void proposerContrats() {
-	
-	    // Créer une liste de fèves de qualité MQ et HQ uniquement
-	    List<Feve> feves = new ArrayList<Feve>();
-	    for (Feve feve : Feve.values()) {
-	        if (feve.getGamme() == Gamme.MQ || feve.getGamme() == Gamme.HQ) {
-	            feves.add(feve);
-	        }
-	    }
-	    for (Feve f : feves) { 
+	    for (Feve f : Feve.values()) { 
 	    	//pour tous les acheteurs de chaque feves on propose un echeancier de 10 step
 	        List<IAcheteurContratCadre> acheteurs = superviseur.getAcheteurs(f);
 	        Set<IAcheteurContratCadre> acheteurSet = new HashSet<IAcheteurContratCadre>(acheteurs);
@@ -217,6 +209,8 @@ public class Producteur3VendeurContratCadre extends Producteur3VendeurBourse imp
 	        prixBase = Math.max(3000.0,prixBase);
 	    } else if (feve.getGamme() == Gamme.MQ) {
 	       prixBase = Math.max(prixBase, 1910.0);
+	    } else {
+	    	prixBase = Math.max(prixBase,1100);
 	    }
 	  // Ajustements selon équitable et bio
 	      if (feve.isEquitable() && feve.isBio()) {
