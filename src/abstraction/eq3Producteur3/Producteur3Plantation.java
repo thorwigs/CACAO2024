@@ -83,7 +83,16 @@ public abstract class Producteur3Plantation extends Producteur3Acteur {
 		
 	}
 	
-
+	/**
+	 * @author Arthur
+	 * Permet de mettre a jour la variable qui suit la surface de plantation HQ_BE a des fins d'analyses
+	 */
+	public void next() {
+		for (Feve f : plantations.keySet()) {
+			plantations.get(f).setValeur(this,surfacePlantation.get(f));
+		}
+		super.next();
+	}
 
 ///Gestion de la plantation
 	

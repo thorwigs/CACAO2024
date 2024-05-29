@@ -41,6 +41,8 @@ public abstract class Producteur3Acteur implements IActeur {
     //creation d'un tableau de variables qui donne les stocks pour chaque type de feve 
     //@alexis
     protected HashMap<Feve, Variable> stockfeve;
+    
+    protected HashMap<Feve,Variable> plantations; //variable qui suit la surface de plantation HQ_BE @author Arthur
   
     
     protected HashMap<Feve, Double> ventefevebourse;
@@ -54,7 +56,10 @@ public abstract class Producteur3Acteur implements IActeur {
     abstract void setProdTemps(HashMap<Feve, Double> d0,HashMap<Feve, Double> d1);
     abstract HashMap<Feve,Double> maindoeuvre();
 	protected abstract HashMap<Feve,Double> newQuantite();
-	protected HashMap<Feve, Double> partDeMarcheFeve;
+	
+	private HashMap<Feve,Double> production_initial = new HashMap<Feve,Double>();
+	
+	
 	public Producteur3Acteur() {
 		this.journal = new Journal(this.getNom()+" journal",this);
 		this.journal_bourse = new Journal(this.getNom()+" journal bourse",this);
@@ -65,15 +70,50 @@ public abstract class Producteur3Acteur implements IActeur {
 		this.stockfeve = new HashMap<Feve,Variable>();
 		this.ventefevebourse = new HashMap<Feve, Double>();
 		this.ventefevecadre = new HashMap<Feve, Double>();
-
+		this.plantations = new HashMap<Feve,Variable>();
 		//VALEURS INITIALES
-		for (Feve f : Feve.values()) {
-			this.ventefeve.put(f,  new Variable("Eq3Vente "+f, this, 1.0));
-			this.stockfeve.put(f,  new Variable("Eq3Stock "+f, this, 1.0));
-			this.prodfeve.put(f,  new Variable("Eq3Prod "+f, this, 1.0));
-			this.ventefevebourse.put(f, 0.2);
-			this.ventefevecadre.put(f, 0.8);
-		}
+		//BQ
+		this.ventefeve.put(Feve.F_BQ,  new Variable("Eq3Vente "+Feve.F_BQ, this, 3600));
+		this.stockfeve.put(Feve.F_BQ,  new Variable("Eq3Stock "+Feve.F_BQ, this, 22372));
+		this.prodfeve.put(Feve.F_BQ,  new Variable("Eq3Prod "+Feve.F_BQ, this, 3790));
+		this.ventefevebourse.put(Feve.F_BQ, 3600.0);
+		this.ventefevecadre.put(Feve.F_BQ, 0.0);
+		this.plantations.put(Feve.F_BQ, new Variable("Plantation "+Feve.F_BQ,this,134775));
+		//MQ
+		this.ventefeve.put(Feve.F_MQ,  new Variable("Eq3Vente "+Feve.F_MQ, this, 2024));
+		this.stockfeve.put(Feve.F_MQ,  new Variable("Eq3Stock "+Feve.F_MQ, this, 3900));
+		this.prodfeve.put(Feve.F_MQ,  new Variable("Eq3Prod "+Feve.F_MQ, this, 1263));
+		this.ventefevebourse.put(Feve.F_MQ, 2024*0.8);
+		this.ventefevecadre.put(Feve.F_MQ, 2024*0.2);
+		this.plantations.put(Feve.F_MQ, new Variable("Plantation "+Feve.F_MQ,this,47570));
+		//MQ_E
+		this.ventefeve.put(Feve.F_MQ_E,  new Variable("Eq3Vente "+Feve.F_MQ_E, this, 290));
+		this.stockfeve.put(Feve.F_MQ_E,  new Variable("Eq3Stock "+Feve.F_MQ_E, this, 986));
+		this.prodfeve.put(Feve.F_MQ_E,  new Variable("Eq3Prod "+Feve.F_MQ_E, this, 315));
+		this.ventefevebourse.put(Feve.F_MQ_E, 290.0);
+		this.ventefevecadre.put(Feve.F_MQ_E, 0.0);
+		this.plantations.put(Feve.F_MQ_E, new Variable("Plantation "+Feve.F_MQ_E,this,11890));
+		//HQ
+		this.ventefeve.put(Feve.F_HQ,  new Variable("Eq3Vente "+Feve.F_HQ, this, 502));
+		this.stockfeve.put(Feve.F_HQ,  new Variable("Eq3Stock "+Feve.F_HQ, this, 750));
+		this.prodfeve.put(Feve.F_HQ,  new Variable("Eq3Prod "+Feve.F_HQ, this, 568));
+		this.ventefevebourse.put(Feve.F_HQ, 502.0);
+		this.ventefevecadre.put(Feve.F_HQ, 0.0);
+		this.plantations.put(Feve.F_HQ, new Variable("Plantation "+Feve.F_HQ,this,22740));	
+		//HQ_E
+		this.ventefeve.put(Feve.F_HQ_E,  new Variable("Eq3Vente "+Feve.F_HQ_E, this, 189));
+		this.stockfeve.put(Feve.F_HQ_E,  new Variable("Eq3Stock "+Feve.F_HQ_E, this, 250));
+		this.prodfeve.put(Feve.F_HQ_E,  new Variable("Eq3Prod "+Feve.F_HQ_E, this, 189.5));
+		this.ventefevebourse.put(Feve.F_HQ_E, 189.0);
+		this.ventefevecadre.put(Feve.F_HQ_E, 0.0);
+		this.plantations.put(Feve.F_HQ_E, new Variable("Plantation "+Feve.F_HQ_E,this,7580));	
+		//HQ_E
+		this.ventefeve.put(Feve.F_HQ_BE,  new Variable("Eq3Vente "+Feve.F_HQ_BE, this, 189));
+		this.stockfeve.put(Feve.F_HQ_BE,  new Variable("Eq3Stock "+Feve.F_HQ_BE, this, 277));
+		this.prodfeve.put(Feve.F_HQ_BE,  new Variable("Eq3Prod "+Feve.F_HQ_BE, this, 189.45));
+		this.ventefevebourse.put(Feve.F_HQ_BE, 189.0);
+		this.ventefevecadre.put(Feve.F_HQ_BE, 0.0);
+		this.plantations.put(Feve.F_HQ_BE, new Variable("Plantation "+Feve.F_HQ_BE,this,8420));	
 		 
 	}
 	
@@ -192,6 +232,7 @@ public abstract class Producteur3Acteur implements IActeur {
 		//Détail des transactions pour chaque type de fève, @Youssef
 		    this.journal.ajouter("Feve " + f.name() + ": Prod=" + quantite().get(f) + "t, VenteCadre=" + ventefevecadre.get(f) + "t, VenteBourse=" + ventefevebourse.get(f) + "t, Stock=" + this.getQuantiteEnStock(f, cryptogramme) + "t");
 		}
+		
 
 	}
 	
@@ -210,6 +251,8 @@ public abstract class Producteur3Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		for (Feve f : Feve.values()) {
 			res.add(stockfeve.get(f));
+			res.add(prodfeve.get(f));
+			res.add(plantations.get(f));
 		}
 		return res;
 	}
