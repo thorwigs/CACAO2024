@@ -63,6 +63,10 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected double totalBesoin;
 	protected double peutproduireemploye;
 	
+	protected HashMap<ChocolatDeMarque,Double> chocoAProduire;
+	protected HashMap<Feve,Double> feveNecessaire;
+
+	
 	protected List<ExemplaireContratCadre> contratsEnCours; // les contrats cadre en cours
 	
 	public Transformateur4Acteur() {
@@ -217,12 +221,191 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	
 		for (ChocolatDeMarque c : chocolatCocOasis) {
 			this.journal.ajouter("stock de " + c + " est "+ this.stockChocoMarque.get(c));
+			
+				
+		
 		}
+		
+		this.feveNecessaire = new HashMap<Feve,Double>();
+		this.chocoAProduire = new HashMap<ChocolatDeMarque,Double>(); 
+		
+		if (feveNecessaire.isEmpty()) {
+			for (Feve f : lesFeves) {
+				feveNecessaire.put(f, 0.0);
+			}
+		} else {
+			for (Feve f : lesFeves) {
+				feveNecessaire.replace(f, 0.0);
+			}
+		}
+		
+		this.totalBesoin = 0;
+		
+		
+		//Pour les chocos de marque cocoasis//////////////////////////////////////////////////////////
+				for (ChocolatDeMarque c : chocolatCocOasis) {
+					//ça fait la boucle pour tout les chocos de marques
+					//On doit quand même savoir quelle fève on va utiliser pour la transformation, ce qui dépend du chocolat produit
+					Feve feve_utilise = Feve.F_HQ_BE; //valeur par défault au début, on prend la meilleure fève car elle permet de produire tout les chocolat, de toute façon cette valeur va changer
+					//Ici on regarde exhaustivement, c'est un peu lourd mais ça marchera pour n'importe quel chocolat
+					if (c.getChocolat() == Chocolat.C_HQ_BE) {
+						feve_utilise = Feve.F_HQ_BE; //là on aurait pas vraiment besoin de changer mais c'est pour bien illustrer
+					}
+					if (c.getChocolat() == Chocolat.C_HQ_E) {
+						feve_utilise = Feve.F_HQ_E;
+					}
+					if (c.getChocolat() == Chocolat.C_HQ) {
+						feve_utilise = Feve.F_HQ;
+					}
+					if (c.getChocolat() == Chocolat.C_MQ_E) {
+						feve_utilise = Feve.F_MQ_E;
+					}
+					if (c.getChocolat() == Chocolat.C_MQ) {
+						feve_utilise = Feve.F_MQ;
+					}
+					if (c.getChocolat() == Chocolat.C_BQ) {
+						feve_utilise = Feve.F_BQ;
+					}
+					//là on sais quelle fève on utilise
+					//double stock = this.stockFeves.get(feve_utilise);
+					//double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
+					if (this.stockChocoMarque.get(c) < restantALivrerAuStep(c)+10000) { 
+						//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 5000 pour pouvoir faire des contrats cadre, on se fixe 5000 comme valeur
+						chocoAProduire.put(c,restantALivrerAuStep(c)+1000);
+
+					//} else if (stock - restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 10000
+					//		&& this.stockChocoMarque.get(c) < 20000) {
+					//	chocoAProduire.put(c,restantALivrerAuStep(c) );
+					} else {
+						chocoAProduire.put(c,  restantALivrerAuStep(c));
+					}
+					//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
+			
+					feveNecessaire.replace(feve_utilise, feveNecessaire.get(feve_utilise) + chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())));
+					
+					this.totalBesoin += chocoAProduire.get(c);
+					//totalFeve += chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat()));
+				}
+					
+					//###########################################################################################
+					
+				for (ChocolatDeMarque c : chocolatDistributeur) {
+					//faut réussir à identifier à quel chocolat de notre stock_choco correspond le chocolat de marque distributeur
+					
+					//On détermine quelle fève on va utiliser pour la transformation, ce qui dépend du chocolat produit
+					Feve feve_utilise = Feve.F_HQ_BE; //valeur par défault au début, on prend la meilleure fève car elle permet de produire tout les chocolat, de toute façon cette valeur va changer
+					//Ici on regarde exhaustivement, c'est un peu lourd mais ça marchera pour n'importe quel chocolat
+					if (c.getChocolat() == Chocolat.C_HQ_BE) {
+						feve_utilise = Feve.F_HQ_BE; //là on aurait pas vraiment besoin de changer mais c'est pour bien illustrer
+					}
+					if (c.getChocolat() == Chocolat.C_HQ_E) {
+						feve_utilise = Feve.F_HQ_E;
+					}
+					if (c.getChocolat() == Chocolat.C_HQ) {
+						feve_utilise = Feve.F_HQ;
+					}
+					if (c.getChocolat() == Chocolat.C_MQ_E) {
+						feve_utilise = Feve.F_MQ_E;
+					}
+					if (c.getChocolat() == Chocolat.C_MQ) {
+						feve_utilise = Feve.F_MQ;
+					}
+					if (c.getChocolat() == Chocolat.C_BQ) {
+						feve_utilise = Feve.F_BQ;
+					}
+					//là on sais quelle fève on utilise
+					//double stock = this.stockFeves.get(feve_utilise);
+					if (this.stockChoco.get(c.getChocolat()) < restantALivrerDeTypeAuStep(c.getChocolat())+10000) { 
+						chocoAProduire.put(c,restantALivrerDeTypeAuStep(c.getChocolat())+1000);
+						
+					//} else if (stock -restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 3000
+					//		&& this.stockChoco.get(c.getChocolat()) < 20000) {
+					//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
+					//	chocoAProduire.put(c,restantALivrerAuStep(c)+1000);
+						
+					} else {
+						chocoAProduire.put(c, restantALivrerDeTypeAuStep(c.getChocolat()));
+					}
+					feveNecessaire.replace(feve_utilise, feveNecessaire.get(feve_utilise) + chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat()))); //formule conversion entre qte feve et qte choco
+				
+					this.totalBesoin += chocoAProduire.get(c);
+					//totalFeve += chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat()));
+				}
 		
 	
 		
 		
 	}
+	
+	//##########################fonctions que l'on utilise dans le code ###########################
+	
+	
+	public double restantALivrerDeTypeAuStep (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if ((c.getProduit().getType().equals("ChocolatDeMarque")) && ((ChocolatDeMarque)(c.getProduit())).getChocolat().equals(choco)) {
+					res+=c.getQuantiteALivrerAuStep();
+			}
+		} 
+		return res;
+	}
+	
+	public double restantALivrerAuStep(ChocolatDeMarque choco) {
+		double res=0;			
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if ((c.getProduit().getType().equals("ChocolatDeMarque") && ((ChocolatDeMarque)(c.getProduit())).equals(choco)) ) {
+					res+=c.getQuantiteALivrerAuStep();
+			}
+		}
+		return res;
+	}
+	
+	public double restantALivrer(ChocolatDeMarque choco) {
+		double res=0;			
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(choco)) {
+				res+=c.getQuantiteRestantALivrer();
+			}
+		}
+		return res;
+	}
+	
+
+	public double BesoinDeFeve(Feve f) {
+		double BesoinPourChoco = 0.0;
+		for (ExemplaireContratCadre contratC : this.contratsEnCours) {
+			if ( contratC.getProduit().getType().equals("ChocolatDeMarque") ) {
+				Chocolat c = ((ChocolatDeMarque)(contratC.getProduit())).getChocolat();
+				if ( (c.getGamme().equals(f.getGamme())) && (c.isBio() == f.isBio()) && (c.isEquitable() == f.isEquitable())) {
+					BesoinPourChoco += restantALivrerDeTypeAuStep( ((ChocolatDeMarque)(contratC.getProduit())).getChocolat() ) / (this.pourcentageTransfo.get(f).get(c));
+				}
+			}
+		}
+		return BesoinPourChoco;
+	}
+	
+	public double getQuantiteAuStep (Feve f) {
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(f)) {
+				res+=c.getQuantiteALivrerAuStep();
+			}
+		}
+		return res;
+	}
+	
+	public double restantDu(Feve f) {
+		double res=0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(f)) {
+				res+=c.getQuantiteRestantALivrer();
+			}
+		}
+		return res;
+	}
+	
+	//###############################################################################################
+	
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(162, 207, 238); 

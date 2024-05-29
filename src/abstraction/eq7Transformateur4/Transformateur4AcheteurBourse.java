@@ -51,28 +51,6 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 		return res;
 	}
 	
-	public double BesoinDeFeve(Feve f) {
-		double BesoinPourChoco = 0.0;
-		for (ExemplaireContratCadre contratC : this.contratsEnCours) {
-			if ( contratC.getProduit().getType().equals("ChocolatDeMarque") ) {
-				Chocolat c = ((ChocolatDeMarque)(contratC.getProduit())).getChocolat();
-				if ( (c.getGamme().equals(f.getGamme())) && (c.isBio() == f.isBio()) && (c.isEquitable() == f.isEquitable())) {
-					BesoinPourChoco += restantALivrerDeTypeAuStep( ((ChocolatDeMarque)(contratC.getProduit())).getChocolat() ) / (this.pourcentageTransfo.get(f).get(c));
-				}
-			}
-		}
-		return BesoinPourChoco;
-	}
-	
-	public double getQuantiteAuStep (Feve f) {
-		double res = 0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if (c.getProduit().equals(f)) {
-				res+=c.getQuantiteALivrerAuStep();
-			}
-		}
-		return res;
-	}
 	
 	
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {

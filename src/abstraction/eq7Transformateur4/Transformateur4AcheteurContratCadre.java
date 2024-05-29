@@ -223,26 +223,6 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 	
 	
 	//Honorer les contrats
-	
-	public double restantDu(Feve f) {
-		double res=0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if (c.getProduit().equals(f)) {
-				res+=c.getQuantiteRestantALivrer();
-			}
-		}
-		return res;
-	}
-	
-	public double getQuantiteAuStep (Feve f) {
-		double res = 0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if (c.getProduit().equals(f)) {
-				res+=c.getQuantiteALivrerAuStep();
-			}
-		}
-		return res;
-	}
 
 
 	

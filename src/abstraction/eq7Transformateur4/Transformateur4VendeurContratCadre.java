@@ -89,8 +89,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 			if ((stockChocoMarque.get(cM)-restantALivrerAuStep(cM)-contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()> 5000) 
 			&& ( this.totalBesoin+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < this.peutproduireemploye * 1.05)) {
 				//double a = (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()+this.totalBesoin);
-				journalVCC.ajouter("#######################################" + this.peutproduireemploye);
-				journalVCC.ajouter("#######################################" + this.totalBesoin);
+				
 				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 				|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
@@ -325,47 +324,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 	
 	//Honorer le contrat
 	
-	public double restantALivrer(ChocolatDeMarque choco) {
-		double res=0;			
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if (c.getProduit().equals(choco)) {
-				res+=c.getQuantiteRestantALivrer();
-			}
-		}
-		return res;
-	}
-	
-	public double restantALivrerAuStep(ChocolatDeMarque choco) {
-		double res=0;			
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if ((c.getProduit().getType().equals("ChocolatDeMarque") && ((ChocolatDeMarque)(c.getProduit())).equals(choco)) ) {
-					res+=c.getQuantiteALivrerAuStep();
-				
-			}
-		}
-		return res;
-	}
 	
 	
-	public double restantALivrerDeType (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
-		double res = 0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if ((c.getProduit().getType().equals("ChocolatDeMarque")) && ((ChocolatDeMarque)(c.getProduit())).getChocolat().equals(choco)) {
-				res+=c.getQuantiteRestantALivrer();
-			}
-		}
-		return res;
-	}
-	
-	public double restantALivrerDeTypeAuStep (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
-		double res = 0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if ((c.getProduit().getType().equals("ChocolatDeMarque")) && ((ChocolatDeMarque)(c.getProduit())).getChocolat().equals(choco)) {
-					res+=c.getQuantiteALivrerAuStep();
-			}
-		} 
-		return res;
-	}
+
 
 	public double restantPayeARecevoir() {
 		double res=0;
@@ -393,6 +354,7 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 					&& ( this.totalBesoin < this.peutproduireemploye * 1.05)) {
 						
 						this.journalVCC.ajouter("restant a livrer de " + choco + " = " + this.restantALivrerAuStep(choco));
+		
 						
 						
 						this.journalVCC.ajouter("   "+choco+" suffisamment trop en stock/contrat pour passer un CC");
@@ -479,6 +441,9 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				
 				}
 				journalVCC.ajouter(" === fin de phase de demande chocolat Distributeur =========");
+				
+				journalVCC.ajouter("#######################################" + this.peutproduireemploye);
+				journalVCC.ajouter("#######################################" + this.totalBesoin);
 				
 		// On archive les contrats terminés  (pas à modifier)
 		for (ExemplaireContratCadre c : this.contratsEnCours) {

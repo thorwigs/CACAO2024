@@ -23,27 +23,6 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 			}
 	
 	
-	
-	public double restantALivrerDeTypeAuStep (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
-		double res = 0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if ((c.getProduit().getType().equals("ChocolatDeMarque")) && ((ChocolatDeMarque)(c.getProduit())).getChocolat().equals(choco)) {
-					res+=c.getQuantiteALivrerAuStep();
-			}
-		} 
-		return res;
-	}
-	
-	public double restantALivrerAuStep(ChocolatDeMarque choco) {
-		double res=0;			
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if ((c.getProduit().getType().equals("ChocolatDeMarque") && ((ChocolatDeMarque)(c.getProduit())).equals(choco)) ) {
-					res+=c.getQuantiteALivrerAuStep();
-			}
-		}
-		return res;
-	}
-	
 //Pierrick
 	public void next() {
 		
@@ -51,12 +30,10 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 		this.journalTransfo.ajouter("=== STEP " + Filiere.LA_FILIERE.getEtape() + "==================");
 		//HashMap<ChocolatDeMarque, Double> chocoalivrer = new HashMap<ChocolatDeMarque,Double>(); //critère pour la transformation
 		
-		HashMap<ChocolatDeMarque, Double> chocoAProduire = new HashMap<ChocolatDeMarque,Double>();  
-		
+	
 		HashMap<ChocolatDeMarque, Double> partProduite = new HashMap<ChocolatDeMarque,Double>(); 
 		
 		
-		HashMap<Feve, Double> feveNecessaire = new HashMap<Feve,Double>();
 		
 	
 		
@@ -66,28 +43,7 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 			this.journalTransfo.ajouter("stock de fève" + f+ "avant ce step est "+ this.stockFeves.get(f));
 		}
 		
-		if (feveNecessaire.isEmpty()) {
-			for (Feve f : lesFeves) {
-				feveNecessaire.put(f, 0.0);
-			}
-		} else {
-			for (Feve f : lesFeves) {
-				feveNecessaire.replace(f, 0.0);
-			}
-		}
 		
-		
-		/*
-		if (partParChoco.isEmpty()) {
-			for (Chocolat c : lesChocolats) {
-				partParChoco.put(c, 0.0);
-			}
-		} else {
-			for (Chocolat c : lesChocolats) {
-				partParChoco.replace(c, 0.0);
-			}
-		}
-		*/
 		
 	
 		
@@ -98,7 +54,7 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 		this.coutproduction_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>(); //on la reset à 0, permettra de savoir combien on a dépensé pour fabriquer une tonne d'un chocolat
 		this.production_tonne_marque_step = new HashMap<ChocolatDeMarque,Double>();//on la reset à 0, permettre de savoir combien on a produit d'un chocolat ce step
 		this.peutproduireemploye = this.tauxproductionemploye*this.nbemployeCDI; //ce qu'on peut produire avec nos employés (en terme de conversion de fève)
-		double peutencoreproduire = this.peutproduireemploye; //ce qu'on peut encore produire ce step, au départ c'est tout ce que nos employé peuvent faire
+		//double peutencoreproduire = this.peutproduireemploye; //ce qu'on peut encore produire ce step, au départ c'est tout ce que nos employé peuvent faire
 		
 		//////////on fixe le critère : ce qu'on doit produire comme choco de marque, dépendant des contrats cadre en cours pour l'instant//////////
 		
@@ -121,99 +77,7 @@ public class Transformation2 extends Transformateur4AcheteurBourse {
 		
 		
 		
-		this.totalBesoin = 0;
-		double totalFeve = 0;
-		
-		//Pour les chocos de marque cocoasis//////////////////////////////////////////////////////////
-		for (ChocolatDeMarque c : chocolatCocOasis) {
-			//ça fait la boucle pour tout les chocos de marques
-			//On doit quand même savoir quelle fève on va utiliser pour la transformation, ce qui dépend du chocolat produit
-			Feve feve_utilise = Feve.F_HQ_BE; //valeur par défault au début, on prend la meilleure fève car elle permet de produire tout les chocolat, de toute façon cette valeur va changer
-			//Ici on regarde exhaustivement, c'est un peu lourd mais ça marchera pour n'importe quel chocolat
-			if (c.getChocolat() == Chocolat.C_HQ_BE) {
-				feve_utilise = Feve.F_HQ_BE; //là on aurait pas vraiment besoin de changer mais c'est pour bien illustrer
-			}
-			if (c.getChocolat() == Chocolat.C_HQ_E) {
-				feve_utilise = Feve.F_HQ_E;
-			}
-			if (c.getChocolat() == Chocolat.C_HQ) {
-				feve_utilise = Feve.F_HQ;
-			}
-			if (c.getChocolat() == Chocolat.C_MQ_E) {
-				feve_utilise = Feve.F_MQ_E;
-			}
-			if (c.getChocolat() == Chocolat.C_MQ) {
-				feve_utilise = Feve.F_MQ;
-			}
-			if (c.getChocolat() == Chocolat.C_BQ) {
-				feve_utilise = Feve.F_BQ;
-			}
-			//là on sais quelle fève on utilise
-			double stock = this.stockFeves.get(feve_utilise);
-			//double aproduire = 0.0; //la qte de chocolat qu'on va devoir produire
-			if (this.stockChocoMarque.get(c) < restantALivrerAuStep(c)+5000) { 
-				//on veut produire ce qu'on doit livrer et avoir un stock au dessus de 5000 pour pouvoir faire des contrats cadre, on se fixe 5000 comme valeur
-				chocoAProduire.put(c,restantALivrerAuStep(c)+500);
-
-			//} else if (stock - restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 10000
-			//		&& this.stockChocoMarque.get(c) < 20000) {
-			//	chocoAProduire.put(c,restantALivrerAuStep(c) );
-			} else {
-				chocoAProduire.put(c,  restantALivrerAuStep(c));
-			}
-			//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
 	
-			feveNecessaire.replace(feve_utilise, feveNecessaire.get(feve_utilise) + chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())));
-			
-			this.totalBesoin += chocoAProduire.get(c);
-			totalFeve += chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat()));
-		}
-			
-			//###########################################################################################
-			
-		for (ChocolatDeMarque c : chocolatDistributeur) {
-			this.journalTransfo.ajouter("le chocolat distributeur est " + c);
-			//faut réussir à identifier à quel chocolat de notre stock_choco correspond le chocolat de marque distributeur
-			
-			//On détermine quelle fève on va utiliser pour la transformation, ce qui dépend du chocolat produit
-			Feve feve_utilise = Feve.F_HQ_BE; //valeur par défault au début, on prend la meilleure fève car elle permet de produire tout les chocolat, de toute façon cette valeur va changer
-			//Ici on regarde exhaustivement, c'est un peu lourd mais ça marchera pour n'importe quel chocolat
-			if (c.getChocolat() == Chocolat.C_HQ_BE) {
-				feve_utilise = Feve.F_HQ_BE; //là on aurait pas vraiment besoin de changer mais c'est pour bien illustrer
-			}
-			if (c.getChocolat() == Chocolat.C_HQ_E) {
-				feve_utilise = Feve.F_HQ_E;
-			}
-			if (c.getChocolat() == Chocolat.C_HQ) {
-				feve_utilise = Feve.F_HQ;
-			}
-			if (c.getChocolat() == Chocolat.C_MQ_E) {
-				feve_utilise = Feve.F_MQ_E;
-			}
-			if (c.getChocolat() == Chocolat.C_MQ) {
-				feve_utilise = Feve.F_MQ;
-			}
-			if (c.getChocolat() == Chocolat.C_BQ) {
-				feve_utilise = Feve.F_BQ;
-			}
-			//là on sais quelle fève on utilise
-			double stock = this.stockFeves.get(feve_utilise);
-			if (this.stockChoco.get(c.getChocolat()) < restantALivrerDeTypeAuStep(c.getChocolat())+5000) { 
-				chocoAProduire.put(c,restantALivrerDeTypeAuStep(c.getChocolat())+1000);
-				
-			} else if (stock -restantALivrerDeTypeAuStep(c.getChocolat())/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat())) > 3000
-					&& this.stockChoco.get(c.getChocolat()) < 20000) {
-			//si on a pas le stock nécessaire pour lancer des contrat cadre, on le produit
-				chocoAProduire.put(c,restantALivrerAuStep(c)+1000);
-				
-			} else {
-				chocoAProduire.put(c, 0.0);
-			}
-			feveNecessaire.replace(feve_utilise, feveNecessaire.get(feve_utilise) + chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat()))); //formule conversion entre qte feve et qte choco
-		
-			this.totalBesoin += chocoAProduire.get(c);
-			totalFeve += chocoAProduire.get(c)/(this.pourcentageTransfo.get(feve_utilise).get(c.getChocolat()));
-		}
 			
 		//#################################### QUANTITE PRODUITE ####################################################
 			
