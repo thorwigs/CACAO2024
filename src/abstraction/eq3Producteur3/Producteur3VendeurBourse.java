@@ -21,16 +21,32 @@ import abstraction.eq7Transformateur4.Transformateur4AcheteurBourse;
 public class Producteur3VendeurBourse extends Producteur3Production implements IVendeurBourse {
 	
 	BourseCacao superviseur;
-	LinkedList<IVendeurBourse> vendeurs;
-	LinkedList<IAcheteurBourse> acheteurs;
+	//@author Arthur
+	LinkedList<IVendeurBourse> vendeurs; //liste des vendeurs en bourse
+	LinkedList<IAcheteurBourse> acheteurs; //liste des acheteurs en bourse
 	
+	/**
+	 * @author Arthur
+	 * @param IAcheteurBourse acheteur
+	 * Fonction qui supprime un acteur de la liste des acheteurs en bourse
+	 */
 	protected void deleteAcheteurs(IAcheteurBourse acheteur) {
 		acheteurs.remove(acheteur);
 	}
+	
+	/**
+	 * @author Arthur
+	 * @param IAcheteurBourse vendeur
+	 * Fonction qui supprime un acteur de la liste des vendeurs en bourse
+	 */
 	protected void deleteVendeurs(IVendeurBourse vendeur) {
 		vendeurs.remove(vendeur);
 	}
 	
+	/**
+	 * @author Arthur
+	 * Initialisation des vendeurs et acheteurs en bourse (hors nous) et mise en variable du superviseur
+	 */
 	public void initialiser() {
 		super.initialiser();	
 		superviseur = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");
@@ -52,16 +68,14 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 	 * Renvoie selon la feve et son cours, la quantité que l'on est pret a vendre (potentiellement 0)
 	 */
 	public double offre(Feve f, double cours) {
-		//vendre par bourse ce qui n'est pas vendue par contrat cadre (a faire)
-		//vend toute la production BQ en bourse
-		//verifie si cours>couts sinon pas de ventes (a voir si sur le point de perimer si on garde ca)
 		double stock = getQuantiteEnStock(f,cryptogramme);
+		//vente du stock BQ en bourse si cours superieur a cout de revient
 		if ((f.getGamme() == Gamme.BQ)&&(coutRevient(f,stock)<=cours)) {
-			//mettre la quantite de stock BQ (on pourra mettre plus et ajuster selon la demande)
-			//plus on demande, plus on vend (attention a l'offre et a la demande) (souvent on vend < 5% de ce qu'on veut vendre mais attention on vend plus mais ca fait baisser le cours)
+			//On utilise quantiteAV comme une etude de marché afin de proposer une quantite a vendre sur la bourse qui permette d'ecouler le stock que l'on veut
 			return quantiteAV(f,cours,stock);
 		}
-		else {
+		else { 
+			//on fait de meme avec le MQ et HQ mais on le fait dans un else dans le but de pouvoir modifier le comportement des MQ et HQ independant de BQ si l'on souhaite
 			if (coutRevient(f,stock)<=cours) {
 				return quantiteAV(f,cours,stock);
 			}
@@ -81,28 +95,30 @@ public class Producteur3VendeurBourse extends Producteur3Production implements I
 	private double quantiteAV(Feve f, double cours, double stock) {
 		double autresAV = 0;
 		double dem = 0;
-		for (IVendeurBourse vendeur : vendeurs) {
+		for (IVendeurBourse vendeur : vendeurs) { //on regarde la quantite proposé par les autres vendeurs
 			if (!(superviseur.getVendeursBlackListes().contains(vendeur))) {
 				autresAV += vendeur.offre(f, cours);
 			}
 		}
-		for (IAcheteurBourse acheteur : acheteurs) {
+		for (IAcheteurBourse acheteur : acheteurs) { //on regarde la quantité demandé par les acheteurs
 			if (!(superviseur.getAcheteursBlackListes().contains(acheteur))) {
 				dem += acheteur.demande(f, cours);
 			}
 		}
 		
-		if (dem >= autresAV+stock) {
+		//On applique la formule elaborée
+		if (dem > autresAV+stock) {
 			return stock;
-		}
-		else if (dem == 0) {
+		} else if (dem == autresAV+stock){
+			return stock-0.01; //si l'offre est egale a la demande, le cours descend: on fait en sorte d'avoir une offre legerement inferieur pour augmenter le cours
+		} else if (dem == 0) {
 			return 0;
 		} else if (autresAV == 0) {
-			return Math.min(stock,dem);
+			return Math.min(stock,dem)-0.01; //de meme on reduite legerement de maniere a faire monter le cours
 		} else if (stock < dem) {
 			return stock/dem*autresAV/(1-stock/dem);
 		} else {
-			return 9*autresAV;
+			return 9*autresAV; //Si trop peu de demande, on essaie de vendre 90% de notre stock
 		}
 	}
 	

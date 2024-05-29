@@ -26,21 +26,21 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 
 
 	public double demande(Feve f, double cours) { //changer selon conditions et qte d'achat de chaque fève
-		if (f.equals(Feve.F_MQ) && stockFeves.get(f) <= 1000) {
-			D = 10000 - stockFeves.get(f);
+		if (f.equals(Feve.F_BQ) && stockFeves.get(f) + getQuantiteAuStep(f) - BesoinDeFeve(f) < 10000 ) {
+			D = 10000 - (stockFeves.get(f) + getQuantiteAuStep(f) - BesoinDeFeve(f)) ;
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
 			return D;
 		}
-		if (f.equals(Feve.F_HQ) && stockFeves.get(f)<= 1000 ) {
-			D = 4000 - stockFeves.get(f);
-			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
-			return D;
-		}
+		//if (f.equals(Feve.F_HQ) && stockFeves.get(f) + getQuantiteAuStep(f) - BesoinDeFeve(f) < 10000 ) {
+		//	D = 10000 - (stockFeves.get(f) + getQuantiteAuStep(f) - BesoinDeFeve(f)) ;
+		//	journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je souhaite acheter "+ D +" T de "+f);
+		//	return D;
+		//}
 		else {
 			return 0;
 		}
 	}
-
+	
 	
 	
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
