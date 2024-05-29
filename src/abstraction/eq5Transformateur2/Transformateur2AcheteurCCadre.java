@@ -185,7 +185,7 @@ public class Transformateur2AcheteurCCadre extends Transformateur2Acteur impleme
 					if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)>5000) { //quantité trop grande 
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),5000+0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-5000)) ; //on ramène la quantité à la borne fixée et on garde la durée 
 					}
-					else if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)<5000) { //quantité trop faible
+					else if (contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)<500) { //quantité trop faible
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1,contrat.getEcheancier().getNbEcheances(),500-0.2*Math.abs(contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)-500)) ; //on ramène la quantité à la borne fixée et on garde la durée
 					}
 					else {//quantité convenable (on ne change rien)
