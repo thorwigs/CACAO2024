@@ -112,9 +112,9 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			if ( f.equals(Feve.F_HQ) || f.equals(Feve.F_HQ_BE) || f.equals(Feve.F_MQ) ) {
-				this.stockFeves.put(f, 000.0);
-				this.totalStocksFeves.ajouter(this, 000.0, this.cryptogramme);
+			if ( f.equals(Feve.F_HQ) || f.equals(Feve.F_MQ) ) {
+				this.stockFeves.put(f, 11000.0);
+				this.totalStocksFeves.ajouter(this, 11000.0, this.cryptogramme);
 				this.journal.ajouter("ajout de 11000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			} else {
 				this.stockFeves.put(f, 0.0);
@@ -144,17 +144,24 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
 
-		this.stockChoco.put(Chocolat.C_MQ, 000.0);
-		this.totalStocksChoco.ajouter(this, 000.0, this.cryptogramme);
+		this.stockChoco.put(Chocolat.C_MQ, 7000.0);
+		this.totalStocksChoco.ajouter(this, 7000.0, this.cryptogramme);
 		this.journal.ajouter("ajout de 7000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 
 
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 000.0, cryptogramme);
-			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
+			if ( !(c.getChocolat().equals(Chocolat.C_HQ_BE)) ) {
+				this.stockChocoMarque.put(c, 7000.0); //le premier element de stockchocomarque correspond a mirage
+				this.totalStocksChocoMarque.ajouter(this, 7000.0, cryptogramme);
+				this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
+			} else {
+				this.stockChocoMarque.put(c, 0.0); //le premier element de stockchocomarque correspond a mirage
+				this.totalStocksChocoMarque.ajouter(this, 0.0, cryptogramme);
+				this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
+			}
+
 		}
 		
 		double conversion = 1.25; // correspond a une transformation avec 80% de choco

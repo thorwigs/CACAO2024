@@ -131,16 +131,27 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 			Chocolat cD = ((ChocolatDeMarque)(contrat.getProduit())).getChocolat();
 			
 			if ((stockChoco.get( cD )-restantALivrerDeTypeAuStep(cD)-contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()>5000)
-			&& ( this.totalBesoin+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < this.peutproduireemploye * 1.05) ){
+			&& ( this.totalBesoin+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < this.peutproduireemploye * 1.0)
+			&& ( (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances())<=3000 ) ){
 				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
 					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
 				} else { // les volumes sont corrects, la duree et le debut aussi
 					return contrat.getEcheancier();
 				}
+			} else if ((stockChoco.get( cD )-restantALivrerDeTypeAuStep(cD)-contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()>5000)
+					&& ( this.totalBesoin+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < this.peutproduireemploye * 1.0)
+					&& ( (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances())>3000 ) ){
+				if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+						|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, 3000 );
+					} else { // les volumes sont corrects, la duree et le debut aussi
+						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, contrat.getEcheancier().getNbEcheances(), 3000 );
+					}
+
 			} else {
 				if ((stockChoco.get(cD)-restantALivrerDeTypeAuStep(cD) - 1000> 5000)
-				&& ( this.totalBesoin + 1000 < this.peutproduireemploye * 1.05) ){
+				&& ( this.totalBesoin + 1000 < this.peutproduireemploye * 1.0) ){
 					if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, 1000 );
@@ -150,14 +161,6 @@ public class Transformateur4VendeurContratCadre extends Transformateur4AcheteurC
 				} else {
 					return null;
 				}
-			
-				//double marge = - 1000 + stockChoco.get( ((ChocolatDeMarque)(contrat.getProduit())).getChocolat() ) - restantALivrerAuStep((ChocolatDeMarque)(contrat.getProduit()));
-				//if (marge<100) {
-				//	return null;
-				//} else {
-				//	double quantite = marge; // un nombre aleatoire entre 25000 et la marge
-				//	return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
-				//}
 			}
 		}
 	}

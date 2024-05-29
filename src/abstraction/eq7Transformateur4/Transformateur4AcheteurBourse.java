@@ -40,16 +40,6 @@ public class Transformateur4AcheteurBourse extends Transformateur4Acteur impleme
 			return 0;
 		}
 	}
-
-	public double restantALivrerDeTypeAuStep (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
-		double res = 0;
-		for (ExemplaireContratCadre c : this.contratsEnCours) {
-			if ((c.getProduit().getType().equals("ChocolatDeMarque")) && ((ChocolatDeMarque)(c.getProduit())).getChocolat().equals(choco)) {
-					res+=c.getQuantiteALivrerAuStep();
-			}
-		} 
-		return res;
-	}
 	
 	
 	
