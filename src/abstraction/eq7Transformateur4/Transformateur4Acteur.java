@@ -112,10 +112,10 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			if ( f.equals(Feve.F_HQ) || f.equals(Feve.F_MQ) ) {
-				this.stockFeves.put(f, 11000.0);
-				this.totalStocksFeves.ajouter(this, 11000.0, this.cryptogramme);
-				this.journal.ajouter("ajout de 11000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			if ( f.equals(Feve.F_BQ) || f.equals(Feve.F_HQ_E) ) {
+				this.stockFeves.put(f, 5000.0);
+				this.totalStocksFeves.ajouter(this, 5000.0, this.cryptogramme);
+				this.journal.ajouter("ajout de 5000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			} else {
 				this.stockFeves.put(f, 0.0);
 				this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
@@ -128,15 +128,15 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 		
 		//grâce à ceci on pourra accéder à nos chocolats de marque
-		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
-		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
+		this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Mirage", 80));
+		//this.chocolatCocOasis.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 		
 		
 		//grâce à ceci on pourra accéder aux différents chocolats marque distributeur (ici 2)
 		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
 		for (String marque : marquesDistributeurs) {
 			if ((marque == "Chocoflow") || (marque == "Ecacaodor")) {
-				this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+				this.chocolatDistributeur.add(new ChocolatDeMarque(Chocolat.C_BQ, marque,80));
 			}	
 		}
 		
@@ -144,20 +144,20 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
 
-		this.stockChoco.put(Chocolat.C_MQ, 7000.0);
+		this.stockChoco.put(Chocolat.C_BQ, 7000.0);
 		this.totalStocksChoco.ajouter(this, 7000.0, this.cryptogramme);
-		this.journal.ajouter("ajout de 7000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.journal.ajouter("ajout de 7000 de "+ Chocolat.C_BQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 
 
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			if ( !(c.getChocolat().equals(Chocolat.C_HQ_BE)) ) {
+			if ( !(c.getChocolat().equals(Chocolat.C_HQ_E)) ) {
 				this.stockChocoMarque.put(c, 7000.0); //le premier element de stockchocomarque correspond a mirage
 				this.totalStocksChocoMarque.ajouter(this, 7000.0, cryptogramme);
 				this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 			} else {
-				this.stockChocoMarque.put(c, 0.0); //le premier element de stockchocomarque correspond a mirage
+				this.stockChocoMarque.put(c, 0.0);
 				this.totalStocksChocoMarque.ajouter(this, 0.0, cryptogramme);
 				this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 			}
@@ -502,11 +502,11 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		// TODO Auto-generated method stub
 		List<String> marquesDistributeurs = Filiere.LA_FILIERE.getMarquesDistributeur();
 		if (this.chocosProduits.size()==0){
-			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Mirage", 80));
-			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
+			this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Mirage", 80));
+			//this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_HQ, "Mirage", 80));
 			for (String marque : marquesDistributeurs) {
 				if ((marque == "Chocoflow") || (marque == "Ecacaodor")) {
-					this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, marque,80));
+					this.chocosProduits.add(new ChocolatDeMarque(Chocolat.C_BQ, marque,80));
 				}	
 			}
 			
