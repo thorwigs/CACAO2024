@@ -1,5 +1,6 @@
 package abstraction.eq7Transformateur4;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,32 +24,35 @@ import java.awt.Color;
 public class Transformateur4AcheteurContratCadre extends Transformateur4AcheteurBourse implements IAcheteurContratCadre{
 	
 	private SuperviseurVentesContratCadre supCC;
-	protected List<ExemplaireContratCadre> contratsEnCours;
+	
 	protected List<ExemplaireContratCadre> contratsTermines;
-
 	protected Journal journalACC;
+	private HashMap<Long, Double> prixPrecedentF;
 
 	public Transformateur4AcheteurContratCadre() {
 		super();
-		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
+		
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.journalACC = new Journal(this.getNom()+" journal CC achat", this);
+		this.prixPrecedentF = new HashMap< Long ,Double>();
 
 	}
 	
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
+		
 	}
 	
-	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE ou HQ en CC
+	public boolean achete(IProduit produit) { //on n'achête que des feves HQ_BE, HQ ou MQ
 		return (produit.getType().equals("Feve"))
 				&& (
 						(((Feve)produit).equals(Feve.F_HQ)) ||
-						(((Feve)produit).equals(Feve.F_HQ_BE))
+						(((Feve)produit).equals(Feve.F_HQ_BE)) ||
+						(((Feve)produit).equals(Feve.F_MQ))
 					)
 				
-				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 150000 );
+				&& (stockFeves.get(produit)+restantDu((Feve)produit) < 20000 );
 	}
 	
 	
@@ -59,26 +63,50 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 	//Négociations
 	
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {   
+		
+		
+		double BesoinPourChoco = 0.0;
+		
 		//à modifier selon comment on veut nos échéanciers
-		if (!contrat.getProduit().getType().equals("Feve")) {
+		if (!(contrat.getProduit().getType().equals("Feve"))) {
 			return null;
 		}
+		
+		Feve f = (Feve)(contrat.getProduit()) ;
+		
+		BesoinPourChoco = BesoinDeFeve(f);
+				
+		//for (ExemplaireContratCadre c : this.contratsEnCours) {
+		//	if ( (c.getProduit().getType().equals("ChocolatDeMarque")) 
+		//		&& (((ChocolatDeMarque)(c.getProduit())).getChocolat().getGamme().equals(((Feve)(contrat.getProduit())).getGamme() ) )) {
+		//		
+		//	}
+		//}
 
-		if (stockFeves.get((Feve)(contrat.getProduit()))+restantDu((Feve)(contrat.getProduit()))+contrat.getEcheancier().getQuantiteTotale()<150000) {
+		if (stockFeves.get(f)+this.getQuantiteAuStep(f)+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() - BesoinPourChoco < 10000) {
 			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
-					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) {
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
-			} else { // les volumes sont corrects, la duree et le debut aussi
-				return contrat.getEcheancier();
+			|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) { //contrat de minimum 12 steps
+				if (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < 100) { //minimum 1000 T par steps
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, 100 );
+				} else {
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, contrat.getEcheancier().getQuantiteTotale()/12 );
+				}
+			} else { // les volumes peuvent être acceptable, la duree et le debut aussi
+				if (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < 100) { //minimum 1000 T par steps
+					return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, contrat.getEcheancier().getNbEcheances(), 100 );
+				} else {
+					return contrat.getEcheancier();
+				}
 			}
-		} else {
-			double marge = 15000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
-			if (marge<1200) {
-				return null;
-			} else {
-				double quantite = 1200 + Filiere.random.nextDouble()*(marge-1200); // un nombre aleatoire entre 1200 et la marge
-				return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
-			}
+		} else { //nous ne sommes pas en besoin de feve 
+			return null;
+			//double marge = 15000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
+			//if (marge<1200) {
+			//	return null;
+			//} else {
+			//	double quantite = 1200 + Filiere.random.nextDouble()*(marge-1200); // un nombre aleatoire entre 1200 et la marge
+			//	return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, quantite/12 );
+			//}
 		}
 	}
 
@@ -87,12 +115,68 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		// plus les prix seront bas) et de l'urgence (si on n'en n'a pas en stock et pas de CC alors 
 		// il devient plus urgent d'en disposer et donc on acceptera davantage un prix eleve)
 		// mais dans cet acteur trivial on ne se base que sur le prix et via des tirages aleatoires.
+		double prixPropose = contrat.getPrix();
+		long N = contrat.getNumero();
+		
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme)-restantAPayer();
 		double prixSansDecouvert = solde / contrat.getQuantiteTotale();
 		if (prixSansDecouvert<bourse.getCours(Feve.F_BQ).getValeur()) {
 			return 0.0; // nous ne sommes pas en mesure de fournir un prix raisonnable
 		}
+		double prix = 0.0 ;
+		Feve feve_utilise = (Feve)contrat.getProduit();
+		
+		
+		double prixtot = 0.0; //prix a la tonne de tout les contrat concerant ce type de feve
+		int i = 0; //nombre de contrat concerant ce tyoe de feve
+		for (ExemplaireContratCadre c : this.contratsEnCours) { //on base le prix des fèves sur la moyenne pondérale des prix de contrat cadre par lesquels on les achète
+			if (c.getProduit().equals(feve_utilise)) {
+				i += 1;
+				prixtot += c.getPrix();
+			}
+		}
+	
+		if (i == 0.0) { //si on a pas de contrat cadre (au début) pour les fèves, on se base sur le cours de la bourse pour des F_HQ
+			if (feve_utilise.isEquitable() == true ) {
+				prix = bourse.getCours(Feve.F_HQ).getValeur()*2;
+			} else {
+				prix = bourse.getCours(feve_utilise).getValeur()*1.5;
+			}	
+		} else {
+			prix = prixtot/i;	
+		}
+	
+		if (prixPrecedentF.get(N)==null) {	
+			if (prixPropose < prix) {
+				return prixPropose;
+			} else {
+				prixPrecedentF.put(N,prix);
+				return prix;
+			}
+		} else {
+			if (prixPropose > prixPrecedentF.get(N)) {
+				if ((prixPropose+prixPrecedentF.get(N))/2 <= prix*1.2){
+					prixPrecedentF.replace(N,(prixPropose+prixPrecedentF.get(N))/2);
+					return prixPrecedentF.get(N);
+				} else if ((prixPropose+2*prixPrecedentF.get(N))/3 <= prix*1.2){
+					prixPrecedentF.replace(N,(prixPropose+2*prixPrecedentF.get(N))/3);
+					return prixPrecedentF.get(N);
+				} else if ((prixPropose+3*prixPrecedentF.get(N))/4 <= prix*1.2){
+					prixPrecedentF.replace(N,(prixPropose+3*prixPrecedentF.get(N))/4);
+					return prixPrecedentF.get(N);
+				} else {
+					prixPrecedentF.replace(N, prix*1.2);
+					return prixPrecedentF.get(N);
+				}
+			} else {
+				return prixPropose;
+			}
+		}
+	}
+		
+	
+		/*
 		if (((Feve)contrat.getProduit()).isEquitable()) { // pas de cours en bourse
 			double max = bourse.getCours(Feve.F_MQ).getMax()*1.25;
 			double alea = Filiere.random.nextInt((int)max);
@@ -115,7 +199,7 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		}
 	}
 	
-	
+	*/
 	
 	
 	
@@ -149,7 +233,19 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		}
 		return res;
 	}
+	
+	public double getQuantiteAuStep (Feve f) {
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if (c.getProduit().equals(f)) {
+				res+=c.getQuantiteALivrerAuStep();
+			}
+		}
+		return res;
+	}
 
+
+	
 	public double restantAPayer() {
 		double res=0;
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
@@ -158,9 +254,28 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		return res;
 	}
 	
+	public double restantALivrerDeTypeAuStep (Chocolat choco) { //permet d'obtenir le nombre de chocolat d'un type à livrer en CC, utile pour les CC de marque distributeur
+		double res = 0;
+		for (ExemplaireContratCadre c : this.contratsEnCours) {
+			if ((c.getProduit().getType().equals("ChocolatDeMarque")) && ((ChocolatDeMarque)(c.getProduit())).getChocolat().equals(choco)) {
+					res+=c.getQuantiteALivrerAuStep();
+			}
+		} 
+		return res;
+	}
 	
-	
-	
+	public double BesoinDeFeve(Feve f) {
+		double BesoinPourChoco = 0.0;
+		for (ExemplaireContratCadre contratC : this.contratsEnCours) {
+			if ( contratC.getProduit().getType().equals("ChocolatDeMarque") ) {
+				Chocolat c = ((ChocolatDeMarque)(contratC.getProduit())).getChocolat();
+				if ( (c.getGamme().equals(f.getGamme())) && (c.isBio() == f.isBio()) && (c.isEquitable() == f.isEquitable())) {
+					BesoinPourChoco += restantALivrerDeTypeAuStep( ((ChocolatDeMarque)(contratC.getProduit())).getChocolat() ) / (this.pourcentageTransfo.get(f).get(c));
+				}
+			}
+		}
+		return BesoinPourChoco;
+	}
 	
 	
 	//Next
@@ -171,24 +286,20 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 		
 		
 		List<Feve> fInteresse = new LinkedList<Feve>();
-		fInteresse.add(Feve.F_HQ_BE);
+		//fInteresse.add(Feve.F_HQ_BE);
 		fInteresse.add(Feve.F_HQ);
-				for (Feve f : fInteresse) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve	
-					double alivrer = 0.0; //quantité à livrer de fèves
-					for (ChocolatDeMarque c : chocolatCocOasis) { //on ne regarde que les chocolats CocOasis car on ne fait pas de choco distributeurs HQ ou HQ_BE
-						if ( (f.getGamme() == c.getGamme()) && (f.isBio() == c.isBio()) && (f.isEquitable() == c.isEquitable()) ){
-							for (ExemplaireContratCadre contrat : this.contratsEnCours) {
-								if (contrat.getProduit().equals(c)) {
-									alivrer = alivrer + contrat.getQuantiteRestantALivrer()/(this.pourcentageTransfo.get(f).get(c.getChocolat()));
-									}
-							}
-						}
-					}
+		fInteresse.add(Feve.F_MQ);
+		fInteresse.add(Feve.F_HQ_BE);
+				for (Feve f : fInteresse) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 					
+					double BesoinPourChoco = 0.0; //quantité à livrer de fèves
 					
-					if (stockFeves.get(f)+restantDu(f)< Math.min(10000, alivrer + 10000 - restantDu(f) ) ) { 
+					BesoinPourChoco = BesoinDeFeve(f);
+
+					
+					if (stockFeves.get(f)+this.getQuantiteAuStep(f) - BesoinPourChoco < 10000 ) { 
 						this.journalACC.ajouter("   "+f+" suffisamment peu en stock/contrat pour passer un CC");
-						double parStep = Math.max(900, (21200-stockFeves.get(f)-restantDu(f))/12); // au moins 900
+						double parStep = Math.max(500, (1000-this.getQuantiteAuStep(f)+BesoinPourChoco)); // au moins 900
 						Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep);
 						List<IVendeurContratCadre> vendeurs = supCC.getVendeurs(f);
 						if (vendeurs.size()>0) {
@@ -221,7 +332,9 @@ public class Transformateur4AcheteurContratCadre extends Transformateur4Acheteur
 			}
 		}
 		for (ExemplaireContratCadre c : this.contratsTermines) {
-			journalACC.ajouter("Archivage du contrat "+c);
+			if (c.getProduit().getType().equals("Feve")) {
+				journalACC.ajouter("Archivage du contrat "+c);
+			}
 			this.contratsEnCours.remove(c);
 		}
 		this.journalACC.ajouter("=================================");

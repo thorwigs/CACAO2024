@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
@@ -32,7 +33,10 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected int cryptogramme;
 	private Journal journal;
 	private double coutStockageTransfo; //pour simplifier, on aura juste a appeler cette variable pour nos coût de stockage
+	
 	protected List<Feve> lesFeves; //la liste de toutes les fèves qui existent
+	protected List<Chocolat> lesChocolats; //la liste de tous les chocolats qui existent
+	
 	protected HashMap<Feve, Double> stockFeves; //un truc qui contiendra tout nos stocks pour chaque fèves
 	protected HashMap<Chocolat, Double> stockChoco; //idem pour les chocolats, donc on aura 2 chocos (un BQ/MH et un HQ)
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; //idem pour les chocolat de marques, donc on aura un seul choco, le HQ de stockChoco une fois qu'on lui aura apposé la marque Mirage
@@ -54,14 +58,20 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 	protected double tauxproductionemploye ; //le taux qui permet de savoir ce qu'on peut produire avec nos employés
 	protected HashMap<ChocolatDeMarque, Double> coutproduction_tonne_marque_step ;//représente le cout de prod pour 1 tonne de choco_marque pour 1 step, sera réinitialisé à chaque fois dans transformation
 	protected HashMap<ChocolatDeMarque,Double> production_tonne_marque_step ;//représente la quantite produite d'un chocolat à ce step, sera réinitialisé dans transformation
-
+	
+	
+	protected double totalBesoin;
+	protected double peutproduireemploye;
+	
+	protected List<ExemplaireContratCadre> contratsEnCours; // les contrats cadre en cours
+	
 	public Transformateur4Acteur() {
 		this.journal = new Journal(this.getNom()+" journal", this);
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		
-		
+		this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.chocolatCocOasis = new LinkedList<ChocolatDeMarque>();
@@ -87,13 +97,20 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 			this.journal.ajouter("   - "+f);
 			
 		}
+		
+		this.lesChocolats = new LinkedList<Chocolat>();
+		this.journal.ajouter("les Feves sont :");
+		for (Chocolat c : Chocolat.values()) {
+			this.lesChocolats.add(c);
+			this.journal.ajouter("   - "+c);
+		}
 		  
 		//////////a changer, pour l'instant on met au départ 20000 de chaque fèves dans nos stocks
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			if (f == Feve.F_HQ || f == Feve.F_HQ_BE || f == Feve.F_MQ) {
-				this.stockFeves.put(f, 11000.0);
-				this.totalStocksFeves.ajouter(this, 11000.0, this.cryptogramme);
+			if ( f.equals(Feve.F_HQ) || f.equals(Feve.F_HQ_BE) || f.equals(Feve.F_MQ) ) {
+				this.stockFeves.put(f, 000.0);
+				this.totalStocksFeves.ajouter(this, 000.0, this.cryptogramme);
 				this.journal.ajouter("ajout de 11000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 			} else {
 				this.stockFeves.put(f, 0.0);
@@ -123,36 +140,37 @@ public class Transformateur4Acteur implements IActeur, IFabricantChocolatDeMarqu
 		//ici les chocolats n'ont pas encore de marque, on ne leur apose une marque que à la vente
 		//Pour l'instant nos chocolats hors Mirage sont des chocolats MQ
 
-		this.stockChoco.put(Chocolat.C_MQ, 7000.0);
-		this.totalStocksChoco.ajouter(this, 7000.0, this.cryptogramme);
+		this.stockChoco.put(Chocolat.C_MQ, 000.0);
+		this.totalStocksChoco.ajouter(this, 000.0, this.cryptogramme);
 		this.journal.ajouter("ajout de 7000 de "+ Chocolat.C_MQ +" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 
 
 		//on pourra rajouter d'autre chocolats que choco1 = mirage , sachant que mirage est le premier element de cette liste
 		//ici on parle directement du chocolat CocOasis on peut donc aposer notre marque
 		for (ChocolatDeMarque c : chocolatCocOasis) {
-			this.stockChocoMarque.put(c, 7000.0); //le premier element de stockchocomarque correspond a mirage
-			this.totalStocksChocoMarque.ajouter(this, 7000.0, cryptogramme);
+			this.stockChocoMarque.put(c, 000.0); //le premier element de stockchocomarque correspond a mirage
+			this.totalStocksChocoMarque.ajouter(this, 000.0, cryptogramme);
 			this.journal.ajouter(" stock("+ c +")->"+this.stockChocoMarque.get(c));
 		}
 		
+		double conversion = 1.25; // correspond a une transformation avec 80% de choco
 		
 		//on créé la Hashmap de pourcentageTransfo, qu'on va compléter ensuite avec les infos connues par tout le monde ; ne va peut être pas servir...
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
-		double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
+		//double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_HQ_BE).put(Chocolat.C_HQ_BE, conversion);// la masse de chocolat obtenue est plus importante que la masse de feve vue l'ajout d'autres ingredients
 		this.pourcentageTransfo.put(Feve.F_HQ_E, new HashMap<Chocolat, Double>());
 		this.pourcentageTransfo.get(Feve.F_HQ_E).put(Chocolat.C_HQ_E, conversion);
 		this.pourcentageTransfo.put(Feve.F_HQ, new HashMap<Chocolat, Double>());
 		this.pourcentageTransfo.get(Feve.F_HQ).put(Chocolat.C_HQ, conversion);
 		this.pourcentageTransfo.put(Feve.F_MQ_E, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
+		//conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
 		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
 		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
 		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
+		//conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 		
 					

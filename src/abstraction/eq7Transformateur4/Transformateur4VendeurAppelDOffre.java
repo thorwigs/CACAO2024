@@ -70,12 +70,12 @@ public class Transformateur4VendeurAppelDOffre extends Transformation2 implement
 			return null;
 		}
 		
-		if ((this.chocolatCocOasis.contains(cm))  && (stockChocoMarque.get(cm) > restantALivrer(cm)+ 20000)) { //Nous ne vendons que nos sur-stocks en faisant attention a ne pas vendre ce que nous devons fournir en CC
+		if ((this.chocolatCocOasis.contains(cm))  && (stockChocoMarque.get(cm) > restantALivrer(cm)+ 10000)) { //Nous ne vendons que nos sur-stocks en faisant attention a ne pas vendre ce que nous devons fournir en CC
 			if (prixAO.get(cm).size()==0) {
 				BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 				double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
 				if (cm.getChocolat().getGamme()==Gamme.HQ) {
-					px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+					px = bourse.getCours(Feve.F_MQ).getMax()*2;
 				} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
 					px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
 				}
@@ -84,13 +84,13 @@ public class Transformateur4VendeurAppelDOffre extends Transformation2 implement
 				return new OffreVente(offre, this, cm, prixMoyen(cm)*1.05);
 			}
 			
-		} else if ((this.chocolatDistributeur.contains(cm))  && (stockChoco.get(cm.getChocolat()) > restantALivrer(cm)+ 20000)){
+		} else if ((this.chocolatDistributeur.contains(cm))  && (stockChoco.get(cm.getChocolat()) > restantALivrer(cm)+ 10000)){
 		
 			if (prixAO.get(cm).size()==0) {
 				BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 				double px = bourse.getCours(Feve.F_MQ).getMax()*1.75;
 				if (cm.getChocolat().getGamme()==Gamme.HQ) {
-					px = bourse.getCours(Feve.F_MQ).getMax()*2.5;
+					px = bourse.getCours(Feve.F_HQ).getMax()*2;
 				} else if (cm.getChocolat().getGamme()==Gamme.BQ) {
 					px = bourse.getCours(Feve.F_BQ).getMax()*1.75;
 				}
