@@ -44,7 +44,7 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 			}
 			return somme/prix.size();
 		} else {
-			return 0.0;
+			return PRIX_DEFAUT;
 		}
 	}
 
@@ -63,6 +63,12 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 		if (!(stockChocoMarque.keySet().contains(cm))) {
 			return null;
 		}
+		
+		// Vérification que l'on a suffisament en stock du chocolat par rapport aux
+		if (this.stockChocoMarque.get(cm).getValeur() - this.demandeCC.get(cm.getGamme()) < offre.getQuantiteT()) {
+			return null;
+		}
+		
 		// Si pas d'offre auparavant-> on reg la bourse pour donner un prix
 		//System.out.println(prixAO.get(cm)+" ; "+cm);
 		if (prixAO.get(cm).size()==0) {

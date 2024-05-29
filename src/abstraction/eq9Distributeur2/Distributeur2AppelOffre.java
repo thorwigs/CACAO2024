@@ -35,6 +35,7 @@ public abstract class Distributeur2AppelOffre extends Distributeur2ContratCadre 
 			
 			if (QuantitePrix<rapportmin) {
 				propRetenue = proposition;
+				rapportmin=QuantitePrix;
 			}
 		}
 		return propRetenue;

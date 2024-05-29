@@ -36,7 +36,7 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 		double prixMoyen = 0;
 		int nbPrix = 0;
 		
-		for(ExemplaireContratCadre c :this.contratsEnCours) {
+		for(ExemplaireContratCadre c :this.contratsEnCoursVente) {
 			if(c.getProduit() == choco) {
 				for(double p: c.getListePrix()) {
 					prixMoyen += p;
@@ -52,7 +52,10 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 		if(choco.getGamme()==Gamme.HQ && this.stockChocoMarque.keySet().contains(choco)) {
-			return this.stockChocoMarque.get(choco).getValeur() * this.pourcentageVenteDirecte;
+			if (this.stockChocoMarque.get(choco).getValeur() - this.demandeCC.get(choco.getGamme()) > this.stockChocoMarque.get(choco).getValeur() * this.pourcentageVenteDirecte) {
+				return this.stockChocoMarque.get(choco).getValeur() * this.pourcentageVenteDirecte;
+			}
+			return Math.max(this.stockChocoMarque.get(choco).getValeur() - this.demandeCC.get(choco.getGamme()), 0);
 		}
 		return 0;
 	}
