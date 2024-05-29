@@ -84,7 +84,8 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 		//	}
 		//}
 
-		if (stockFeves.get(f)+this.getQuantiteAuStep(f)+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() - BesoinPourChoco < 10000) {
+		if ((stockFeves.get(f)+this.getQuantiteAuStep(f)+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() - BesoinPourChoco < 10000)
+				&& (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() <= 4000)){
 			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
 			|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) { //contrat de minimum 12 steps
 				if (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() < 100) { //minimum 1000 T par steps
@@ -99,6 +100,15 @@ public class Transformateur4AcheteurContratCadre extends Transformation2 impleme
 					return contrat.getEcheancier();
 				}
 			}
+		} else if ((stockFeves.get(f)+this.getQuantiteAuStep(f)+contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() - BesoinPourChoco < 10000)
+				&& (contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances() > 4000)) {
+			if (contrat.getEcheancier().getStepFin()-contrat.getEcheancier().getStepDebut()<11
+					|| contrat.getEcheancier().getStepDebut()-Filiere.LA_FILIERE.getEtape()>8) { //contrat de minimum 12 steps
+							return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, 4000 );
+					} else { // les volumes peuvent être acceptable, la duree et le debut aussi
+							return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, contrat.getEcheancier().getNbEcheances(), 4000 );
+					}
+
 		} else { //nous ne sommes pas en besoin de feve 
 			return null;
 			//double marge = 15000 - stockFeves.get((Feve)(contrat.getProduit())) - restantDu((Feve)(contrat.getProduit()));
