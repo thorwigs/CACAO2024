@@ -56,8 +56,8 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 		if (quantiteEnT!=0) { 
 			double Seuil = getCoutUnitaireProduction(f);
-			System.out.println("seuil"+Seuil);
-			System.out.println("cours"+cours);
+			//System.out.println("seuil"+Seuil);
+			//System.out.println("cours"+cours);
 		
 
 			if (f.getGamme()==Gamme.MQ) {

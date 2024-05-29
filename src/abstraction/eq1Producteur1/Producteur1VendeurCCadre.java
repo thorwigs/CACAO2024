@@ -73,7 +73,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 					journalCoC.ajouter("   pas d'acheteur");
 				}
 			}
-			System.out.println("size= "+this.contratsEnCours.size());
+			//System.out.println("size= "+this.contratsEnCours.size());
 
 		}
 	}
@@ -168,7 +168,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		}
 		Feve f = (Feve) produit;
 		Double stockdispo = stock.get((Feve) produit).getValeur()-restantDu((Feve) produit);
-		if (stockdispo < 600) { //Au moins 50 tonnes par step
+		if (stockdispo < 500) { //Au moins 50 tonnes par step
 			journalCoC.ajouter("Je n'ai que" +stockdispo);
 			return null;
 		}
