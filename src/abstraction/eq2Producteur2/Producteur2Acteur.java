@@ -315,7 +315,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	 */
 	public void DebiteCoutParStep() {
 		retireArgent(this.cout_total_stock(), "coût des stocks");	
-		retireArgent(this.cout_humain_par_step(), "coût humain");	
+		retireArgent(this.cout_humain_par_step(), "coût humain");
 		retireArgent(this.cout_plantation(), "coût de la plantation");	
 	}
 

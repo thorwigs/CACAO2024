@@ -261,7 +261,7 @@ public abstract class Producteur2VendeurCCadre extends Producteur2VendeurBourse 
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)((stock.get((Feve)produit)-restantDu((Feve)produit)/12)));
 					}
 				}
-			
+				journalCC.ajouter(Color.GREEN, this.getColor(), "   contrat signe");
 				journalCC.ajouter("      j'accepte l'echeancier");
 				return res;
 	}
