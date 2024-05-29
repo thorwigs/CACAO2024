@@ -57,7 +57,7 @@ public class Transformateur2VendeurCCadre extends Transformateur2AcheteurCCadre 
 							}
 						}
 					}
-					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+" acheteurs potentiels");
+					journalCC.ajouter("   "+acheteur.getNom()+" retenu comme acheteur parmi "+acheteurs.size()+"acheteurs potentiels");
 					ExemplaireContratCadre contrat = supCC.demandeVendeur(acheteur, this, cm, e, cryptogramme, false);
 					if (contrat==null) {
 						if (this.BlackListAcheteur.containsKey(acheteur)) {
