@@ -31,7 +31,7 @@ public class Producteur1Acteur implements IActeur {
 	//new stuff I added : Abdo
 	private double coutStockage;
 	
-	private double coutUnitaireProductionBQ = 1.0;
+	private double coutUnitaireProductionBQ = 1;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
 	protected HashMap<Feve, Double> prodParStep;

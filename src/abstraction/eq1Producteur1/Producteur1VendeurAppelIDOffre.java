@@ -69,8 +69,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	/**
 	 *@author youssef ben abdeljelil*/
 	public double revenus_bourse_seuil_AO(AppelDOffre offre,BourseCacao bourse) {
-
-
+		
+		
 		return bourse.getCours((Feve)(offre.getProduit())).getMax()*offre.getQuantiteT();
 		//évaluer les revenus si on vendait ces quantités en bourse
 	}
