@@ -13,7 +13,11 @@ import abstraction.eqXRomu.produits.IProduit;
 public abstract class Producteur3Production extends Producteur3Plantation { 
 	abstract void deleteAcheteurs(IAcheteurBourse acheteur);
 	abstract void deleteVendeurs(IVendeurBourse vendeur);
-	
+	/**
+	 * @author Gabin
+	 * partie relative à la quantité produite, aux délais, 
+	 * aux saisons. Mon bébé !
+	 */
 	//tonne produite par hectare lors d'un step
 	protected double T_ha_BQ = 28.125/1000 ;	//avec pesticide
 	protected double T_ha_MQ = 26.5625/1000 ;
