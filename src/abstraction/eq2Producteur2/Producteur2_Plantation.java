@@ -29,8 +29,8 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	protected static final int PRIX_HECTARE_MQ = 1000;
 	protected static final int PRIX_HECTARE_HQ = 1500;
 	
-	protected double nb_hectares_max;	
 	protected double nb_nouveaux_hectares; // hectares nouvellement plantés sur 2 semaines
+
 
 	// Simplement pour l'initialisation de la plantation
 	protected int pourcentage_HQ;
@@ -91,7 +91,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
         }
         plantation.put(Feve.F_HQ,hectare_HQ);
 
-        //
         HashMap<Integer, Double> hectare_MQ = new HashMap<>();
 
         for(int i  = 0; i < 40; i++) {
@@ -100,20 +99,6 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
         }
         plantation.put(Feve.F_MQ,hectare_MQ);
     }
-	 
-	/** Getter
-	 * @author Anthony
-	 */
-	public double getNb_hectares_max() {
-		return this.nb_hectares_max;
-	}
-
-	/** Setter
-	 * @author Anthony
-	 */
-	public void setNb_hectares_max(double nb_hectares_max) {
-		this.nb_hectares_max = nb_hectares_max;
-	}
 
 	/** Getter
 	 * @author Anthony
@@ -199,19 +184,34 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	 * @author Anthony
 	 */
 	public void planter(double nb_hectares, Feve f) {
-		if (getHectaresTotal(this.cryptogramme) + nb_hectares > this.nb_max_hectares) { //achat impossible
-			this.journal.ajouter("on ne peut pas acheter plus de terrain.");
-			return;
+		// Il n'y a pas d'hectares MQ_E ou HQ_E donc il faut définir une nouvelle variable
+		Feve qualite;
+		if (f == Feve.F_HQ || f == Feve.F_HQ_E) {
+			qualite = Feve.F_HQ;
+		}
+		else if (f == Feve.F_MQ || f == Feve.F_MQ_E) {
+			qualite = Feve.F_MQ;
 		}
 		else {
+			qualite = Feve.F_BQ;
+		}
 		
-			// Il n'y a pas d'hectares MQ_E ou HQ_E donc il faut définir une nouvelle variable
-			Feve qualite;
-			if (f == Feve.F_HQ || f == Feve.F_HQ_E) {
-				qualite = Feve.F_HQ;
-			}
-			else if (f == Feve.F_MQ || f == Feve.F_MQ_E) {
-				qualite = Feve.F_MQ;
+		if (this.plantation.containsKey(annee_actuelle + DUREE_VIE)) {
+			double deja_achetes_cette_annee = this.plantation.get(qualite).get(annee_actuelle + DUREE_VIE);
+			plantation.get(qualite).put(annee_actuelle + DUREE_VIE, deja_achetes_cette_annee + nb_hectares);
+		}
+		else {
+			plantation.get(qualite).put(annee_actuelle + DUREE_VIE, nb_hectares);
+		}
+		if (qualite == Feve.F_HQ) {
+			// On ne fait que de la haute qualité équitable
+			this.embauche((int) nb_hectares, "adulte équitable");
+			cout_du_tour = cout_du_tour + PRIX_HECTARE_HQ * nb_hectares; 
+		}
+		else {
+			this.embauche((int) nb_hectares, "adulte");
+			if (qualite == Feve.F_BQ) {
+				cout_du_tour = cout_du_tour + PRIX_HECTARE_BQ * nb_hectares; 
 			}
 			else {
 				qualite = Feve.F_BQ;
@@ -312,7 +312,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.prodParStep.put(Feve.F_HQ, production_HQ);
 	    this.prodParStep.put(Feve.F_HQ_E, production_HQ_E);
 	    
-	    ajout_plantation_journal(production_HQ,production_MQ,production_BQ);
+	    ajout_plantation_journal(production_HQ_E,production_MQ,production_BQ);
 	}
 	
 	/** Retourne le coût de plantation par rapport au nombre de nouveaux hectares plantés
@@ -383,7 +383,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	/** Ajoute les nouvelles informations sur les plantations au journal des plantations
 	 * @author Anthony
 	*/
-	public void ajout_plantation_journal(double prod_HQ, double prod_MQ, double prod_BQ){
+	public void ajout_plantation_journal(double prod_HQ_E, double prod_MQ, double prod_BQ){
 		this.journalPlantation.ajouter(" ");
 		this.journalPlantation.ajouter("------------ ETAPE " + Filiere.LA_FILIERE.getEtape() + " ---------------");
 		//this.journalPlantation.ajouter("Cout de la plantation : " + cout_plantation());
@@ -397,7 +397,7 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 		this.journalPlantation.ajouter("a ce tour on a produit :");
 		this.journalPlantation.ajouter(" .      " + prod_BQ + " tonnes de fèves de basse qualité");
 		this.journalPlantation.ajouter(" .      " + prod_MQ + " tonnes de fèves de moyenne qualité");
-		this.journalPlantation.ajouter(" .      " + prod_HQ + " tonnes de fèves de haute qualité");
+		this.journalPlantation.ajouter(" .      " + prod_HQ_E + " tonnes de fèves de haute qualité equitable");
 	}
 	
 	/** Méthode permettant de savoir quand il faut embaucher et planter en fonction de la quantité de stock restante
@@ -406,21 +406,20 @@ public abstract class Producteur2_Plantation extends Producteur2_MasseSalariale 
 	public void besoin_embauche() {
 		double stock_BQ = this.getQuantiteEnStock(Feve.F_BQ, this.cryptogramme);
 		double stock_MQ = this.getQuantiteEnStock(Feve.F_MQ, this.cryptogramme);
-		double stock_HQ = this.getQuantiteEnStock(Feve.F_HQ, this.cryptogramme);
 		double stock_HQ_E = this.getQuantiteEnStock(Feve.F_HQ_E, this.cryptogramme);
 		
-		if (stock_BQ < 10000) {
-			this.embauche((int) (this.getNb_Employes_total()*0.03), "adulte");
-			this.planter((int) (this.getNb_Employes_total()*0.03), Feve.F_BQ);	
+		if (stock_BQ < 1000) {
+			this.embauche((int) (this.getNb_Employes_total()*0.02), "adulte");
+			this.planter((int) (this.getNb_Employes_total()*0.02), Feve.F_BQ);	
 		}
-		if (stock_MQ < 10000) {
-			this.embauche((int) (this.getNb_Employes_total()*0.03), "adulte");
-			this.planter((int) (this.getNb_Employes_total()*0.03), Feve.F_MQ);
+		if (stock_MQ < 1000) {
+			this.embauche((int) (this.getNb_Employes_total()*0.02), "adulte");
+			this.planter((int) (this.getNb_Employes_total()*0.02), Feve.F_MQ);
 		}
 		
-		if (stock_HQ_E < 10000 && this.getPourcentage_equitable() < 20 ) {
-			this.embauche((int) (this.getNb_Employes_total()*0.03), "adulte équitable");
-			this.planter((int) (this.getNb_Employes_total()*0.03), Feve.F_HQ);
+		if (stock_HQ_E < 1000 && this.getPourcentage_equitable() < 20 ) {
+			this.embauche((int) (this.getNb_Employes_total()*0.02), "adulte équitable");
+			this.planter((int) (this.getNb_Employes_total()*0.02), Feve.F_HQ);
 		}
 	}
 	

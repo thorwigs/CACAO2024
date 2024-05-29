@@ -53,9 +53,9 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.tonnes_venduesCC =  new Variable("Tonnes livrées CC ", this);
 		this.tonnes_venduesBourse =  new Variable("Tonnes livrées Bourse ", this);
 
-		this.init_stock(Feve.F_BQ, 1); //103846153.8
-		this.init_stock(Feve.F_MQ, 1); //62115384.62
-		this.init_stock(Feve.F_HQ_E, 1); //3076923.076
+		this.init_stock(Feve.F_BQ, 102384.55); //103846153.8
+		this.init_stock(Feve.F_MQ, 38678.61); //62115384.62
+		this.init_stock(Feve.F_HQ_E, 2600.24); //3076923.076
 		
 		this.lot_to_hashmap();
 		
@@ -67,13 +67,13 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		for (Feve f : Feve.values()) {
 			if(f == Feve.F_BQ) {
-				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 102384.55));
 			}
 			else if(f == Feve.F_MQ) {
-				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 38678.61));
 			}
 			else if(f == Feve.F_HQ_E) {
-				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
 			}
 			else if (f != Feve.F_HQ_BE){
 				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
@@ -81,9 +81,7 @@ public abstract class Producteur2Acteur implements IActeur {
 			if (f != Feve.F_HQ_BE){
 				this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
 			}
-		}
-		
-		
+		}	
 	}
 	
 	/** Définition de méthodes abstraites
