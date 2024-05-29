@@ -26,6 +26,9 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 			return Chocolat.C_HQ_BE ;
 	}
 	
+	/**
+	 * @author Mahel
+	 */
 	public Feve Correspond(Chocolat c) {
 		
 		switch(  c ) {

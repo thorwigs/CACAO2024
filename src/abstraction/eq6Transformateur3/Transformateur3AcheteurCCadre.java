@@ -67,7 +67,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	
 	}
 	/**
-	 * @author Mahel et Thomas
+	 * @author Mahel
 	 * 
 	 */
 	public void next() {
@@ -180,22 +180,18 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		return jx;
 	}
 	/**
-	 * @author Thomas
+	 * @author Mahel
 	 */
 	public boolean achete(IProduit produit) {
-		/**if( ! produit.getType().equals("Feve")) {
+		if( ! produit.getType().equals("Feve")) {
 			return false;
 		}
-		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
-			if(Correspond(c.getChocolat())==produit) {
-				return stockChocoMarque.get(produit)+restantDu((Feve)produit)<50000;
+		for(Feve f : stockFeves.keySet()) {
+			if(f==produit) {
+				return stockFeves.get(produit)+restantDu((Feve)produit)<0000;
 			}
 		}
-		return false;*/
-		if (produit.getType().equals("Feve")) {
-			return ((Feve)produit)==Feve.F_MQ || ((Feve)produit)==Feve.F_MQ_E || ((Feve)produit)==Feve.F_BQ;
-		}
-	return false;
+		return false;
 	}
 	/**
 	 * @author Thomas
@@ -258,4 +254,5 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 		}
 	}
+
 }
