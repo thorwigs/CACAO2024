@@ -61,10 +61,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		
 
 			if (f.getGamme()==Gamme.MQ) {
-				//if(true) {
+				
 				
 				if(cours>= 1400) {
-					this.quantiteEnTMQ=0.4*quantiteEnT;
+					this.quantiteEnTMQ=0.4*quantiteEnT; // quantité mise à jour dans la classe vendeurAuxEncheres
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTMQ+" T de "+f);
 
 					return quantiteEnTMQ;
@@ -73,10 +73,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 				
 			}
 			if (f.getGamme()==Gamme.HQ) {
-				//if(true) {
+		
 				
 				if(cours>= 1700) {
-					this.quantiteEnTHQ=0.7*quantiteEnT;
+					this.quantiteEnTHQ=0.7*quantiteEnT; // quantité mise à jour dans la classe vendeurAuxEncheres
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+this.quantiteEnTHQ+" T de "+f);
 
 					return quantiteEnTHQ;
@@ -84,10 +84,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 			
 			}
 			if (f.getGamme()==Gamme.BQ) {
-				//if(true) {
+			
 				if(cours>= 1200) {
-					this.quantiteEnTBQ=0.3*quantiteEnT;
-					//double offre =  this.stock.get(f).getValeur()*(Math.min(cours, 3000)/3000.0);
+					this.quantiteEnTBQ=0.3*quantiteEnT;  // quantité mise à jour dans la classe vendeurAuxEncheres
+					
 					journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+quantiteEnTBQ+" T de "+f);
 					return quantiteEnTBQ;
 				}
@@ -105,6 +105,10 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		
 		
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
+		HashMap<Feve, Double> ajustements = new HashMap<>();
+		ajustements.put(f, 10.0);
+		adjustPlantationSize( ajustements);
+		
 		return 0;
 		
 
@@ -142,14 +146,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 
 
 	}
-	public void changePlant() {
-		double ameBQ = 0; double ameMQ= 0; double ameHQ = 0;
-		if (bourseBQ.size() > 12) {
-			for (int i = 0; i < bourseBQ.size()-1;i++) {
-				ameBQ += (bourseBQ.get(i+1)-bourseBQ.get(i+1))/bourseBQ.get(i);
-			}
-		}
-	}
+	
 	
 	/**
 	 * Renvoie les journaux de l'acteur, y compris le journal de la bourse.
@@ -159,15 +156,19 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
 		List<Journal> res=super.getJournaux();
 		res.add(journalBourse);
 		return res;
+		
 	}
 	
+	
+	 
 	public void next() {
 		super.next();
-		changePlant();
+		
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		bourseBQ.add(bourse.getCours(Feve.F_BQ).getValeur());
 		bourseMQ.add(bourse.getCours(Feve.F_MQ).getValeur());
 		bourseHQ.add(bourse.getCours(Feve.F_HQ).getValeur());
+		
 		
 	}
 
