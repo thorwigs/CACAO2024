@@ -25,7 +25,6 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	protected static double PBQ = 0.7; 
 	protected static double PMQ = 0.28;
 	protected static double PHQ = 0.02;
-	protected static double rendSaison = 1;
 
 
 
@@ -82,6 +81,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		/*
 		 *  Si on n'a pas assez d'espace pour planter nos feves
 		 */
+		
 		for (Feve feve : adjustments.keySet()) {
 
 			double adjustment = adjustments.get(feve);
@@ -144,24 +144,30 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	 * methode qui tient compte des rendements selons la saison
 	 * @return double qui decrit le rendement, ce rendement 
 	 */
-	public double effet_saison() {
-		//de octobre a mars:grande récolte, 
-		//avril-septembre:baisse de récolte :Saison des pluies
-		int i = Filiere.LA_FILIERE.getEtape();
+	public double effet_saison(int i) {
+	    // De octobre à mars : grande récolte
+	    // Avril-septembre : baisse de récolte : Saison des pluies
 
-        int rang_step = i % 24;
-        if ((rang_step >= 18 && rang_step <= 23) || (rang_step >= 0 && rang_step <= 5)) {
-            return (random.nextInt((120 - 100) + 1) + 100) / 100.0; // forte saison, valeur random entre 1.00 et 1.20
-        } else if (rang_step == 6 || rang_step == 17) {
-            return (random.nextInt((110 - 90) + 1) + 90) / 100.0; // forte saison commence sa décroissance, valeur random entre 0.90 et 1.10
-        } else if (rang_step == 7 || rang_step == 16) {
-            return (random.nextInt((100 - 80) + 1) + 80) / 100.0; // forte saison encore en décroissance, valeur random entre 0.80 et 1.00
-        } else {
-            return (random.nextInt((80 - 55) + 1) + 55) / 100.0; // basse saison commence, valeur random entre 0.55 et 0.80
-        }
+	    int rang_step = i % 24;
+	    if ((rang_step >= 18 && rang_step <= 23) || (rang_step >= 0 && rang_step <= 5)) {
+	        // Forte saison, valeur random entre 1.00 et 1.20
+	        return (random.nextInt((120 - 100) + 1) + 100) / 100.0;
+	    } else if (rang_step == 6 || rang_step == 17) {
+	        // Forte saison commence sa décroissance, valeur random entre 0.90 et 1.10
+	        return (random.nextInt((110 - 90) + 1) + 90) / 100.0;
+	    } else if (rang_step == 7 || rang_step == 16) {
+	        // Forte saison commence encore en décroissance, valeur random entre 0.80 et 1.00
+	        return (random.nextInt((100 - 80) + 1) + 80) / 100.0;
+	    } else {
+	        // Basse saison commence, valeur random entre 0.55 et 0.80
+	        return (random.nextInt((80 - 55) + 1) + 55) / 100.0;
+	    }
+	}
 
 
-}
+
+
+
 
 
 
@@ -203,18 +209,14 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		aEmbaucher = (int) Math.round(what);
 
 		this.addQuantiteOuvrier(this.ouvrierEquitableNonForme,(int) Math.round(0.30 * aEmbaucher));
-		
 		aEmbaucher -= (int) Math.round(0.30 * aEmbaucher);
 		this.addQuantiteOuvrier(this.ouvrierNonEquitableNonForme,(int) Math.round(0.40 * aEmbaucher));
-
 		aEmbaucher -= (int) Math.round(0.40 * aEmbaucher);
 		if (this.get_Nombre_Enfant() != 0) {
 			this.addQuantiteOuvrier(this.enfant,(int) Math.round(0.30 * aEmbaucher));
 			aEmbaucher -= (int) Math.round(0.30 * aEmbaucher);
 		}
 		this.addQuantiteOuvrier(this.ouvrierNonEquitableNonForme,aEmbaucher);
-		
-	
 	}
 	/**
 	 * Méthode pour acheter une certaine quantité de terres.
@@ -297,11 +299,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		return production;
 	}
 
-	@Override
-	public void setProdTemps(HashMap<Feve, Double> d0, HashMap<Feve, Double> d1) {
-		// TODO Auto-generated method stub
 
-	}
 	public HashMap<Feve, Double> ProdParStep(){
 		/*
 		 * retourne la production par etape
@@ -358,14 +356,18 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	 * @return Un dictionnaire avec chaque fève et sa quantité de stock associée.
 	 */
 
-	@SuppressWarnings("static-access")
 	public void next() {
 		super.next();
 		this.maindoeuvre();
-		this.rendSaison = effet_saison();
+		if (Filiere.LA_FILIERE.getEtape() % 10 ==0) {
+			
+			this.formation((int) (this.get_Nombre_Ouvrier_NonEquitable_NonForme()*0.2), false);
+			
+			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), true);
+		}
 
 		if (Filiere.LA_FILIERE.getEtape()%12 == 0) {
-			this.achat((nombreHecMax-nombreHec)/2);
+			this.achat((nombreHecMax-nombreHec));
 		}
 
 

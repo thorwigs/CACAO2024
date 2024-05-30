@@ -26,8 +26,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	protected HashMap<Gamme, Double> PRIX_DEFAUT;
 	
 	protected int quantiteMiniCC = 1200;
-	protected int nombreMois = 3;
-	protected int stockCibleMini = 40000;
+	protected int nombreMois = 4;
+	protected int stockCibleMini = 75000;
 
 	protected List<ExemplaireContratCadre> contratsEnCoursVente;
 	protected List<ExemplaireContratCadre> contratsEnCoursAchat;

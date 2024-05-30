@@ -1,9 +1,8 @@
 package abstraction.eq1Producteur1;
 /**author Fatima-Ezzahra*/
-import java.util.ArrayList;
+
 import java.util.List;
 
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;

@@ -19,7 +19,6 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
     
     private double pourcentageVenteDirecte;
     private Journal journalVD;
-    private HashMap<ChocolatDeMarque, Double> quantiteEnStock;
 
     public Transformateur1Distribution() {
     	super();
@@ -29,10 +28,6 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
     
     public void initialiser() {
     	super.initialiser();
-    	this.quantiteEnStock = new HashMap<ChocolatDeMarque, Double>();
-    	for(ChocolatDeMarque cdm : this.stockChocoMarque.keySet()) {
-    		this.quantiteEnStock.put(cdm, 0.);
-    	}
     }
 
     public List<Journal> getJournaux() {
@@ -55,6 +50,7 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 			}
 		}
 		if (nbPrix != 0) {
+			this.journalVD.ajouter("prix moyen des contrats déjà passés" + (prixMoyen/nbPrix * 1.1));
 			return prixMoyen/nbPrix * 1.1;
 		} return PRIX_DEFAUT.get(choco.getGamme()) * 1.1;
 	}
@@ -67,14 +63,9 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 			if (this.stockChocoMarque.get(choco).getValeur() - this.demandeCC.get(choco.getGamme()) > this.stockChocoMarque.get(choco).getValeur() * this.pourcentageVenteDirecte) {
 				aVendre = this.stockChocoMarque.get(choco).getValeur() * this.pourcentageVenteDirecte;
 			} else {
-				aVendre = Math.max(this.stockChocoMarque.get(choco).getValeur() - this.demandeCC.get(choco.getGamme()), 0);
+				aVendre = Math.max(this.stockChocoMarque.get(choco).getValeur() - this.demandeCC.get(choco.getGamme()) * this.nombreMois, 0);
 			}
-		this.journalVD.ajouter("mise en vente de " + aVendre + "T de chocolat "+ choco + ", déjà en stock : "+this.quantiteEnStock.get(choco));	
-		}
-		if(this.quantiteEnStock.get(choco) != null) {
-			this.quantiteEnStock.put(choco, this.quantiteEnStock.get(choco) + aVendre);
-		} else {
-			this.quantiteEnStock.put(choco, aVendre);
+		this.journalVD.ajouter("mise en vente de " + aVendre + "T de chocolat "+ choco);	
 		}
 		return aVendre;
 	}
@@ -89,7 +80,6 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 		if (this.stockChocoMarque!=null && this.stockChocoMarque.keySet().contains(choco)) {
 			this.stockChocoMarque.get(choco).retirer(this, quantite);
 			this.totalStocksChocoMarque.retirer(this,  quantite, cryptogramme);
-			this.quantiteEnStock.put(choco, this.quantiteEnStock.get(choco) - quantite);
 			this.journalVD.ajouter("vente de "+quantite+" T de "+choco+" pour un prix de "+montant+" !");
 		}
 		

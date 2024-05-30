@@ -39,6 +39,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 
 	public static int score_seuil_blacklist=1000;//score a partir duquel un achteur est ajouté au blacklist
 	private Journal journalAO;
+	@SuppressWarnings("unused")
 	private SuperviseurVentesAO supAO;
 
 

@@ -373,7 +373,7 @@ public class Distributeur1Vendeur extends Distributeur1Acteur implements IDistri
 			}
 
 			this.aVendu.replace(choc, 0);
-		}		
+		}
 		Filiere.LA_FILIERE.getBanque().payerCout(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme, "Coût Fixe", this.Cout_Fixe());
 	}
 	
