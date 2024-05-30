@@ -39,6 +39,7 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 
 	public static int score_seuil_blacklist=1000;//score a partir duquel un achteur est ajouté au blacklist
 	private Journal journalAO;
+	@SuppressWarnings("unused")
 	private SuperviseurVentesAO supAO;
 
 
@@ -69,8 +70,8 @@ public class Producteur1VendeurAppelIDOffre extends Producteur1VendeurCCadre imp
 	/**
 	 *@author youssef ben abdeljelil*/
 	public double revenus_bourse_seuil_AO(AppelDOffre offre,BourseCacao bourse) {
-
-
+		
+		
 		return bourse.getCours((Feve)(offre.getProduit())).getMax()*offre.getQuantiteT();
 		//évaluer les revenus si on vendait ces quantités en bourse
 	}

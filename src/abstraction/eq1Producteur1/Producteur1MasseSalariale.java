@@ -7,16 +7,12 @@
  */
 package abstraction.eq1Producteur1;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.produits.Feve;
 
 
 
@@ -48,7 +44,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	protected Ouvrier ouvrierEquitableNonForme;
 	protected Ouvrier ouvrierNonEquitableForme;
 	protected Ouvrier ouvrierNonEquitableNonForme;
-
+	protected static double coutFormation = 2 ; 
 	/**
 	 * @author haythem
 	 */
@@ -83,9 +79,9 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		this.salaire.add(2.4);
 		this.salaire.add(1.8);
 
-		
 
-		
+
+
 		this.types_ouvriers.add(enfant);
 		this.types_ouvriers.add(ouvrierEquitableForme);
 		this.types_ouvriers.add(ouvrierEquitableNonForme);
@@ -364,7 +360,6 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 			int etape = Filiere.LA_FILIERE.getEtape();
 			int annee = Filiere.LA_FILIERE.getAnnee(etape);
 
-			int enfants = this.get_Nombre_Enfant();
 			int size = this.croissanceParStep.size();
 			boolean croissant = this.croissanceParStep.get(size-1)>0 && this.croissanceParStep.get(size-2)>0 && this.croissanceParStep.get(size-3)>0;
 
@@ -397,65 +392,60 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 * @author youssef
 	 */
 
-	public void formation (int nbr_à_former,boolean equitable) {
-		//on suppose qu'un ouvrier peut encore travailler lors de sa formation
-		int quantite_max_a_former_par_step=70;
-		int nbr_max_a_former=nbr_à_former;
+	@SuppressWarnings("static-access")
 
-		if (nbr_à_former>quantite_max_a_former_par_step) {
-			
-			nbr_max_a_former=quantite_max_a_former_par_step;
-			
-		}
+	public void formation(int nbrAFormer, boolean equitable) {
+	    // on suppose qu'un ouvrier peut encore travailler lors de sa formation
+	    int quantiteMaxAFormerParStep = (int) (0.1 * (this.get_Nombre_Ouvrier_NonEquitable_NonForme() + this.get_Nombre_Ouvrier_Equitable_NonForme()));
+	    int nbrMaxAFormer = Math.min(nbrAFormer, quantiteMaxAFormerParStep);
+	    double coutTotalFormation = 0;
 
-		//changer la masse salariale
-		if (equitable ) {
-			Integer a =this.masseSalariale.get(ouvrierEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
-			this.masseSalariale.put(ouvrierEquitableForme, this.masseSalariale.get(ouvrierEquitableForme)+nbr_reel_a_former);
-			this.masseSalariale.put(ouvrierEquitableNonForme, this.masseSalariale.get(ouvrierEquitableNonForme)-nbr_reel_a_former);
-			int restant=nbr_reel_a_former;
-			ArrayList<Integer> anciennete_initiale=this.anciennete.get(2);
-			ArrayList<Integer> anciennete_finale=this.anciennete.get(1);
+	    if (equitable) {
+	        int a = this.masseSalariale.getOrDefault(ouvrierEquitableNonForme, 0);
+	        int nbrReelAFormer = Math.min(a, nbrMaxAFormer);
+	        coutTotalFormation = nbrReelAFormer * this.coutFormation;
 
+	        this.masseSalariale.put(ouvrierEquitableForme, this.masseSalariale.getOrDefault(ouvrierEquitableForme, 0) + nbrReelAFormer);
+	        this.masseSalariale.put(ouvrierEquitableNonForme, this.masseSalariale.getOrDefault(ouvrierEquitableNonForme, 0) - nbrReelAFormer);
 
-			int i=anciennete_initiale.size()-1;
-			while (restant>0 && i<anciennete_initiale.size()) {
-				int supprimes=Math.min(anciennete_initiale.get(i), restant);
-				anciennete_initiale.set(i, anciennete_initiale.get(i)-supprimes);
-				anciennete_finale.set(i, anciennete_finale.get(i)+supprimes);
-				restant=restant-supprimes;
-				i--;
+	        ArrayList<Integer> ancienneteInitiale = this.anciennete.get(2);
+	        ArrayList<Integer> ancienneteFinale = this.anciennete.get(1);
+	        int restant = nbrReelAFormer;
 
+	        for (int i = ancienneteInitiale.size() - 1; i >= 0 && restant > 0; i--) {
+	            int supprimes = Math.min(ancienneteInitiale.get(i), restant);
+	            ancienneteInitiale.set(i, ancienneteInitiale.get(i) - supprimes);
+	            ancienneteFinale.set(i, ancienneteFinale.get(i) + supprimes);
+	            restant -= supprimes;
+	        }
+	    } else {
+	        int a = this.masseSalariale.getOrDefault(ouvrierNonEquitableNonForme, 0);
+	        int nbrReelAFormer = Math.min(a, nbrMaxAFormer);
+	        coutTotalFormation = nbrReelAFormer * this.coutFormation;
 
+	        this.masseSalariale.put(ouvrierNonEquitableForme, this.masseSalariale.getOrDefault(ouvrierNonEquitableForme, 0) + nbrReelAFormer);
+	        this.masseSalariale.put(ouvrierNonEquitableNonForme, this.masseSalariale.getOrDefault(ouvrierNonEquitableNonForme, 0) - nbrReelAFormer);
 
+	        ArrayList<Integer> ancienneteInitiale = this.anciennete.get(4);
+	        ArrayList<Integer> ancienneteFinale = this.anciennete.get(3);
+	        int restant = nbrReelAFormer;
 
-			}
+	        for (int i = ancienneteInitiale.size() - 1; i >= 0 && restant > 0; i--) {
+	            int supprimes = Math.min(ancienneteInitiale.get(i), restant);
+	            ancienneteInitiale.set(i, ancienneteInitiale.get(i) - supprimes);
+	            ancienneteFinale.set(i, ancienneteFinale.get(i) + supprimes);
+	            restant -= supprimes;
+	        }
+	    }
 
-
-
-		}
-		else {
-
-			Integer a =this.masseSalariale.get(ouvrierNonEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
-			this.masseSalariale.put(ouvrierNonEquitableForme, this.masseSalariale.get(ouvrierNonEquitableForme)+nbr_reel_a_former);
-			this.masseSalariale.put(ouvrierNonEquitableNonForme, this.masseSalariale.get(ouvrierNonEquitableNonForme)-nbr_reel_a_former);
-			int restant=nbr_reel_a_former;
-			ArrayList<Integer> anciennete_initiale=this.anciennete.get(4);
-			ArrayList<Integer> anciennete_finale=this.anciennete.get(3);
-			int i=anciennete_initiale.size()-1;
-			while (restant>0 && i<anciennete_initiale.size()) {
-				int supprimes=Math.min(anciennete_initiale.get(i), restant);
-				anciennete_initiale.set(i, anciennete_initiale.get(i)-supprimes);
-				anciennete_finale.set(i, anciennete_finale.get(i)+supprimes);
-				restant=restant-supprimes;
-				i--;
-			}
-		}
-
-
+	    if (coutTotalFormation > 0) {
+	        Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Cout Total de formation des ouvriers", coutTotalFormation);
+	        this.journalOuvrier.ajouter("On a payé le coût suivant pour augmenter le rendement de certains ouvriers: " + coutTotalFormation);
+	    }
 	}
+
+	
+
 
 
 
@@ -493,6 +483,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		ordre=0;
 
 		this.updateAnciennete();
+
 
 		this.amelioration();
 	}

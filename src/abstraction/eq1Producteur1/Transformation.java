@@ -21,7 +21,9 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
-
+/*
+ * Author : Abderrahmane ER-RAHMAOUY
+ */
 public class Transformation extends Producteur1VendeurAuxEncheres implements IFabricantChocolatDeMarque, IMarqueChocolat{
 	protected Journal journalTransfo;
 	public HashMap<Chocolat, Variable > stockChoc;
@@ -34,6 +36,11 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 	protected boolean BeginHQ;
 
 	protected HashMap<Gamme, Boolean> beginning;
+	/**
+	 * This class is responsible for transforming the excess cacao beans into choclate
+	 * Due to time constraints and other factors it won't be used
+	 * 
+	 */
 
 
 	public Transformation() {
@@ -50,6 +57,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 			this.stockChoc.put(choc, new Variable("EQ1"+choc,this, 0));
 		}
 		this.Mmmm = new HashMap<ChocolatDeMarque, Variable>();
+		
 
 		this.stockChocMarque = new HashMap<ChocolatDeMarque, Double>();
 		//this.stockChocMarque.put(null, null);
@@ -79,8 +87,8 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 					ChocolatDeMarque cm= new ChocolatDeMarque(c, "AfriChoco", pourcentageCacao);
 					this.MamaChoco.add(cm);
-					this.Mmmm.put(cm, new Variable("EQ1"+cm,this, 0) );
-					this.stockChocMarque.put(cm, 0.0);
+					this.Mmmm.put(cm, new Variable("EQ1"+cm,this, 20000000) );
+					this.stockChocMarque.put(cm, 200000.0);
 
 				}
 			}
@@ -133,6 +141,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 		}
 
 	}
+	@SuppressWarnings({ "unused", "unlikely-arg-type" })
 	public void beginTran() {
 		this.checkStock();
 		for (Feve f : this.pourcentageTransfo.keySet()) {
@@ -153,11 +162,13 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 						double newChocoMarque = ((transfo*0.5)*this.pourcentageTransfo.get(f).get(c));
 						//this.stockChocMarque.put(, newChocoMarque);
 						System.out.println(newChoco);
-						this.stockChoc.get(c).setValeur(this, this.stockChoc.get(c).getValeur()+newChoco);
+						
+						//this.stockChoc.get(c).setValeur(this, this.stockChoc.get(c).getValeur()+newChoco/2);
 						for (ChocolatDeMarque cdm : this.Mmmm.keySet()) {
 							if (cdm.getGamme().equals(c.getGamme())) {
-								System.out.println("setting");
-								this.Mmmm.get(cdm).setValeur(this, newChocoMarque);
+								System.out.println("beofe"+this.Mmmm.get(cdm).getValeur());
+								this.Mmmm.get(cdm).ajouter(this, newChoco);
+								System.out.println("after"+this.Mmmm.get(cdm).getValeur());
 							}
 						}
 						//this.Mmmm.get(c).setValeur(this, newChocoMarque);
@@ -196,8 +207,8 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 
 		boolean acceptable = produit.getType().equals("ChocolatDeMarque")
 				&& ec.getQuantiteTotale()>=20  // au moins 100 tonnes par step pendant 6 mois
-				&& ec.getStepFin()-ec.getStepDebut()>=11   // duree totale d'au moins 12 etapes
-				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+8 // ca doit demarrer dans moins de 4 mois
+				&& ec.getStepFin()-ec.getStepDebut()>=5   // duree totale d'au moins 12 etapes
+				&& ec.getStepDebut()<Filiere.LA_FILIERE.getEtape()+100 // ca doit demarrer dans moins de 4 mois
 				&& ec.getQuantiteTotale()<stockChocMarque.get((ChocolatDeMarque)produit)-restantDutr((ChocolatDeMarque)produit);
 				if (!acceptable) {
 					if (!produit.getType().equals("ChocolatDeMarque") || stockChocMarque.get((ChocolatDeMarque)produit)-restantDutr((ChocolatDeMarque)produit)<20) {
@@ -231,13 +242,11 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 	}
 	public void next() {
 		super.next();
+		
 		this.checkStock();
 		this.beginTran();
 		this.MoneyBaby();
-		for (ChocolatDeMarque cdm : this.Mmmm.keySet()) {
-			System.out.println(cdm.getGamme());
-			System.out.println(this.Mmmm.get(cdm).getValeur());
-		}
+		
 		//System.out.println(this.BeginBQ);
 		//System.out.println(this.BeginMQ);
 		//System.out.println(this.BeginHQ);
@@ -268,8 +277,10 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 		return res;
 	}
 	public List<Variable> getIndicateurs(){
+		
 		List<Variable> res = super.getIndicateurs();
-		res.addAll(this.stockChoc.values());
+		//res.addAll(this.stockChoc.values());
+		res.addAll(this.Mmmm.values());
 		//res.addAll(this.stockChocMarque.values());
 		return res;
 	}
@@ -310,11 +321,12 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 			}
 
 
-			double stockActuel = stockChocMarque.get(produit);
+			double stockActuel = Mmmm.get(cdm).getValeur();
 			double aLivre = Math.min(quantite, stockActuel);
 			journalTransfo.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 			//stockChocMarque.get((ChocolatDeMarque)produit).setValeur(this, stockActuel-aLivre);
 			stockChocMarque.put((ChocolatDeMarque)produit, stockActuel-aLivre);
+			Mmmm.get(cdm).setValeur(this, stockActuel-aLivre);
 			//this.totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme)-aLivre, this.cryptogramme);
 			return aLivre;
 		}
@@ -369,7 +381,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 		if (s.equals("Feve")) {
 			Feve f = (Feve) produit;
 			this.stock.get(f);
-			if (this.stock.get(f).getValeur()>10) {
+			if (this.stock.get(f).getValeur()>100) {
 				return true;
 			}
 		}
@@ -377,7 +389,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 			ChocolatDeMarque c = (ChocolatDeMarque) produit;
 
 
-			if (this.stockChocMarque.keySet().contains(c)) {
+			if (this.Mmmm.keySet().contains(c)) {
 				return true;
 			}
 		}

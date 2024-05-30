@@ -193,10 +193,11 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public void Transformation(Feve f, double tonnes) {
 		Chocolat c = Chocolat.get(f.getGamme(), f.isBio(), f.isEquitable());
 		if (this.stockFeves.containsKey((Feve)f) & this.stockChoco.containsKey((Chocolat)c)){
+			double pourcentageCacao = this.pourcentageTransfo.get(f.get(f.getGamme(), f.isBio(), f.isEquitable())).get(c.get(c.getGamme(), c.isBio(), c.isEquitable()));
 			this.stockFeves.get((Feve)f).retirer(this, tonnes, this.cryptogramme); //Maj stock de feves 
 			this.totalStocksFeves.retirer(this, tonnes, this.cryptogramme);
-			this.stockChoco.get((Chocolat) c).ajouter(this, tonnes, this.cryptogramme); //Maj stock choco
-			this.totalStocksChoco.ajouter(this, tonnes, this.cryptogramme);
+			this.stockChoco.get((Chocolat) c).ajouter(this, tonnes*(1/pourcentageCacao), this.cryptogramme); //Maj stock choco
+			this.totalStocksChoco.ajouter(this, tonnes*(1/pourcentageCacao), this.cryptogramme);
 		}
 	}
 	/**
@@ -298,6 +299,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		if ((this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage>0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
 		}
+		this.JournalProduction.ajouter("Couts de stockage :"+this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme)*this.coutStockage);	
+
 		
 		
 		////////////////////////////////////////////////////
@@ -307,17 +310,20 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		double coutMasseSalariale = 0;
 		
 		/* Stratégie d'embauche/licenciement : 
-		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 20% de nos stocks.
-		 * 	   On embauche au maximum 2000 salarié par step
+		 * --> On embauche si notre capacité de transformation ne permet pas de transformer plus de 10% de nos stocks.
+		 * 	   On embauche au maximum 2000 salariés par step
+		 * 	   On n'embauche plus si on a plus de 17 000 salariés
 		 * --> On licencie si notre capacité de transformation est 2 fois supérieur à nos stocks.
 		 *     On licencie 30% de notre effectif
 		 */
 		
-		if (capaciteTransfoTotal < 0.2 * this.totalStocksFeves.getValeur()) {
-			int embauche =(int)((0.2 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
-			if (embauche> 2000){
-				embauche=2000;
-			}
+		if (capaciteTransfoTotal < 0.1 * this.totalStocksFeves.getValeur()) {
+			int embauche =(int)((0.1 * this.totalStocksFeves.getValeur() - capaciteTransfoTotal) / capaciteTransfo);
+			if (embauche > 2000) {
+				embauche = 2000;
+			}else if (this.NbSalaries > 17000) {
+				embauche = 0;
+			}	
 			this.NbSalaries += embauche;
 			this.JournalProduction.ajouter("On embauche"+embauche+"personnes");
 			coutMasseSalariale = NbSalaries * salaire;

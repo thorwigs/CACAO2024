@@ -1,7 +1,6 @@
 package abstraction.eq1Producteur1;
 /**@author Abderrahmane ER-RAHMAOUY*/
 import java.awt.Color;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,27 +10,19 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
-import java.util.ArrayList;
-import java.util.List;
 
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
 
 	protected int cryptogramme;
 	protected Journal journal;
-	//new stuff I added : Abdo
+	
 	private double coutStockage;
 	
-	private double coutUnitaireProductionBQ = 1.0;
+	private double coutUnitaireProductionBQ = 1;
     private double coutUnitaireProductionMQ = 1.5;
     private double coutUnitaireProductionHQ = 2.0;
 	protected HashMap<Feve, Double> prodParStep;
@@ -49,7 +40,12 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_normal;
 	protected int nb_equitable;
 	
-	
+	 /**
+     * Retourne le coût unitaire de production pour une fève donnée.
+     * 
+     * @param f la fève pour laquelle le coût unitaire de production est demandé.
+     * @return le coût unitaire de production de la fève.
+     */
 	public double getCoutUnitaireProduction(Feve f) {
 		if(f.getGamme()== Gamme.HQ) {
 			return this.coutUnitaireProductionHQ;
@@ -81,31 +77,29 @@ public class Producteur1Acteur implements IActeur {
 		
 	
 	
-	
+	/**
+     * Retourne la production par étape.
+     * 
+     * @return un HashMap contenant la production par étape.
+     */
 	public HashMap<Feve, Double> getProd(){
 		return this.prodParStep;
 	}
+	 /**
+     * Retourne le coût de stockage.
+     * 
+     * @return le coût de stockage.
+     */
 	public double getCoutStockage() {
 		return this.coutStockage;
 	}
 	 /**
      * Initialise l'acteur Producteur1.
      */
+	@SuppressWarnings("static-access")
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		/*
-		this.nb_enfants = 150;
-		this.liste_Ouvrier=new Producteru1MasseSalariale();
-		this.liste_Ouvrier.addOuvrier(nb_enfants,labourEnfant,false,false,true);
-		this.liste_Ouvrier.addOuvrier(nb_equitables,labourEquitable,true,false,false);
-		this.liste_Ouvrier.addOuvrier(nb_employees_non_equitable,labourNormal,false,false,false);
-		*/
-		/*
-		this.stockIni = new HashMap<Feve, Double>();
-		for (Feve feve : Feve.values()) {
-			this.stockIni.put(feve, 20000.0); //le nombre reste a changer
-		}
-*/
+	
 		
 		this.soldeInitiale = this.getSolde();
 		this.soldeParStep.add(this.soldeInitiale);
@@ -115,7 +109,9 @@ public class Producteur1Acteur implements IActeur {
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ1";
 	}
-	
+	 /**
+     * Calcule la croissance économique.
+     */
 	public void CroissanceEconomique() {
 		this.croissanceParStep = new ArrayList<Double>();
 		
@@ -137,7 +133,9 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
+	/**
+     * Effectue les opérations nécessaires à chaque étape de la simulation.
+     */
 	public void next() {
 		
        int etape = Filiere.LA_FILIERE.getEtape();
@@ -235,6 +233,11 @@ public class Producteur1Acteur implements IActeur {
 
 
 	/**@author Haythem */
+	/**
+     * Calcule les coûts de production.
+     * 
+     * @return le coût total de production.
+     */
 	protected double CoutsProd() {
 		double CoutProdBQ=0;
 		double CoutProdMQ=0;
@@ -258,23 +261,15 @@ public class Producteur1Acteur implements IActeur {
 	
 	
 	
-	public void embauche(int à_embaucher) {
-		
-	
-		
-			}
-	
-	public void licensier(int à_licensier) {
-		
-		
-		
-	}
-	
-	public void formation() {
-		
-		
-	}
+
 	@Override
+	/**
+     * Retourne la quantité en stock d'un produit donné.
+     * 
+     * @param p le produit.
+     * @param cryptogramme le cryptogramme.
+     * @return la quantité en stock du produit.
+     */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0.0;
 		

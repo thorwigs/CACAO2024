@@ -28,6 +28,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 	private SuperviseurVentesAO supAO;
 	protected Journal journalAO;
 	protected HashMap<Integer,OffreVente> choix;
+
 	
 	/**
 	 * @author Clement E.
@@ -47,7 +48,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		for (ChocolatDeMarque cm : this.stock_Choco.keySet()) {
 			this.prixRetenus.put(cm, new LinkedList<Double>());
 		}
-		this.choix = new HashMap<Integer,OffreVente>(); 
+		this.choix = new HashMap<Integer,OffreVente>();
 	}
 
 	/**
@@ -67,16 +68,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 			return null;
 		}
 		
-		
-/*		int parcourir=0; //permet de parcourir la liste des propositions pour trouver la bonne
-		while(choisi==-1 && parcourir<propositions.size()) {
-			if (propositions.get(0).getOffre().getProduit().equals(propositions.get(parcourir).getProduit())!=true) {
-				parcourir++;
-			}
-			else {
-				choisi=parcourir;
-			}  
-		} */
 		
 		int choisi=-1; // permet de connaître la proposition choisi à la fin, la moins chere, ou renverra -1 si pas d'offre correspondante
 		for (int i=0; i<propositions.size();i++) {
@@ -140,6 +131,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				}
 				
 				if (produit.getType().equals("ChocolatDeMarque")
+						&& this.banni.contains(produit)==false
 						&& this.stock_Choco.containsKey(produit)){
 					
 					double fluctuation = 1.0 ; 
@@ -153,34 +145,35 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 						fluctuation = 1.03;
 					}
 					
+					double r = Filiere.LA_FILIERE.getAttractivite((ChocolatDeMarque)produit)/this.attract_tot;
 					
 					ChocolatDeMarque choco = (ChocolatDeMarque)produit;
 					if (choco.getMarque()== "Chocoflow") {
-						return ((capaciteDeVente*0.20*fluctuation)/chocoProduits.size())-(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return r*((capaciteDeVente*0.20*fluctuation)/chocoProduits.size())-(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
 					}
 					if (choco.toString().contains("C_BQ")) {
 						double x = (capaciteDeVente*0.32*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return r*(x -(a+this.getQuantiteEnStock(choco,cryptogramme))) ;
 					}
 					if (choco.toString().contains("C_MQ_E")) {
 						double x = (capaciteDeVente*0.12*fluctuation)/this.nombreMarquesParType.get(choco.getChocolat());
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return r*(x -(a+this.getQuantiteEnStock(choco,cryptogramme))) ;
 					}
 					if (choco.toString().contains("C_MQ")) {
 						double x = (capaciteDeVente*0.12*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return r*(x -(a+this.getQuantiteEnStock(choco,cryptogramme))) ;
 					}
 					if (choco.toString().contains("C_HQ_BE")) {
 						double x = (capaciteDeVente*0.04*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return r*(x -(a+this.getQuantiteEnStock(choco,cryptogramme))) ;
 					}	
 					if (choco.toString().contains("C_HQ_E")) {
 						double x = (capaciteDeVente*0.08*fluctuation)/this.nombreMarquesParType.get(choco.getChocolat());
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return r*(x -(a+this.getQuantiteEnStock(choco,cryptogramme))) ;
 					}	
 					if (choco.toString().contains("C_HQ")) {
 						double x = (capaciteDeVente*0.12*fluctuation)/(this.nombreMarquesParType.get(choco.getChocolat())-1);
-						return x -(a+this.getQuantiteEnStock(choco,cryptogramme)) ;
+						return r*(x -(a+this.getQuantiteEnStock(choco,cryptogramme))) ;
 					}
 				}
 				return 0.0;
@@ -212,6 +205,10 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 		this.journalAO.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"=================================");
 		this.journalAO.ajouter("");
 
+		this.attract_tot=0.0;
+		for (ChocolatDeMarque choc : chocolats) {
+			this.attract_tot= this.attract_tot + Filiere.LA_FILIERE.getAttractivite(choc);
+		}
 	}
 
 }

@@ -5,15 +5,15 @@ package abstraction.eq1Producteur1;
 
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Random;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.Gamme;
 /**@author Abderrahmane Er-rahmaouy */
 public class Producteur1Plantation extends Producteur1MasseSalariale implements IPlantation{
 	protected double nombreHec = 3E6;
+	Random random = new Random();
 	protected double nombreHecMax = 5E6;
 	protected Journal journalPlantation;
 	protected HashMap<Feve, Double> plantation;
@@ -81,6 +81,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		/*
 		 *  Si on n'a pas assez d'espace pour planter nos feves
 		 */
+		
 		for (Feve feve : adjustments.keySet()) {
 
 			double adjustment = adjustments.get(feve);
@@ -112,7 +113,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		 */
 
 		double rendementPresent = this.get_Nombre_Enfant()+this.get_Nombre_Ouvrier_NonEquitable_NonForme()+(this.get_Nombre_Ouvrier_Equitable_Forme()*1.5+this.get_Nombre_Ouvrier_NonEquitable_Forme())*1.5+this.get_Nombre_Ouvrier_Equitable_NonForme();
-		double rendnecessaire = 0;
+		//double rendnecessaire = 0;
 		/*
 		if (rendementPresent < this.nombreHec) {
 
@@ -138,6 +139,35 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 
 		this.recruitWorkers(this.nombreHec-rendementPresent);
 	}	
+	/**
+	 * @author youssef
+	 * methode qui tient compte des rendements selons la saison
+	 * @return double qui decrit le rendement, ce rendement 
+	 */
+	public double effet_saison(int i) {
+	    // De octobre à mars : grande récolte
+	    // Avril-septembre : baisse de récolte : Saison des pluies
+
+	    int rang_step = i % 24;
+	    if ((rang_step >= 18 && rang_step <= 23) || (rang_step >= 0 && rang_step <= 5)) {
+	        // Forte saison, valeur random entre 1.00 et 1.20
+	        return (random.nextInt((120 - 100) + 1) + 100) / 100.0;
+	    } else if (rang_step == 6 || rang_step == 17) {
+	        // Forte saison commence sa décroissance, valeur random entre 0.90 et 1.10
+	        return (random.nextInt((110 - 90) + 1) + 90) / 100.0;
+	    } else if (rang_step == 7 || rang_step == 16) {
+	        // Forte saison commence encore en décroissance, valeur random entre 0.80 et 1.00
+	        return (random.nextInt((100 - 80) + 1) + 80) / 100.0;
+	    } else {
+	        // Basse saison commence, valeur random entre 0.55 et 0.80
+	        return (random.nextInt((80 - 55) + 1) + 55) / 100.0;
+	    }
+	}
+
+
+
+
+
 
 
 
@@ -269,11 +299,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		return production;
 	}
 
-	@Override
-	public void setProdTemps(HashMap<Feve, Double> d0, HashMap<Feve, Double> d1) {
-		// TODO Auto-generated method stub
 
-	}
 	public HashMap<Feve, Double> ProdParStep(){
 		/*
 		 * retourne la production par etape
@@ -307,6 +333,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 
 		return production;
 	}
+	
 	/**
 	 * Méthode pour initialiser le stock de fèves pour chaque type de fève.
 	 * @return Un dictionnaire avec chaque fève et sa quantité de stock associée.
@@ -332,10 +359,15 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	public void next() {
 		super.next();
 		this.maindoeuvre();
-		
+		if (Filiere.LA_FILIERE.getEtape() % 10 ==0) {
+			
+			this.formation((int) (this.get_Nombre_Ouvrier_NonEquitable_NonForme()*0.2), false);
+			
+			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), true);
+		}
 
 		if (Filiere.LA_FILIERE.getEtape()%12 == 0) {
-			this.achat((nombreHecMax-nombreHec)/2);
+			this.achat((nombreHecMax-nombreHec));
 		}
 
 

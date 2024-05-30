@@ -53,9 +53,9 @@ public abstract class Producteur2Acteur implements IActeur {
 		this.tonnes_venduesCC =  new Variable("Tonnes livrées CC ", this);
 		this.tonnes_venduesBourse =  new Variable("Tonnes livrées Bourse ", this);
 
-		this.init_stock(Feve.F_BQ, 1); //103846153.8
-		this.init_stock(Feve.F_MQ, 1); //62115384.62
-		this.init_stock(Feve.F_HQ_E, 1); //3076923.076
+		this.init_stock(Feve.F_BQ, 102384.55); //103846153.8
+		this.init_stock(Feve.F_MQ, 38678.61); //62115384.62
+		this.init_stock(Feve.F_HQ_E, 0); //3076923.076
 		
 		this.lot_to_hashmap();
 		
@@ -67,13 +67,13 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		for (Feve f : Feve.values()) {
 			if(f == Feve.F_BQ) {
-				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 102384.55));
 			}
 			else if(f == Feve.F_MQ) {
-				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 38678.61));
 			}
 			else if(f == Feve.F_HQ_E) {
-				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 1));
+				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
 			}
 			else if (f != Feve.F_HQ_BE){
 				this.stock_variable.put(f,  new Variable("EQ2 Stock "+f, this, 0));
@@ -81,9 +81,7 @@ public abstract class Producteur2Acteur implements IActeur {
 			if (f != Feve.F_HQ_BE){
 				this.prod_step.put(f,  new Variable("EQ2 Production par step "+f, this, 0));
 			}
-		}
-		
-		
+		}	
 	}
 	
 	/** Définition de méthodes abstraites
@@ -96,7 +94,6 @@ public abstract class Producteur2Acteur implements IActeur {
 		solde.add(this.getSolde()); //initialisation solde initial
 		// les initialisations sont faites dans le constructeur
 	}
-	
 	
 	/** getBenefice
 	 * 
@@ -112,6 +109,10 @@ public abstract class Producteur2Acteur implements IActeur {
 		}
 	}
 
+	/** getCoursBourse
+	 * 
+	 * @author Maxime
+	 */
 	public double getCoursBourse(Feve f) {
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		Variable cours = bourse.getCours(f);
@@ -160,7 +161,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		
 		for (Feve f : Feve.values()) {
 			if (f != Feve.F_HQ_BE) {
-				this.stock_variable.get(f).setValeur(this, this.stock.get(f));
+				this.stock_variable.get(f).setValeur(this, this.getQuantiteEnStock(f, this.cryptogramme));
 				this.prod_step.get(f).setValeur(this, this.prodParStep.get(f));
 			}
 		}
@@ -188,7 +189,6 @@ public abstract class Producteur2Acteur implements IActeur {
 	/** Renvoie les indicateurs
 	 * @author Noémie
 	 */
-	
 	public List<Variable> getIndicateurs() {
 		
 		List<Variable> res = new ArrayList<Variable>();
@@ -273,6 +273,7 @@ public abstract class Producteur2Acteur implements IActeur {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			double quantite_stockee_prod = this.stock.get(p);
 			return quantite_stockee_prod;
+			//return this.getStockTotal(cryptogramme);
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
@@ -314,7 +315,7 @@ public abstract class Producteur2Acteur implements IActeur {
 	 */
 	public void DebiteCoutParStep() {
 		retireArgent(this.cout_total_stock(), "coût des stocks");	
-		retireArgent(this.cout_humain_par_step(), "coût humain");	
+		retireArgent(this.cout_humain_par_step(), "coût humain");
 		retireArgent(this.cout_plantation(), "coût de la plantation");	
 	}
 
