@@ -131,6 +131,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurContra
 				}
 				
 				if (produit.getType().equals("ChocolatDeMarque")
+						&& this.banni.contains(produit)==false
 						&& this.stock_Choco.containsKey(produit)){
 					
 					double fluctuation = 1.0 ; 

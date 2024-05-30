@@ -299,6 +299,8 @@ public class Transformateur2Acteur implements IActeur,IMarqueChocolat, IFabrican
 		if ((this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage>0) {
 			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
 		}
+		this.JournalProduction.ajouter("Couts de stockage :"+this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme)*this.coutStockage);	
+
 		
 		
 		////////////////////////////////////////////////////

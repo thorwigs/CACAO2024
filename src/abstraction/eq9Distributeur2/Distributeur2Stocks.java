@@ -63,7 +63,7 @@ public abstract class Distributeur2Stocks extends Distributeur2Acteur{
 	}
 	
 	
-	
+	//partie indicateurs réalisée par Maxime
 	public List<Variable> getIndicateurs(){
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(totalStocks);
