@@ -104,31 +104,23 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 		return res;
 		}
 	
+	private double stockChocoTransformer(Feve feve) {
+		double stockChocoTransformer = 0;
+		for (ChocolatDeMarque cdm : this.stockChocoMarque.keySet()) {
+			if(cdm.getGamme() == feve.getGamme()) {
+				stockChocoTransformer += this.stockChocoMarque.get(cdm).getValeur();
+			}
+		}
+		return stockChocoTransformer;
+	}
 	
 	@Override
 	public boolean achete(IProduit produit) {
 		if (produit instanceof Feve) {
 	        Feve feve = (Feve) produit;
 	        if (feve.getType().equals("Feve")) {
-	        	if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-	        		double stockChocoTransformer = 0;
-	        		for (ChocolatDeMarque cdm : this.stockChocoMarque.keySet()) {
-	        			if(cdm.getGamme() == feve.getGamme()) {
-	        				stockChocoTransformer += this.stockChocoMarque.get(cdm).getValeur();
-	        			}
-	        		}
-	        		boolean reponse = stockChocoTransformer + stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC.get(Gamme.HQ) * nombreMois, this.quantiteMiniCC);
-	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
-	        		return reponse;
-	        	}
-	        	if (feve.getGamme() == Gamme.MQ) {
-	        		double stockChocoTransformer = 0;
-	        		for (ChocolatDeMarque cdm : this.stockChocoMarque.keySet()) {
-	        			if(cdm.getGamme() == feve.getGamme()) {
-	        				stockChocoTransformer += this.stockChocoMarque.get(cdm).getValeur();
-	        			}
-	        		}
-	        		boolean reponse = stockChocoTransformer + stockFeves.get(feve).getValeur() + restantDu(feve) <= Math.max(this.demandeCC.get(Gamme.MQ) * nombreMois, this.quantiteMiniCC);
+	        	if ((feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) || feve.getGamme() == Gamme.MQ) {
+	        		boolean reponse = stockChocoTransformer(feve) + stockFeves.get(feve).getValeur() + restantDu(feve) - this.stockCibleMini*this.listePourcentageMarque.get(feve.getGamme()) <= Math.max(this.demandeCC.get(feve.getGamme()) * nombreMois, this.quantiteMiniCC);
 	    	    	journalCC.ajouter("La feve proposée : "+feve+", réponse : "+reponse);
 	        		return reponse;
 	        	}
@@ -143,9 +135,9 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	@Override
 	/**
 	 * @author Yannig_charonnat
-	 */	
-	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {   
-	    if (!(contrat.getProduit() instanceof Feve)) {
+	 */
+	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
+		if (!(contrat.getProduit() instanceof Feve)) {
 	        return null;
 	    }
 
@@ -154,39 +146,23 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	        return null;
 	    }
 	    
+	    if(!achete(contrat.getProduit())) {
+	    	return null;
+	    }
 	    
-	    // Utilisation de la logique de la méthode achete pour déterminer si on achète la fève
-        if (feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) {
-            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 5000) {
-                // Condition d'achat pour le chocolat de haute qualité, biologique et équitable
-                return contrat.getEcheancier();
-            } else {
-                double marge = this.demandeCC.get(feve.getGamme()) * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
-                if (marge < 1000) {
-                    return null;
-                } else {
-                    double quantite = 1000 + Filiere.random.nextDouble() * (marge - 1000); // un nombre aléatoire entre 1000 et la marge
-                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
-                }
-            }
-        } else if (feve.getGamme() == Gamme.MQ) {
-            if (Math.max(stockFeves.get(feve).getValeur(), 0.0) + restantDu(feve) + contrat.getEcheancier().getQuantiteTotale() < 10000) {
-                // Condition d'achat pour le chocolat de qualité moyenne, biologique et équitable
-                return contrat.getEcheancier();
-            } else {
-                double marge = this.demandeCC.get(feve.getGamme()) * nombreMois - Math.max(stockFeves.get(feve).getValeur(), 0.0) - restantDu(feve);
-                if (marge < 1000) {
-                    return null;
-                } else {
-                    double quantite = 1000 + Filiere.random.nextDouble() * (marge - 1000); // un nombre aléatoire entre 1000 et la marge
-                    return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, quantite / 12);
-                }
-            }
-        }
+	    if((feve.getGamme() == Gamme.HQ && feve.isBio() && feve.isEquitable()) || feve.getGamme() == Gamme.MQ) {
+	    	if(contrat.getQuantiteTotale() <= this.stockCibleMini*this.listePourcentageMarque.get(feve.getGamme()) - stockChocoTransformer(feve) - stockFeves.get(feve).getValeur() - restantDu(feve)) {
+	    		return contrat.getEcheancier();
+	    	} else {
+	    		double quantiteTotale = this.stockCibleMini*this.listePourcentageMarque.get(feve.getGamme()) - stockChocoTransformer(feve) - stockFeves.get(feve).getValeur() - restantDu(feve);
+	    		Echeancier echeancier = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, Math.max(quantiteTotale, this.quantiteMiniCC) / 12);
+	    		return echeancier;
+	    	}
+	    }
 	    
-	    // Si on ne souhaite pas acheter la fève ou si aucune condition n'a été satisfaite, retourne null
-	    return null;
+		return null;
 	}
+	
 	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 	    if (!(contrat.getProduit() instanceof Feve)) {
@@ -211,7 +187,7 @@ public class Transformateur1AcheteurCCadre extends Transformateur1AcheteurBourse
 	            if (contrat.getPrix() < Math.min(alea, prixSansDecouvert)) {
 	                return contrat.getPrix();
 	            } else {
-	                return Math.min(prixSansDecouvert, bourse.getCours(Feve.F_MQ).getValeur() * (1 + (Filiere.random.nextInt(25) / 100.0))); // Entre 1 et 1.25 le prix de F_MQ
+	                return Math.min(prixSansDecouvert, bourse.getCours(Feve.get(feve.getGamme(), false, false)).getValeur() * (1 + (Filiere.random.nextInt(25) / 100.0))); // Entre 1 et 1.25 le prix de la feve
 	            }
 	        } else {
 	            double cours = bourse.getCours(feve).getValeur();
