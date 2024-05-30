@@ -45,6 +45,9 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	
 	protected int cryptogramme;
 
+	/**
+	 * @author Mahel
+	 */
 	public Transformateur3Acteur() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.journal = new Journal(this.getNom()+" journal", this);
@@ -109,11 +112,16 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		
 	
 	}
+	/**
+	 * @author Mahel
+	 */
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ6";
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
 	}
@@ -122,7 +130,7 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 	/**
-	 * @author Thomas
+	 * @author Thomas and Mahel
 	 */
 	public void next() {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape() );
@@ -144,6 +152,7 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	
 	}
 
+	
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(160, 242, 226); 
 	}
@@ -153,25 +162,33 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	}
 
 	// Renvoie les indicateurs
-	
+	/**
+	 * @author Mahel
+	 */
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		return res;
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
 		List<Variable> res=new ArrayList<Variable>();
 		return res;
 	}
-
+	/**
+	 * @author Mahel
+	 */
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal);
 		return res;
 	}
-
+	/**
+	 * @author Mahel
+	 */
 	////////////////////////////////////////////////////////
 	//               En lien avec la Banque               //
 	////////////////////////////////////////////////////////
@@ -182,17 +199,23 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public void setCryptogramme(Integer crypto) {
 		this.cryptogramme = crypto;
 	}
-
+	/**
+	 * @author Mahel
+	 */
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
 	// afin de vous en informer.
 	public void notificationFaillite(IActeur acteur) {
 	}
-
+	/**
+	 * @author Mahel
+	 */
 	// Apres chaque operation sur votre compte bancaire, cette
 	// operation est appelee pour vous en informer
 	public void notificationOperationBancaire(double montant) {
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	// Renvoie le solde actuel de l'acteur
 	protected double getSolde() {
 		return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
@@ -203,11 +226,16 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	////////////////////////////////////////////////////////
 
 	// Renvoie la liste des filieres proposees par l'acteur
+	/**
+	 * @author Mahel
+	 */
 	public List<String> getNomsFilieresProposees() {
 		ArrayList<String> filieres = new ArrayList<String>();
 		return(filieres);
 	}
-
+	/**
+	 * @author Mahel
+	 */
 	// Renvoie une instance d'une filiere d'apres son nom
 	public Filiere getFiliere(String nom) {
 		return Filiere.LA_FILIERE;

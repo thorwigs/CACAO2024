@@ -96,7 +96,7 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	
 	/**
 	 * 
-	 * @author Mahel et Arthur
+	 * @author Mahel 
 	 */
 	public void TransformationFeve(Feve f) {
 		double feve_en_stock = this.stockFeves.get(f);
@@ -109,7 +109,9 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 		}
 		
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		if(stockChocoMarque != null) {
