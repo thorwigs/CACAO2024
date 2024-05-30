@@ -51,12 +51,13 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 		this.totalStocksFeves = new VariablePrivee("EqXTStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("EqXTStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("EqXTStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
-	
+
 	}
 	/**
 	 * @author Mahel
 	 */
 	public void initialiser() {
+		
 		this.lesFeves = new LinkedList<Feve>();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		this.stockFeves = new HashMap<Feve,Double>();
@@ -83,8 +84,7 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 			stockChocoMarque.put(c, 0.0);
 			
 		}
-		
-		
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
 		double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
@@ -127,6 +127,11 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	public void next() {
 		this.journal.ajouter("etape=" + Filiere.LA_FILIERE.getEtape() );
 		this.journal.ajouter("=== STOCKS === ");
+		if ((this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage>0) {
+			this.journal.ajouter("Stock total " + this.coutStockage);
+			this.journal.ajouter("cout de stockage "+this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme)*this.coutStockage); 
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(this.cryptogramme)+this.totalStocksChoco.getValeur(this.cryptogramme))*this.coutStockage);
+		}
 		for (Feve f : stockFeves.keySet()) {
 			this.journal.ajouter("Stock de "+f+" = "+this.stockFeves.get(f));
 		}
@@ -148,11 +153,12 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 	}
 
 	// Renvoie les indicateurs
+	
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		return res;
 	}
-
+	
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
 		List<Variable> res=new ArrayList<Variable>();
@@ -255,4 +261,26 @@ public class Transformateur3Acteur implements IActeur,IMarqueChocolat, IFabrican
 			
 		}
 	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

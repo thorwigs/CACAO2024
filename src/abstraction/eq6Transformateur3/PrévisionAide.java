@@ -58,7 +58,9 @@ public class PrévisionAide extends Transformateur3Acteur{
 		}
 			return Chocolat.C_HQ_BE ;
 	}
-	
+	/**
+	 * @author Mahel
+	 */
 	public Feve Correspond(Chocolat c) {
 		
 		switch(  c ) {
@@ -77,7 +79,9 @@ public class PrévisionAide extends Transformateur3Acteur{
 	}
 	
 	
-	
+	/**
+	 * @author Mahel
+	 */
 	/**
 	 * Permet de mettre à jour l'historique des stocks
 	 * @param stockFeves

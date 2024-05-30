@@ -1,6 +1,11 @@
 package abstraction.eq6Transformateur3;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
@@ -8,7 +13,7 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3Produit extends Transformateur3AcheteurBourse {
-	
+	protected double quantiteParStep;
 	/**
 	 * @author Mahel 
 	 */
@@ -26,6 +31,9 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 			return Chocolat.C_HQ_BE ;
 	}
 	
+	/**
+	 * @author Mahel
+	 */
 	public Feve Correspond(Chocolat c) {
 		
 		switch(  c ) {
@@ -48,7 +56,7 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 	 */
 	public void next() {
 		super.next();
-		
+		this.quantiteParStep = 0;
 		journal.ajouter("stock avant transformation : ");
 		journal.ajouter("stock de feves : ");
 		for(Feve p : stockFeves.keySet()) {
@@ -82,6 +90,8 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
 			journal.ajouter(c.getGamme() +" : " + stockChocoMarque.get(c));
 		}
+		
+		journal.ajouter("Quantite transformee ce step : " + quantiteParStep);
 	}
 	
 	/**
@@ -93,12 +103,34 @@ public class Transformateur3Produit extends Transformateur3AcheteurBourse {
 		double choco_en_stock = this.stockChoco.get(this.Correspond(f));						
 		if(feve_en_stock >0 ) {                                               
 			Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Cout de production",feve_en_stock*(0.5*1200+8+2*1000*0.27));
-			this.stockChoco.put(this.Correspond(f),choco_en_stock + feve_en_stock/4.2);
+			this.stockChoco.put(this.Correspond(f),choco_en_stock + feve_en_stock /*/ 4.2*/);
+			quantiteParStep += feve_en_stock;
 			this.stockFeves.put(f,0.0);
 		}
 		
 	}
 	
+	public List<Variable> getIndicateurs() {
+		List<Variable> res = new ArrayList<Variable>();
+		if(stockChocoMarque != null) {
+			for(ChocolatDeMarque c : this.stockChocoMarque.keySet()) {
+				Variable var = new Variable("Chocolat sharks," + c.getNom(),this,stockChocoMarque.get(c));
+				res.add(var);
+			}
+			res.add(new Variable("Quantite_produite_par_step ",this,this.quantiteParStep));
+			double q = 0;
+			for (ExemplaireContratCadre c : this.contratsEnCours) {
+				q += c.getQuantiteALivrerAuStep();
+			}
+			res.add(new Variable("Ventes ", this,q ));
+		}
+		else {
+			
+		}
+		
+		
+		return res;
+	}
 	/**
 	 * @author Mahel
 	 */
