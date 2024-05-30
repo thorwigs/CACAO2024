@@ -5,7 +5,6 @@
 
 /**@author Abderrahmane Er-rahmaouy*/
 package abstraction.eq1Producteur1;
-import java.util.Random;
 
 import java.util.ArrayList;
 

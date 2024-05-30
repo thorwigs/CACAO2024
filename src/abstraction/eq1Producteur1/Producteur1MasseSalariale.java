@@ -393,73 +393,58 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 	 */
 
 	@SuppressWarnings("static-access")
-	public void formation (int nbr_à_former,boolean equitable) {
-		//on suppose qu'un ouvrier peut encore travailler lors de sa formation
-		int quantite_max_a_former_par_step=(int)0.1*(this.get_Nombre_Ouvrier_NonEquitable_NonForme()+this.get_Nombre_Ouvrier_Equitable_NonForme());
-		double coutTotalFormation = 0;
-		int nbr_max_a_former=nbr_à_former;
 
-		if (nbr_à_former>quantite_max_a_former_par_step) {
+	public void formation(int nbrAFormer, boolean equitable) {
+	    // on suppose qu'un ouvrier peut encore travailler lors de sa formation
+	    int quantiteMaxAFormerParStep = (int) (0.1 * (this.get_Nombre_Ouvrier_NonEquitable_NonForme() + this.get_Nombre_Ouvrier_Equitable_NonForme()));
+	    int nbrMaxAFormer = Math.min(nbrAFormer, quantiteMaxAFormerParStep);
+	    double coutTotalFormation = 0;
 
-			nbr_max_a_former=quantite_max_a_former_par_step;
+	    if (equitable) {
+	        int a = this.masseSalariale.getOrDefault(ouvrierEquitableNonForme, 0);
+	        int nbrReelAFormer = Math.min(a, nbrMaxAFormer);
+	        coutTotalFormation = nbrReelAFormer * this.coutFormation;
 
-		}
+	        this.masseSalariale.put(ouvrierEquitableForme, this.masseSalariale.getOrDefault(ouvrierEquitableForme, 0) + nbrReelAFormer);
+	        this.masseSalariale.put(ouvrierEquitableNonForme, this.masseSalariale.getOrDefault(ouvrierEquitableNonForme, 0) - nbrReelAFormer);
 
-		//changer la masse salariale
-		if (equitable ) {
-			Integer a =this.masseSalariale.get(ouvrierEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
-			coutTotalFormation = nbr_reel_a_former*this.coutFormation;
+	        ArrayList<Integer> ancienneteInitiale = this.anciennete.get(2);
+	        ArrayList<Integer> ancienneteFinale = this.anciennete.get(1);
+	        int restant = nbrReelAFormer;
 
-			this.masseSalariale.put(ouvrierEquitableForme, this.masseSalariale.get(ouvrierEquitableForme)+nbr_reel_a_former);
-			this.masseSalariale.put(ouvrierEquitableNonForme, this.masseSalariale.get(ouvrierEquitableNonForme)-nbr_reel_a_former);
-			int restant=nbr_reel_a_former;
-			ArrayList<Integer> anciennete_initiale=this.anciennete.get(2);
-			ArrayList<Integer> anciennete_finale=this.anciennete.get(1);
+	        for (int i = ancienneteInitiale.size() - 1; i >= 0 && restant > 0; i--) {
+	            int supprimes = Math.min(ancienneteInitiale.get(i), restant);
+	            ancienneteInitiale.set(i, ancienneteInitiale.get(i) - supprimes);
+	            ancienneteFinale.set(i, ancienneteFinale.get(i) + supprimes);
+	            restant -= supprimes;
+	        }
+	    } else {
+	        int a = this.masseSalariale.getOrDefault(ouvrierNonEquitableNonForme, 0);
+	        int nbrReelAFormer = Math.min(a, nbrMaxAFormer);
+	        coutTotalFormation = nbrReelAFormer * this.coutFormation;
 
+	        this.masseSalariale.put(ouvrierNonEquitableForme, this.masseSalariale.getOrDefault(ouvrierNonEquitableForme, 0) + nbrReelAFormer);
+	        this.masseSalariale.put(ouvrierNonEquitableNonForme, this.masseSalariale.getOrDefault(ouvrierNonEquitableNonForme, 0) - nbrReelAFormer);
 
-			int i=anciennete_initiale.size()-1;
-			while (restant>0 && i<anciennete_initiale.size()) {
-				int supprimes=Math.min(anciennete_initiale.get(i), restant);
-				anciennete_initiale.set(i, anciennete_initiale.get(i)-supprimes);
-				anciennete_finale.set(i, anciennete_finale.get(i)+supprimes);
-				restant=restant-supprimes;
-				i--;
+	        ArrayList<Integer> ancienneteInitiale = this.anciennete.get(4);
+	        ArrayList<Integer> ancienneteFinale = this.anciennete.get(3);
+	        int restant = nbrReelAFormer;
 
+	        for (int i = ancienneteInitiale.size() - 1; i >= 0 && restant > 0; i--) {
+	            int supprimes = Math.min(ancienneteInitiale.get(i), restant);
+	            ancienneteInitiale.set(i, ancienneteInitiale.get(i) - supprimes);
+	            ancienneteFinale.set(i, ancienneteFinale.get(i) + supprimes);
+	            restant -= supprimes;
+	        }
+	    }
 
-
-
-			}
-
-
-
-
-		}
-		else {
-
-			Integer a =this.masseSalariale.get(ouvrierNonEquitableNonForme);
-			int nbr_reel_a_former=Math.min(a,nbr_max_a_former);
-			coutTotalFormation = nbr_reel_a_former*this.coutFormation;
-			this.masseSalariale.put(ouvrierNonEquitableForme, this.masseSalariale.get(ouvrierNonEquitableForme)+nbr_reel_a_former);
-			this.masseSalariale.put(ouvrierNonEquitableNonForme, this.masseSalariale.get(ouvrierNonEquitableNonForme)-nbr_reel_a_former);
-			int restant=nbr_reel_a_former;
-			ArrayList<Integer> anciennete_initiale=this.anciennete.get(4);
-			ArrayList<Integer> anciennete_finale=this.anciennete.get(3);
-			int i=anciennete_initiale.size()-1;
-			while (restant>0 && i<anciennete_initiale.size()) {
-				int supprimes=Math.min(anciennete_initiale.get(i), restant);
-				anciennete_initiale.set(i, anciennete_initiale.get(i)-supprimes);
-				anciennete_finale.set(i, anciennete_finale.get(i)+supprimes);
-				restant=restant-supprimes;
-				i--;
-			}
-		}
-
-		if (coutTotalFormation > 0) {
-			Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Cout Total de formation des ouvirers", coutTotalFormation);
-			this.journalOuvrier.ajouter("On a paye le cout suivant pour augmenter le rendement de certains ouvriers:"+ coutTotalFormation);
-		}
+	    if (coutTotalFormation > 0) {
+	        Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Cout Total de formation des ouvriers", coutTotalFormation);
+	        this.journalOuvrier.ajouter("On a payé le coût suivant pour augmenter le rendement de certains ouvriers: " + coutTotalFormation);
+	    }
 	}
+
+	
 
 
 
@@ -498,10 +483,7 @@ public class Producteur1MasseSalariale extends Producteur1Acteur {
 		ordre=0;
 
 		this.updateAnciennete();
-		if (Filiere.LA_FILIERE.getEtape() % 10 ==0) {
-			this.formation((int) (this.get_Nombre_Ouvrier_NonEquitable_NonForme()*0.2), false);
-			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), true);
-		}
+
 
 		this.amelioration();
 	}

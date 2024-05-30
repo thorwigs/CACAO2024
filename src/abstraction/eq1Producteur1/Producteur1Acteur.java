@@ -40,7 +40,12 @@ public class Producteur1Acteur implements IActeur {
 	protected int nb_normal;
 	protected int nb_equitable;
 	
-	
+	 /**
+     * Retourne le coût unitaire de production pour une fève donnée.
+     * 
+     * @param f la fève pour laquelle le coût unitaire de production est demandé.
+     * @return le coût unitaire de production de la fève.
+     */
 	public double getCoutUnitaireProduction(Feve f) {
 		if(f.getGamme()== Gamme.HQ) {
 			return this.coutUnitaireProductionHQ;
@@ -72,10 +77,19 @@ public class Producteur1Acteur implements IActeur {
 		
 	
 	
-	
+	/**
+     * Retourne la production par étape.
+     * 
+     * @return un HashMap contenant la production par étape.
+     */
 	public HashMap<Feve, Double> getProd(){
 		return this.prodParStep;
 	}
+	 /**
+     * Retourne le coût de stockage.
+     * 
+     * @return le coût de stockage.
+     */
 	public double getCoutStockage() {
 		return this.coutStockage;
 	}
@@ -95,7 +109,9 @@ public class Producteur1Acteur implements IActeur {
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ1";
 	}
-	
+	 /**
+     * Calcule la croissance économique.
+     */
 	public void CroissanceEconomique() {
 		this.croissanceParStep = new ArrayList<Double>();
 		
@@ -117,7 +133,9 @@ public class Producteur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
+	/**
+     * Effectue les opérations nécessaires à chaque étape de la simulation.
+     */
 	public void next() {
 		
        int etape = Filiere.LA_FILIERE.getEtape();
@@ -215,6 +233,11 @@ public class Producteur1Acteur implements IActeur {
 
 
 	/**@author Haythem */
+	/**
+     * Calcule les coûts de production.
+     * 
+     * @return le coût total de production.
+     */
 	protected double CoutsProd() {
 		double CoutProdBQ=0;
 		double CoutProdMQ=0;
@@ -240,6 +263,13 @@ public class Producteur1Acteur implements IActeur {
 	
 
 	@Override
+	/**
+     * Retourne la quantité en stock d'un produit donné.
+     * 
+     * @param p le produit.
+     * @param cryptogramme le cryptogramme.
+     * @return la quantité en stock du produit.
+     */
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		return 0.0;
 		

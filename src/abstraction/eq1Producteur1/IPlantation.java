@@ -3,7 +3,7 @@ package abstraction.eq1Producteur1;
 import java.util.HashMap;
 
 import abstraction.eqXRomu.produits.Feve;
-/**@author Yuri*/
+/**@author Abderrahmane ER-RAHMAOUY*/
 public interface IPlantation {
 	// Gestion de la plantation
     

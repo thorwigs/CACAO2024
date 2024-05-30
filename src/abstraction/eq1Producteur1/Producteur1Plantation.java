@@ -81,6 +81,7 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 		/*
 		 *  Si on n'a pas assez d'espace pour planter nos feves
 		 */
+		
 		for (Feve feve : adjustments.keySet()) {
 
 			double adjustment = adjustments.get(feve);
@@ -358,10 +359,15 @@ public class Producteur1Plantation extends Producteur1MasseSalariale implements 
 	public void next() {
 		super.next();
 		this.maindoeuvre();
-		
+		if (Filiere.LA_FILIERE.getEtape() % 10 ==0) {
+			
+			this.formation((int) (this.get_Nombre_Ouvrier_NonEquitable_NonForme()*0.2), false);
+			
+			this.formation((int) (this.get_Nombre_Ouvrier_Equitable_NonForme()*0.2), true);
+		}
 
 		if (Filiere.LA_FILIERE.getEtape()%12 == 0) {
-			this.achat((nombreHecMax-nombreHec)/2);
+			this.achat((nombreHecMax-nombreHec));
 		}
 
 

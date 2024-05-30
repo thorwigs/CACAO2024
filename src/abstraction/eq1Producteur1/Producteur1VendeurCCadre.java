@@ -157,29 +157,18 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 				return null;
 			}
 		}
-		double quanmax = this.ProdParStep().get(f) * (ec.getStepFin() - ec.getStepDebut());
-		if (f.isEquitable()) {
-			double eq = (this.get_Nombre_Ouvrier_Equitable_NonForme() + this.get_Nombre_Ouvrier_Equitable_NonForme()) / this.get_Nombre_Total();
-			quanmax *= eq;
-		}
-		if (Filiere.LA_FILIERE.getActeursSolvables().contains(Filiere.LA_FILIERE.getActeur("EQ2"))) {
-			if (ec.getQuantiteTotale() > 0.7 * quanmax) {
-				journalCoC.ajouter(Color.RED, Color.white, "  Grosses Demandes");
-				return null;
-			}
-		}
-
+		
 		int duree = ec.getStepFin() - ec.getStepDebut();
 		if (duree < 10) {
-			journalCoC.ajouter("Pas de contract avec une duree inferieure a 5 mois");
+			journalCoC.ajouter(Color.RED, Color.white,"Pas de contract avec une duree inferieure a 5 mois");
 			return null;
 		}
 		if (Filiere.LA_FILIERE.getEtape() < 12) {
-			journalCoC.ajouter("On fait pas de contract pendant la 12ere etapes");
+			journalCoC.ajouter(Color.RED, Color.white,"On fait pas de contract pendant la 12ere etapes");
 			return null;
 		}
 		if (this.contratsEnCours.size() >= 5) {
-			journalCoC.ajouter("Maximum number of ongoing contracts reached");
+			journalCoC.ajouter(Color.RED, Color.white,"Maximum number of ongoing contracts reached");
 			return null;
 		}
 		if (ec.getStepDebut() < Filiere.LA_FILIERE.getEtape() + 8) {
@@ -187,7 +176,7 @@ public class Producteur1VendeurCCadre extends Producteur1VendeurBourse implement
 		}
 		if (!accepted) {
 			if (ec.getQuantiteTotale() <= stock.get((Feve) produit).getValeur() - restantDu((Feve) produit)) {
-				journalCoC.ajouter("      je retourne " + new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) (ec.getQuantiteTotale() / 12)));
+				journalCoC.ajouter("      je retourne " + new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) 0.7*(ec.getQuantiteTotale() / 12)));
 				return new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) (ec.getQuantiteTotale() / 12));
 			} else {
 				journalCoC.ajouter("      je retourne " + new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 12, (int) ((stock.get((Feve) produit).getValeur() - restantDu((Feve) produit) / 12))));

@@ -21,7 +21,9 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
-
+/*
+ * Author : Abderrahmane ER-RAHMAOUY
+ */
 public class Transformation extends Producteur1VendeurAuxEncheres implements IFabricantChocolatDeMarque, IMarqueChocolat{
 	protected Journal journalTransfo;
 	public HashMap<Chocolat, Variable > stockChoc;
@@ -34,6 +36,11 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 	protected boolean BeginHQ;
 
 	protected HashMap<Gamme, Boolean> beginning;
+	/**
+	 * This class is responsible for transforming the excess cacao beans into choclate
+	 * Due to time constraints and other factors it won't be used
+	 * 
+	 */
 
 
 	public Transformation() {
@@ -134,6 +141,7 @@ public class Transformation extends Producteur1VendeurAuxEncheres implements IFa
 		}
 
 	}
+	@SuppressWarnings({ "unused", "unlikely-arg-type" })
 	public void beginTran() {
 		this.checkStock();
 		for (Feve f : this.pourcentageTransfo.keySet()) {
