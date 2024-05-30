@@ -44,7 +44,7 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 			}
 			return somme/prix.size();
 		} else {
-			return PRIX_DEFAUT;
+			return PRIX_DEFAUT.get(cm.getGamme());
 		}
 	}
 

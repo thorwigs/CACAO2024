@@ -23,7 +23,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabricantChocolatDeMarque {
 
-	protected static int PRIX_DEFAUT = 4500;
+	protected HashMap<Gamme, Double> PRIX_DEFAUT;
 	
 	protected int quantiteMiniCC = 1200;
 	protected int nombreMois = 4;
@@ -87,6 +87,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 
 		this.demandeCC = new HashMap<Gamme, Double>();
 		this.listePourcentageMarque = new HashMap<Gamme, Double>();
+		this.PRIX_DEFAUT = new HashMap<Gamme, Double>();
+		this.PRIX_DEFAUT.put(Gamme.HQ, 4800.0);
+		this.PRIX_DEFAUT.put(Gamme.MQ, 4500.0);
 	}
 /**
 *@author Noemie_Grosset
