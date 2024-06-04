@@ -33,6 +33,9 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	protected HashMap<Feve, Integer > nbAchatFeve;
 	protected Journal journalCC6;
 
+	/**
+	 * @author Mahel
+	 */
 	public Transformateur3AcheteurCCadre() {
 		super();
 		this.contratsEnCours= new LinkedList<ExemplaireContratCadre>();
@@ -43,6 +46,9 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		
 	}
 
+	/**
+	 * @author Mahel
+	 */
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
@@ -67,7 +73,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 	
 	}
 	/**
-	 * @author Mahel et Thomas
+	 * @author Mahel
 	 * 
 	 */
 	public void next() {
@@ -180,22 +186,18 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		return jx;
 	}
 	/**
-	 * @author Thomas
+	 * @author Mahel
 	 */
 	public boolean achete(IProduit produit) {
-		/**if( ! produit.getType().equals("Feve")) {
+		if( ! produit.getType().equals("Feve")) {
 			return false;
 		}
-		for(ChocolatDeMarque c : stockChocoMarque.keySet()) {
-			if(Correspond(c.getChocolat())==produit) {
-				return stockChocoMarque.get(produit)+restantDu((Feve)produit)<50000;
+		for(Feve f : stockFeves.keySet()) {
+			if(f==produit) {
+				return stockFeves.get(produit)+restantDu((Feve)produit)<20000;
 			}
 		}
-		return false;*/
-		if (produit.getType().equals("Feve")) {
-			return ((Feve)produit)==Feve.F_MQ || ((Feve)produit)==Feve.F_MQ_E || ((Feve)produit)==Feve.F_BQ;
-		}
-	return false;
+		return false;
 	}
 	/**
 	 * @author Thomas
@@ -247,7 +249,7 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 		this.contratsEnCours.add(contrat);
 	}
 	/**
-	 * @author Arthur
+	 * @author Arthur and Mahel
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur().getNom().equals("EQ6")) {
@@ -258,4 +260,5 @@ public class Transformateur3AcheteurCCadre extends PrévisionAide implements IAc
 			totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme);
 		}
 	}
+
 }

@@ -11,7 +11,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
-import abstraction.eqXRomu.produits.IProduit;
+
 
 public class Producteur1VendeurBourse extends Producteur1Production implements  IVendeurBourse {
 	public double  pourcentageHQ=0.1 ;
@@ -92,7 +92,7 @@ public class Producteur1VendeurBourse extends Producteur1Production implements  
        
 
 		if (quantiteEnT!=0) { 
-			double Seuil = getCoutUnitaireProduction(f);
+			//double Seuil = getCoutUnitaireProduction(f);
 			//System.out.println("seuil"+Seuil);
 			//System.out.println("cours"+cours);
 		
