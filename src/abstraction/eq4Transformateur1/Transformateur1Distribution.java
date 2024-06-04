@@ -83,6 +83,11 @@ public class Transformateur1Distribution extends Transformateur1AcheteurCCadre i
 			this.journalVD.ajouter("vente de "+quantite+" T de "+choco+" pour un prix de "+montant+" !");
 		}
 		
+		if(choco.getGamme() == Gamme.HQ) {
+			this.venteHQ.ajouter(this, quantite);
+		} else {
+			this.venteMQ.ajouter(this, quantite);
+		}
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 
 public class Transformateur1VendeurAuxEncheres extends Transformateur1AcheteurCCadre implements IVendeurAuxEncheres{
 
@@ -53,6 +54,13 @@ public class Transformateur1VendeurAuxEncheres extends Transformateur1AcheteurCC
 						prixRetenus.get(cm).remove(0); // on ne garde que les dix derniers prix
 						journalEncheres.ajouter("   Les derniers prix pour "+cm+" sont "+prixRetenus.get(cm));
 					}
+
+					if(cm.getGamme() == Gamme.HQ) {
+						this.venteHQ.ajouter(this, quantite);
+					} else {
+						this.venteMQ.ajouter(this, quantite);
+					}
+					
 				}
 			}
 		}

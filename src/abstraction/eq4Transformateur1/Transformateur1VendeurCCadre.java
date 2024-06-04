@@ -250,6 +250,14 @@ public class Transformateur1VendeurCCadre extends Transformateur1VendeurBourse i
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		stockChocoMarque.get((ChocolatDeMarque)produit).setValeur(this, stockActuel-aLivre);
 		this.totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme)-aLivre, this.cryptogramme);
+		
+
+		if(((ChocolatDeMarque) produit).getGamme() == Gamme.HQ) {
+			this.venteHQ.ajouter(this, aLivre);
+		} else {
+			this.venteMQ.ajouter(this, aLivre);
+		}
+		
 		return aLivre;
 	}
 	

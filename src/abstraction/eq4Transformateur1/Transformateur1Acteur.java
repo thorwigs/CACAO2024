@@ -52,6 +52,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 	
+	protected Variable venteHQ = new Variable("Vente de fèves HQ_B_E", this);
+	protected Variable venteMQ = new Variable("Vente de fèves MQ", this);
+	protected Variable pourcentageHQ = new Variable("Poucentage ventes HQ", this);
+	
 	protected HashMap<Gamme, Double> demandeCC;
 
 	
@@ -116,10 +120,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		
 		this.getChocolatsProduits();
 		for (ChocolatDeMarque c : this.chocosProduits) {
-			this.stockChocoMarque.put(c, new Variable("EQ4_stock_choco_"+c, this));
 			this.demandeCC.put(c.getGamme(), 0.0);
 		}
-
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -194,6 +196,15 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 				}
 			}
 		}
+		
+		if (this.venteHQ.getValeur() + this.venteMQ.getValeur() > 0) {
+			this.pourcentageHQ.setValeur(this, this.venteHQ.getValeur()/(this.venteHQ.getValeur() + this.venteMQ.getValeur()));
+		} else {
+			this.pourcentageHQ.setValeur(this, 0);
+		}
+		this.venteMQ.setValeur(this, 0);
+		this.venteHQ.setValeur(this, 0);
+		
 /**
 * @author Noemie_Grosset
 */	
@@ -225,8 +236,18 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat, IFabrica
 		res.add(this.stockFeves.get(Feve.F_HQ));
 		res.add(this.stockFeves.get(Feve.F_MQ));
 		//res.addAll(this.stockChoco.values());
+		Chocolat cmc = Chocolat.C_MQ;
+		this.stockChocoMarque.put(new ChocolatDeMarque(cmc, "CacaoMagic", 0), new Variable("EQ4_stock_choco_"+cmc, this));
+
+		Chocolat chc = Chocolat.C_HQ_BE;
+		this.stockChocoMarque.put(new ChocolatDeMarque(chc, "LeaderKakao", 0), new Variable("EQ4_stock_choco_"+chc, this));
+		
 		res.addAll(this.stockChocoMarque.values());
 		res.add(this.totalStocksChocoMarque);
+
+		res.add(venteHQ);
+		res.add(venteMQ);
+		res.add(pourcentageHQ);
 		return res;
 	}
 

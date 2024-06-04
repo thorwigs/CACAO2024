@@ -94,6 +94,11 @@ public class Transformateur1VendeurAppelDOffre extends Transformateur1VendeurCCa
 		if (prixAO.get(cm).size()>10) {
 			prixAO.get(cm).remove(0); // on ne garde que les dix derniers prix
 		}
+		if(cm.getGamme() == Gamme.HQ) {
+			this.venteHQ.ajouter(this, quantite);
+		} else {
+			this.venteMQ.ajouter(this, quantite);
+		}
 	}
 
 
